@@ -1082,7 +1082,7 @@ button.cbtn.on{background:var(--accent-soft)}
 .bkic{font-size:46px;line-height:1}
 .bkbig{font-size:18px;font-weight:700}
 .paclist{max-height:38vh;overflow:auto;margin-top:10px;border:1px solid var(--line);border-radius:12px}
-.afbar{height:8px;border-radius:5px;background:var(--line);margin:8px 0;overflow:hidden}.afbar i{display:block;height:100%;background:#43a047}.afed{margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:12px}.lsec{display:flex;align-items:center;gap:8px;width:100%;text-align:left;min-height:44px;margin:6px 0 2px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card,transparent);color:inherit;font:inherit;font-weight:700;cursor:pointer}.lsec .lt{flex:0 0 auto}.lsec small{flex:1;min-width:0;font-weight:400;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}.lsec i{font-style:normal;flex:0 0 auto}.lbody{padding:2px 0 4px}.impsel{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:10px 0 6px}.pbox{width:20px;height:20px;border:2px solid var(--line);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:13px;color:#fff;grid-row:1/3}.pbox.on{background:var(--green,#4b7a1f);border-color:var(--green,#4b7a1f)}.pacrow{cursor:pointer;align-items:center}.pacrow.off{opacity:.45}.pacrow.off b{text-decoration:line-through}.pacrow{display:grid;grid-template-columns:auto 1fr auto;gap:0 10px;padding:8px 12px;border-bottom:1px solid var(--line);font-size:14px}
+.leaflet-control-attribution{max-width:70vw}#verbtn{position:absolute;z-index:500;left:8px;bottom:30px;max-width:calc(100% - 16px);padding:3px 9px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--surface) 82%,transparent);color:var(--ink2);font:11px/1.3 var(--sans);cursor:pointer;opacity:.85}#verbtn.new{background:#ffb300;color:#1d1d1d;border-color:#c68a00;font-weight:700;opacity:1}.afbar{height:8px;border-radius:5px;background:var(--line);margin:8px 0;overflow:hidden}.afbar i{display:block;height:100%;background:#43a047}.afed{margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:12px}.lsec{display:flex;align-items:center;gap:8px;width:100%;text-align:left;min-height:44px;margin:6px 0 2px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card,transparent);color:inherit;font:inherit;font-weight:700;cursor:pointer}.lsec .lt{flex:0 0 auto}.lsec small{flex:1;min-width:0;font-weight:400;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}.lsec i{font-style:normal;flex:0 0 auto}.lbody{padding:2px 0 4px}.impsel{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:10px 0 6px}.pbox{width:20px;height:20px;border:2px solid var(--line);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:13px;color:#fff;grid-row:1/3}.pbox.on{background:var(--green,#4b7a1f);border-color:var(--green,#4b7a1f)}.pacrow{cursor:pointer;align-items:center}.pacrow.off{opacity:.45}.pacrow.off b{text-decoration:line-through}.pacrow{display:grid;grid-template-columns:auto 1fr auto;gap:0 10px;padding:8px 12px;border-bottom:1px solid var(--line);font-size:14px}
 .pacrow small{grid-column:2/4;color:var(--ink2);font-size:12px}
 
 @media (min-width:900px){
@@ -1147,6 +1147,7 @@ button.cbtn.on{background:var(--accent-soft)}
     <section id="selbar" hidden></section>
     <section id="recbar" hidden></section>
     <section id="afbar" hidden></section>
+    <button id="verbtn" type="button" data-act="ver-tap" aria-label="Versión de la app: tocar para comprobar si hay una nueva"></button>
   </div>
 
   <div id="panels">
@@ -1632,6 +1633,19 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
+var APPV={v:'2026-10-07T16:01:58Z',n:'Entrega 13 · 7 oct · 18:01'}, verNew=null, verAt=0;
+function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
+function verCheck(manual){
+  verAt=Date.now();
+  return fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('x');return r.json()}).then(function(j){
+    if(j&&j.v&&j.v>APPV.v){verNew=j;verRender();if(manual)toast('Hay una versión nueva: '+j.n,'Actualizar',verUpdate,12000)}
+    else{verNew=null;verRender();if(manual)toast('Ya tienes la última versión ('+APPV.n+')')}
+  }).catch(function(){if(manual)toast('No puedo comprobarlo ahora. Mira la conexión.')});
+}
+function verUpdate(){toast('Actualizando…');fetch(location.pathname,{cache:'reload'}).catch(function(){}).then(function(){location.reload()})}
+verRender();
+setTimeout(function(){verCheck(false)},4000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&Date.now()-verAt>60000)verCheck(false)});
 var layOpen={cap:true};
 function layHead(k,t,sum,first){
   var open=!!layOpen[k];
@@ -4400,7 +4414,7 @@ document.addEventListener('change',function(ev){var t=ev.target;if(!t)return;if(
 /* ───── invitado: vista de solo lectura ───── */
 var GU={opt:{},rev:-1,coms:[],title:'',name:'',gkey:'',busy:false,err:'',loaded:false};
 function guCall(fn,args){return sbFetch('/rest/v1/rpc/'+fn,{method:'POST',body:JSON.stringify(args)}).then(function(r){return r.json().catch(function(){return {error:'red'}})},function(){return {error:'red'}})}
-var GU_OK=/^(var-tg|lay-sec|tag-more|card-size|close-card|cm-add|cm-cancel|cm-del|cm-edit|cm-save|colby|copy|crop-map|crop-view|dl-close|dl-save|dl-share|dw-.*|exp|fav-go|finca-back|finca-map|finca-open|finca-pdf|finca-recorte|finca-view|flt-.*|focus-clear|gp-open|grp-back|grp-map|grp-open|grp-pdf|gsub|guide-.*|idx-set|informe|intro-close|layers|locate|med-go|mk-toggle|ndvi-step|ov|ov-.*|pdf-save|pdf-share|place-go|rec-close|rec-dxf|rec-orient|rec-paper|rec-photo|rec-plano|rec-redo|rec-start|recent|sel-clear|sel-close|sel-start|share|sig-.*|sigpac-open|tag-go|tools)$/;
+var GU_OK=/^(ver-tap|var-tg|lay-sec|tag-more|card-size|close-card|cm-add|cm-cancel|cm-del|cm-edit|cm-save|colby|copy|crop-map|crop-view|dl-close|dl-save|dl-share|dw-.*|exp|fav-go|finca-back|finca-map|finca-open|finca-pdf|finca-recorte|finca-view|flt-.*|focus-clear|gp-open|grp-back|grp-map|grp-open|grp-pdf|gsub|guide-.*|idx-set|informe|intro-close|layers|locate|med-go|mk-toggle|ndvi-step|ov|ov-.*|pdf-save|pdf-share|place-go|rec-close|rec-dxf|rec-orient|rec-paper|rec-photo|rec-plano|rec-redo|rec-start|recent|sel-clear|sel-close|sel-start|share|sig-.*|sigpac-open|tag-go|tools)$/;
 var GU_DL=/^(dw-.*|exp|pdf-save|pdf-share|finca-pdf|grp-pdf|informe|finca-recorte|rec-.*|sel-start|sel-clear|sel-close|share|dl-save|dl-share)$/;
 function guOK(act){if(VC&&/^(pf-open|pf-menu|pf-pick)$/.test(act))return true;if(!GU_OK.test(act))return false;if(!(GU.opt&&GU.opt.descargar)&&GU_DL.test(act))return false;return true}
 var GU_RO=['favname','favnew','fname','fgrp-name','gname','medname','nf-name','nfp-name','otro','bulk-otro-in','ra','rm','rn','rp','rt','rv','tagname','tpname','bpa','bpm','bpp'];
@@ -6414,6 +6428,7 @@ document.addEventListener('click',function(ev){
     case 'sigpac-open':sigShow();break;
     case 'pac-pick':{var pf0=$('#pacfile');if(pf0)pf0.click();break}
     case 'lay-sec':layOpen[b.dataset.k]=!layOpen[b.dataset.k];renderLayers();break;
+    case 'ver-tap':if(verNew)verUpdate();else verCheck(true);break;
     case 'af-open':if(b.dataset.fid)afOpen('finca',b.dataset.fid);else afOpen();break;
     case 'af-scope':afReadSel();af.scope=b.dataset.v;af.id=null;$('#afmodal').innerHTML=afStartHTML();if(!af.id){var s0=$('#af-sel');if(s0)af.id=s0.value}break;
     case 'af-begin':afReadSel();afStartMap();break;
