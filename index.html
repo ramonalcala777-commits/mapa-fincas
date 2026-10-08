@@ -800,6 +800,20 @@ button.pill{cursor:pointer}
 
 /* ficha del recinto */
 #rcard,#empty,#medbar,#selbar,#recbar,#afbar{position:absolute;z-index:550;left:8px;right:8px;bottom:8px;max-height:60%;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:10px 14px 12px;-webkit-overflow-scrolling:touch}
+#medbar,#selbar,#recbar{max-height:34%;padding:24px 12px 10px;font-size:14px}
+#afbar{max-height:42%;padding:24px 12px 10px;font-size:14px}
+#medbar.big,#selbar.big,#recbar.big,#afbar.big{max-height:72%}
+#medbar::before,#selbar::before,#recbar::before,#afbar::before{content:"";position:absolute;left:50%;top:9px;width:44px;height:5px;margin-left:-22px;border-radius:3px;background:var(--line)}
+#afbar .chd{align-items:center}#afbar .x{margin:-8px -6px -8px 0;height:34px}
+.aft{font-size:15px;font-weight:700;line-height:1.25}.aft span{font-weight:500;color:var(--ink2)}
+.afsum{font-size:13px;margin-top:2px;color:var(--ink2)}.afsum b{color:var(--ink);font-size:16px}
+#afbar .afbar{height:6px;margin:6px 0 4px}
+#afbar .aflg{margin:4px 0 0;font-size:11px;gap:2px 8px}#afbar .aflg i{width:10px;height:10px}
+#afbar .aflg2{margin-top:2px;font-size:10.5px;line-height:1.3}
+#afbar .afed{margin-top:6px;padding:8px}
+#afbar .acts{margin-top:8px;gap:6px;flex-wrap:nowrap}#afbar .acts .btn{min-height:38px;padding:0 10px;font-size:14px;flex:1}
+#afbar .afed .acts{flex-wrap:wrap}#afbar .afed .acts .btn{flex:none;min-height:34px}
+#layers,#sres,#tools{padding:6px}
 #rcard{display:flex;flex-direction:column}
 #rcard[hidden]{display:none}
 .grab{display:block;flex:none;width:100%;height:20px;margin:-6px 0 0;border:0;background:none;padding:0;cursor:pointer;touch-action:none;position:relative}
@@ -979,7 +993,7 @@ button.cbtn.on{background:var(--accent-soft)}
 .pill.leg .lgi{background:none;border:0;color:inherit;font:inherit;font-weight:600;padding:5px 7px;border-radius:10px;cursor:pointer}
 .pill.leg .lgi.on{background:rgba(255,255,255,.22);font-weight:800}
 .pill.leg i{width:10px;height:10px;border-radius:50%;border:1px solid rgba(255,255,255,.55)}
-#layers,#sres,#tools{position:absolute;z-index:600;top:calc(66px + env(safe-area-inset-top,0px));background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:8px;max-height:54%;overflow:auto}
+#layers,#sres,#tools{position:absolute;z-index:600;top:calc(66px + env(safe-area-inset-top,0px));background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:8px;max-height:38%;overflow:auto}
 #layers,#tools{right:10px;width:min(320px,calc(100% - 20px))}
 #sres{left:10px;right:10px}
 .lopt{display:flex;align-items:center;gap:10px;width:100%;min-height:40px;border:0;background:none;text-align:left;font-size:14px;line-height:1.2;padding:0 8px;border-radius:10px;cursor:pointer;color:var(--ink)}
@@ -1095,6 +1109,9 @@ button.cbtn.on{background:var(--accent-soft)}
   #mapwrap{left:var(--side);bottom:0}
   .panel{padding-top:18px}
   #rcard,#empty,#medbar,#selbar,#recbar,#afbar{left:12px;right:auto;bottom:12px;width:380px;max-height:70%}
+  #medbar,#selbar,#recbar,#afbar{padding:10px 14px 12px;font-size:inherit}
+  #medbar::before,#selbar::before,#recbar::before,#afbar::before{display:none}
+  #layers,#sres,#tools{max-height:54%}
   .topbar{right:64px}
   #layers,#tools{right:64px}
   #sres{right:64px;max-width:520px}
@@ -1634,7 +1651,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-07T18:19:44Z',n:'Entrega 15 · 7 oct · 20:19'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-08T10:57:37Z',n:'Entrega 16 · 8 oct · 12:57'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -1684,7 +1701,7 @@ function renderLayers(){
   h+='<button class="lopt'+(OV.clab?' on':'')+'" data-act="ov-clab"><i class="sq"></i>Cultivo escrito en cada recinto (al acercar)</button>';
   h+=layHead('col','Colorear los recintos por',OV.colby==='cultivo'?'cultivo':'finca o propietario');
   h+='<button class="lopt'+(OV.colby!=='cultivo'?' on':'')+'" data-act="colby" data-k="finca"><i class="rd"></i>Finca o propietario</button>';
-  h+='<button class="lopt'+(OV.colby==='cultivo'?' on':'')+'" data-act="colby" data-k="cultivo"><i class="rd"></i>Cultivo (con el nombre de cada finca)</button>';
+  h+='<button class="lopt'+(OV.colby==='cultivo'?' on':'')+'" data-act="colby" data-k="cultivo"><i class="rd"></i>Cultivo</button>';
   h+='<div class="small" style="padding:4px 8px 2px">Si quitas «Mis fincas» solo ves las líneas blancas del SIGPAC. Las parcelas del Catastro aparecen al acercar el mapa.</div>';
   h+=layHead('cul','Colores de los cultivos','');
   h+='<div class="small" style="padding:0 8px">Relleno de todos los recintos</div><div class="fopr"><span>transparente</span><input id="fo-all" type="range" min="10" max="90" step="5" value="'+Math.round(fillOp()*100)+'" aria-label="Relleno de todos los recintos"><span>intenso</span></div>';
@@ -1773,8 +1790,9 @@ function focusId(){return detailId&&finca(detailId)&&!isHid(detailId)?detailId:(
 function recSel(){return sel&&S.recintos[sel.ref]&&recIn(S.recintos[sel.ref])&&finca(S.recintos[sel.ref].fincaId)&&!isHid(S.recintos[sel.ref].fincaId)?S.recintos[sel.ref]:null}
 var varOpen={};
 function varFocus(){var f=focusId();return (f&&varOpen['f:'+f])?f:null}
+function varFocusG(){var g=(grpId&&grupo(grpId))?grpId:((viewG&&grupo(viewG))?viewG:null);return (g&&varOpen['g:'+g])?g:null}
 function rgbHex(c){return '#'+c.map(function(n){return ('0'+Math.max(0,Math.min(255,n)).toString(16)).slice(-2)}).join('')}
-function viewKey(){var r=recSel();return (r?'r:'+r.ref+'|'+r.fincaId:'')+'|'+(focusId()||'')+'|'+(viewG||'')+'|'+(viewCrop||'')+'|'+(varFocus()?'v':'')}
+function viewKey(){var r=recSel();return (r?'r:'+r.ref+'|'+r.fincaId:'')+'|'+(focusId()||'')+'|'+(viewG||'')+'|'+(viewCrop||'')+'|'+(varFocus()?'v':'')+'|'+(varFocusG()||'')}
 function syncFocus(){if(viewKey()!==drawnKey)drawSaved();renderChip()}
 var polyC=new Map(), llC=new WeakMap(), drawGen=0, dashDrawn=false, cLabels=L.layerGroup().addTo(map);
 function llOf(g){var l=llC.get(g);if(!l){l=toLL(g);llC.set(g,l)}return l}
@@ -1804,6 +1822,7 @@ function drawSaved(){
   if(dashDrawn){savedGroup.clearLayers();polyC.clear();dashDrawn=false}
   var cx=drawCtx(), gen=++drawGen, ndvi=OV.ndvi, fm={}, recsOf={}, haOf={}, gRecs={}, vf=varFocus(), vtn=vf?planTones(fincaRecs(vf)):null;
   S.fincas.forEach(function(f){fm[f.id]=f});
+  var vg2=varFocusG(), vtn2=null; if(vg2)vtn2=planTones(grupoFincas(vg2).reduce(function(a,f){return a.concat(fincaRecs(f.id))},[]));
   allRecs().forEach(function(r){
     var f=fm[r.fincaId]; if(!f)return;
     (recsOf[f.id]||(recsOf[f.id]=[])).push(r); haOf[f.id]=(haOf[f.id]||0)+r.ha;
@@ -1814,6 +1833,7 @@ function drawSaved(){
       var cn=r.cultivo||NOCROP, g=f.grupo?grupo(f.grupo):null;
       var col=cx.byCrop?cropColor(cn):(g?ownerColor(g):fcolor(f)), fop=cx.byCrop?cropOp(cn):fillOp();
       if(vtn&&f.id===vf&&vtn[cn]){var tn=vtn[cn][varNorm(r.variedad)];if(tn){col=rgbHex(toneRGB(hex2rgb(col),tn));fop=Math.max(fop,.45)}}
+      if(vtn2&&f.grupo===vg2&&vtn2[cn]){var tn2=vtn2[cn][varNorm(r.variedad)];if(tn2){col=rgbHex(toneRGB(hex2rgb(cropColor(cn)),tn2));fop=Math.max(fop,.45)}}
       st={renderer:canvas,color:col,weight:ndvi?3:3.4,opacity:1,fill:!ndvi,fillColor:col,fillOpacity:fop,dashArray:null,interactive:false};
     }else st={renderer:canvas,color:'#ffffff',weight:1.3,opacity:.55,dashArray:'5 5',fill:false,fillOpacity:0,interactive:false};
     putPoly(r,st,gen);
@@ -1826,13 +1846,12 @@ function drawSaved(){
       m.on('click',click); labels.addLayer(m);
     };
     S.x.grupos.forEach(function(g){
-      if(OV.colby==='cultivo')return;
       var rs=gRecs[g.id]; if(!rs||!rs.length)return;
       var ha=rs.reduce(function(a,r){return a+r.ha},0);
       lab(recsPoint(rs),ownerColor(g),g.nombre,ha,!!(focus||(cx.vg&&cx.vg!==g.id)||cx.vc),function(){goGrupo(g.id,true)});
     });
     S.fincas.forEach(function(f){
-      if(OV.colby!=='cultivo'&&grupo(f.grupo)&&f.id!==focus)return;
+      if(grupo(f.grupo)&&f.id!==focus)return;
       var rs=recsOf[f.id]; if(!rs)return;
       lab(recsPoint(rs),fcolor(f),f.nombre,haOf[f.id],!!((focus&&f.id!==focus)||(cx.vg&&f.grupo!==cx.vg)||cx.vc),function(){goFinca(f.id,true)});
     });
@@ -2929,6 +2948,7 @@ function grupoDetailHTML(id){
   h+='<div class="big3"><div><span>Superficie</span><b>'+ha2(st.tot)+' ha</b></div><div><span>Fincas</span><b>'+fl.length+'</b></div><div><span>Recintos</span><b>'+st.n+'</b></div>'+(anyA?'<div><span>Árboles (aprox.)</span><b>'+nf(arb,0)+'</b></div>':'')+'</div>';
   if(st.n){
     h+=barHTML(st.byCrop,st.tot);
+    h+=varBlockHTML('g:'+id,'Variedades',varGroups(fl.reduce(function(a,f){return a.concat(fincaRecs(f.id))},[])));
     if(st.byRg.regadio||st.byRg.secano)h+='<div class="small" style="margin-top:6px">Regadío '+ha2(st.byRg.regadio||0)+' ha · Secano '+ha2(st.byRg.secano||0)+' ha'+(st.byRg['']?' · Sin indicar '+ha2(st.byRg[''])+' ha':'')+'</div>';
   }
   h+='<div class="acts"><button class="btn primary" data-act="grp-map" data-id="'+id+'"'+(st.n?'':' disabled')+'>Ver en el mapa</button><button class="btn" data-act="grp-pdf" data-id="'+id+'"'+(st.n?'':' disabled')+'>Informe en PDF</button></div>';
@@ -3313,7 +3333,7 @@ function renderChip(){
   if(f){c.hidden=false;c.removeAttribute('data-act');c.innerHTML='Añadiendo a: <b>'+esc(f.nombre)+'</b> · '+ha2(fincaHa(f.id))+' ha';fin.hidden=false}
   else if(scope){c.hidden=false;c.setAttribute('data-act','focus-clear');c.innerHTML='Viendo: '+(title?'<b>'+esc(title)+'</b>':'')+(vc?(title?' · ':'')+'<b>'+esc(vc)+'</b>':'')+' &nbsp;✕';fin.hidden=true}
   else{c.hidden=true;fin.hidden=true}
-  var sf=null, showAll=(OV.colby==='cultivo'&&!scope&&!recSel());
+  var sf=null, showAll=false;
   if(scope==='f')sf=stats().per[fo];
   else if(scope==='g'){var gs0=stats(grupoFincas(vg).map(function(x){return x.id}));if(gs0.n)sf={n:gs0.n,crops:gs0.byCrop}}
   else if(scope==='c'||showAll){var gs1=stats();if(gs1.n)sf={n:gs1.n,crops:gs1.byCrop}}
@@ -5729,19 +5749,19 @@ function afDraw(){
   afLabelsRedraw();
 }
 function afBarHTML(){
-  var pg=afProg(), h='<div class="chd"><div><div class="ref" style="font-family:var(--sans)">Aforo de cosecha</div><div class="sub">'+esc(afScopeName())+' · Campaña '+af.year+'</div></div><button class="x" data-act="af-close" aria-label="Cerrar">×</button></div>';
-  h+='<div class="mbig">'+(pg.left?'Quedan '+pg.left+(pg.left===1?' recinto':' recintos'):'¡Todos hechos!')+'</div><div class="small">Hechos '+pg.done+' de '+pg.n+(pg.omit?' (de ellos '+pg.omit+' sin aforar)':'')+' · '+ha2(pg.haDone)+' de '+ha2(pg.ha)+' ha</div>';
+  var pg=afProg(), h='<div class="chd"><div class="aft">Aforo <span>· '+esc(afScopeName())+' · '+af.year+'</span></div><button class="x" data-act="af-close" aria-label="Cerrar">×</button></div>';
+  h+='<div class="afsum"><b>'+(pg.left?'Quedan '+pg.left:'¡Todos hechos!')+'</b> · Hechos '+pg.done+' de '+pg.n+(pg.omit?' ('+pg.omit+' sin aforar)':'')+' · '+ha2(pg.haDone)+' de '+ha2(pg.ha)+' ha</div>';
   h+='<div class="afbar"><i style="width:'+(pg.n?Math.round(pg.done/pg.n*100):0)+'%"></i></div>';
   var cs={}; afRecs().forEach(function(r){var c=r.cultivo||NOCROP;cs[c]=1});
-  h+='<div class="aflg">'+Object.keys(cs).sort().map(function(c){return '<span><i style="background:'+cropColor(c)+'"></i>'+esc(c)+'</span>'}).join('')+'</div><div class="small aflg2">Borde blanco: ya aforado · naranja discontinuo: pendiente · gris punteado: no se afora</div>';
   var r=af.cur&&S.recintos[af.cur];
+  if(!r)h+='<div class="aflg">'+Object.keys(cs).sort().map(function(c){return '<span><i style="background:'+cropColor(c)+'"></i>'+esc(c)+'</span>'}).join('')+'</div><div class="aflg2 small">Borde: blanco hecho · naranja pendiente · gris no se afora</div>';
   if(r){
     var v=afVal(af.year,r.ref);
     h+='<div class="afed"><div><b>'+esc(refShort(r.ref))+'</b>'+(r.nombre?' · '+esc(r.nombre):'')+'</div><div class="small">'+esc(r.cultivo||'Sin cultivo')+(r.variedad?' · '+esc(r.variedad):'')+' · '+ha4(r.ha)+' ha</div>';
-    h+='<div class="row" style="margin-top:8px"><input id="af-kg" class="in" inputmode="decimal" placeholder="kg por hectárea" value="'+(typeof v==='number'?String(v).replace('.',','):'')+'" autocomplete="off" aria-label="Kilos por hectárea"><button class="btn primary" data-act="af-save">Guardar</button></div>';
+    h+='<div class="row" style="margin-top:6px"><input id="af-kg" class="in" inputmode="decimal" placeholder="kg por hectárea" value="'+(typeof v==='number'?String(v).replace('.',','):'')+'" autocomplete="off" aria-label="Kilos por hectárea"><button class="btn primary" data-act="af-save">Guardar</button></div>';
     h+='<div class="acts" style="margin-top:6px"><button class="btn sm" data-act="af-skip">No aforar este recinto</button>'+(v!==undefined?'<button class="btn sm" data-act="af-clear">Quitar dato</button>':'')+'</div></div>';
-  }else h+='<div class="small" style="margin-top:8px">Toca un recinto en el mapa y escribe los kg por hectárea. Cada recinto lleva el color de su cultivo; los que faltan tienen el borde naranja discontinuo.</div>';
-  h+='<div class="acts">'+(pg.left?'<button class="btn" data-act="af-next">Siguiente pendiente ›</button>':'')+'<button class="btn primary" data-act="af-report">Terminar y ver informe</button></div>';
+  }else h+='<div class="small" style="margin-top:4px">Toca un recinto en el mapa.</div>';
+  h+='<div class="acts">'+(pg.left?'<button class="btn" data-act="af-next">Siguiente ›</button>':'')+'<button class="btn primary" data-act="af-report">Terminar e informe</button></div>';
   return h;
 }
 function renderAf(){
@@ -6368,6 +6388,8 @@ try{if(bkAdopt())lsSet(KEY,JSON.stringify(S))}catch(e){}
 
 /* ───────── eventos ───────── */
 document.addEventListener('click',function(ev){
+  var pb=ev.target&&ev.target.id&&/^(medbar|selbar|recbar|afbar)$/.test(ev.target.id)?ev.target:null;
+  if(pb&&!isDesk()){var rr=pb.getBoundingClientRect();if(ev.clientY-rr.top<30){pb.classList.toggle('big');return}}
   var b=ev.target.closest&&ev.target.closest('[data-act],#nav button[data-tab]'); if(!b)return;
   if(b.dataset.tab){setTab(b.dataset.tab);return}
   var act=b.dataset.act, id=b.dataset.id;
