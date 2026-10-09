@@ -1654,7 +1654,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-09T10:48:53Z',n:'Entrega 18 · 9 oct · 12:48'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-09T19:03:56Z',n:'Entrega 19 · 9 oct · 21:03'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -3994,11 +3994,29 @@ function fnCall(accion,args,tokIn){
     });
   }).catch(function(e){return {error:(e&&e.code==='nologin')?'nologin':'red'}});
 }
-function signOut(){SY={};try{localStorage.removeItem(KEYS)}catch(e){}renderSync(true);updateDot()}
+function srvLogout(scope){
+  var tok=SY.at; if(!tok)return Promise.resolve(false);
+  return sbFetch('/auth/v1/logout?scope='+(scope==='global'?'global':'local'),{method:'POST'},tok).then(function(r){return r.ok||r.status===401||r.status===403},function(){return false}).catch(function(){return false});
+}
+function signOut(scope){
+  var p=srvLogout(scope);
+  SY={};try{localStorage.removeItem(KEYS)}catch(e){}renderSync(true);updateDot();
+  return p;
+}
+function kickOut(){
+  /* la sesión ya no vale (contraseña cambiada, usuario borrado, caducada): se cierra y se pide entrar de nuevo */
+  SY={};try{localStorage.removeItem(KEYS)}catch(e){}
+  loginMsg='Tu sesión se ha cerrado (por ejemplo, porque se cambió la contraseña). Entra otra vez para sincronizar. Tus datos siguen guardados en este aparato.';
+  syncErr='';
+  try{toast('Tu sesión se ha cerrado. Vuelve a entrar en Datos.')}catch(e){}
+  try{if(!GTOK)setTab('datos')}catch(e){}
+  updateDot();
+}
 function authToken(force){
   if(!force&&SY.at&&Date.now()<SY.exp-60000)return Promise.resolve(SY.at);
   if(!SY.rt)return Promise.reject({code:'nologin'});
   return sbFetch('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:JSON.stringify({refresh_token:SY.rt})}).then(function(r){
+    if(r.status===429)throw {code:'net'};
     if(r.status>=400&&r.status<500){var e={code:'nologin'};throw e}
     if(!r.ok)throw {code:'net'};
     return r.json();
@@ -4076,7 +4094,7 @@ function syncNow(manual){
   if(syncing){syncAgain=true;return}
   syncing=true; syncErr=''; renderSync();
   syncRound().then(function(){ if(manual)toast('Sincronizado'); },function(e){
-    if(e&&(e.code==='nologin'||e.code==='expired')){ SY.rt=null; SY.at=null; saveSY(); syncErr='Hay que volver a entrar con tu usuario y contraseña.'; }
+    if(e&&(e.code==='nologin'||e.code==='expired')){ kickOut(); }
     else syncErr='Sin conexión. Los cambios se subirán solos cuando vuelva.';
   }).then(function(){
     syncing=false; renderSync(); setTimeout(phFlush,0); setTimeout(lkTick,0);
@@ -4097,7 +4115,7 @@ function renderSync(force){
     var pend=!!S.dirty;
     var st=syncing?'Sincronizando…':syncErr?esc(syncErr):pend?'Hay cambios por subir.':'Todo sincronizado'+(SY.last?' · '+agoTxt(SY.last):'')+(SY.act?' ('+esc(SY.act.toLowerCase())+')':'');
     h+='<div class="fcard"><div class="t"><b>Conectado'+(SY.name?' como '+esc(SY.name):'')+'</b></div><div class="small"'+(syncErr?' style="color:var(--warn-ink)"':'')+'>'+st+'</div>'+
-      '<div class="acts"><button class="btn sm primary" data-act="sync-now">Sincronizar ahora</button><button class="btn sm" data-act="sync-out">Salir</button></div></div>';
+      '<div class="acts"><button class="btn sm primary" data-act="sync-now">Sincronizar ahora</button><button class="btn sm" data-act="sync-out">Salir</button><button class="btn sm" data-act="sync-out-all">Salir en todos los aparatos</button></div></div>';
   }
   box.innerHTML=h;
 }
@@ -7082,6 +7100,7 @@ document.addEventListener('click',function(ev){
       toMap(); setTimeout(function(){map.invalidateSize();select({ref:rr.ref,ha:rr.ha,uso:rr.uso,geom:rr.geom,pt:rr.pt},true)},80); break}
     case 'sync-now':syncNow(true);break;
     case 'sync-out':signOut();toast('Has salido. Los datos siguen en este aparato.');break;
+    case 'sync-out-all':signOut('global').then(function(ok){toast(ok?'Sesión cerrada en todos los aparatos.':'Has salido aquí, pero no he podido avisar al servidor (¿sin conexión?). Repite desde otro aparato con internet.')});break;
     case 'export':doExport();break;
     case 'export-share':doExportShare();break;
     case 'import-pick':{var inp=$('#impfile');if(inp)inp.click();break}
