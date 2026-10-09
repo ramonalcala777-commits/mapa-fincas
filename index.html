@@ -1651,7 +1651,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-08T10:57:37Z',n:'Entrega 16 · 8 oct · 12:57'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-09T08:29:43Z',n:'Entrega 16.1 · 9 oct · 10:29'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -5964,35 +5964,43 @@ function afXlsx(d,cmp){
   var hd=(O?['Propietario']:[]).concat(['Finca','Referencia SIGPAC','Nombre','Cultivo','Variedad','Superficie (ha)','kg/ha','kg totales']);
   var cC=O?4:3, cH=O?6:5, cK=O?7:6, cT=O?8:7, nB=hd.length;
   var r1=[H(hd)];
-  d.rows.forEach(function(r,i){var n=i+2;r1.push((O?[r.prop]:[]).concat([r.finca,refLabel(r.ref),r.nombre||'-',r.cultivo,r.variedad,{v:+r.ha.toFixed(4),s:3},{v:r.kgha,s:3},{v:r.kg,f:LT(cH)+n+'*'+LT(cK)+n,s:4}]))});
+  d.rows.forEach(function(r,i){var n=i+2;r1.push((O?[r.prop]:[]).concat([r.finca,refLabel(r.ref),r.nombre||'-',r.cultivo,r.vname,{v:+r.ha.toFixed(4),s:3},{v:r.kgha,s:3},{v:r.kg,f:LT(cH)+n+'*'+LT(cK)+n,s:4}]))});
   var L=d.rows.length+1; r1.push([]);
-  d.byCult.forEach(function(e,i){var n=L+2+i, q=function(c){return 'SUMIF($'+LT(cC)+'$2:$'+LT(cC)+'$'+L+',$'+LT(cC)+n+','+LT(c)+'$2:'+LT(c)+'$'+L+')'}, row=[];
+  d.byCult.forEach(function(e){var n=r1.length+1, q=function(c){return 'SUMIF($'+LT(cC)+'$2:$'+LT(cC)+'$'+L+',$'+LT(cC)+n+','+LT(c)+'$2:'+LT(c)+'$'+L+')'}, row=[];
     for(var k=0;k<nB;k++)row.push({v:k===0?'TOTAL':(k===cC?e.cultivo:''),s:2});
     row[cH]={v:e.ha,f:q(cH),s:6};row[cK]={v:e.kgha,f:'IF('+LT(cH)+n+'=0,0,'+LT(cT)+n+'/'+LT(cH)+n+')',s:6};row[cT]={v:e.kg,f:q(cT),s:5};
-    r1.push(row)});
+    r1.push(row);
+    /* desglose por variedad (kg de cada variedad dentro del cultivo), con fórmulas */
+    if(e.showVars)e.vars.forEach(function(v){
+      var m=r1.length+1, qv=function(c){return 'SUMIFS('+LT(c)+'$2:'+LT(c)+'$'+L+',$'+LT(cC)+'$2:$'+LT(cC)+'$'+L+',$'+LT(cC)+m+',$'+LT(cC+1)+'$2:$'+LT(cC+1)+'$'+L+',$'+LT(cC+1)+m+')'}, vr=[];
+      for(var k=0;k<nB;k++)vr.push(k===0?'↳ variedad':(k===cC?e.cultivo:(k===cC+1?v.vname:'')));
+      vr[cH]={v:+v.ha.toFixed(4),f:qv(cH),s:3};vr[cK]={v:v.kgha,f:'IF('+LT(cH)+m+'=0,0,'+LT(cT)+m+'/'+LT(cH)+m+')',s:4};vr[cT]={v:v.kg,f:qv(cT),s:4};
+      r1.push(vr);
+    });
+  });
   sh.push({name:'Por recinto',rows:r1,widths:(O?[24]:[]).concat([26,30,22,18,18,16,12,14])});
   /* Por finca */
   var r2=[H((O?['Propietario']:[]).concat(['Finca','Cultivo','Variedad','Recintos','Superficie (ha)','kg totales','kg/ha (media)']))], last='';
   d.byFinca.forEach(function(e){
     var k=e.prop+'\u0001'+e.finca, first=k!==last; last=k;
-    r2.push((O?[{v:e.prop,s:first?2:0}]:[]).concat([{v:e.finca,s:first?2:0},{v:e.cultivo,s:2},{v:e.showVars?'Todas':'',s:2},{v:e.n,s:5},{v:e.ha,s:6},{v:e.kg,s:5},{v:e.kgha,s:5}]));
-    if(e.showVars)e.vars.forEach(function(v){r2.push((O?['']:[]).concat(['','',v.vname,v.n,{v:+v.ha.toFixed(4),s:3},{v:v.kg,s:4},{v:v.kgha,s:4}]))});
+    r2.push((O?[{v:e.prop,s:first?2:0}]:[]).concat([{v:e.finca,s:first?2:0},{v:e.cultivo,s:2},{v:'',s:2},{v:e.n,s:5},{v:e.ha,s:6},{v:e.kg,s:5},{v:e.kgha,s:5}]));
+    if(e.showVars)e.vars.forEach(function(v){r2.push((O?['']:[]).concat(['',e.cultivo,v.vname,v.n,{v:+v.ha.toFixed(4),s:3},{v:v.kg,s:4},{v:v.kgha,s:4}]))});
   });
   sh.push({name:'Por finca',rows:r2,widths:(O?[24]:[]).concat([28,18,18,10,16,14,14])});
   /* Por propietario (solo cuando el aforo es de un propietario) */
   if(O){
     var r3=[H(['Propietario','Cultivo','Variedad','Recintos','Superficie (ha)','kg totales','kg/ha (media)'])];
     d.byProp.forEach(function(e){
-      r3.push([{v:e.prop,s:2},{v:e.cultivo,s:2},{v:e.showVars?'Todas':'',s:2},{v:e.n,s:5},{v:e.ha,s:6},{v:e.kg,s:5},{v:e.kgha,s:5}]);
-      if(e.showVars)e.vars.forEach(function(v){r3.push(['','',v.vname,v.n,{v:+v.ha.toFixed(4),s:3},{v:v.kg,s:4},{v:v.kgha,s:4}])});
+      r3.push([{v:e.prop,s:2},{v:e.cultivo,s:2},{v:'',s:2},{v:e.n,s:5},{v:e.ha,s:6},{v:e.kg,s:5},{v:e.kgha,s:5}]);
+      if(e.showVars)e.vars.forEach(function(v){r3.push(['',e.cultivo,v.vname,v.n,{v:+v.ha.toFixed(4),s:3},{v:v.kg,s:4},{v:v.kgha,s:4}])});
     });
     sh.push({name:'Por propietario',rows:r3,widths:[28,18,18,10,16,14,14]});
   }
   /* Totales por cultivo */
   var r4=[H(['Cultivo','Variedad','Recintos','Superficie (ha)','kg totales','kg/ha (media)'])];
   d.byCult.forEach(function(e){
-    r4.push([{v:e.cultivo,s:2},{v:e.showVars?'Todas':'',s:2},{v:e.n,s:5},{v:e.ha,s:6},{v:e.kg,s:5},{v:e.kgha,s:5}]);
-    if(e.showVars)e.vars.forEach(function(v){r4.push(['',v.vname,v.n,{v:+v.ha.toFixed(4),s:3},{v:v.kg,s:4},{v:v.kgha,s:4}])});
+    r4.push([{v:e.cultivo,s:2},{v:'',s:2},{v:e.n,s:5},{v:e.ha,s:6},{v:e.kg,s:5},{v:e.kgha,s:5}]);
+    if(e.showVars)e.vars.forEach(function(v){r4.push([e.cultivo,v.vname,v.n,{v:+v.ha.toFixed(4),s:3},{v:v.kg,s:4},{v:v.kgha,s:4}])});
   });
   sh.push({name:'Totales por cultivo',rows:r4,widths:[24,18,10,16,14,14]});
   if(cmp){
