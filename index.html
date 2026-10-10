@@ -1802,7 +1802,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-10T14:19:26Z',n:'Entrega 26 · 10 oct · 16:19'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-10T15:00:39Z',n:'Entrega 27 · 10 oct · 17:00'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -1986,8 +1986,8 @@ function drawSaved(){
     if(recOn(r,f,cx)){
       var cn=r.cultivo||NOCROP, g=f.grupo?grupo(f.grupo):null;
       var col=cx.byCrop?cropColor(cn):(g?ownerColor(g):fcolor(f)), fop=cx.byCrop?cropOp(cn):fillOp();
-      if(vtn&&f.id===vf&&vtn[cn]){var tn=vtn[cn][varNorm(r.variedad)];if(tn){col=rgbHex(toneRGB(hex2rgb(col),tn));fop=Math.max(fop,.45)}}
-      if(vtn2&&f.grupo===vg2&&vtn2[cn]){var tn2=vtn2[cn][varNorm(r.variedad)];if(tn2){col=rgbHex(toneRGB(hex2rgb(cropColor(cn)),tn2));fop=Math.max(fop,.45)}}
+      if(vtn&&f.id===vf&&vtn[cn]){var tn=vtn[cn][varKey(cn,r.variedad)];if(tn){col=rgbHex(toneRGB(hex2rgb(col),tn));fop=Math.max(fop,.45)}}
+      if(vtn2&&f.grupo===vg2&&vtn2[cn]){var tn2=vtn2[cn][varKey(cn,r.variedad)];if(tn2){col=rgbHex(toneRGB(hex2rgb(cropColor(cn)),tn2));fop=Math.max(fop,.45)}}
       st={renderer:canvas,color:col,weight:ndvi?3:3.4,opacity:1,fill:!ndvi,fillColor:col,fillOpacity:fop,dashArray:null,interactive:false};
     }else st={renderer:canvas,color:'#ffffff',weight:1.3,opacity:.55,dashArray:'5 5',fill:false,fillOpacity:0,interactive:false};
     putPoly(r,st,gen);
@@ -5222,15 +5222,18 @@ function recFinca(id){
 
 /* ---- variedades en planos y resúmenes ---- */
 function varNorm(v){return noAcc(String(v||'')).toLowerCase().replace(/\s+/g,' ').trim()}
+/* Entrega 27: «Pistacho Sirora» en un recinto de Pistacho es la variedad «Sirora» */
+function varStrip(c,v){var raw=String(v||'').trim().replace(/\s+/g,' '), cs=String(c||'').trim().replace(/\s+/g,' '); if(!raw||!cs)return raw; var cw=cs.split(' ').length, w=raw.split(' '); if(w.length>=cw&&varNorm(w.slice(0,cw).join(' '))===varNorm(cs))return w.slice(cw).join(' '); return raw}
+function varKey(c,v){return varNorm(varStrip(c,v))}
 function varName(v){var s=String(v||'').trim().replace(/\s+/g,' ');return s?s.charAt(0).toUpperCase()+s.slice(1):'Sin variedad'}
 /* agrupa por cultivo y variedad. Devuelve [{c,ha,g:[{key,name,ha}]}] ordenado por ha (sin variedad, siempre al final) */
 function varGroups(rows){
   var cr={};
   rows.forEach(function(r){
-    var c=r.cultivo||NOCROP, k=varNorm(r.variedad), o=cr[c]||(cr[c]={c:c,ha:0,m:{}});
-    var g=o.m[k]||(o.m[k]={key:k,name:varName(r.variedad),ha:0,n:{}});
+    var c=r.cultivo||NOCROP, vs=varStrip(c,r.variedad), k=varNorm(vs), o=cr[c]||(cr[c]={c:c,ha:0,m:{}});
+    var g=o.m[k]||(o.m[k]={key:k,name:varName(vs),ha:0,n:{}});
     g.ha+=r.ha||0; o.ha+=r.ha||0;
-    var nm=varName(r.variedad); g.n[nm]=(g.n[nm]||0)+1;
+    var nm=varName(vs); g.n[nm]=(g.n[nm]||0)+1;
   });
   return Object.keys(cr).map(function(c){
     var o=cr[c], g=Object.keys(o.m).map(function(k){var x=o.m[k];var best=Object.keys(x.n).sort(function(a,b){return x.n[b]-x.n[a]})[0];return {key:x.key,name:x.key?best:'Sin variedad',ha:x.ha}});
@@ -5377,8 +5380,8 @@ function esriBlob(bb,w,h){
   var go=function(n){return fetchBlobT(u,60000,/image\/jp/).catch(function(e){if(n<1&&!netDead(e))return go(n+1);throw e})};
   return go(0);
 }
-function esriImage(ext,wpx,hpx){
-  var k=Math.min(1,4000/Math.max(wpx,hpx)), W=Math.max(64,Math.round(wpx*k)), H=Math.max(64,Math.round(hpx*k)), T=2000;
+function esriImage(ext,wpx,hpx,T){
+  T=T||2000; var k=Math.min(1,3000/Math.max(wpx,hpx)), W=Math.max(64,Math.round(wpx*k)), H=Math.max(64,Math.round(hpx*k));
   if(W<=T&&H<=T)return esriBlob(ext,W,H).then(blobDataURL);
   var mx=(ext.maxx-ext.minx)/W, my=(ext.maxy-ext.miny)/H, jobs=[];
   for(var y0=0;y0<H;y0+=T)for(var x0=0;x0<W;x0+=T){
@@ -5390,7 +5393,19 @@ function esriImage(ext,wpx,hpx){
 }
 /* Entrega 26: un 5xx, un tiempo agotado o un fallo de red (el navegador no deja leer el error del IGN caído) = servidor que no responde */
 function netDead(e){return !!(e&&(e.st>=500||e.name==='AbortError'||(!e.st&&e.message!=='tipo'&&e.message!=='img'&&e.message!=='canvas'&&e.message!=='jpg')))}
-var NOPH={asked:false,skip:false};
+var NOPH={asked:false,skip:false,fails:0};
+/* Entrega 27: una página sin foto no frena las demás; solo si fallan dos seguidas se pregunta (una vez) si reintentar o seguir sin foto */
+function photoGate(ph,nofoto,retry){
+  if(ph.url){NOPH.fails=0;return ph}
+  if(nofoto||ph.skipped)return ph;
+  NOPH.fails++;
+  if(NOPH.fails>=2&&!NOPH.asked){
+    NOPH.asked=true;
+    if(photoAsk(ph.why||'sin respuesta')){IGNDOWN=false;IGNWHY='';return retry().then(function(p2){if(p2.url)NOPH.fails=0;else NOPH.skip=true;return p2})}
+    NOPH.skip=true;
+  }
+  return ph;
+}
 function photoAsk(why){return typeof confirm==='function'&&confirm('No llegan las fotos de fondo ('+why+').\n\nAceptar = volver a intentarlo ahora.\nCancelar = seguir sin foto de fondo en el resto de páginas.')}
 function whyErr(e){
   if(!e)return 'error desconocido';
@@ -5404,7 +5419,7 @@ function whyErr(e){
 var IGNWHY='';
 function planFoto(ext,wpx,hpx,skip,prog){
   prog=prog||function(){};
-  if(skip)return Promise.resolve({url:null,src:null});
+  if(skip)return Promise.resolve({url:null,src:null,skipped:true});
   var big=wpx>1536||hpx>1536, isDead=netDead;
   var ign=function(tile){prog('foto del IGN');return wmsImage(ext,wpx,hpx,true,function(d,t){prog('foto del IGN, '+d+' de '+t)},{tile:tile,retries:1,ms:15000}).then(function(u){return {url:u,src:'ign'}})};
   var first=IGNDOWN?Promise.reject(Object.assign(new Error('down'),{st:599,again:1})):ign(2048);
@@ -5417,7 +5432,8 @@ function planFoto(ext,wpx,hpx,skip,prog){
     if(!e.again)IGNWHY=whyErr(e);
     if(isDead(e))IGNDOWN=true;
     prog(IGNDOWN?'foto de Esri (el IGN no responde)':'foto de Esri');
-    return esriImage(ext,wpx,hpx).then(function(u){return {url:u,src:'esri'}}).catch(function(e2){return {url:null,src:null,why:'IGN: '+(IGNWHY||'sin respuesta')+'; Esri: '+whyErr(e2)}});
+    /* Entrega 27: si Esri no contesta a tiempo con trozos de 2000 px, se repite la página con trozos de 1000 px (más ligeros) */
+    return esriImage(ext,wpx,hpx,2000).catch(function(){return esriImage(ext,wpx,hpx,1000)}).then(function(u){return {url:u,src:'esri'}}).catch(function(e2){return {url:null,src:null,why:'IGN: '+(IGNWHY||'sin respuesta')+'; Esri: '+whyErr(e2)}});
   });
 }
 /* píxeles del plano: resolución real del PNOA (25 cm) con tope de memoria */
@@ -5650,9 +5666,9 @@ function locText(rows){
 }
 function dmsC(v,pos,neg){var a=Math.abs(v),d=Math.floor(a),m=Math.floor((a-d)*60),sc=((a-d)*60-m)*60; sc=Math.round(sc*100)/100; if(sc>=60){sc-=60;m++} if(m>=60){m-=60;d++} return d+'°'+m+"'"+sc.toFixed(2)+'"'+(v>=0?pos:neg)}
 /* Leyenda: reparte los cultivos (con sus variedades) en columnas a todo lo ancho de la caja, reduciendo la letra hasta que quepa */
-function planLegend(doc,blocks,x,y,w,h,k){
-  var ax=x+3*k, ay=y+7.4*k, aw=w-6*k, ah=h-7.4*k-2*k, best=null, fs;
-  for(fs=6.4*k;fs>=2.6;fs-=.2){
+function planLegendFit(doc,blocks,maxW,h,k){
+  var aw=maxW-6*k, ah=h-7.4*k-2*k, best=null, fs;
+  for(fs=7.2*k;fs>=2.6;fs-=.2){
     doc.setFontSize(fs);
     var lh=fs*.3528*1.55, maxL=Math.max(1,Math.floor(ah/lh)), cols=[[]], sq=fs*.3528*1.05;
     blocks.forEach(function(bl){
@@ -5661,11 +5677,15 @@ function planLegend(doc,blocks,x,y,w,h,k){
       bl.forEach(function(ln){if(cur.length>=maxL)cols.push(cur=[]);cur.push(ln)});
     });
     var ws=cols.map(function(c){var mx=0;c.forEach(function(ln){doc.setFont('helvetica',ln.bold?'bold':'normal');mx=Math.max(mx,(ln.sw||ln.border?sq+1.6:0)+(ln.ind?2.4:0)+doc.getTextWidth(ln.t))});return mx});
-    var tot=ws.reduce(function(a,b){return a+b},0)+(cols.length-1)*5*k;
+    var tot=ws.reduce(function(a,b){return a+b},0)+(cols.length-1)*6*k;
     best={fs:fs,lh:lh,cols:cols,ws:ws,sq:sq,tot:tot};
     if(tot<=aw)break;
   }
-  var n=best.cols.length, gap=n>1?Math.min((aw-best.ws.reduce(function(a,b){return a+b},0))/(n-1),30*k):0, used=best.ws.reduce(function(a,b){return a+b},0)+gap*(n-1), cx=ax+Math.max(0,(aw-used)/2);
+  best.boxW=Math.min(maxW,Math.max(34*k,best.tot+6*k));
+  return best;
+}
+function planLegendDraw(doc,best,x,y,k){
+  var ax=x+3*k, ay=y+7.4*k, cx=ax;
   doc.setFontSize(best.fs);
   best.cols.forEach(function(c,ci){
     c.forEach(function(ln,li){
@@ -5674,7 +5694,7 @@ function planLegend(doc,blocks,x,y,w,h,k){
       else if(ln.sw){doc.setFillColor.apply(doc,ln.sw);doc.rect(tx,yy-best.sq*.85,best.sq,best.sq,'F');tx+=best.sq+1.6}
       doc.setFont('helvetica',ln.bold?'bold':'normal'); doc.setTextColor(0,0,0); doc.text(ln.t,tx,yy);
     });
-    cx+=best.ws[ci]+gap;
+    cx+=best.ws[ci]+6*k;
   });
 }
 function planCajetines(doc,G,ext,seen,TONES,op,name){
@@ -5684,7 +5704,7 @@ function planCajetines(doc,G,ext,seen,TONES,op,name){
   doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.setTextColor(0,0,0);
   /* texto de fuentes, justo sobre los cajetines */
   doc.setFont('helvetica','normal'); doc.setFontSize(6*Math.max(k,.8)); doc.setTextColor(110,120,100);
-  doc.text('ETRS89 / UTM 30N (EPSG:25830) · Escala 1:'+nf(G.S,0)+' válida al imprimir al 100 % en '+(rec.paper==='a3'?'A3':'A4')+' · '+(op.esri?'Imagen © Esri':'Imagen © PNOA · Instituto Geográfico Nacional')+' · Recintos © SIGPAC · FEGA / MAPA',M,top-1.8);
+  doc.text((op.esri?'Imagen © Esri':'Imagen © PNOA · Instituto Geográfico Nacional')+' · Recintos © SIGPAC · FEGA / MAPA',M,top-1.8);
   doc.setTextColor(0,0,0);
   /* ---- ORIENTACIÓN ---- */
   doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.rect(M,top,ow,hC);
@@ -5703,8 +5723,6 @@ function planCajetines(doc,G,ext,seen,TONES,op,name){
     doc.setFontSize(4.6*k); doc.text(dmsC(ll[1],'N','S'),M+1.1*k,top+26.5*k); doc.text(dmsC(ll[0],'E','O'),M+1.1*k,top+28.2*k);
   }
   /* ---- LEYENDA ---- */
-  doc.setLineWidth(.2); doc.rect(lx,top,lw,hC);
-  doc.setFont('helvetica','normal'); doc.setFontSize(4.4*k); doc.setTextColor(0,0,0); doc.text('LEYENDA:',lx+.7*k,top+1.9*k);
   var blocks=[], b0=[{t:(op.over?'Recintos del conjunto: ':'Recintos de esta zona: ')+rows.length+' · '+nf(totHa,2)+' ha',bold:true}];
   var pdh={eco:0,cv:0}; rows.forEach(function(r){var q=prodKind(recProd(r.ref));if(q==='eco'||q==='cv')pdh[q]+=r.ha});
   var pc=hex2rgb(PROD_COL);
@@ -5716,7 +5734,11 @@ function planCajetines(doc,G,ext,seen,TONES,op,name){
     if(T)o.g.forEach(function(g){bl.push({t:g.name+' '+nf(g.ha,2)+' ha',ind:true,sw:toneRGB(base,T[g.key]||0)})});
     blocks.push(bl);
   });
-  planLegend(doc,blocks,lx,top,lw,hC,k); doc.setDrawColor(0,0,0); doc.setLineWidth(.2);
+  /* Entrega 27: la caja de leyenda se ajusta a su contenido; el límite es el cajetín de datos */
+  var lay=planLegendFit(doc,blocks,dx-lx-3*k,hC,k);
+  doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.rect(lx,top,lay.boxW,hC);
+  doc.setFont('helvetica','normal'); doc.setFontSize(4.4*k); doc.setTextColor(0,0,0); doc.text('LEYENDA:',lx+.7*k,top+1.9*k);
+  planLegendDraw(doc,lay,lx,top,k); doc.setDrawColor(0,0,0); doc.setLineWidth(.2);
   /* ---- DATOS ---- */
   var rh=[14,14,14,28,15.1].map(function(v){return v*u}), ry=[top]; rh.forEach(function(v){ry.push(ry[ry.length-1]+v)});
   doc.setLineWidth(.2); doc.rect(dx,top,dw,hC);
@@ -5753,7 +5775,7 @@ function planoBuild(name,G,ext,rowsIn,imgUrl,opt){
   /* recintos */
   var seen={}, geo={}, TONES=planTones(op.toneRows||rowsIn);
   rowsIn.forEach(function(r){
-    var col=toneRGB(hex2rgb(cropColor(r.cultivo||NOCROP)),(TONES[r.cultivo||NOCROP]||{})[varNorm(r.variedad)]), any=false;
+    var col=toneRGB(hex2rgb(cropColor(r.cultivo||NOCROP)),(TONES[r.cultivo||NOCROP]||{})[varKey(r.cultivo||NOCROP,r.variedad)]), any=false;
     utmPolys(r.geom).forEach(function(poly){
       var cl=clipRing(poly[0].slice(0,-1),ext.minx,ext.miny,ext.maxx,ext.maxy); if(cl.length<3)return; any=true;
       var rel=[],pp=cl.map(function(q){return [px(q[0]),py(q[1])]});
@@ -5800,9 +5822,9 @@ function planoBuild(name,G,ext,rowsIn,imgUrl,opt){
   /* barra de escala */
   var nice=[5,10,20,25,50,100,200,250,500,1000,2000,2500,5000,10000], len=nice[0];
   nice.forEach(function(n){if(n/S*1000<=70)len=n});
-  var bl=len/S*1000, bx=M+4, by=y0+mh-7; doc.setFillColor(255,255,255); doc.rect(bx-3,by-6,bl+30,12.5,'F');
+  var bl=len/S*1000, bx=M+4, by=y0+mh-7, lenTxt=len>=1000?(len/1000)+' km':len+' m'; doc.setFont('helvetica','normal'); doc.setFontSize(7); var tw0=doc.getTextWidth('0'), tw1=doc.getTextWidth(lenTxt), lft=Math.max(2.5,tw0/2+1.5), rgt=Math.max(2.5,tw1/2+1.5); doc.setFillColor(255,255,255); doc.rect(bx-lft,by-4.3,bl+lft+rgt,7.4,'F');
   var seg=4; for(var s=0;s<seg;s++){doc.setFillColor(s%2?255:0,s%2?255:0,s%2?255:0); doc.rect(bx+s*bl/seg,by,bl/seg,2,'F')} doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.rect(bx,by,bl,2);
-  doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(0,0,0); doc.text('0',bx,by-1.2,{align:'center'}); doc.text(len>=1000?(len/1000)+' km':len+' m',bx+bl,by-1.2,{align:'center'}); doc.text('1:'+nf(S,0),bx+bl+5,by+2,{align:'left'});
+  doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(0,0,0); doc.text('0',bx,by-1.2,{align:'center'}); doc.text(lenTxt,bx+bl,by-1.2,{align:'center'});
   planCajetines(doc,G,ext,seen,TONES,op,name);
   return doc;
 }
@@ -5812,7 +5834,7 @@ function recPlano(){
   rec.busy='plano'; renderRec();
   var G=recPlanGeom(b), ew=G.mw*G.S/1000, eh=G.mh*G.S/1000, ext={minx:b.cx-ew/2,maxx:b.cx+ew/2,miny:b.cy-eh/2,maxy:b.cy+eh/2};
   var pp=planPx(G,ext), wpx=pp.wpx, hpx=pp.hpx, name=rec.name||'Plano';
-  IGNDOWN=false;IGNWHY="";NOPH.asked=false;NOPH.skip=false;
+  IGNDOWN=false;IGNWHY="";NOPH.asked=false;NOPH.skip=false;NOPH.fails=0;
   locEnsure(recRowsInBox(ext)).then(function(){return planFoto(ext,wpx,hpx,false)}).then(function(ph){
     if(!ph.url&&photoAsk(ph.why||'sin respuesta')){IGNDOWN=false;IGNWHY='';return planFoto(ext,wpx,hpx,false)}
     return ph;
@@ -6065,7 +6087,7 @@ function dwGo(){
   if(dl.busy||!dwCanNext())return;
   if(!loadPdfLib()&&(dl.f.plano||dl.f.informe||dl.f.ficha)){toast('No he podido preparar el generador de PDF.');return}
   var units=dwUnits(), sp=units.length>1, files=[], notes=[], title=(dl.title||'').trim()||'Plano', base=safeName(title), steps=[], oldPaper=rec.paper, oldScale=rec.scale, oldOnly=rec.only, oldOr=rec.orient;
-  rec.only=null; rec.orient=dl.orient; IGNDOWN=false;IGNWHY="";NOPH.asked=false;NOPH.skip=false;
+  rec.only=null; rec.orient=dl.orient; IGNDOWN=false;IGNWHY="";NOPH.asked=false;NOPH.skip=false;NOPH.fails=0;
   var add=function(pre,n,d){files.push({n:pre+n,d:d})};
   units.forEach(function(u){
     var pre=sp?safeName(u.name)+'/':'', nm=safeName(u.name);
@@ -6104,11 +6126,10 @@ function dwGo(){
         var lab0=u.name+' · '+pg.sub+' ('+k+' de '+pages.length+')';
         var pf=function(){return planFoto(ext,wpx,hpx,nofoto||NOPH.skip,function(t){dwProg(lab0+' · '+t)})};
         return locEnsure(u.rows).then(pf).then(function(ph){
-          if(!ph.url&&!nofoto&&!NOPH.skip&&!NOPH.asked){NOPH.asked=true; if(photoAsk(ph.why||'sin respuesta')){IGNDOWN=false;IGNWHY='';return pf().then(function(p2){if(!p2.url)NOPH.skip=true;return p2})} NOPH.skip=true}
-          return ph;
+          return photoGate(ph,nofoto,pf);
         }).then(function(ph){
           var url=ph.url, rows=pg.rows||(u.zone?recRowsInBox(ext):u.rows); /* Entrega 21: en cada plano solo se dibujan los recintos de su zona (o zonas) */
-          if(!url)notes.push('«'+u.name+'» '+pg.sub+': sin foto de fondo'+(nofoto?' (la escala elegida abarca demasiado terreno para la foto; elige una escala más pequeña).':(ph.why?' ('+ph.why+').':' (seguiste sin foto de fondo tras el aviso).')));
+          if(!url)notes.push('«'+u.name+'» '+pg.sub+': sin foto de fondo'+(nofoto?' (la escala elegida abarca demasiado terreno para la foto; elige una escala más pequeña).':(ph.why?' ('+ph.why+').':' (no se ha intentado: elegiste seguir sin foto tras el aviso).')));
           else if(ph.src==='esri')esr.push(pg.sub);
           var d=planoBuild(u.name,G,ext,rows,url,{doc:doc,sub:pg.sub,over:pg.over,zones:pg.zones,esri:ph.src==='esri',kind:u.kind,who:u.who,toneRows:u.rows}); if(!doc)doc=d;
           return one();
@@ -6121,13 +6142,12 @@ function dwGo(){
       rec.paper=dl.paper; rec.scale=dl.scale;
       var G=recPlanGeom(b), ew=G.mw*G.S/1000, eh=G.mh*G.S/1000, ext={minx:b.cx-ew/2,maxx:b.cx+ew/2,miny:b.cy-eh/2,maxy:b.cy+eh/2};
       var pp=planPx(G,ext), wpx=pp.wpx, hpx=pp.hpx;
-      var pf1=function(){return NOPH.skip?Promise.resolve({url:null,src:null}):planFoto(ext,wpx,hpx,false,function(t){dwProg('Plano de '+u.name+' · '+t)})};
+      var pf1=function(){return NOPH.skip?Promise.resolve({url:null,src:null,skipped:true}):planFoto(ext,wpx,hpx,false,function(t){dwProg('Plano de '+u.name+' · '+t)})};
       return locEnsure(u.rows).then(pf1).then(function(ph){
-        if(!ph.url&&!NOPH.skip&&!NOPH.asked){NOPH.asked=true; if(photoAsk(ph.why||'sin respuesta')){IGNDOWN=false;IGNWHY='';return pf1().then(function(p2){if(!p2.url)NOPH.skip=true;return p2})} NOPH.skip=true}
-        return ph;
+        return photoGate(ph,false,pf1);
       }).then(function(ph){
         var url=ph.url, rows=u.zone?(function(){return recRowsInBox(ext)})():u.rows, doc=planoBuild(u.name,G,ext,rows,url,{esri:ph.src==='esri',kind:u.kind,who:u.who,toneRows:u.rows});
-        if(!url)notes.push('El plano de '+u.name+' no tiene foto de fondo ('+(ph.why||'seguiste sin foto tras el aviso')+').');
+        if(!url)notes.push('El plano de '+u.name+' no tiene foto de fondo ('+(ph.why||'no se ha intentado: elegiste seguir sin foto tras el aviso')+').');
         else if(ph.src==='esri')notes.push('El plano de '+u.name+': la foto de fondo es de Esri porque el IGN no respondía (menos resolución que el PNOA).');
         return blobBytes(doc.output('blob')).then(function(by){add(pre,nm+'-plano-1a'+G.S+'.pdf',by)});
       });
