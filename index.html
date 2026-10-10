@@ -1805,7 +1805,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-10T10:14:08Z',n:'Entrega 22 · 10 oct · 12:14'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-10T10:44:34Z',n:'Entrega 23 · 10 oct · 12:44'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -5322,11 +5322,15 @@ function renderRec(){
   h+='<div class="acts"><button class="btn sm" data-act="rec-redo">Elegir otra zona</button></div>';
   el.innerHTML=h; el.hidden=false;
 }
-/* Entrega 22: petición con reintentos y espera (n = reintentos; 0 = sin esperas, como antes) */
-function wmsBlobR(bb,w,h,n,i){i=i||0;return wmsBlob(bb,w,h).catch(function(e){if(i>=n)throw e;return new Promise(function(r){setTimeout(r,i*700)}).then(function(){return wmsBlobR(bb,w,h,n,i+1)})})}
-function wmsBlob(bb,wpx,hpx){
+/* Entrega 23: petición al IGN con tiempo máximo (ms) y reintentos. Con ms (planos), un error 5xx o un tiempo agotado NO se reintenta: el servidor ya ha esperado */
+function wmsBlobR(bb,w,h,n,ms,i){i=i||0;return wmsBlob(bb,w,h,ms).catch(function(e){var dead=ms&&e&&(e.st>=500||e.name==='AbortError'); if(i>=n||dead)throw e;return new Promise(function(r){setTimeout(r,i?500:0)}).then(function(){return wmsBlobR(bb,w,h,n,ms,i+1)})})}
+function fetchBlobT(u,ms,okRe){
+  var ac=ms&&typeof AbortController!=='undefined'?new AbortController():null, t=ac?setTimeout(function(){ac.abort()},ms):0, done=function(){if(t)clearTimeout(t)};
+  return fetch(u,ac?{signal:ac.signal}:undefined).then(function(r){if(!r.ok){var e=new Error(r.status);e.st=r.status;throw e}return r.blob()}).then(function(bl){done();if(!okRe.test(bl.type))throw new Error('tipo');return bl},function(e){done();throw e});
+}
+function wmsBlob(bb,wpx,hpx,ms){
   var u='https://www.ign.es/wms-inspire/pnoa-ma?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=OI.OrthoimageCoverage&STYLES=&SRS=EPSG:25830&BBOX='+[bb.minx,bb.miny,bb.maxx,bb.maxy].map(function(v){return v.toFixed(3)}).join(',')+'&WIDTH='+wpx+'&HEIGHT='+hpx+'&FORMAT=image/jpeg';
-  return fetch(u).then(function(r){if(!r.ok)throw new Error(r.status);return r.blob()}).then(function(bl){if(!/image\/jpeg/.test(bl.type))throw new Error('tipo');return bl});
+  return fetchBlobT(u,ms,/image\/jpeg/);
 }
 
 /* PNOA por teselas: cada trozo se pide a su resolución real y se une (o se entrega por separado) */
@@ -5338,11 +5342,12 @@ function wmsParts(bb,wpx,hpx,onProg,opt){
     jobs.push({x:x0,y:y0,w:w,h:h,bb:{minx:bb.minx+x0*mx,maxx:bb.minx+(x0+w)*mx,maxy:bb.maxy-y0*my,miny:bb.maxy-(y0+h)*my}});
   }
   var k=0, done=0, out=new Array(jobs.length);
+  var stop=false;
   var one=function(){
-    if(k>=jobs.length)return Promise.resolve();
+    if(stop||k>=jobs.length)return Promise.resolve();
     var i=k++, jb=jobs[i];
-    var get=function(){return wmsBlobR(jb.bb,jb.w,jb.h,RT)};
-    return get().then(function(bl){jb.blob=bl;out[i]=jb;done++;if(onProg)onProg(done,jobs.length)}).then(one);
+    var get=function(){return wmsBlobR(jb.bb,jb.w,jb.h,RT,opt&&opt.ms)};
+    return get().then(function(bl){jb.blob=bl;out[i]=jb;done++;if(onProg)onProg(done,jobs.length)},function(e){stop=true;throw e}).then(one);
   };
   return Promise.all([one(),one(),one()]).then(function(){return out});
 }
@@ -5359,23 +5364,44 @@ function wmsStitch(parts,wpx,hpx){
 /* devuelve un blob JPEG (asData=false) o un dataURL (asData=true) de toda la zona */
 function wmsImage(bb,wpx,hpx,asData,onProg,opt){
   var TL=(opt&&opt.tile)||WTILE;
-  if(wpx<=TL&&hpx<=TL)return (opt&&opt.retries?wmsBlobR(bb,wpx,hpx,opt.retries):wmsBlob(bb,wpx,hpx)).then(function(bl){return asData?blobDataURL(bl):bl});
+  if(wpx<=TL&&hpx<=TL)return (opt&&opt.retries?wmsBlobR(bb,wpx,hpx,opt.retries,opt.ms):wmsBlob(bb,wpx,hpx)).then(function(bl){return asData?blobDataURL(bl):bl});
   return wmsParts(bb,wpx,hpx,onProg,opt).then(function(parts){return wmsStitch(parts,wpx,hpx)}).then(function(cv){
     if(asData)return cv.toDataURL('image/jpeg',.92);
     return new Promise(function(res,rej){cv.toBlob(function(b){b?res(b):rej(new Error('jpg'))},'image/jpeg',.92)});
   });
 }
-/* Entrega 22: foto de fondo de un plano. Primero el IGN (trozos pequeños y varios reintentos); si falla algo, TODA la página se pide a Esri (nunca se mezclan trozos de dos fuentes) */
-function esriImage(ext,wpx,hpx){
-  var k=Math.min(1,3500/Math.max(wpx,hpx)), w=Math.max(64,Math.round(wpx*k)), h=Math.max(64,Math.round(hpx*k));
-  var u='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox='+[ext.minx,ext.miny,ext.maxx,ext.maxy].map(function(v){return v.toFixed(3)}).join(',')+'&bboxSR=25830&imageSR=25830&size='+w+','+h+'&format=jpg&f=image';
-  var go=function(n){return fetch(u).then(function(r){if(!r.ok)throw new Error(r.status);return r.blob()}).then(function(bl){if(!/image\/jp/.test(bl.type))throw new Error('tipo');return blobDataURL(bl)}).catch(function(e){if(n<1){return new Promise(function(r){setTimeout(r,700)}).then(function(){return go(n+1)})}throw e})};
+/* Entrega 23: foto de fondo de un plano. 1) IGN (trozos de 2048, 15 s por petición); 2) si falla por otra causa que servidor caído, IGN con trozos de 1024;
+   3) si el IGN está caído (5xx o tiempo agotado) o falla, TODA la página se pide a Esri en trozos de hasta 2000 px (nunca se mezclan fuentes).
+   IGNDOWN recuerda, durante una descarga, que el IGN no responde para no volver a probarlo en cada página. */
+var IGNDOWN=false;
+function esriBlob(bb,w,h){
+  var u='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox='+[bb.minx,bb.miny,bb.maxx,bb.maxy].map(function(v){return v.toFixed(3)}).join(',')+'&bboxSR=25830&imageSR=25830&size='+w+','+h+'&format=jpg&f=image';
+  var go=function(n){return fetchBlobT(u,40000,/image\/jp/).catch(function(e){if(n<1&&!(e&&(e.st>=500||e.name==='AbortError')))return go(n+1);throw e})};
   return go(0);
 }
-function planFoto(ext,wpx,hpx,skip){
+function esriImage(ext,wpx,hpx){
+  var k=Math.min(1,4000/Math.max(wpx,hpx)), W=Math.max(64,Math.round(wpx*k)), H=Math.max(64,Math.round(hpx*k)), T=2000;
+  if(W<=T&&H<=T)return esriBlob(ext,W,H).then(blobDataURL);
+  var mx=(ext.maxx-ext.minx)/W, my=(ext.maxy-ext.miny)/H, jobs=[];
+  for(var y0=0;y0<H;y0+=T)for(var x0=0;x0<W;x0+=T){
+    var w=Math.min(T,W-x0), h=Math.min(T,H-y0);
+    jobs.push({x:x0,y:y0,w:w,h:h,bb:{minx:ext.minx+x0*mx,maxx:ext.minx+(x0+w)*mx,maxy:ext.maxy-y0*my,miny:ext.maxy-(y0+h)*my}});
+  }
+  return Promise.all(jobs.map(function(jb){return esriBlob(jb.bb,jb.w,jb.h).then(function(bl){jb.blob=bl;return jb})})).then(function(parts){return wmsStitch(parts,W,H)}).then(function(cv){return cv.toDataURL('image/jpeg',.92)});
+}
+function planFoto(ext,wpx,hpx,skip,prog){
+  prog=prog||function(){};
   if(skip)return Promise.resolve({url:null,src:null});
-  var big=wpx>1536||hpx>1536;
-  return wmsImage(ext,wpx,hpx,true,null,{tile:big?1024:WTILE,retries:3}).then(function(u){return {url:u,src:'ign'}}).catch(function(){
+  var big=wpx>1536||hpx>1536, isDead=function(e){return !!(e&&(e.st>=500||e.name==='AbortError'))};
+  var ign=function(tile){prog('foto del IGN');return wmsImage(ext,wpx,hpx,true,function(d,t){prog('foto del IGN, '+d+' de '+t)},{tile:tile,retries:1,ms:15000}).then(function(u){return {url:u,src:'ign'}})};
+  var first=IGNDOWN?Promise.reject(Object.assign(new Error('down'),{st:599})):ign(2048);
+  return first.catch(function(e){
+    if(isDead(e)||IGNDOWN){IGNDOWN=true;throw e}
+    if(!big)throw e;
+    return ign(1024);
+  }).catch(function(e){
+    if(isDead(e))IGNDOWN=true;
+    prog(IGNDOWN?'foto de Esri (el IGN no responde)':'foto de Esri');
     return esriImage(ext,wpx,hpx).then(function(u){return {url:u,src:'esri'}}).catch(function(){return {url:null,src:null}});
   });
 }
@@ -5675,6 +5701,7 @@ function recPlano(){
   rec.busy='plano'; renderRec();
   var G=recPlanGeom(b), ew=G.mw*G.S/1000, eh=G.mh*G.S/1000, ext={minx:b.cx-ew/2,maxx:b.cx+ew/2,miny:b.cy-eh/2,maxy:b.cy+eh/2};
   var pp=planPx(G,ext), wpx=pp.wpx, hpx=pp.hpx, name=rec.name||'Plano';
+  IGNDOWN=false;
   planFoto(ext,wpx,hpx,false).then(function(ph){
     try{
       var url=ph.url, doc=planoBuild(name,G,ext,recRowsInBox(ext).map(function(r){return r}),url,{esri:ph.src==='esri'}), blob=doc.output('blob');
@@ -5923,7 +5950,7 @@ function dwGo(){
   if(dl.busy||!dwCanNext())return;
   if(!loadPdfLib()&&(dl.f.plano||dl.f.informe||dl.f.ficha)){toast('No he podido preparar el generador de PDF.');return}
   var units=dwUnits(), sp=units.length>1, files=[], notes=[], title=(dl.title||'').trim()||'Plano', base=safeName(title), steps=[], oldPaper=rec.paper, oldScale=rec.scale, oldOnly=rec.only, oldOr=rec.orient;
-  rec.only=null; rec.orient=dl.orient;
+  rec.only=null; rec.orient=dl.orient; IGNDOWN=false;
   var add=function(pre,n,d){files.push({n:pre+n,d:d})};
   units.forEach(function(u){
     var pre=sp?safeName(u.name)+'/':'', nm=safeName(u.name);
@@ -5950,6 +5977,7 @@ function dwGo(){
       });
       if(!gen.length)notes.push('«'+u.name+'»: las zonas están muy separadas (más de '+(DWGEN/1000)+' km) y no hay página de conjunto; cada zona tiene su plano.');
       else if(gz.length>gen.length)notes.push('«'+u.name+'»: '+(gen.length===1?'la página de conjunto reúne':'las '+gen.length+' páginas de conjunto reúnen')+' solo las zonas cercanas; las zonas aisladas tienen su plano propio.');
+      var esr=[];
       var pages=genPages.concat(zs.map(function(z,i){return {sub:'Zona '+(i+1),box:z.box,rows:z.rows}})), doc=null, k=0;
       var one=function(){
         if(k>=pages.length)return Promise.resolve();
@@ -5958,22 +5986,23 @@ function dwGo(){
         var G=recPlanGeom(pb), ew=G.mw*G.S/1000, eh=G.mh*G.S/1000, ext={minx:pb.cx-ew/2,maxx:pb.cx+ew/2,miny:pb.cy-eh/2,maxy:pb.cy+eh/2};
         var pp=planPx(G,ext), wpx=pp.wpx, hpx=pp.hpx, nofoto=pg.over&&Math.max(ew,eh)>DWGEN*2;
         dwProg(u.name+' · '+pg.sub+' ('+k+' de '+pages.length+')');
-        return planFoto(ext,wpx,hpx,nofoto).then(function(ph){
+        var lab0=u.name+' · '+pg.sub+' ('+k+' de '+pages.length+')';
+        return planFoto(ext,wpx,hpx,nofoto,function(t){dwProg(lab0+' · '+t)}).then(function(ph){
           var url=ph.url, rows=pg.rows||(u.zone?recRowsInBox(ext):u.rows); /* Entrega 21: en cada plano solo se dibujan los recintos de su zona (o zonas) */
           if(!url)notes.push('«'+u.name+'» '+pg.sub+': sin foto de fondo'+(nofoto?' (la escala elegida abarca demasiado terreno para la foto; elige una escala más pequeña).':' (ni el IGN ni Esri han enviado las imágenes).'));
-          else if(ph.src==='esri')notes.push('«'+u.name+'» '+pg.sub+': la foto de fondo es de Esri porque el IGN no respondía (menos resolución que el PNOA).');
+          else if(ph.src==='esri')esr.push(pg.sub);
           var d=planoBuild(u.name,G,ext,rows,url,{doc:doc,sub:pg.sub,over:pg.over,zones:pg.zones,esri:ph.src==='esri'}); if(!doc)doc=d;
           return one();
         });
       };
-      return one().then(function(){if(!doc)return;return blobBytes(doc.output('blob')).then(function(by){add(pre,nm+'-plano-por-zonas.pdf',by)})});
+      return one().then(function(){if(esr.length)notes.push('«'+u.name+'»: el IGN no respondía; la foto de fondo de '+esr.join(', ')+' es de Esri (menos resolución que el PNOA).');if(!doc)return;return blobBytes(doc.output('blob')).then(function(by){add(pre,nm+'-plano-por-zonas.pdf',by)})});
     }]);
     else if(dl.f.plano)steps.push(['Plano de '+u.name,function(){
       if(!b||big){notes.push('Plano de '+u.name+' no creado: la zona pasa de 15 km por lado.');return Promise.resolve()}
       rec.paper=dl.paper; rec.scale=dl.scale;
       var G=recPlanGeom(b), ew=G.mw*G.S/1000, eh=G.mh*G.S/1000, ext={minx:b.cx-ew/2,maxx:b.cx+ew/2,miny:b.cy-eh/2,maxy:b.cy+eh/2};
       var pp=planPx(G,ext), wpx=pp.wpx, hpx=pp.hpx;
-      return planFoto(ext,wpx,hpx,false).then(function(ph){
+      return planFoto(ext,wpx,hpx,false,function(t){dwProg('Plano de '+u.name+' · '+t)}).then(function(ph){
         var url=ph.url, rows=u.zone?(function(){return recRowsInBox(ext)})():u.rows, doc=planoBuild(u.name,G,ext,rows,url,{esri:ph.src==='esri'});
         if(!url)notes.push('El plano de '+u.name+' no tiene foto de fondo (ni el IGN ni Esri han enviado las imágenes).');
         else if(ph.src==='esri')notes.push('El plano de '+u.name+': la foto de fondo es de Esri porque el IGN no respondía (menos resolución que el PNOA).');
