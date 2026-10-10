@@ -1802,7 +1802,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-10T15:22:18Z',n:'Entrega 28 · 10 oct · 17:22'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-10T18:22:47Z',n:'Entrega 29 · 10 oct · 20:22'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -3701,7 +3701,7 @@ function renderSres(){
   }else if(sresMode==='places'){
     h+='<div class="sres-t" style="margin-top:0">Lugares</div>';
     if(placeRes===null)h+='<div class="small" style="padding:6px 8px">Buscando…</div>';
-    else if(placeErr)h+='<div class="small" style="padding:6px 8px">No he podido buscar. Revisa la conexión.</div>';
+    else if(placeErr)h+='<div class="small" style="padding:6px 8px">No responden los servicios de búsqueda ahora mismo (puede ser el IGN). Prueba en un rato o busca por referencia, código SIGPAC o coordenadas.</div>';
     else if(!placeRes.length)h+='<div class="small" style="padding:6px 8px">No encuentro ese lugar. Prueba con otro nombre, o con el pueblo y la provincia.</div>';
     else placeRes.forEach(function(c,i){h+='<button class="lopt" style="height:auto;padding:8px;display:block" data-act="place-go" data-i="'+i+'"><b>'+esc(c.address)+'</b><div class="small">'+esc(PTYPES[c.type]||c.type||'')+(c.province&&c.type!=='provincia'?' · '+esc(c.province):'')+'</div></button>'});
   }else if(sresMode==='guide'){
@@ -3755,12 +3755,31 @@ function goRC(rc,text){
     toMap(); setTimeout(function(){map.invalidateSize();map.setView([y,x],18);if(!OV.cat)setOv('cat',true);showCat(y,x,rc,xt(d,'ldt'))},60);
   }).catch(function(){toast('No encuentro esa referencia catastral. Revisa las letras y los números.')});
 }
+/* Entrega 29: la búsqueda de lugares espera como máximo 6 s a CartoCiudad (IGN); si falla, usa OpenStreetMap (Nominatim) */
+var placeSeq=0;
+function fetchJsonT(url,ms){
+  return new Promise(function(res,rej){
+    var done=false, ac=(typeof AbortController!=='undefined')?new AbortController():null, t=setTimeout(function(){if(done)return;done=true;try{ac&&ac.abort()}catch(e){}rej(new Error('tiempo'))},ms);
+    fetch(url,ac?{signal:ac.signal}:undefined).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(j){if(done)return;done=true;clearTimeout(t);res(j)}).catch(function(e){if(done)return;done=true;clearTimeout(t);rej(e)});
+  });
+}
+function osmType(c){
+  var t=c.addresstype||c.type||'';
+  if(/^(city|town|village|hamlet|suburb|municipality|locality|neighbourhood)$/.test(t))return 'poblacion';
+  if(/^(state|province|region|county)$/.test(t))return t==='state'||t==='region'?'comunidad_autonoma':'provincia';
+  return 'toponimo';
+}
 function searchPlace(q){
+  var my=++placeSeq;
   sresMode='places'; placeRes=null; placeErr=false; renderSres();
-  fetch('https://www.cartociudad.es/geocoder/api/geocoder/candidates?limit=8&q='+encodeURIComponent(q))
-    .then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})
-    .then(function(a){placeRes=(Array.isArray(a)?a:[]).filter(function(c){return c&&c.address}).slice(0,8);renderSres()})
-    .catch(function(){placeRes=[];placeErr=true;renderSres()});
+  var show=function(a,err){if(my!==placeSeq)return;placeRes=a;placeErr=!!err;renderSres()};
+  fetchJsonT('https://www.cartociudad.es/geocoder/api/geocoder/candidates?limit=8&q='+encodeURIComponent(q),6000)
+    .then(function(a){var l=(Array.isArray(a)?a:[]).filter(function(c){return c&&c.address}).slice(0,8);if(!l.length)throw new Error('vacio');return l})
+    .catch(function(){
+      return fetchJsonT('https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=es&limit=8&accept-language=es&q='+encodeURIComponent(q),8000)
+        .then(function(a){return (Array.isArray(a)?a:[]).filter(function(c){return c&&c.display_name&&isFinite(+c.lat)&&isFinite(+c.lon)}).slice(0,8).map(function(c){return {address:c.display_name.split(', ').slice(0,3).join(', '),lat:+c.lat,lng:+c.lon,type:osmType(c),osm:1}})});
+    })
+    .then(function(l){show(l,false)},function(){show([],true)});
 }
 function placeGo(i){
   var c=placeRes&&placeRes[i]; if(!c)return;
@@ -3779,14 +3798,13 @@ function guideGo(){
   var go=function(m){closePops();goRef([prov,m,0,0,pol,par,rec],[prov,m,0,0,pol,par,rec].join(':'))};
   if(/^\d{1,3}$/.test(mun)){go(+mun);return}
   toast('Buscando el municipio…');
-  fetch('https://www.cartociudad.es/geocoder/api/geocoder/candidates?limit=10&q='+encodeURIComponent(mun))
-    .then(function(r){return r.json()})
+  fetchJsonT('https://www.cartociudad.es/geocoder/api/geocoder/candidates?limit=10&q='+encodeURIComponent(mun),6000)
     .then(function(a){
       var c=(a||[]).filter(function(x){return (x.type==='poblacion'||x.type==='municipio')&&+x.provinceCode===prov&&x.muniCode})[0];
       if(!c)throw new Error('x');
       go(+String(c.muniCode).slice(-3));
     })
-    .catch(function(){toast('No encuentro ese municipio en esa provincia. Prueba a escribir su número SIGPAC (3 cifras).')});
+    .catch(function(){toast('No encuentro ese municipio en esa provincia (o el IGN no responde ahora). Elige el municipio de la lista o escribe su número SIGPAC (3 cifras).')});
 }
 function locate(){
   if(!navigator.geolocation){toast('Este navegador no puede darte tu ubicación');return}
@@ -5263,6 +5281,19 @@ function planTones(rows){
   });
   return out;
 }
+/* Entrega 29: además del tono, cada variedad lleva su transparencia (mismo orden que los tonos) */
+var VALPHA=[.85,.45,.7,.3,.6,.4];
+function planAlphas(rows){
+  var out={};
+  varGroups(rows).forEach(function(o){
+    if(o.g.length<2)return;
+    var named=o.g.filter(function(g){return g.key}), t={};
+    named.forEach(function(g,i){t[g.key]=VALPHA[i%6]});
+    if(named.length<o.g.length)t['']=.5;
+    out[o.c]=t;
+  });
+  return out;
+}
 function toneRGB(rgb,t){
   if(!t)return rgb;
   return t<0?rgb.map(function(v){return Math.round(v*(1+t))}):rgb.map(function(v){return Math.round(v+(255-v)*t)});
@@ -5691,18 +5722,15 @@ function planLegendDraw(doc,best,x,y,k){
     c.forEach(function(ln,li){
       var yy=ay+li*best.lh+best.lh*.62, tx=cx+(ln.ind?2.4:0);
       if(ln.border){doc.setDrawColor.apply(doc,ln.border);doc.setLineWidth(.45*k);if(ln.dash&&doc.setLineDashPattern)doc.setLineDashPattern([.9,.6],0);doc.rect(tx,yy-best.sq*.85,best.sq,best.sq,'S');if(doc.setLineDashPattern)doc.setLineDashPattern([],0);tx+=best.sq+1.6}
-      else if(ln.sw){doc.setFillColor.apply(doc,ln.sw);doc.rect(tx,yy-best.sq*.85,best.sq,best.sq,'F');tx+=best.sq+1.6}
+      else if(ln.sw){if(ln.alpha)doc.setGState(new doc.GState({opacity:ln.alpha}));doc.setFillColor.apply(doc,ln.sw);doc.rect(tx,yy-best.sq*.85,best.sq,best.sq,'F');if(ln.alpha)doc.setGState(new doc.GState({opacity:1}));tx+=best.sq+1.6}
       doc.setFont('helvetica',ln.bold?'bold':'normal'); doc.setTextColor(0,0,0); doc.text(ln.t,tx,yy);
     });
     cx+=best.ws[ci]+6*k;
   });
 }
-function planCajetines(doc,G,ext,seen,TONES,op,name){
-  var W=G.W,H=G.H,M=G.M,k=G.k||1,u=.3528*k,hC=G.hC||30,top=H-6.5-hC,bot=H-6.5;
-  var rows=Object.keys(seen).map(function(q){return seen[q]}), totHa=rows.reduce(function(s,r){return s+r.ha},0), ink=[0,0,0];
-  var ow=15*k, dw=92.9*k, dx=W-M-dw;
-  doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.setTextColor(0,0,0);
-  /* ---- LEYENDA ---- */
+function planLegendBlocks(rows,TONES,op,AL){
+  var totHa=rows.reduce(function(s,r){return s+r.ha},0);
+  AL=AL||{};
   var blocks=[], b0=[{t:(op.over?'Recintos del conjunto: ':'Recintos de esta zona: ')+rows.length+' · '+nf(totHa,2)+' ha',bold:true}];
   var pdh={eco:0,cv:0}; rows.forEach(function(r){var q=prodKind(recProd(r.ref));if(q==='eco'||q==='cv')pdh[q]+=r.ha});
   var pc=hex2rgb(PROD_COL);
@@ -5711,9 +5739,51 @@ function planCajetines(doc,G,ext,seen,TONES,op,name){
   blocks.push(b0);
   varGroups(rows.map(function(r){return {cultivo:r.cultivo,variedad:r.variedad,ha:r.ha}})).forEach(function(o){
     var base=hex2rgb(cropColor(o.c)), bl=[{t:o.c+' '+nf(o.ha,2)+' ha',bold:true,sw:base}], T=TONES[o.c];
-    if(T)o.g.forEach(function(g){bl.push({t:g.name+' '+nf(g.ha,2)+' ha',ind:true,sw:toneRGB(base,T[g.key]||0)})});
+    if(T)o.g.forEach(function(g){bl.push({t:g.name+' '+nf(g.ha,2)+' ha',ind:true,sw:toneRGB(base,T[g.key]||0),alpha:(AL[o.c]||{})[g.key]||.5})});
     blocks.push(bl);
   });
+  return {blocks:blocks,pdh:pdh};
+}
+/* Entrega 29: si algún recinto cae debajo del bloque de cajetines, se desplaza la vista hacia abajo (misma escala); si no basta, se usa una escala algo menor */
+function planBlockRect(G,rows,op){
+  var jsPDF=window.jspdf.jsPDF, doc=new jsPDF({unit:'mm',format:[G.W,G.H]}), k=G.k||1, ow=15*k, dw=92.9*k, dx=G.W-G.M-dw, hC=G.hC||30;
+  var LB=planLegendBlocks(rows,planTones(op.toneRows||rows),op,planAlphas(op.toneRows||rows)), lay=planLegendFit(doc,LB.blocks,dx-G.M-ow-12*k,hC,k);
+  return {left:dx-lay.boxW-ow};
+}
+function planFix(G,b,rows,op){
+  op=op||{};
+  var mk=function(S){var ew=G.mw*S/1000, eh=G.mh*S/1000; return {minx:b.cx-ew/2,maxx:b.cx+ew/2,miny:b.cy-eh/2,maxy:b.cy+eh/2}};
+  var items=[], S0=G.S;
+  rows.forEach(function(r){utmPolys(r.geom).forEach(function(pl){var x0=1e12,y0=1e12,x1=-1e12,y1=-1e12;pl[0].forEach(function(q){x0=Math.min(x0,q[0]);x1=Math.max(x1,q[0]);y0=Math.min(y0,q[1]);y1=Math.max(y1,q[1])});if(x1>=x0)items.push([x0,y0,x1,y1])})});
+  (op.zones||[]).forEach(function(z){items.push([z.box.minx,z.box.miny,z.box.maxx,z.box.maxy])});
+  if(!items.length)return mk(S0);
+  var br=planBlockRect(G,rows,op), top=Math.max.apply(null,items.map(function(i){return i[3]})), lo=Math.min.apply(null,items.map(function(i){return i[1]}));
+  var fixed=rec.scale>0&&rec.scale>=G.req;
+  var tryS=function(S){
+    var e=mk(S), u=S/1000, El=e.minx+(br.left-G.M)*u, Nt=e.miny+(G.hC+2.5)*u, col=items.filter(function(i){return i[2]>El&&i[1]<Nt});
+    if(!col.length)return {ext:e,ok:true};
+    var d=Nt-Math.min.apply(null,col.map(function(i){return i[1]})), room=e.maxy-2.5*u-top;
+    var ok=d<=room, dd=Math.max(0,Math.min(d,room));
+    return {ext:{minx:e.minx,maxx:e.maxx,miny:e.miny-dd,maxy:e.maxy-dd},ok:ok};
+  };
+  var r=tryS(S0); if(r.ok||fixed){G.S=S0;return r.ext}
+  var cands=[], i;
+  if(rec.scale===-1){for(i=1;i<=45;i++)cands.push(Math.round(S0*Math.pow(1.02,i)))}
+  else{SCALES.forEach(function(sc){if(sc>S0)cands.push(sc)}); var m=Math.ceil(S0/5000)*5000; for(i=0;i<8;i++)cands.push(m+5000*i)}
+  for(i=0;i<cands.length;i++){var rr=tryS(cands[i]); if(rr.ok){G.S=cands[i];return rr.ext}}
+  G.S=S0; return r.ext;
+}
+function sitBox(b,f){
+  var m=Math.max(b.w,b.h), f2=Math.min(f,30000/m); if(f2<1.3)return null;
+  var w=b.w*f2, h=b.h*f2; return {minx:b.cx-w/2,maxx:b.cx+w/2,miny:b.cy-h/2,maxy:b.cy+h/2,w:w,h:h,cx:b.cx,cy:b.cy};
+}
+function planCajetines(doc,G,ext,seen,TONES,op,name){
+  var W=G.W,H=G.H,M=G.M,k=G.k||1,u=.3528*k,hC=G.hC||30,top=H-6.5-hC,bot=H-6.5;
+  var rows=Object.keys(seen).map(function(q){return seen[q]}), totHa=rows.reduce(function(s,r){return s+r.ha},0), ink=[0,0,0];
+  var ow=15*k, dw=92.9*k, dx=W-M-dw;
+  doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.setTextColor(0,0,0);
+  /* ---- LEYENDA ---- */
+  var LB=planLegendBlocks(rows,TONES,op,planAlphas(op.toneRows||rows)), blocks=LB.blocks, pdh=LB.pdh;
   /* Entrega 28: la leyenda ocupa lo que necesita, pegada al cajetín de datos; crece hacia la izquierda */
   var lay=planLegendFit(doc,blocks,dx-M-ow-12*k,hC,k), lx=dx-lay.boxW, ox=lx-ow;
   /* ---- ORIENTACIÓN ---- */
@@ -5771,7 +5841,7 @@ function planoBuild(name,G,ext,rowsIn,imgUrl,opt){
   doc.setDrawColor(0,0,0); doc.setLineWidth(1); doc.rect(4,4,W-8,H-8); /* marco de la hoja */
   if(imgUrl)doc.addImage(imgUrl,'JPEG',M,y0,mw,mh); else {doc.setFillColor(32,38,27); doc.rect(M,y0,mw,mh,'F')}
   /* recintos */
-  var seen={}, geo={}, TONES=planTones(op.toneRows||rowsIn);
+  var seen={}, geo={}, TONES=planTones(op.toneRows||rowsIn), ALPH=planAlphas(op.toneRows||rowsIn);
   rowsIn.forEach(function(r){
     var col=toneRGB(hex2rgb(cropColor(r.cultivo||NOCROP)),(TONES[r.cultivo||NOCROP]||{})[varKey(r.cultivo||NOCROP,r.variedad)]), any=false;
     utmPolys(r.geom).forEach(function(poly){
@@ -5780,7 +5850,7 @@ function planoBuild(name,G,ext,rowsIn,imgUrl,opt){
       for(var i=1;i<pp.length;i++)rel.push([pp[i][0]-pp[i-1][0],pp[i][1]-pp[i-1][1]]);
       var mnx=1e9,mny=1e9,mxx=-1e9,mxy=-1e9,ar=0; pp.forEach(function(q,i){mnx=Math.min(mnx,q[0]);mxx=Math.max(mxx,q[0]);mny=Math.min(mny,q[1]);mxy=Math.max(mxy,q[1]);var q2=pp[(i+1)%pp.length];ar+=q[0]*q2[1]-q2[0]*q[1]}); ar=Math.abs(ar)/2;
       if(!geo[r.ref]||ar>geo[r.ref].ar)geo[r.ref]={ar:ar,bw:mxx-mnx,bh:mxy-mny};
-      doc.setGState(new doc.GState({opacity:.5})); doc.setFillColor(col[0],col[1],col[2]); doc.lines(rel,pp[0][0],pp[0][1],[1,1],'F',true); doc.setGState(new doc.GState({opacity:1}));
+      doc.setGState(new doc.GState({opacity:((ALPH[r.cultivo||NOCROP]||{})[varKey(r.cultivo||NOCROP,r.variedad)]||.5)})); doc.setFillColor(col[0],col[1],col[2]); doc.lines(rel,pp[0][0],pp[0][1],[1,1],'F',true); doc.setGState(new doc.GState({opacity:1}));
       doc.setLineJoin&&doc.setLineJoin('round');
       doc.setDrawColor(255,255,255); doc.setLineWidth(.9); doc.lines(rel,pp[0][0],pp[0][1],[1,1],'S',true);
       doc.setDrawColor(col[0],col[1],col[2]); doc.setLineWidth(.45); doc.lines(rel,pp[0][0],pp[0][1],[1,1],'S',true);
@@ -5835,7 +5905,7 @@ function recPlano(){
   var b=recBox(); if(!b||rec.busy)return; if(b.w>15000||b.h>15000||b.w<20||b.h<20)return;
   if(!loadPdfLib()){toast('No he podido preparar el generador de PDF.');return}
   rec.busy='plano'; renderRec();
-  var G=recPlanGeom(b), ew=G.mw*G.S/1000, eh=G.mh*G.S/1000, ext={minx:b.cx-ew/2,maxx:b.cx+ew/2,miny:b.cy-eh/2,maxy:b.cy+eh/2};
+  var G=recPlanGeom(b), ew0=G.mw*G.S/1000, eh0=G.mh*G.S/1000, ext0={minx:b.cx-ew0/2,maxx:b.cx+ew0/2,miny:b.cy-eh0/2,maxy:b.cy+eh0/2}, ext=planFix(G,b,recRowsInBox(ext0),{});
   var pp=planPx(G,ext), wpx=pp.wpx, hpx=pp.hpx, name=rec.name||'Plano';
   IGNDOWN=false;IGNWHY="";NOPH.asked=false;NOPH.skip=false;NOPH.fails=0;
   locEnsure(recRowsInBox(ext)).then(function(){return planFoto(ext,wpx,hpx,false)}).then(function(ph){
@@ -6067,7 +6137,7 @@ function renderDw(){
         var zs=dwZones(u.rows);
         if(zs.length>1){
           var gz0=dwGeneral(zs), gen0=gz0.filter(function(g){return g.idx.length>1});
-          zl+='<br>«'+esc(u.name)+'»: '+zs.length+' zonas'+(gen0.length?' + '+(gen0.length===1?'página de conjunto':gen0.length+' páginas de conjunto'):' (están muy separadas: sin página de conjunto)')+zs.map(function(z,i){return '<br>&nbsp;&nbsp;Zona '+(i+1)+': '+z.rows.length+(z.rows.length===1?' recinto':' recintos')+' · '+ha2(z.ha)+' ha'}).join('')+gen0.map(function(g,gi){return '<br>&nbsp;&nbsp;Conjunto'+(gen0.length>1?' '+(gi+1):'')+': zonas '+dwNums(g.idx)}).join('');
+          zl+='<br>«'+esc(u.name)+'»: '+zs.length+' zonas'+(gen0.length?' + '+(gen0.length===1?'página de conjunto':gen0.length+' páginas de conjunto'):' (están muy separadas: cada una con su plano de situación)')+zs.map(function(z,i){return '<br>&nbsp;&nbsp;Zona '+(i+1)+': '+z.rows.length+(z.rows.length===1?' recinto':' recintos')+' · '+ha2(z.ha)+' ha'}).join('')+gen0.map(function(g,gi){return '<br>&nbsp;&nbsp;Conjunto'+(gen0.length>1?' '+(gi+1):'')+': zonas '+dwNums(g.idx)}).join('');
         }
         else zl+='<br>«'+esc(u.name)+'»: está todo cerca, sale un solo plano.';
       });
@@ -6113,17 +6183,25 @@ function dwGo(){
       var genPages=gen.map(function(g,gi){
         var rowsG=[]; g.idx.forEach(function(i){rowsG=rowsG.concat(zs[i].rows)});
         var lab=gen.length===1?(gz.length===1?'Conjunto':'Conjunto (zonas '+dwNums(g.idx)+')'):'Conjunto '+(gi+1)+' de '+gen.length+' (zonas '+dwNums(g.idx)+')';
-        return {sub:lab,box:g.box,over:true,rows:rowsG,zones:g.idx.map(function(i){return {box:zs[i].box,n:i+1}})};
+        var sb=sitBox(g.box,2)||g.box; return {sub:lab,box:sb,over:true,rows:rowsG,zones:g.idx.map(function(i){return {box:zs[i].box,n:i+1}})};
       });
-      if(!gen.length)notes.push('«'+u.name+'»: las zonas están muy separadas (más de '+(DWGEN/1000)+' km) y no hay página de conjunto; cada zona tiene su plano.');
-      else if(gz.length>gen.length)notes.push('«'+u.name+'»: '+(gen.length===1?'la página de conjunto reúne':'las '+gen.length+' páginas de conjunto reúnen')+' solo las zonas cercanas; las zonas aisladas tienen su plano propio.');
+      if(!gen.length)notes.push('«'+u.name+'»: las zonas están muy separadas (más de '+(DWGEN/1000)+' km) y no hay página de conjunto; cada zona lleva su plano de situación y su plano.');
+      else if(gz.length>gen.length)notes.push('«'+u.name+'»: '+(gen.length===1?'la página de conjunto reúne':'las '+gen.length+' páginas de conjunto reúnen')+' solo las zonas cercanas; cada zona aislada lleva su plano de situación y su plano propio.');
       var esr=[];
-      var pages=genPages.concat(zs.map(function(z,i){return {sub:'Zona '+(i+1),box:z.box,rows:z.rows}})), doc=null, k=0;
+      /* Entrega 29: cada zona aislada lleva antes de su plano un plano de situación (más alejado, con su recuadro) */
+      var isoZ={}; gz.forEach(function(g){if(g.idx.length===1&&gz.length>1)isoZ[g.idx[0]]=1});
+      var zpages=[]; zs.forEach(function(z,i){
+        var sb=isoZ[i]?sitBox(z.box,3):null;
+        if(sb)zpages.push({sub:'Situación de la zona '+(i+1),box:sb,over:true,rows:z.rows,zones:[{box:z.box,n:i+1}]});
+        zpages.push({sub:'Zona '+(i+1),box:z.box,rows:z.rows});
+      });
+      var pages=genPages.concat(zpages), doc=null, k=0;
       var one=function(){
         if(k>=pages.length)return Promise.resolve();
         var pg=pages[k++], pb=pg.box;
         if(!pb||(!pg.over&&(pb.w>15000||pb.h>15000))){notes.push('«'+u.name+'» '+pg.sub+' no creada: pasa de 15 km por lado.');return one()}
-        var G=recPlanGeom(pb), ew=G.mw*G.S/1000, eh=G.mh*G.S/1000, ext={minx:pb.cx-ew/2,maxx:pb.cx+ew/2,miny:pb.cy-eh/2,maxy:pb.cy+eh/2};
+        var G=recPlanGeom(pb), ew0=G.mw*G.S/1000, eh0=G.mh*G.S/1000, ext0={minx:pb.cx-ew0/2,maxx:pb.cx+ew0/2,miny:pb.cy-eh0/2,maxy:pb.cy+eh0/2};
+        var ext=planFix(G,pb,pg.rows||(u.zone?recRowsInBox(ext0):u.rows),{zones:pg.zones,over:pg.over,toneRows:u.rows}), ew=ext.maxx-ext.minx, eh=ext.maxy-ext.miny;
         var pp=planPx(G,ext,pg.over?3000:0), wpx=pp.wpx, hpx=pp.hpx, nofoto=pg.over&&Math.max(ew,eh)>DWGEN*2;
         dwProg(u.name+' · '+pg.sub+' ('+k+' de '+pages.length+')');
         var lab0=u.name+' · '+pg.sub+' ('+k+' de '+pages.length+')';
@@ -6143,7 +6221,8 @@ function dwGo(){
     else if(dl.f.plano)steps.push(['Plano de '+u.name,function(){
       if(!b||big){notes.push('Plano de '+u.name+' no creado: la zona pasa de 15 km por lado.');return Promise.resolve()}
       rec.paper=dl.paper; rec.scale=dl.scale;
-      var G=recPlanGeom(b), ew=G.mw*G.S/1000, eh=G.mh*G.S/1000, ext={minx:b.cx-ew/2,maxx:b.cx+ew/2,miny:b.cy-eh/2,maxy:b.cy+eh/2};
+      var G=recPlanGeom(b), ew0=G.mw*G.S/1000, eh0=G.mh*G.S/1000, ext0={minx:b.cx-ew0/2,maxx:b.cx+ew0/2,miny:b.cy-eh0/2,maxy:b.cy+eh0/2};
+      var ext=planFix(G,b,u.zone?recRowsInBox(ext0):u.rows,{toneRows:u.rows});
       var pp=planPx(G,ext), wpx=pp.wpx, hpx=pp.hpx;
       var pf1=function(){return NOPH.skip?Promise.resolve({url:null,src:null,skipped:true}):planFoto(ext,wpx,hpx,false,function(t){dwProg('Plano de '+u.name+' · '+t)})};
       return locEnsure(u.rows).then(pf1).then(function(ph){
@@ -7773,7 +7852,7 @@ setTimeout(function(){map.invalidateSize();refreshSigpac();if(OV.ndvi){ndviPill(
 
 window.__mf={GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
-Object.assign(window.__mf,{bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
+Object.assign(window.__mf,{recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
 })();
 </script>
 <script type="text/plain" id="pdflib">/** @license
