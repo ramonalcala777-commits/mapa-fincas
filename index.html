@@ -1232,12 +1232,58 @@ var BASES={
   pnoa:{name:'Foto aérea PNOA',url:wm('pnoa-ma','OI.OrthoimageCoverage','image/jpeg'),att:'Imagen © PNOA · IGN',nat:19,ph:true},
   esri:{name:'Satélite Esri',url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',att:'Imagen © Esri',nat:19},
   esrin:{name:'Satélite Esri con nombres',url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',over:'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',overNat:18,att:'Imagen © Esri',nat:19},
+  esrih:{name:'Satélite Esri histórico',url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',att:'Imagen © Esri',nat:19,wb:true},
   hibrido:{name:'Foto aérea con nombres',url:wm('pnoa-ma','OI.OrthoimageCoverage','image/jpeg'),over:wm('ign-base','IGNBaseOrto','image/png'),att:'Imagen © PNOA · IGN',nat:19,ph:true},
   ign:{name:'Mapa base IGN',url:wm('ign-base','IGNBaseTodo','image/jpeg'),att:'Mapa © IGN',nat:19},
   topo:{name:'Topográfico IGN',url:wm('mapa-raster','MTN','image/jpeg'),att:'Mapa © IGN',nat:17},
   osm:{name:'Callejero OpenStreetMap',url:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',att:'© OpenStreetMap',nat:19}
 };
-var BORDER=['pnoa','esri','hibrido','esrin','ign','topo','osm'];
+var BORDER=['pnoa','esri','hibrido','esrin','esrih','ign','topo','osm'];
+/* Entrega 31: Esri Wayback = versiones guardadas del satélite de Esri. WBK.list = [{rel,date,y,url,meta}] (ordenadas por fecha); WBK.years = [{y,it}] (la última versión de cada año) */
+var WBK={list:null,years:null,err:'',busy:false,sel:0,p:null};
+var WBCFG='https://s3-us-west-2.amazonaws.com/config.maptiles.arcgis.com/waybackconfig.json';
+function wbFmt(d){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(d||'');return m?esdFmt(new Date(Date.UTC(+m[1],+m[2]-1,+m[3]))):''}
+function wbParse(j){
+  var out=[]; if(!j||typeof j!=='object')return out;
+  Object.keys(j).forEach(function(k){
+    var o=j[k]||{}, m=/(\d{4})-(\d{2})-(\d{2})/.exec(o.itemTitle||''), rel=+k; if(!m||!isFinite(rel))return;
+    var u=String(o.itemURL||'').replace('{level}','{z}').replace('{row}','{y}').replace('{col}','{x}');
+    if(u.indexOf('{z}')<0)u='https://wayback.maptiles.arcgis.com/arcgis/rest/services/world_imagery/mapserver/tile/'+rel+'/{z}/{y}/{x}';
+    out.push({rel:rel,date:m[1]+'-'+m[2]+'-'+m[3],y:+m[1],url:u,meta:o.metadataLayerUrl||''});
+  });
+  out.sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:a.rel-b.rel});
+  return out;
+}
+function wbSet(list){
+  var ys={}; list.forEach(function(it){ys[it.y]=it});
+  if(!WBK.sel){try{WBK.sel=+localStorage.getItem('mf_wby')||0}catch(e){}}
+  WBK.list=list; WBK.years=Object.keys(ys).map(function(y){return {y:+y,it:ys[y]}}).sort(function(a,b){return a.y-b.y});
+  if(!WBK.sel||!ys[WBK.sel])WBK.sel=WBK.years.length?WBK.years[WBK.years.length-1].y:0;
+}
+function wbLoad(force){
+  if(WBK.list&&!force)return Promise.resolve(WBK.list);
+  if(WBK.p&&!force)return WBK.p;
+  WBK.busy=true; WBK.err='';
+  try{var c=JSON.parse(localStorage.getItem('mf_wb')||'null'); if(c&&c.list&&c.list.length&&Date.now()-c.t<6048e5&&!force){wbSet(c.list);WBK.busy=false;return Promise.resolve(WBK.list)}}catch(e){}
+  WBK.p=fetchJsonS(WBCFG,15000).then(function(j){
+    var l=wbParse(j); if(!l.length)throw new Error('lista');
+    wbSet(l); WBK.busy=false; WBK.p=null;
+    try{localStorage.setItem('mf_wb',JSON.stringify({t:Date.now(),list:l}))}catch(e){}
+    return l;
+  },function(e){
+    WBK.busy=false; WBK.p=null; WBK.err=whyErr(e);
+    try{var c=JSON.parse(localStorage.getItem('mf_wb')||'null'); if(c&&c.list&&c.list.length){wbSet(c.list);WBK.err='';return WBK.list}}catch(e2){}
+    throw e;
+  });
+  return WBK.p;
+}
+function wbItem(y){var r=null;(WBK.years||[]).forEach(function(x){if(x.y===+y)r=x.it});return r}
+function wbLatest(){return WBK.list&&WBK.list.length?WBK.list[WBK.list.length-1]:null}
+function wbTileUrl(it,z,x,y){return it.url.replace('{z}',z).replace('{y}',y).replace('{x}',x)}
+function fetchJsonS(u,ms){
+  var ac=ms&&typeof AbortController!=='undefined'?new AbortController():null, t=ac?setTimeout(function(){ac.abort()},ms):0, done=function(){if(t)clearTimeout(t)};
+  return fetch(u,ac?{signal:ac.signal}:undefined).then(function(r){if(!r.ok){var e=new Error(r.status);e.st=r.status;throw e}return r.json()}).then(function(j){done();return j},function(e){done();throw e});
+}
 
 /* ───────── datos y almacenamiento ───────── */
 var VC=(function(){
@@ -1579,7 +1625,9 @@ function mountBase(k){
   esdClear();
   if(baseLayer)map.removeLayer(baseLayer);
   if(overLayer){map.removeLayer(overLayer);overLayer=null}
-  var b=BASES[k]; baseLayer=L.tileLayer(b.url,{maxNativeZoom:b.nat,maxZoom:21,attribution:b.att}).addTo(map);
+  var b=BASES[k], bu=b.url, ba=b.att, wi=b.wb&&WBK.list?wbItem(WBK.sel):null;
+  if(wi){bu=wi.url;ba='Imagen © Esri · versión del '+wbFmt(wi.date)}
+  ESD.base=ba; baseLayer=L.tileLayer(bu,{maxNativeZoom:b.nat,maxZoom:21,attribution:ba}).addTo(map);
   if(b.over)overLayer=L.tileLayer(b.over,{maxNativeZoom:b.overNat||19,maxZoom:21,zIndex:2}).addTo(map);
   var me=baseLayer;
   baseLayer.on('loading',function(){BKS.e=0;BKS.ok=0});
@@ -1589,32 +1637,37 @@ function mountBase(k){
   baseLayer.bringToBack(); esdSoon();
 }
 /* Entrega 22: fecha de la foto de Esri junto a su atribución (la del punto central del mapa; se consulta al parar el mapa) */
-var ESD={t:0,key:'',seq:0,att:'',cut:false,txt:''};
-function isEsriNow(){var k=BKUP||S.base;return k==='esri'||k==='esrin'}
+var ESD={t:0,key:'',seq:0,att:'',cut:false,txt:'',base:''};
+function isEsriNow(){var k=BKUP||S.base;return k==='esri'||k==='esrin'||k==='esrih'}
 function esdClear(){try{if(ESD.att)map.attributionControl.removeAttribution(ESD.att)}catch(e){}ESD.att='';ESD.cut=false;ESD.txt='';ESD.key='';ESD.seq++}
 function esdFmt(d){return d&&isFinite(d.getTime())?d.toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}):''}
 /* Entrega 24: Esri da «DATE (YYYYMMDD)» (p. ej. 20240616) y «SRC_DATE2» en formato EE. UU. mes/día/año (6/16/2024) */
 function esdParse(a){
   a=a||{}; var ks=Object.keys(a), v, m, d;
   for(var i=0;i<ks.length;i++){ if(/^date\s*\(yyyymmdd\)$/i.test(ks[i])){ v=String(a[ks[i]]); m=/^(\d{4})(\d{2})(\d{2})$/.exec(v); if(m){d=esdFmt(new Date(Date.UTC(+m[1],+m[2]-1,+m[3])));if(d)return d} } }
-  for(i=0;i<ks.length;i++){ if(/^src_?date2?$/i.test(ks[i])){ v=String(a[ks[i]]); m=/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(v); if(m){d=esdFmt(new Date(Date.UTC(+m[3],+m[1]-1,+m[2])));if(d)return d} } }
+  for(i=0;i<ks.length;i++){ if(/^src_?date2?$/i.test(ks[i])){ v=String(a[ks[i]]);
+    if(/^\d{11,14}$/.test(v)){d=esdFmt(new Date(+v));if(d)return d}
+    m=/^(\d{4})(\d{2})(\d{2})$/.exec(v); if(m){d=esdFmt(new Date(Date.UTC(+m[1],+m[2]-1,+m[3])));if(d)return d} m=/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(v); if(m){d=esdFmt(new Date(Date.UTC(+m[3],+m[1]-1,+m[2])));if(d)return d} } }
   return '';
 }
 function esdSet(txt){
   if(!txt||txt===ESD.txt)return;
   var ac=map.attributionControl; if(!ac)return;
   if(ESD.att)ac.removeAttribution(ESD.att);
-  if(!ESD.cut){ac.removeAttribution('Imagen © Esri');ESD.cut=true}
-  ESD.att='Imagen © Esri · foto de '+txt; ESD.txt=txt; ac.addAttribution(ESD.att);
+  if(!ESD.cut){ac.removeAttribution(ESD.base||'Imagen © Esri');ESD.cut=true}
+  var wi=(BKUP||S.base)==='esrih'&&WBK.list?wbItem(WBK.sel):null;
+  ESD.att='Imagen © Esri · foto de '+txt+(wi?' (versión '+wi.y+')':''); ESD.txt=txt; ac.addAttribution(ESD.att);
 }
 function esdFetch(){
   if(!isEsriNow()||!map._loaded)return;
   var c=map.getCenter(), z=map.getZoom(), key=c.lat.toFixed(3)+','+c.lng.toFixed(3)+','+z; if(key===ESD.key)return; ESD.key=key;
   var b=map.getBounds(), sz=map.getSize(), seq=++ESD.seq;
-  var u='https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/identify?f=json&geometry='+encodeURIComponent(c.lng.toFixed(6)+','+c.lat.toFixed(6))+'&geometryType=esriGeometryPoint&sr=4326&layers=top&tolerance=2&mapExtent='+[b.getWest(),b.getSouth(),b.getEast(),b.getNorth()].map(function(v){return v.toFixed(6)}).join(',')+'&imageDisplay='+sz.x+','+sz.y+',96&returnGeometry=false';
+  var wi=(BKUP||S.base)==='esrih'&&WBK.list?wbItem(WBK.sel):null, svc='https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer';
+  if(wi){if(!wi.meta)return; svc=wi.meta.replace(/\/+$/,'')}
+  var u=svc+'/identify?f=json&geometry='+encodeURIComponent(c.lng.toFixed(6)+','+c.lat.toFixed(6))+'&geometryType=esriGeometryPoint&sr=4326&layers='+(wi?'all':'top')+'&tolerance=2&mapExtent='+[b.getWest(),b.getSouth(),b.getEast(),b.getNorth()].map(function(v){return v.toFixed(6)}).join(',')+'&imageDisplay='+sz.x+','+sz.y+',96&returnGeometry=false';
   fetch(u).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(j){
     if(seq!==ESD.seq||!isEsriNow())return;
-    var r0=(j.results||[])[0]; var t=r0?esdParse(r0.attributes):''; if(t)esdSet(t);
+    var t=''; (j.results||[]).some(function(r0){t=esdParse(r0.attributes);return !!t}); if(t)esdSet(t);
   }).catch(function(){});
 }
 function esdSoon(){if(ESD.t)clearTimeout(ESD.t);ESD.t=setTimeout(function(){ESD.t=0;esdFetch()},700)}
@@ -1623,6 +1676,7 @@ function setBase(k,quiet){
   if(!BASES[k])k='pnoa';
   BKUP=null; if(bkT){clearInterval(bkT);bkT=null}
   mountBase(k); S.base=k; var b=BASES[k]; if(!quiet){save();toast(b.name)} esdSoon();
+  if(b.wb&&!WBK.list)wbLoad().then(function(){if(S.base==='esrih'&&!BKUP){mountBase('esrih');if($('#layers')&&!$('#layers').hidden)renderLayers()}},function(){if($('#layers')&&!$('#layers').hidden)renderLayers();toast('No he podido leer la lista de años de Esri ('+WBK.err+'). Se ve la foto actual.')});
 }
 /* reserva automática: si el IGN no responde (nada carga y hay errores), se ve Esri/OSM sin cambiar tu elección */
 function bkCheck(){
@@ -1802,7 +1856,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-10T19:33:50Z',n:'Entrega 30 · 10 oct · 21:33'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-10T20:17:04Z',n:'Entrega 31 · 10 oct · 22:17'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -1827,6 +1881,15 @@ function renderLayers(){
   h+='<div class="lgrid">';
   BORDER.forEach(function(k){h+='<button class="lopt'+(S.base===k?' on':'')+'" data-act="base-set" data-k="'+k+'"><i class="rd"></i>'+esc(BASES[k].name)+'</button>'});
   h+='</div>';
+  if(S.base==='esrih'&&!BKUP){
+    if(WBK.years&&WBK.years.length){
+      var wi=wbItem(WBK.sel);
+      h+='<div class="row" style="margin:8px 0 2px"><label for="wb-year" class="small" style="flex:1"><b>Año de la foto</b></label><select id="wb-year" class="in" style="max-width:150px" aria-label="Año de la foto de Esri">'+WBK.years.slice().reverse().map(function(x){return '<option value="'+x.y+'"'+(x.y===WBK.sel?' selected':'')+'>'+x.y+'</option>'}).join('')+'</select></div>';
+      h+='<div class="small" style="margin-bottom:8px">Versión de Esri del '+esc(wi?wbFmt(wi.date):'')+'. La fecha real de la foto de cada sitio sale abajo a la derecha (puede ser anterior a la versión).</div>';
+    }else if(WBK.err){
+      h+='<div class="note" style="margin:8px 0">No he podido leer la lista de años de Esri ('+esc(WBK.err)+'). Mientras tanto se ve la foto actual de Esri. <button class="chip" data-act="wb-retry">Reintentar</button></div>';
+    }else h+='<div class="small" style="margin:8px 0">Cargando los años disponibles…</div>';
+  }
   h+=layHead('cap','Capas encima',capsOn.join(', ')||'ninguna');
   h+='<button class="lopt'+(OV.sig?' on':'')+'" data-act="ov" data-k="sig"><i class="sq"></i>Recintos SIGPAC</button>';
   h+='<button class="lopt'+(OV.cat?' on':'')+'" data-act="ov" data-k="cat"><i class="sq"></i>Parcelas catastrales</button>';
@@ -5424,6 +5487,96 @@ function esriImage(ext,wpx,hpx,T){
 }
 /* Entrega 26: un 5xx, un tiempo agotado o un fallo de red (el navegador no deja leer el error del IGN caído) = servidor que no responde */
 function netDead(e){return !!(e&&(e.st>=500||e.name==='AbortError'||(!e.st&&e.message!=='tipo'&&e.message!=='img'&&e.message!=='canvas'&&e.message!=='jpg')))}
+/* Entrega 31: foto de Esri Wayback para los planos. Wayback solo sirve teselas Web Mercator (EPSG:3857); el plano está en UTM 30N (EPSG:25830).
+   Se bajan las teselas que cubren la zona, se unen en un mosaico y se reproyecta aquí mismo: para cada píxel del plano se calcula dónde cae en el mosaico (red de puntos cada 16 px, interpolada) y se toma el color con interpolación bilineal. */
+var PHREL=null;
+function wbMerc(lon,lat,z){var n=256*Math.pow(2,z), r=lat*Math.PI/180; return [(lon+180)/360*n,(1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*n]}
+function wbGrid(ext,W,H,z,mx0,my0,step){
+  step=step||16; var nx=Math.ceil(W/step)+1, ny=Math.ceil(H/step)+1, px=new Float64Array(nx*ny), py=new Float64Array(nx*ny), dx=(ext.maxx-ext.minx)/W, dy=(ext.maxy-ext.miny)/H;
+  for(var j=0;j<ny;j++)for(var i=0;i<nx;i++){
+    var ll=fromUTM(ext.minx+i*step*dx,ext.maxy-j*step*dy,30), m=wbMerc(ll[0],ll[1],z);
+    px[j*nx+i]=m[0]-mx0; py[j*nx+i]=m[1]-my0;
+  }
+  return {nx:nx,ny:ny,step:step,px:px,py:py};
+}
+/* mos = {w,h,data(RGBA)}; devuelve RGBA de W x H */
+function wbWarp(mos,ext,W,H,z,mx0,my0){
+  var G=wbGrid(ext,W,H,z,mx0,my0,16), st=G.step, out=new Uint8ClampedArray(W*H*4), md=mos.data, mw=mos.w, mh=mos.h;
+  for(var y=0;y<H;y++){
+    var gj=Math.min(G.ny-2,Math.floor(y/st)), fy=y/st-gj;
+    for(var x=0;x<W;x++){
+      var gi=Math.min(G.nx-2,Math.floor(x/st)), fx=x/st-gi, a=gj*G.nx+gi, b=a+1, c=a+G.nx, d=c+1;
+      var sx=(G.px[a]*(1-fx)+G.px[b]*fx)*(1-fy)+(G.px[c]*(1-fx)+G.px[d]*fx)*fy-.5, sy=(G.py[a]*(1-fx)+G.py[b]*fx)*(1-fy)+(G.py[c]*(1-fx)+G.py[d]*fx)*fy-.5;
+      var x0=Math.floor(sx), y0=Math.floor(sy), tx=sx-x0, ty=sy-y0, o=(y*W+x)*4;
+      if(x0<0)x0=0,tx=0; if(y0<0)y0=0,ty=0; if(x0>mw-2){x0=Math.max(0,mw-2);tx=1} if(y0>mh-2){y0=Math.max(0,mh-2);ty=1}
+      var i00=(y0*mw+x0)*4, i10=i00+4, i01=i00+mw*4, i11=i01+4, w00=(1-tx)*(1-ty), w10=tx*(1-ty), w01=(1-tx)*ty, w11=tx*ty;
+      out[o]=md[i00]*w00+md[i10]*w10+md[i01]*w01+md[i11]*w11;
+      out[o+1]=md[i00+1]*w00+md[i10+1]*w10+md[i01+1]*w01+md[i11+1]*w11;
+      out[o+2]=md[i00+2]*w00+md[i10+2]*w10+md[i01+2]*w01+md[i11+2]*w11;
+      out[o+3]=255;
+    }
+  }
+  return out;
+}
+function wbDecode(bl){
+  if(typeof window.__wbDecode==='function')return window.__wbDecode(bl);
+  var draw=function(src,w,h){var cv=document.createElement('canvas');cv.width=w;cv.height=h;var cx=cv.getContext('2d');if(!cx)throw new Error('canvas');cx.drawImage(src,0,0);return cx.getImageData(0,0,w,h).data};
+  if(typeof createImageBitmap==='function')return createImageBitmap(bl).then(function(bm){var d=draw(bm,bm.width,bm.height);if(bm.close)bm.close();return {w:bm.width,h:bm.height,data:d}});
+  return new Promise(function(res,rej){var u=URL.createObjectURL(bl), im=new Image(); im.onload=function(){try{var d=draw(im,im.width,im.height);URL.revokeObjectURL(u);res({w:im.width,h:im.height,data:d})}catch(e){rej(e)}}; im.onerror=function(){URL.revokeObjectURL(u);rej(new Error('img'))}; im.src=u});
+}
+function wbEncode(rgba,W,H){
+  if(typeof window.__wbEncode==='function')return window.__wbEncode(rgba,W,H);
+  var cv=document.createElement('canvas'); cv.width=W; cv.height=H; var cx=cv.getContext('2d'); if(!cx)throw new Error('canvas');
+  cx.putImageData(new ImageData(rgba,W,H),0,0); return cv.toDataURL('image/jpeg',.92);
+}
+/* planifica el zoom y las teselas de una zona UTM */
+function wbPlan(ext,W,H){
+  var cs=[[ext.minx,ext.miny],[ext.maxx,ext.miny],[ext.minx,ext.maxy],[ext.maxx,ext.maxy]].map(function(c){return fromUTM(c[0],c[1],30)});
+  var lat=(cs[0][1]+cs[2][1])/2, res=(ext.maxx-ext.minx)/W, z=Math.ceil(Math.log(156543.034*Math.cos(lat*Math.PI/180)/res)/Math.LN2);
+  z=Math.max(1,Math.min(19,z));
+  for(;;){
+    var ms=cs.map(function(c){return wbMerc(c[0],c[1],z)}), x0=Math.floor(Math.min.apply(null,ms.map(function(m){return m[0]}))/256)-0, x1=Math.floor(Math.max.apply(null,ms.map(function(m){return m[0]}))/256),
+        y0=Math.floor(Math.min.apply(null,ms.map(function(m){return m[1]}))/256), y1=Math.floor(Math.max.apply(null,ms.map(function(m){return m[1]}))/256);
+    if((x1-x0+1)*(y1-y0+1)<=150||z<=8)return {z:z,x0:x0,x1:x1,y0:y0,y1:y1};
+    z--;
+  }
+}
+function wbImage(it,ext,wpx,hpx,onProg){
+  var k=Math.min(1,3000/Math.max(wpx,hpx)), W=Math.max(64,Math.round(wpx*k)), H=Math.max(64,Math.round(hpx*k)), P=wbPlan(ext,W,H), nx=P.x1-P.x0+1, ny=P.y1-P.y0+1, tot=nx*ny;
+  var mw=nx*256, mh=ny*256, mos={w:mw,h:mh,data:new Uint8ClampedArray(mw*mh*4)}; mos.data.fill(150);
+  var jobs=[], k2=0, done=0, miss=0, dead=0, stop=null, lastE=null;
+  for(var ty=P.y0;ty<=P.y1;ty++)for(var tx=P.x0;tx<=P.x1;tx++)jobs.push([tx,ty]);
+  var one=function(){
+    if(stop||k2>=jobs.length)return Promise.resolve();
+    var j=jobs[k2++];
+    return fetchBlobT(wbTileUrl(it,P.z,j[0],j[1]),20000,/image\//).then(wbDecode).then(function(t){
+      var ox=(j[0]-P.x0)*256, oy=(j[1]-P.y0)*256, tw=Math.min(256,t.w), th=Math.min(256,t.h);
+      for(var r=0;r<th;r++)mos.data.set(t.data.subarray(r*t.w*4,r*t.w*4+tw*4),((oy+r)*mw+ox)*4);
+    },function(e){
+      lastE=e; if(e&&(e.st===404||e.st===400||e.message==='tipo'))miss++; else{miss++;if(netDead(e))dead++}
+      if(dead>=4)stop=e;
+    }).then(function(){done++;if(onProg)onProg(done,tot);return one()});
+  };
+  var pool=[]; for(var q=0;q<6;q++)pool.push(one());
+  return Promise.all(pool).then(function(){
+    if(stop)throw stop;
+    if(miss>tot*.3)throw Object.assign(new Error('faltan'),{st:0,miss:miss,tot:tot});
+    var rgba=wbWarp(mos,ext,W,H,P.z,P.x0*256,P.y0*256);
+    return wbEncode(rgba,W,H);
+  });
+}
+/* fecha real de la foto en el centro de la zona (servicio de metadatos de esa versión); vacío si no se obtiene */
+function wbCapDate(it,ext){
+  if(!it||!it.meta)return Promise.resolve('');
+  var ll=fromUTM((ext.minx+ext.maxx)/2,(ext.miny+ext.maxy)/2,30), d=.002;
+  var u=it.meta.replace(/\/+$/,'')+'/identify?f=json&geometry='+encodeURIComponent(ll[0].toFixed(6)+','+ll[1].toFixed(6))+'&geometryType=esriGeometryPoint&sr=4326&layers=all&tolerance=2&mapExtent='+[ll[0]-d,ll[1]-d,ll[0]+d,ll[1]+d].map(function(v){return v.toFixed(6)}).join(',')+'&imageDisplay=400,400,96&returnGeometry=false';
+  return fetchJsonT(u,8000).then(function(j){var t='';(j.results||[]).some(function(r){t=esdParse(r.attributes);return !!t});return t},function(){return ''});
+}
+/* texto de crédito de la foto de Esri de un plano */
+function phNote(ph){
+  if(!ph||ph.src!=='esri'||!ph.wb)return '';
+  return ph.date?'foto de '+ph.date+' (versión '+ph.wb.y+')':'versión del '+wbFmt(ph.wb.date);
+}
 var NOPH={asked:false,skip:false,fails:0};
 /* Entrega 27: una página sin foto no frena las demás; solo si fallan dos seguidas se pregunta (una vez) si reintentar o seguir sin foto */
 function photoGate(ph,nofoto,retry){
@@ -5443,6 +5596,8 @@ function whyErr(e){
   if(e.name==='AbortError')return 'tiempo agotado';
   if(e.st>=500&&e.st<599)return 'servidor caído (error '+e.st+')';
   if(e.st>=400&&e.st<500)return 'petición rechazada (error '+e.st+')';
+  if(e.message==='faltan')return 'faltan trozos de la foto de esa versión';
+  if(e.message==='lista')return 'no responde la lista de versiones';
   if(e.message==='tipo')return 'respuesta que no es una imagen';
   if(e.message==='img'||e.message==='canvas'||e.message==='jpg')return 'no se han podido unir los trozos';
   return 'no responde';
@@ -5451,6 +5606,10 @@ var IGNWHY='';
 function planFoto(ext,wpx,hpx,skip,prog){
   prog=prog||function(){};
   if(skip)return Promise.resolve({url:null,src:null,skipped:true});
+  /* Entrega 31: con un año elegido solo se pide esa versión de Esri; si falla no se cambia a otro año */
+  if(PHREL){var it0=PHREL; prog('foto de Esri de '+it0.y);
+    return wbImage(it0,ext,wpx,hpx,function(d,t){prog('foto de Esri '+it0.y+', trozo '+d+' de '+t)}).then(function(u){return wbCapDate(it0,ext).then(function(dt){return {url:u,src:'esri',wb:it0,date:dt,chosen:true}})},function(e){return {url:null,src:null,why:'Esri '+it0.y+': '+whyErr(e)}});
+  }
   var big=wpx>1536||hpx>1536, isDead=netDead;
   var ign=function(tile){prog('foto del IGN');return wmsImage(ext,wpx,hpx,true,function(d,t){prog('foto del IGN, '+d+' de '+t)},{tile:tile,retries:1,ms:15000}).then(function(u){return {url:u,src:'ign'}})};
   var first=IGNDOWN?Promise.reject(Object.assign(new Error('down'),{st:599,again:1})):ign(2048);
@@ -5464,7 +5623,11 @@ function planFoto(ext,wpx,hpx,skip,prog){
     if(isDead(e))IGNDOWN=true;
     prog(IGNDOWN?'foto de Esri (el IGN no responde)':'foto de Esri');
     /* Entrega 27: si Esri no contesta a tiempo con trozos de 2000 px, se repite la página con trozos de 1000 px (más ligeros) */
-    return esriImage(ext,wpx,hpx,2000).catch(function(){return esriImage(ext,wpx,hpx,1000)}).then(function(u){return {url:u,src:'esri'}}).catch(function(e2){return {url:null,src:null,why:'IGN: '+(IGNWHY||'sin respuesta')+'; Esri: '+whyErr(e2)}});
+    return esriImage(ext,wpx,hpx,2000).catch(function(){return esriImage(ext,wpx,hpx,1000)}).then(function(u){return {url:u,src:'esri'}}).catch(function(e2){
+      /* Entrega 31: tercera vía, la última versión guardada de Esri (teselas, reproyectadas aquí) */
+      var w2=whyErr(e2); prog('foto de Esri (versión guardada)');
+      return wbLoad().then(function(){var it=wbLatest(); if(!it)throw new Error('lista'); return wbImage(it,ext,wpx,hpx,function(d,t){prog('foto de Esri guardada, trozo '+d+' de '+t)}).then(function(u){return wbCapDate(it,ext).then(function(dt){return {url:u,src:'esri',wb:it,date:dt,third:true}})})}).catch(function(e3){return {url:null,src:null,why:'IGN: '+(IGNWHY||'sin respuesta')+'; Esri: '+w2+'; Esri versión guardada: '+whyErr(e3)}});
+    });
   });
 }
 /* píxeles del plano: resolución real del PNOA (25 cm) con tope de memoria */
@@ -5739,6 +5902,7 @@ function planLegendBlocks(rows,TONES,op,AL){
   blocks.push(b0);
   varGroups(rows.map(function(r){return {cultivo:r.cultivo,variedad:r.variedad,ha:r.ha}})).forEach(function(o){
     var base=hex2rgb(cropColor(o.c)), bl=[{t:o.c+' '+nf(o.ha,2)+' ha',bold:true,sw:base}], T=TONES[o.c];
+    if(!T&&o.g.length===1&&o.g[0].key)bl[0].t=o.c+' '+nf(o.ha,2)+' ha · '+o.g[0].name;
     if(T)o.g.forEach(function(g){bl.push({t:g.name+' '+nf(g.ha,2)+' ha',ind:true,sw:toneRGB(base,T[g.key]||0),alpha:(AL[o.c]||{})[g.key]||.5})});
     blocks.push(bl);
   });
@@ -5972,7 +6136,7 @@ function planoBuild(name,G,ext,rowsIn,imgUrl,opt){
   doc.setFillColor(255,255,255); doc.rect(bx-lft,by-4.3,bl+lft+rgt,7.4,'F');
   var seg=4; for(var s=0;s<seg;s++){doc.setFillColor(s%2?255:0,s%2?255:0,s%2?255:0); doc.rect(bx+s*bl/seg,by,bl/seg,2,'F')} doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.rect(bx,by,bl,2);
   doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(0,0,0); doc.text('0',bx,by-1.2,{align:'center'}); doc.text(lenTxt,bx+bl,by-1.2,{align:'center'});
-  var cr=(op.esri?'Imagen © Esri':'Imagen © PNOA · Instituto Geográfico Nacional')+' · Recintos © SIGPAC · FEGA / MAPA';
+  var cr=(op.esri?'Imagen © Esri'+(op.esriNote?' · '+op.esriNote:''):'Imagen © PNOA · Instituto Geográfico Nacional')+' · Recintos © SIGPAC · FEGA / MAPA';
   doc.setFont('helvetica','normal'); doc.setFontSize(6*Math.max(G.k||1,.8)); var tc=doc.getTextWidth(cr), cy=(tc+4<=room)?CJ.bot-1.3:CJ.top-1.3;
   dxLy(doc,'CREDITOS'); doc.setFillColor(255,255,255); doc.rect(M,cy-2.6,tc+3,3.6,'F'); doc.setTextColor(90,100,80); doc.text(cr,M+1.5,cy); doc.setTextColor(0,0,0);
   if(DX){op.dxf.out=DX.finish();op.dxf.n=DX.count();op.dxf.layers=DX.layers()}
@@ -5990,7 +6154,7 @@ function recPlano(){
     return ph;
   }).then(function(ph){
     try{
-      var url=ph.url, doc=planoBuild(name,G,ext,recRowsInBox(ext).map(function(r){return r}),url,{esri:ph.src==='esri'}), blob=doc.output('blob');
+      var url=ph.url, doc=planoBuild(name,G,ext,recRowsInBox(ext).map(function(r){return r}),url,{esri:ph.src==='esri',esriNote:phNote(ph)}), blob=doc.output('blob');
       rec.busy=''; renderRec();
       showDl(blob,'plano-'+safeName(name)+'-1a'+G.S+'.pdf','Plano listo','Escala 1:'+nf(G.S,0)+' en '+(rec.paper==='a3'?'A3':'A4')+(url?(ph.src==='esri'?' · foto de fondo de Esri (el IGN no respondía; menos resolución)':''):' · SIN foto de fondo ('+ph.why+')')+'. Imprímelo al 100 %.');
     }catch(e){rec.busy='';renderRec();toast('No he podido crear el plano.')}
@@ -5999,7 +6163,7 @@ function recPlano(){
 
 /* ---- asistente de descargas (Herramientas) ---- */
 var dwPick=false;
-var dl={allRecs:false,step:1,src:'fincas',fincas:{},owners:{},recs:null,zone:null,f:{plano:true},split:false,title:'',titleEdited:false,paper:'a4',orient:'auto',zones:false,zkm:1,scale:-1,busy:'',prog:''};
+var dl={allRecs:false,step:1,src:'fincas',fincas:{},owners:{},recs:null,zone:null,f:{plano:true},split:false,title:'',titleEdited:false,paper:'a4',orient:'auto',zones:false,zkm:1,scale:-1,wbYear:0,busy:'',prog:''};
 var DWF=[
   ['plano','Plano en PDF','Foto aérea con los recintos dibujados, a escala (A4 o A3). Para imprimir.'],
   ['dxfplano','Plano editable en DXF (AutoCAD / ZWCAD)','El plano completo en capas (recintos, textos, cuadrícula, cajetines, leyenda, escala) con la foto aparte. Para editar a mano.'],
@@ -6199,6 +6363,13 @@ function renderDw(){
       h+='<div class="lbl">Plano: papel y escala</div><div class="chips"><button class="chip'+(dl.paper==='a4'?' on':'')+'" data-act="dw-paper" data-v="a4">A4</button><button class="chip'+(dl.paper==='a3'?' on':'')+'" data-act="dw-paper" data-v="a3">A3</button></div>';
       h+='<div class="row"><select id="dw-scale" class="in" aria-label="Escala"><option value="-1"'+(dl.scale===-1?' selected':'')+'>Ajustar al máximo (cada plano a su escala mínima)</option><option value="0"'+(dl.scale===0?' selected':'')+'>Escala automática</option>'+SCALES.map(function(sc){return '<option value="'+sc+'"'+(dl.scale===sc?' selected':'')+'>1:'+nf(sc,0)+'</option>'}).join('')+'</select></div><div class="small">«Ajustar al máximo» pone cada plano a la escala más pequeña en la que caben todas sus parcelas (puede salir una escala no redonda, como 1:17.300). Si una escala fija no cabe en el papel, se usa la más pequeña que quepa.</div>';
       h+=orientChips('dw-orient',dl.orient);
+      h+='<div class="lbl">Foto de fondo</div>';
+      if(!WBK.list&&!WBK.busy&&!WBK.err)wbLoad().then(function(){if(dl.step===2)renderDw()},function(){if(dl.step===2)renderDw()});
+      if(WBK.years&&WBK.years.length){
+        h+='<div class="row"><select id="dw-wby" class="in" aria-label="Foto de fondo"><option value="0"'+(!dl.wbYear?' selected':'')+'>La más reciente (PNOA del IGN)</option>'+WBK.years.slice().reverse().map(function(x){return '<option value="'+x.y+'"'+(dl.wbYear===x.y?' selected':'')+'>Esri · año '+x.y+'</option>'}).join('')+'</select></div>';
+        h+='<div class="small">'+(dl.wbYear?'Con un año elegido la foto es de Esri (menos detalle que el PNOA). Si esa foto no llega, el plano sale sin foto y te lo aviso: no se cambia a otro año.':'Si el IGN falla, se usa Esri; si también falla, la última versión guardada de Esri.')+'</div>';
+      }else if(WBK.err)h+='<div class="small">La más reciente (PNOA del IGN). No he podido leer la lista de años de Esri ('+esc(WBK.err)+'). <button class="chip" data-act="wb-retry-dw">Reintentar</button></div>';
+      else h+='<div class="small">La más reciente (PNOA del IGN). Cargando los años de Esri…</div>';
       h+='<div class="chips" style="margin-top:12px"><button class="chip'+(dl.zones?' on':'')+'" data-act="dw-zones" aria-pressed="'+!!dl.zones+'">'+(dl.zones?'✓ ':'')+'Dividir por zonas si están separadas</button></div>';
       if(dl.zones)h+='<div class="row" style="margin-top:8px"><label for="dw-zkm" class="small" style="flex:1">Se separan si hay más de</label><select id="dw-zkm" class="in" style="max-width:130px" aria-label="Distancia para separar zonas">'+[.5,1,2,5,10].map(function(k){return '<option value="'+k+'"'+(dl.zkm===k?' selected':'')+'>'+String(k).replace('.',',')+' km</option>'}).join('')+'</select></div><div class="small">Sale un solo PDF: primera página con todo el conjunto y una página por zona, cada una con su escala.</div>';
     }
@@ -6260,7 +6431,7 @@ function dwGo(){
   if(dl.busy||!dwCanNext())return;
   if(!loadPdfLib()&&(dl.f.plano||dl.f.dxfplano||dl.f.informe||dl.f.ficha)){toast('No he podido preparar el generador de PDF.');return}
   var units=dwUnits(), sp=units.length>1, files=[], notes=[], title=(dl.title||'').trim()||'Plano', base=safeName(title), steps=[], oldPaper=rec.paper, oldScale=rec.scale, oldOnly=rec.only, oldOr=rec.orient;
-  rec.only=null; rec.orient=dl.orient; IGNDOWN=false;IGNWHY="";NOPH.asked=false;NOPH.skip=false;NOPH.fails=0;
+  rec.only=null; rec.orient=dl.orient; PHREL=((dl.f.plano||dl.f.dxfplano)&&dl.wbYear&&WBK.list)?wbItem(dl.wbYear):null; IGNDOWN=false;IGNWHY="";NOPH.asked=false;NOPH.skip=false;NOPH.fails=0;
   var add=function(pre,n,d){files.push({n:pre+n,d:d})};
   units.forEach(function(u){
     var pre=sp?safeName(u.name)+'/':'', nm=safeName(u.name);
@@ -6287,7 +6458,7 @@ function dwGo(){
       });
       if(!gen.length)notes.push('«'+u.name+'»: las zonas están muy separadas (más de '+(DWGEN/1000)+' km) y no hay página de conjunto; cada zona lleva su plano de situación y su plano.');
       else if(gz.length>gen.length)notes.push('«'+u.name+'»: '+(gen.length===1?'la página de conjunto reúne':'las '+gen.length+' páginas de conjunto reúnen')+' solo las zonas cercanas; cada zona aislada lleva su plano de situación y su plano propio.');
-      var esr=[];
+      var esr=[], wbp=[];
       /* Entrega 29: cada zona aislada lleva antes de su plano un plano de situación (más alejado, con su recuadro) */
       var isoZ={}; gz.forEach(function(g){if(g.idx.length===1&&gz.length>1)isoZ[g.idx[0]]=1});
       var zpages=[]; zs.forEach(function(z,i){
@@ -6311,13 +6482,14 @@ function dwGo(){
         }).then(function(ph){
           var url=ph.url, rows=pg.rows||(u.zone?recRowsInBox(ext):u.rows); /* Entrega 21: en cada plano solo se dibujan los recintos de su zona (o zonas) */
           if(!url)notes.push('«'+u.name+'» '+pg.sub+': sin foto de fondo'+(nofoto?' (la escala elegida abarca demasiado terreno para la foto; elige una escala más pequeña).':(ph.why?' ('+ph.why+').':' (no se ha intentado: elegiste seguir sin foto tras el aviso).')));
+          else if(ph.src==='esri'&&ph.wb)wbp.push(pg.sub+' ('+phNote(ph)+')'+(ph.third?'':''));
           else if(ph.src==='esri')esr.push(pg.sub);
-          var dx=dl.f.dxfplano?{}:null, d=planoBuild(u.name,G,ext,rows,url,{doc:doc,sub:pg.sub,over:pg.over,zones:pg.zones,esri:ph.src==='esri',kind:u.kind,who:u.who,toneRows:u.rows,dxf:dx}); if(!doc)doc=d;
+          var dx=dl.f.dxfplano?{}:null, d=planoBuild(u.name,G,ext,rows,url,{doc:doc,sub:pg.sub,over:pg.over,zones:pg.zones,esri:ph.src==='esri',esriNote:phNote(ph),kind:u.kind,who:u.who,toneRows:u.rows,dxf:dx}); if(!doc)doc=d;
           if(dx&&dx.out)dxPlano(add,pre,dxP,u.name+'-'+pg.sub,dx.out,url,ext,G);
           return one();
         });
       };
-      return one().then(function(){if(esr.length)notes.push('«'+u.name+'»: el IGN falló ('+IGNWHY+'); la foto de fondo de '+esr.join(', ')+' es de Esri (menos resolución que el PNOA).');if(dl.f.dxfplano&&dxP.length)add(pre+'plano-editable/','LEEME-plano-editable.txt',u8s(dxPlanoLeeme(u.name,dxP)));if(!doc||!dl.f.plano)return;return blobBytes(doc.output('blob')).then(function(by){add(pre,nm+'-plano-por-zonas.pdf',by)})});
+      return one().then(function(){if(wbp.length)notes.push('«'+u.name+'»: '+(PHREL?'la foto de fondo es de Esri, año '+PHREL.y+' (la que elegiste): ':'el IGN y el exportador de Esri fallaron; la foto de fondo es una versión guardada de Esri: ')+wbp.join(', ')+'.');if(esr.length)notes.push('«'+u.name+'»: el IGN falló ('+IGNWHY+'); la foto de fondo de '+esr.join(', ')+' es de Esri (menos resolución que el PNOA).');if(dl.f.dxfplano&&dxP.length)add(pre+'plano-editable/','LEEME-plano-editable.txt',u8s(dxPlanoLeeme(u.name,dxP)));if(!doc||!dl.f.plano)return;return blobBytes(doc.output('blob')).then(function(by){add(pre,nm+'-plano-por-zonas.pdf',by)})});
     }]);
     else if(wantP)steps.push(['Plano de '+u.name,function(){
       if(!b||big){notes.push('Plano de '+u.name+' no creado: la zona pasa de 15 km por lado.');return Promise.resolve()}
@@ -6329,9 +6501,10 @@ function dwGo(){
       return locEnsure(u.rows).then(pf1).then(function(ph){
         return photoGate(ph,false,pf1);
       }).then(function(ph){
-        var url=ph.url, rows=u.zone?(function(){return recRowsInBox(ext)})():u.rows, dx1=dl.f.dxfplano?{}:null, doc=planoBuild(u.name,G,ext,rows,url,{esri:ph.src==='esri',kind:u.kind,who:u.who,toneRows:u.rows,dxf:dx1});
+        var url=ph.url, rows=u.zone?(function(){return recRowsInBox(ext)})():u.rows, dx1=dl.f.dxfplano?{}:null, doc=planoBuild(u.name,G,ext,rows,url,{esri:ph.src==='esri',esriNote:phNote(ph),kind:u.kind,who:u.who,toneRows:u.rows,dxf:dx1});
         if(dx1&&dx1.out){var dxP1=[];dxPlano(add,pre,dxP1,u.name,dx1.out,url,ext,G);add(pre+'plano-editable/','LEEME-plano-editable.txt',u8s(dxPlanoLeeme(u.name,dxP1)))}
         if(!url)notes.push('El plano de '+u.name+' no tiene foto de fondo ('+(ph.why||'no se ha intentado: elegiste seguir sin foto tras el aviso')+').');
+        else if(ph.src==='esri'&&ph.wb)notes.push('El plano de '+u.name+': '+(PHREL?'la foto de fondo es de Esri, año '+PHREL.y+' (la que elegiste), ':'el IGN y el exportador de Esri fallaron; la foto de fondo es una versión guardada de Esri, ')+phNote(ph)+'.');
         else if(ph.src==='esri')notes.push('El plano de '+u.name+': la foto de fondo es de Esri porque el IGN no respondía (menos resolución que el PNOA).');
         if(!dl.f.plano)return;
         return blobBytes(doc.output('blob')).then(function(by){add(pre,nm+'-plano-1a'+G.S+'.pdf',by)});
@@ -6351,7 +6524,7 @@ function dwGo(){
     return st[1]().catch(function(e){notes.push(st[0]+': no se ha podido crear.')}).then(next);
   };
   next().then(function(){
-    rec.paper=oldPaper; rec.scale=oldScale; rec.only=oldOnly; rec.orient=oldOr; dl.busy='';
+    rec.paper=oldPaper; rec.scale=oldScale; rec.only=oldOnly; rec.orient=oldOr; dl.busy=''; PHREL=null;
     if(!files.length){renderDw();toast('No se ha creado ningún archivo.'+(notes.length?' '+notes[0]:''));return}
     var pl=dwPlan(), blob, name, extra=notes.join(' ');
     if(files.length===1){
@@ -6363,7 +6536,7 @@ function dwGo(){
     }
     dwClose();
     showDl(blob,name,files.length===1?'Archivo listo':'Descarga lista',(files.length>1?(files.length-1)+' archivos en un ZIP con su LEEME. ':'')+esc(extra));
-  }).catch(function(){rec.paper=oldPaper;rec.scale=oldScale;rec.only=oldOnly;rec.orient=oldOr;dl.busy='';renderDw();toast('No he podido crear los archivos.')});
+  }).catch(function(){rec.paper=oldPaper;rec.scale=oldScale;rec.only=oldOnly;rec.orient=oldOr;dl.busy='';PHREL=null;renderDw();toast('No he podido crear los archivos.')});
 }
 
 /* ---- informe resumen en PDF ---- */
@@ -7423,6 +7596,8 @@ document.addEventListener('click',function(ev){
   switch(act){
     case 'layers':{var ly=$('#layers'),op=ly.hidden;closePops();if(op){renderLayers();ly.hidden=false}popLight();break}
     case 'base-set':setBase(b.dataset.k);renderLayers();break;
+    case 'wb-retry-dw':WBK.err='';wbLoad(true).then(function(){renderDw()},function(){renderDw()});renderDw();break;
+    case 'wb-retry':WBK.err='';wbLoad(true).then(function(){if(S.base==='esrih'){mountBase('esrih');esdSoon()}renderLayers()},function(){renderLayers()});renderLayers();break;
     case 'ov':setOv(b.dataset.k,!OV[b.dataset.k]);break;
     case 'rad-tg':radToggle();break;
     case 'rad-up':radLoad();break;
@@ -7824,6 +7999,7 @@ document.addEventListener('change',function(ev){
     save();return;
   }
   if(id==='g-prov'){fillMunis(+t.value);return}
+  if(id==='wb-year'){WBK.sel=+t.value;try{localStorage.setItem('mf_wby',String(WBK.sel))}catch(e){}if(S.base==='esrih'&&!BKUP){mountBase('esrih');esdSoon()}renderLayers();return}
   if(id==='ndvi-date'){NDV.sel=+t.value;if(ndviLayer)ndviLayer.redraw();ndviPill();return}
   if(id==='favname'&&sel&&S.x.favs[sel.ref]){S.x.favs[sel.ref].name=t.value.trim()||refShort(sel.ref);save();return}
   if(id==='tagname'){var tg0=tagById(tagCard);if(tg0){tg0.name=t.value.trim()||tg0.name;save();drawMarks();if(tab==='guardados')renderGuardados()}return}
@@ -7835,7 +8011,7 @@ document.addEventListener('change',function(ev){
 });
 document.addEventListener('toggle',function(ev){if(ev.target.id==='more')moreOpen=ev.target.open},true);
 document.addEventListener('input',function(ev){if(ev.target&&ev.target.id==='pfw-name'&&pfWiz)pfWiz.name=ev.target.value;if(ev.target&&ev.target.id==='dw-title'){dl.title=ev.target.value;dl.titleEdited=true}if(ev.target&&ev.target.id==='pac-name'&&pac)pac.name=ev.target.value});
-document.addEventListener('change',function(ev){if(ev.target&&ev.target.id==='dw-scale')dl.scale=+ev.target.value});
+document.addEventListener('change',function(ev){if(ev.target&&ev.target.id==='dw-scale')dl.scale=+ev.target.value;if(ev.target&&ev.target.id==='dw-wby'){dl.wbYear=+ev.target.value||0;renderDw()}});
 document.addEventListener('input',function(ev){if(tp&&ev.target&&ev.target.id==='tpname'){tp.name=ev.target.value;if(tp.mk)tp.mk.setIcon(tpIcon(tp.name,tp.c))}});
 document.addEventListener('keydown',function(ev){
   if(ev.key==='Enter'&&tp&&ev.target.id==='tpname'){ev.preventDefault();tpCreate();return}
@@ -7955,7 +8131,7 @@ setTimeout(function(){map.invalidateSize();refreshSigpac();if(OV.ndvi){ndviPill(
 
 window.__mf={GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
-Object.assign(window.__mf,{dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
+Object.assign(window.__mf,{whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
 })();
 </script>
 <script type="text/plain" id="pdflib">/** @license
