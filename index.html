@@ -1802,7 +1802,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-10T15:00:39Z',n:'Entrega 27 · 10 oct · 17:00'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-10T15:22:18Z',n:'Entrega 28 · 10 oct · 17:22'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -5286,11 +5286,11 @@ function planVarRowsFor(b,W,M){
   return 0;
 }
 function recPlanGeom(b){
-  /* Entrega 25: abajo van los cajetines (orientación, leyenda y datos). Su tamaño es el del plano de ejemplo en A3 y se reduce solo si la hoja es más estrecha */
+  /* Entrega 28: la foto ocupa toda la hoja; los cajetines (orientación, leyenda y datos) van juntos, pegados abajo a la derecha y encima de la foto. Su tamaño es el del plano de ejemplo en A3 y se reduce solo si la hoja es más estrecha */
   var P=rec.paper==='a3'?[420,297]:[297,210], M=10, y0=14, best=null;
   [false,true].forEach(function(po){
     if(rec.orient==='h'&&po)return; if(rec.orient==='v'&&!po)return;
-    var W=po?P[1]:P[0], H=po?P[0]:P[1], k=Math.min(1,(W-2*M)/280.7), hC=30*k, FT=13.5+hC, mw=W-2*M, mh=H-y0-FT, req=Math.max(b.w/(mw/1000),b.h/(mh/1000));
+    var W=po?P[1]:P[0], H=po?P[0]:P[1], k=Math.min(1,(W-2*M)/280.7), hC=30*k, FT=6.5, mw=W-2*M, mh=H-y0-FT, req=Math.max(b.w/(mw/1000),b.h/(mh/1000));
     if(!best||req<best.req)best={po:po,W:W,H:H,mw:mw,mh:mh,req:req,M:M,y0:y0,vr:0,k:k,hC:hC,FT:FT};
   });
   var list=SCALES.filter(function(s){return s>=best.req}); best.list=list;
@@ -5700,28 +5700,8 @@ function planLegendDraw(doc,best,x,y,k){
 function planCajetines(doc,G,ext,seen,TONES,op,name){
   var W=G.W,H=G.H,M=G.M,k=G.k||1,u=.3528*k,hC=G.hC||30,top=H-6.5-hC,bot=H-6.5;
   var rows=Object.keys(seen).map(function(q){return seen[q]}), totHa=rows.reduce(function(s,r){return s+r.ha},0), ink=[0,0,0];
-  var ow=15*k, lx=M+ow+1.6*k, lw=169.2*k, dw=92.9*k, dx=W-M-dw;
+  var ow=15*k, dw=92.9*k, dx=W-M-dw;
   doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.setTextColor(0,0,0);
-  /* texto de fuentes, justo sobre los cajetines */
-  doc.setFont('helvetica','normal'); doc.setFontSize(6*Math.max(k,.8)); doc.setTextColor(110,120,100);
-  doc.text((op.esri?'Imagen © Esri':'Imagen © PNOA · Instituto Geográfico Nacional')+' · Recintos © SIGPAC · FEGA / MAPA',M,top-1.8);
-  doc.setTextColor(0,0,0);
-  /* ---- ORIENTACIÓN ---- */
-  doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.rect(M,top,ow,hC);
-  doc.setFont('helvetica','normal'); doc.setFontSize(4.4*k); doc.text('ORIENTACIÓN:',M+.7*k,top+1.9*k);
-  var cx=M+ow/2, cy=top+15*k, R=6.4*k;
-  doc.setLineWidth(.12); doc.circle(cx,cy,R,'S'); doc.circle(cx,cy,R-.45*k,'S');
-  doc.setFillColor(221,221,221);
-  doc.triangle(cx,cy-.93*R,cx+.89*R,cy+.24*R,cx,cy-.2*R,'F'); doc.triangle(cx,cy-.93*R,cx-.89*R,cy+.24*R,cx,cy-.2*R,'F');
-  doc.setFillColor(0,0,0); doc.rect(cx-.065*R,cy-.93*R,.13*R,.47*R,'F');
-  doc.setFillColor(255,255,255); doc.setLineWidth(.12); doc.circle(cx,cy,.46*R,'FD');
-  doc.setTextColor(0,0,0); doc.setFont('helvetica','normal'); doc.setFontSize(1.82*R); doc.text('N',cx,cy+.23*R,{align:'center'});
-  doc.setLineWidth(.12); doc.line(cx,cy+.46*R,cx,cy+R);
-  if(!op.over){
-    var ll=fromUTM((ext.minx+ext.maxx)/2,(ext.miny+ext.maxy)/2,30);
-    doc.setFont('helvetica','normal'); doc.setFontSize(4.4*k); doc.text('COORDENADAS:',M+.7*k,top+24.7*k);
-    doc.setFontSize(4.6*k); doc.text(dmsC(ll[1],'N','S'),M+1.1*k,top+26.5*k); doc.text(dmsC(ll[0],'E','O'),M+1.1*k,top+28.2*k);
-  }
   /* ---- LEYENDA ---- */
   var blocks=[], b0=[{t:(op.over?'Recintos del conjunto: ':'Recintos de esta zona: ')+rows.length+' · '+nf(totHa,2)+' ha',bold:true}];
   var pdh={eco:0,cv:0}; rows.forEach(function(r){var q=prodKind(recProd(r.ref));if(q==='eco'||q==='cv')pdh[q]+=r.ha});
@@ -5734,14 +5714,31 @@ function planCajetines(doc,G,ext,seen,TONES,op,name){
     if(T)o.g.forEach(function(g){bl.push({t:g.name+' '+nf(g.ha,2)+' ha',ind:true,sw:toneRGB(base,T[g.key]||0)})});
     blocks.push(bl);
   });
+  /* Entrega 28: la leyenda ocupa lo que necesita, pegada al cajetín de datos; crece hacia la izquierda */
+  var lay=planLegendFit(doc,blocks,dx-M-ow-12*k,hC,k), lx=dx-lay.boxW, ox=lx-ow;
+  /* ---- ORIENTACIÓN ---- */
+  doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.setFillColor(255,255,255); doc.rect(ox,top,ow,hC,'FD');
+  doc.setFont('helvetica','normal'); doc.setFontSize(4.4*k); doc.text('ORIENTACIÓN:',ox+.7*k,top+1.9*k);
+  var cx=ox+ow/2, cy=top+15*k, R=6.4*k;
+  doc.setLineWidth(.12); doc.circle(cx,cy,R,'S'); doc.circle(cx,cy,R-.45*k,'S');
+  doc.setFillColor(221,221,221);
+  doc.triangle(cx,cy-.93*R,cx+.89*R,cy+.24*R,cx,cy-.2*R,'F'); doc.triangle(cx,cy-.93*R,cx-.89*R,cy+.24*R,cx,cy-.2*R,'F');
+  doc.setFillColor(0,0,0); doc.rect(cx-.065*R,cy-.93*R,.13*R,.47*R,'F');
+  doc.setFillColor(255,255,255); doc.setLineWidth(.12); doc.circle(cx,cy,.46*R,'FD');
+  doc.setTextColor(0,0,0); doc.setFont('helvetica','normal'); doc.setFontSize(1.82*R); doc.text('N',cx,cy+.23*R,{align:'center'});
+  doc.setLineWidth(.12); doc.line(cx,cy+.46*R,cx,cy+R);
+  if(!op.over){
+    var ll=fromUTM((ext.minx+ext.maxx)/2,(ext.miny+ext.maxy)/2,30);
+    doc.setFont('helvetica','normal'); doc.setFontSize(4.4*k); doc.text('COORDENADAS:',ox+.7*k,top+24.7*k);
+    doc.setFontSize(4.6*k); doc.text(dmsC(ll[1],'N','S'),ox+1.1*k,top+26.5*k); doc.text(dmsC(ll[0],'E','O'),ox+1.1*k,top+28.2*k);
+  }
   /* Entrega 27: la caja de leyenda se ajusta a su contenido; el límite es el cajetín de datos */
-  var lay=planLegendFit(doc,blocks,dx-lx-3*k,hC,k);
-  doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.rect(lx,top,lay.boxW,hC);
+  doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.setFillColor(255,255,255); doc.rect(lx,top,lay.boxW,hC,'FD');
   doc.setFont('helvetica','normal'); doc.setFontSize(4.4*k); doc.setTextColor(0,0,0); doc.text('LEYENDA:',lx+.7*k,top+1.9*k);
   planLegendDraw(doc,lay,lx,top,k); doc.setDrawColor(0,0,0); doc.setLineWidth(.2);
   /* ---- DATOS ---- */
   var rh=[14,14,14,28,15.1].map(function(v){return v*u}), ry=[top]; rh.forEach(function(v){ry.push(ry[ry.length-1]+v)});
-  doc.setLineWidth(.2); doc.rect(dx,top,dw,hC);
+  doc.setLineWidth(.2); doc.setFillColor(255,255,255); doc.rect(dx,top,dw,hC,'FD');
   [1,2,3,4].forEach(function(i){doc.line(dx,ry[i],dx+dw,ry[i])});
   var xp=dx+dw*.749, cw=[40,80,85,58], tw=263.2, xs=[dx]; cw.slice(0,3).forEach(function(v){xs.push(xs[xs.length-1]+v/tw*dw)});
   doc.line(xp,ry[1],xp,ry[2]); xs.slice(1).forEach(function(xv){doc.line(xv,ry[4],xv,ry[5])});
@@ -5765,6 +5762,7 @@ function planCajetines(doc,G,ext,seen,TONES,op,name){
     var wcol=(i<3?xs[i+1]:dx+dw)-xs[i]; lab(xs[i],ry[4],p[0]); val(xs[i],ry[5],p[1],wcol-2.5*k,7.4*k);
   });
   doc.setTextColor(0,0,0);
+  return {left:ox,top:top,bot:bot};
 }
 function planoBuild(name,G,ext,rowsIn,imgUrl,opt){
   var jsPDF=window.jspdf.jsPDF, op=opt||{}, doc=op.doc||new jsPDF({unit:'mm',format:[G.W,G.H],orientation:G.po?'portrait':'landscape'}); if(op.doc)doc.addPage([G.W,G.H],G.po?'portrait':'landscape'); var W=G.W, H=G.H, M=G.M, y0=G.y0, mw=G.mw, mh=G.mh, S=G.S;
@@ -5819,13 +5817,18 @@ function planoBuild(name,G,ext,rowsIn,imgUrl,opt){
       doc.setFillColor(230,90,20); doc.circle(cx,cy,3.6,'F'); doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.text(String(z.n||zi+1),cx,cy+1.3,{align:'center'});
     });
   }
-  /* barra de escala */
+  /* Entrega 28: cajetines primero (encima de la foto); escala y créditos abajo a la izquierda, o justo encima del bloque si no caben */
+  var CJ=planCajetines(doc,G,ext,seen,TONES,op,name);
   var nice=[5,10,20,25,50,100,200,250,500,1000,2000,2500,5000,10000], len=nice[0];
   nice.forEach(function(n){if(n/S*1000<=70)len=n});
-  var bl=len/S*1000, bx=M+4, by=y0+mh-7, lenTxt=len>=1000?(len/1000)+' km':len+' m'; doc.setFont('helvetica','normal'); doc.setFontSize(7); var tw0=doc.getTextWidth('0'), tw1=doc.getTextWidth(lenTxt), lft=Math.max(2.5,tw0/2+1.5), rgt=Math.max(2.5,tw1/2+1.5); doc.setFillColor(255,255,255); doc.rect(bx-lft,by-4.3,bl+lft+rgt,7.4,'F');
+  var bl=len/S*1000, bx=M+4, lenTxt=len>=1000?(len/1000)+' km':len+' m'; doc.setFont('helvetica','normal'); doc.setFontSize(7); var tw0=doc.getTextWidth('0'), tw1=doc.getTextWidth(lenTxt), lft=Math.max(2.5,tw0/2+1.5), rgt=Math.max(2.5,tw1/2+1.5);
+  var room=CJ.left-M-3, byL=CJ.bot-10, by=(bl+rgt+4<=room)?byL:CJ.top-9;
+  doc.setFillColor(255,255,255); doc.rect(bx-lft,by-4.3,bl+lft+rgt,7.4,'F');
   var seg=4; for(var s=0;s<seg;s++){doc.setFillColor(s%2?255:0,s%2?255:0,s%2?255:0); doc.rect(bx+s*bl/seg,by,bl/seg,2,'F')} doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.rect(bx,by,bl,2);
   doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(0,0,0); doc.text('0',bx,by-1.2,{align:'center'}); doc.text(lenTxt,bx+bl,by-1.2,{align:'center'});
-  planCajetines(doc,G,ext,seen,TONES,op,name);
+  var cr=(op.esri?'Imagen © Esri':'Imagen © PNOA · Instituto Geográfico Nacional')+' · Recintos © SIGPAC · FEGA / MAPA';
+  doc.setFont('helvetica','normal'); doc.setFontSize(6*Math.max(G.k||1,.8)); var tc=doc.getTextWidth(cr), cy=(tc+4<=room)?CJ.bot-1.3:CJ.top-1.3;
+  doc.setFillColor(255,255,255); doc.rect(M,cy-2.6,tc+3,3.6,'F'); doc.setTextColor(90,100,80); doc.text(cr,M+1.5,cy); doc.setTextColor(0,0,0);
   return doc;
 }
 function recPlano(){
