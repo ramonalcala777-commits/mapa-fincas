@@ -1802,7 +1802,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-10T18:22:47Z',n:'Entrega 29 · 10 oct · 20:22'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-10T19:33:50Z',n:'Entrega 30 · 10 oct · 21:33'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -5787,7 +5787,7 @@ function planCajetines(doc,G,ext,seen,TONES,op,name){
   /* Entrega 28: la leyenda ocupa lo que necesita, pegada al cajetín de datos; crece hacia la izquierda */
   var lay=planLegendFit(doc,blocks,dx-M-ow-12*k,hC,k), lx=dx-lay.boxW, ox=lx-ow;
   /* ---- ORIENTACIÓN ---- */
-  doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.setFillColor(255,255,255); doc.rect(ox,top,ow,hC,'FD');
+  dxLy(doc,'CAJETIN_ORIENTACION'); doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.setFillColor(255,255,255); doc.rect(ox,top,ow,hC,'FD');
   doc.setFont('helvetica','normal'); doc.setFontSize(4.4*k); doc.text('ORIENTACIÓN:',ox+.7*k,top+1.9*k);
   var cx=ox+ow/2, cy=top+15*k, R=6.4*k;
   doc.setLineWidth(.12); doc.circle(cx,cy,R,'S'); doc.circle(cx,cy,R-.45*k,'S');
@@ -5803,12 +5803,12 @@ function planCajetines(doc,G,ext,seen,TONES,op,name){
     doc.setFontSize(4.6*k); doc.text(dmsC(ll[1],'N','S'),ox+1.1*k,top+26.5*k); doc.text(dmsC(ll[0],'E','O'),ox+1.1*k,top+28.2*k);
   }
   /* Entrega 27: la caja de leyenda se ajusta a su contenido; el límite es el cajetín de datos */
-  doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.setFillColor(255,255,255); doc.rect(lx,top,lay.boxW,hC,'FD');
+  dxLy(doc,'CAJETIN_LEYENDA'); doc.setDrawColor(0,0,0); doc.setLineWidth(.2); doc.setFillColor(255,255,255); doc.rect(lx,top,lay.boxW,hC,'FD');
   doc.setFont('helvetica','normal'); doc.setFontSize(4.4*k); doc.setTextColor(0,0,0); doc.text('LEYENDA:',lx+.7*k,top+1.9*k);
   planLegendDraw(doc,lay,lx,top,k); doc.setDrawColor(0,0,0); doc.setLineWidth(.2);
   /* ---- DATOS ---- */
   var rh=[14,14,14,28,15.1].map(function(v){return v*u}), ry=[top]; rh.forEach(function(v){ry.push(ry[ry.length-1]+v)});
-  doc.setLineWidth(.2); doc.setFillColor(255,255,255); doc.rect(dx,top,dw,hC,'FD');
+  dxLy(doc,'CAJETIN_DATOS'); doc.setLineWidth(.2); doc.setFillColor(255,255,255); doc.rect(dx,top,dw,hC,'FD');
   [1,2,3,4].forEach(function(i){doc.line(dx,ry[i],dx+dw,ry[i])});
   var xp=dx+dw*.749, cw=[40,80,85,58], tw=263.2, xs=[dx]; cw.slice(0,3).forEach(function(v){xs.push(xs[xs.length-1]+v/tw*dw)});
   doc.line(xp,ry[1],xp,ry[2]); xs.slice(1).forEach(function(xv){doc.line(xv,ry[4],xv,ry[5])});
@@ -5834,15 +5834,90 @@ function planCajetines(doc,G,ext,seen,TONES,op,name){
   doc.setTextColor(0,0,0);
   return {left:ox,top:top,bot:bot};
 }
+/* Entrega 30: grabador de dibujo. Envuelve el documento del PDF y copia cada trazo a un DXF (R12) en metros UTM 30N, por capas */
+function dxLy(d,n){if(d&&d.__dxf)d.__dxf.ly=n}
+function dxSkip(d,v){if(d&&d.__dxf)d.__dxf.skip=!!v}
+function dxfRec(doc,G,ext){
+  var k=G.S/1000, ent=[], st={dc:[0,0,0],fc:[0,0,0],tc:[0,0,0],lw:.2,fs:10,dash:false,ly:'0',skip:false}, layers={'0':7}, usedDash=false, nEnt=0;
+  var X=function(x){return ext.minx+(x-G.M)*k}, Y=function(y){return ext.maxy-(y-G.y0)*k}, Nf=function(v){return v.toFixed(3)};
+  var g=function(c,v){ent.push(String(c),String(v))};
+  var U=function(t){return String(t).replace(/[\u2013\u2014]/g,'-').replace(/[\u2018\u2019]/g,"'").replace(/[\u201c\u201d]/g,'"').replace(/[^\x20-\xff]/g,'?')};
+  var white=function(c){return c[0]>245&&c[1]>245&&c[2]>245}, gray=function(c){return Math.abs(c[0]-c[1])<6&&Math.abs(c[1]-c[2])<6};
+  var aci=function(c){if(gray(c)&&(c[0]<40||c[0]>245))return 7; var best=7,bd=1e9; ACI.forEach(function(a){var d=Math.pow(a[1]-c[0],2)+Math.pow(a[2]-c[1],2)+Math.pow(a[3]-c[2],2);if(d<bd){bd=d;best=a[0]}}); return best};
+  var head=function(t,col){g(0,t);g(8,st.ly);layers[st.ly]=layers[st.ly]||7;g(62,col);nEnt++};
+  var poly=function(pts,closed,col){
+    if(pts.length<2)return; var w=st.lw*k, dash=st.dash;
+    head('POLYLINE',col); if(dash){g(6,'DASHED');usedDash=true}
+    g(66,1);g(70,closed?1:0);g(10,0);g(20,0);g(30,0); if(w>.0005){g(40,Nf(w));g(41,Nf(w))}
+    pts.forEach(function(q){g(0,'VERTEX');g(8,st.ly);g(10,Nf(X(q[0])));g(20,Nf(Y(q[1])));g(30,0)}); g(0,'SEQEND');g(8,st.ly);
+  };
+  var solid=function(pts,col){
+    var a=pts.slice(); if(a.length===3)a.push(a[2]); var o=[a[0],a[1],a[3],a[2]];
+    head('SOLID',col); o.forEach(function(q,i){g(10+i,Nf(X(q[0])));g(20+i,Nf(Y(q[1])));g(30+i,0)});
+  };
+  var rd=function(a){return a.length>=3?[a[0],a[1],a[2]]:[a[0],a[0],a[0]]};
+  var act={
+    setDrawColor:function(a){st.dc=rd(a)}, setFillColor:function(a){st.fc=rd(a)}, setTextColor:function(a){st.tc=rd(a)},
+    setLineWidth:function(a){st.lw=a[0]}, setFontSize:function(a){st.fs=a[0]}, setLineDashPattern:function(a){st.dash=!!(a[0]&&a[0].length)},
+    rect:function(a){
+      var x=a[0],y=a[1],w=a[2],h=a[3],sty=String(a[4]||'S'), pts=[[x,y],[x+w,y],[x+w,y+h],[x,y+h]], f=/F/.test(sty), s=/S|D/.test(sty);
+      if(f&&!white(st.fc))solid(pts,aci(st.fc));
+      if(s&&!white(st.dc))poly(pts,true,aci(st.dc));
+    },
+    line:function(a){
+      if(white(st.dc))return;
+      if(st.lw*k>.0005*20){poly([[a[0],a[1]],[a[2],a[3]]],false,aci(st.dc));return}
+      head('LINE',aci(st.dc)); g(10,Nf(X(a[0])));g(20,Nf(Y(a[1])));g(30,0);g(11,Nf(X(a[2])));g(21,Nf(Y(a[3])));g(31,0);
+    },
+    lines:function(a){
+      var sty=String(a[4]||'S'); if(!/S/.test(sty)||white(st.dc))return;
+      var pts=[[a[1],a[2]]], cx=a[1], cy=a[2]; (a[0]||[]).forEach(function(r){cx+=r[0];cy+=r[1];pts.push([cx,cy])});
+      poly(pts,!!a[5],aci(st.dc));
+    },
+    circle:function(a){
+      var sty=String(a[3]||'S'), col=/S|D/.test(sty)?st.dc:st.fc; if(white(col))return;
+      head('CIRCLE',aci(col)); g(10,Nf(X(a[0])));g(20,Nf(Y(a[1])));g(30,0);g(40,Nf(a[2]*k));
+    },
+    triangle:function(a){
+      var pts=[[a[0],a[1]],[a[2],a[3]],[a[4],a[5]]], sty=String(a[6]||'S');
+      if(/F/.test(sty)&&!white(st.fc))solid(pts,aci(st.fc)); else if(!/F/.test(sty)&&!white(st.dc))poly(pts,true,aci(st.dc));
+    },
+    text:function(a){
+      if(st.skip)return; var t=Array.isArray(a[0])?a[0].join(' '):a[0]; if(t==null||t==='')return; var o=a[3]||{}, col=aci(st.tc), h=st.fs*.3528*.72*k;
+      head('TEXT',col); g(10,Nf(X(a[1])));g(20,Nf(Y(a[2])));g(30,0);g(40,Nf(h));g(1,U(t));
+      if(o.angle)g(50,o.angle);
+      if(o.align==='center'||o.align==='right'){g(72,o.align==='center'?1:2);g(11,Nf(X(a[1])));g(21,Nf(Y(a[2])));g(31,0)}
+    }
+  };
+  var proxy=new Proxy(doc,{get:function(t,p){
+    if(p==='__dxf')return st;
+    var v=t[p]; if(typeof v!=='function'||/^[A-Z]/.test(String(p)))return v;
+    return function(){var a=Array.prototype.slice.call(arguments); if(act[p])act[p](a); var r=v.apply(t,a); return r===t?proxy:r};
+  }});
+  var finish=function(){
+    var t=[], G2=function(c,v){t.push(String(c),String(v))};
+    G2(0,'SECTION');G2(2,'HEADER');G2(9,'$ACADVER');G2(1,'AC1009');G2(9,'$DWGCODEPAGE');G2(3,'ANSI_1252');G2(0,'ENDSEC');
+    G2(0,'SECTION');G2(2,'TABLES');G2(0,'TABLE');G2(2,'LTYPE');G2(70,2);
+    G2(0,'LTYPE');G2(2,'CONTINUOUS');G2(70,0);G2(3,'Solid line');G2(72,65);G2(73,0);G2(40,0.0);
+    G2(0,'LTYPE');G2(2,'DASHED');G2(70,0);G2(3,'Dashed');G2(72,65);G2(73,2);G2(40,Nf(2.2*k+1.6*k));G2(49,Nf(2.2*k));G2(49,Nf(-1.6*k));
+    G2(0,'ENDTAB');
+    var names=Object.keys(layers); G2(0,'TABLE');G2(2,'LAYER');G2(70,names.length);
+    names.forEach(function(n){G2(0,'LAYER');G2(2,n);G2(70,0);G2(62,7);G2(6,'CONTINUOUS')});
+    G2(0,'ENDTAB');G2(0,'ENDSEC');G2(0,'SECTION');G2(2,'ENTITIES');
+    return t.concat(ent,['0','ENDSEC','0','EOF']).join('\r\n')+'\r\n';
+  };
+  return {proxy:proxy,finish:finish,count:function(){return nEnt},layers:function(){return Object.keys(layers)}};
+}
 function planoBuild(name,G,ext,rowsIn,imgUrl,opt){
-  var jsPDF=window.jspdf.jsPDF, op=opt||{}, doc=op.doc||new jsPDF({unit:'mm',format:[G.W,G.H],orientation:G.po?'portrait':'landscape'}); if(op.doc)doc.addPage([G.W,G.H],G.po?'portrait':'landscape'); var W=G.W, H=G.H, M=G.M, y0=G.y0, mw=G.mw, mh=G.mh, S=G.S;
+  var jsPDF=window.jspdf.jsPDF, op=opt||{}, doc=op.doc||new jsPDF({unit:'mm',format:[G.W,G.H],orientation:G.po?'portrait':'landscape'}); if(op.doc)doc.addPage([G.W,G.H],G.po?'portrait':'landscape'); var doc0=doc, DX=null; if(op.dxf){DX=dxfRec(doc0,G,ext);doc=DX.proxy} var W=G.W, H=G.H, M=G.M, y0=G.y0, mw=G.mw, mh=G.mh, S=G.S;
   var green=[75,122,31], ink=[30,36,24], gray=[110,120,100];
   var px=function(E){return M+(E-ext.minx)/(ext.maxx-ext.minx)*mw}, py=function(N){return y0+(ext.maxy-N)/(ext.maxy-ext.miny)*mh};
-  doc.setDrawColor(0,0,0); doc.setLineWidth(1); doc.rect(4,4,W-8,H-8); /* marco de la hoja */
+  dxLy(doc,'MARCO_HOJA'); doc.setDrawColor(0,0,0); doc.setLineWidth(1); doc.rect(4,4,W-8,H-8); /* marco de la hoja */
   if(imgUrl)doc.addImage(imgUrl,'JPEG',M,y0,mw,mh); else {doc.setFillColor(32,38,27); doc.rect(M,y0,mw,mh,'F')}
   /* recintos */
   var seen={}, geo={}, TONES=planTones(op.toneRows||rowsIn), ALPH=planAlphas(op.toneRows||rowsIn);
   rowsIn.forEach(function(r){
+    dxLy(doc,dxfLayerName('REC_'+(r.cultivo||NOCROP)));
     var col=toneRGB(hex2rgb(cropColor(r.cultivo||NOCROP)),(TONES[r.cultivo||NOCROP]||{})[varKey(r.cultivo||NOCROP,r.variedad)]), any=false;
     utmPolys(r.geom).forEach(function(poly){
       var cl=clipRing(poly[0].slice(0,-1),ext.minx,ext.miny,ext.maxx,ext.maxy); if(cl.length<3)return; any=true;
@@ -5855,21 +5930,21 @@ function planoBuild(name,G,ext,rowsIn,imgUrl,opt){
       doc.setDrawColor(255,255,255); doc.setLineWidth(.9); doc.lines(rel,pp[0][0],pp[0][1],[1,1],'S',true);
       doc.setDrawColor(col[0],col[1],col[2]); doc.setLineWidth(.45); doc.lines(rel,pp[0][0],pp[0][1],[1,1],'S',true);
       var pk=prodKind(recProd(r.ref));
-      if(pk==='eco'||pk==='cv'){var pc=hex2rgb(PROD_COL);doc.setDrawColor(pc[0],pc[1],pc[2]);doc.setLineWidth(.8);if(pk==='cv'&&doc.setLineDashPattern)doc.setLineDashPattern([2.2,1.6],0);doc.lines(rel,pp[0][0],pp[0][1],[1,1],'S',true);if(doc.setLineDashPattern)doc.setLineDashPattern([],0)}
+      if(pk==='eco'||pk==='cv'){dxLy(doc,'BORDE_ECOLOGICO');var pc=hex2rgb(PROD_COL);doc.setDrawColor(pc[0],pc[1],pc[2]);doc.setLineWidth(.8);if(pk==='cv'&&doc.setLineDashPattern)doc.setLineDashPattern([2.2,1.6],0);doc.lines(rel,pp[0][0],pp[0][1],[1,1],'S',true);if(doc.setLineDashPattern)doc.setLineDashPattern([],0)}
     });
     if(any)seen[r.ref]=r;
   });
-  doc.setFont('helvetica','bold');
+  doc.setFont('helvetica','bold'); dxLy(doc,'ETIQUETAS_HA');
   Object.keys(seen).forEach(function(k){
     var r=seen[k], g=geo[k], pi=pointInside(r.geom), u=toUTM(pi[0],pi[1]); if(!g||u[0]<ext.minx||u[0]>ext.maxx||u[1]<ext.miny||u[1]>ext.maxy)return;
     var x=px(u[0]), y=py(u[1]), t=nf(r.ha,2)+' ha', sq=Math.sqrt(g.ar), we=Math.min(g.bw,1.25*sq), he=Math.min(g.bh,1.25*sq);
     var f=Math.min(.62*we/(t.length*.2),.55*he/.3528,18); if(f<5)return;
     doc.setFontSize(f); var d=Math.max(.2,f*.035), yy=y+f*.3528*.35;
-    doc.setTextColor(255,255,255); [[d,0],[-d,0],[0,d],[0,-d],[d,d],[-d,-d],[d,-d],[-d,d]].forEach(function(o){doc.text(t,x+o[0],yy+o[1],{align:'center'})});
+    doc.setTextColor(255,255,255); dxSkip(doc,1); [[d,0],[-d,0],[0,d],[0,-d],[d,d],[-d,-d],[d,-d],[-d,d]].forEach(function(o){doc.text(t,x+o[0],yy+o[1],{align:'center'})}); dxSkip(doc,0);
     doc.setTextColor(0,0,0); doc.text(t,x,yy,{align:'center'});
   });
   /* marco y cuadrícula UTM */
-  doc.setDrawColor(0,0,0); doc.setLineWidth(.35); doc.rect(M,y0,mw,mh);
+  dxLy(doc,'MARCO_MAPA'); doc.setDrawColor(0,0,0); doc.setLineWidth(.35); doc.rect(M,y0,mw,mh); dxLy(doc,'CUADRICULA_UTM');
   var ew=ext.maxx-ext.minx, steps=[20,50,100,200,250,500,1000,2000,5000,10000,20000], st=steps[steps.length-1];
   for(var si=0;si<steps.length;si++){if(ew/steps[si]<=8){st=steps[si];break}}
   doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(0,0,0); doc.setLineWidth(.2);
@@ -5879,6 +5954,7 @@ function planoBuild(name,G,ext,rowsIn,imgUrl,opt){
   for(var N2=Math.ceil(ext.miny/st)*st;N2<=ext.maxy;N2+=st){var Y2=py(N2); doc.line(M-1.6,Y2,M,Y2); doc.line(M+mw,Y2,M+mw+1.6,Y2); doc.text(String(Math.round(N2)),M-2.3,Y2,{align:'center',angle:90})}
   /* Entrega 22: los recuadros de zona se dibujan antes del norte, la escala y las coordenadas, que quedan por encima */
   if(op.zones){
+    dxLy(doc,'ZONAS');
     op.zones.forEach(function(z,zi){
       var zx0=px(z.box.minx),zx1=px(z.box.maxx),zy0=py(z.box.maxy),zy1=py(z.box.miny);
       doc.setDrawColor(255,255,255); doc.setLineWidth(1.1); doc.rect(zx0,zy0,zx1-zx0,zy1-zy0);
@@ -5888,7 +5964,7 @@ function planoBuild(name,G,ext,rowsIn,imgUrl,opt){
     });
   }
   /* Entrega 28: cajetines primero (encima de la foto); escala y créditos abajo a la izquierda, o justo encima del bloque si no caben */
-  var CJ=planCajetines(doc,G,ext,seen,TONES,op,name);
+  var CJ=planCajetines(doc,G,ext,seen,TONES,op,name); dxLy(doc,'ESCALA_GRAFICA');
   var nice=[5,10,20,25,50,100,200,250,500,1000,2000,2500,5000,10000], len=nice[0];
   nice.forEach(function(n){if(n/S*1000<=70)len=n});
   var bl=len/S*1000, bx=M+4, lenTxt=len>=1000?(len/1000)+' km':len+' m'; doc.setFont('helvetica','normal'); doc.setFontSize(7); var tw0=doc.getTextWidth('0'), tw1=doc.getTextWidth(lenTxt), lft=Math.max(2.5,tw0/2+1.5), rgt=Math.max(2.5,tw1/2+1.5);
@@ -5898,8 +5974,9 @@ function planoBuild(name,G,ext,rowsIn,imgUrl,opt){
   doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(0,0,0); doc.text('0',bx,by-1.2,{align:'center'}); doc.text(lenTxt,bx+bl,by-1.2,{align:'center'});
   var cr=(op.esri?'Imagen © Esri':'Imagen © PNOA · Instituto Geográfico Nacional')+' · Recintos © SIGPAC · FEGA / MAPA';
   doc.setFont('helvetica','normal'); doc.setFontSize(6*Math.max(G.k||1,.8)); var tc=doc.getTextWidth(cr), cy=(tc+4<=room)?CJ.bot-1.3:CJ.top-1.3;
-  doc.setFillColor(255,255,255); doc.rect(M,cy-2.6,tc+3,3.6,'F'); doc.setTextColor(90,100,80); doc.text(cr,M+1.5,cy); doc.setTextColor(0,0,0);
-  return doc;
+  dxLy(doc,'CREDITOS'); doc.setFillColor(255,255,255); doc.rect(M,cy-2.6,tc+3,3.6,'F'); doc.setTextColor(90,100,80); doc.text(cr,M+1.5,cy); doc.setTextColor(0,0,0);
+  if(DX){op.dxf.out=DX.finish();op.dxf.n=DX.count();op.dxf.layers=DX.layers()}
+  return doc0;
 }
 function recPlano(){
   var b=recBox(); if(!b||rec.busy)return; if(b.w>15000||b.h>15000||b.w<20||b.h<20)return;
@@ -5925,6 +6002,7 @@ var dwPick=false;
 var dl={allRecs:false,step:1,src:'fincas',fincas:{},owners:{},recs:null,zone:null,f:{plano:true},split:false,title:'',titleEdited:false,paper:'a4',orient:'auto',zones:false,zkm:1,scale:-1,busy:'',prog:''};
 var DWF=[
   ['plano','Plano en PDF','Foto aérea con los recintos dibujados, a escala (A4 o A3). Para imprimir.'],
+  ['dxfplano','Plano editable en DXF (AutoCAD / ZWCAD)','El plano completo en capas (recintos, textos, cuadrícula, cajetines, leyenda, escala) con la foto aparte. Para editar a mano.'],
   ['foto','Foto aérea para AutoCAD / ZWCAD','Foto georreferenciada (ZIP). Va aparte del DXF.'],
   ['dxf','DXF (AutoCAD / ZWCAD)','Las líneas de los recintos, en metros UTM 30N.'],
   ['shp','Shapefile (QGIS)','Recintos con sus datos, en un ZIP.'],
@@ -5935,6 +6013,7 @@ var DWF=[
 ];
 var DWN={
   plano:{uso:'Para imprimir o enseñar. Es un dibujo fijo: no se edita en AutoCAD.',no:'No es editable y solo dibuja los recintos que has elegido; los demás recintos de la zona no salen.'},
+  dxfplano:{uso:'El plano tal como se imprime, en un DXF por capas (metros, UTM 30N), con la foto en un JPG aparte. Para retocar textos, cajetines o leyenda en AutoCAD / ZWCAD.',no:'Los recintos van solo con su contorno (sin relleno ni transparencias) y la foto no va dentro del DXF: hay que enlazarla (el LEEME dice cómo).'},
   foto:{uso:'Para poner de fondo en ZWCAD / AutoCAD (ZIP con .jpg, .jgw, .prj y LEEME con los pasos).',no:'No incluye los recintos: para verlos, descarga también el DXF.'},
   dxf:{uso:'Las líneas de los recintos para AutoCAD / ZWCAD (metros, UTM 30N).',no:'No incluye la foto: va aparte.'},
   shp:{uso:'Para QGIS u otros programas de mapas.',no:'AutoCAD no lo lee: para AutoCAD usa el DXF.'},
@@ -6063,7 +6142,7 @@ function dwPlan(){
   var base=safeName((dl.title||'').trim()||'Plano'), sp=dl.split&&(dl.src==='fincas'||dl.src==='owners')&&dwFincasSel().length>1, nm=sp?'<finca>':base, out=[];
   DWF.forEach(function(x){
     var k=x[0]; if(!dl.f[k]||!dwFmtOk(k))return;
-    var fn={plano:nm+'-plano-1a…pdf',foto:'foto/'+nm+'.jpg + .jgw + .prj + LEEME (zonas grandes: .tif + .tfw + .prj)',dxf:nm+'.dxf',shp:'shapefile/'+nm+'.shp (+ archivos)',kml:nm+'.kml',csv:nm+'.csv',informe:'informe-'+nm+'.pdf',ficha:'fichas/ficha-<finca>.pdf (una por finca)'}[k];
+    var fn={plano:nm+'-plano-1a…pdf',dxfplano:'plano-editable/'+nm+'-….dxf + .jpg + LEEME (uno por página del plano)',foto:'foto/'+nm+'.jpg + .jgw + .prj + LEEME (zonas grandes: .tif + .tfw + .prj)',dxf:nm+'.dxf',shp:'shapefile/'+nm+'.shp (+ archivos)',kml:nm+'.kml',csv:nm+'.csv',informe:'informe-'+nm+'.pdf',ficha:'fichas/ficha-<finca>.pdf (una por finca)'}[k];
     out.push({k:k,file:fn,uso:(k==='dxf'&&dl.allRecs)?'Las líneas de TODOS los recintos de la zona (tuyos y de otros; los de otros, en la capa SIGPAC_OTROS) para AutoCAD / ZWCAD (metros, UTM 30N).':DWN[k].uso,no:DWN[k].no});
   });
   return out;
@@ -6075,8 +6154,8 @@ function dwLimits(){
     if(un)m.push(un+(un===1?' recinto no es':' recintos no son')+' de ninguna finca: solo tienen datos del SIGPAC (sin cultivo ni riego).');
     if(dl.src==='zone')m.push('De la zona solo salen los recintos que ya están en tus fincas.');
   }
-  if(dl.f.plano||dl.f.foto)m.push('La foto y el plano admiten como máximo 15 km por lado.');
-  if(dl.f.plano&&dl.zones)m.push('Las páginas de conjunto también abarcan como máximo 15 km por lado: si las zonas están más lejos, salen varias páginas de conjunto (una por grupo de zonas cercanas).');
+  if(dl.f.plano||dl.f.foto||dl.f.dxfplano)m.push('La foto y el plano admiten como máximo 15 km por lado.');
+  if((dl.f.plano||dl.f.dxfplano)&&dl.zones)m.push('Las páginas de conjunto también abarcan como máximo 15 km por lado: si las zonas están más lejos, salen varias páginas de conjunto (una por grupo de zonas cercanas).');
   var hid=hiddenFincas().length; if(hid&&(dl.src==='fincas'||dl.src==='owners'))m.push('Las '+hid+(hid===1?' finca oculta no entra':' fincas ocultas no entran')+'.');
   return m;
 }
@@ -6116,7 +6195,7 @@ function renderDw(){
     DWF.forEach(function(x){if(!dwFmtOk(x[0]))return;h+=dwOptHTML(dl.f[x[0]],x[1],esc(x[2]),'','dw-fmt','data-v="'+x[0]+'"')});
     h+='</div>';
     if(dl.f.dxf)h+='<div class="chips" style="margin-top:12px"><button class="chip'+(dl.allRecs?' on':'')+'" data-act="dw-allrecs" aria-pressed="'+!!dl.allRecs+'">'+(dl.allRecs?'✓ ':'')+'DXF con todos los recintos de la zona (también los que no son tuyos)</button></div>'+(dl.allRecs?'<div class="small" style="margin-top:6px">Los recintos de otras personas van en la capa SIGPAC_OTROS. Se descargan de Internet y la zona de cada DXF no puede pasar de unos 9 × 9 km.</div>':'');
-    if(dl.f.plano){
+    if(dl.f.plano||dl.f.dxfplano){
       h+='<div class="lbl">Plano: papel y escala</div><div class="chips"><button class="chip'+(dl.paper==='a4'?' on':'')+'" data-act="dw-paper" data-v="a4">A4</button><button class="chip'+(dl.paper==='a3'?' on':'')+'" data-act="dw-paper" data-v="a3">A3</button></div>';
       h+='<div class="row"><select id="dw-scale" class="in" aria-label="Escala"><option value="-1"'+(dl.scale===-1?' selected':'')+'>Ajustar al máximo (cada plano a su escala mínima)</option><option value="0"'+(dl.scale===0?' selected':'')+'>Escala automática</option>'+SCALES.map(function(sc){return '<option value="'+sc+'"'+(dl.scale===sc?' selected':'')+'>1:'+nf(sc,0)+'</option>'}).join('')+'</select></div><div class="small">«Ajustar al máximo» pone cada plano a la escala más pequeña en la que caben todas sus parcelas (puede salir una escala no redonda, como 1:17.300). Si una escala fija no cabe en el papel, se usa la más pequeña que quepa.</div>';
       h+=orientChips('dw-orient',dl.orient);
@@ -6130,7 +6209,7 @@ function renderDw(){
     if(multi&&(dl.f.plano||dl.f.foto||dl.f.dxf||dl.f.shp||dl.f.kml||dl.f.csv||dl.f.informe))h+='<div class="lbl">Cómo se hacen</div><div class="chips"><button class="chip'+(!dl.split?' on':'')+'" data-act="dw-split" data-v="0">Todo junto en uno</button><button class="chip'+(dl.split?' on':'')+'" data-act="dw-split" data-v="1">Uno por finca (ZIP)</button></div>';
     var pl=dwPlan(), lm2=dwLimits();
     h+='<div class="dwwarn"><b>Antes de descargar, esto es lo que vas a recibir:</b><ul>'+pl.map(function(x){return '<li><b style="display:inline">'+esc(x.file)+'</b><br>'+esc(x.uso)+'<br><i>'+esc(x.no)+'</i></li>'}).join('')+'</ul>'+(lm2.length?'<div style="margin-top:8px">'+lm2.map(esc).join('<br>')+'</div>':'')+'<div style="margin-top:8px">Si hay más de un archivo, se descargan juntos en un ZIP con un LEEME.</div></div>';
-    if(dl.f.plano){
+    if(dl.f.plano||dl.f.dxfplano){
       var oz=dl.orient==='h'?'horizontal':dl.orient==='v'?'vertical':'automática (según la forma)';
       var zl='<div style="margin-top:8px"><b>Plano:</b> '+(dl.paper==='a3'?'A3':'A4')+', orientación '+oz+'.';
       if(dl.zones)dwUnits().forEach(function(u){
@@ -6156,9 +6235,30 @@ function renderDw(){
 }
 function dwProg(t){dl.prog=t;var n=$('#dlwiz .note');if(n)n.textContent='Preparando… '+t}
 function dwMime(n){return /\.pdf$/.test(n)?'application/pdf':/\.dxf$/.test(n)?'application/dxf':/\.kml$/.test(n)?'application/vnd.google-earth.kml+xml':/\.csv$/.test(n)?'text/csv;charset=utf-8':'application/zip'}
+/* Entrega 30: archivos del plano editable (un DXF y un JPG por página) y su LEEME */
+function l1b(t){var o=new Uint8Array(t.length);for(var i=0;i<t.length;i++){var c=t.charCodeAt(i);o[i]=c<256?c:63}return o}
+function dxPlano(add,pre,list,label,dxfText,url,ext,G){
+  var fb=safeName(label), n=list.length+1, base=(n<10?'0':'')+n+'-'+fb;
+  add(pre+'plano-editable/',base+'.dxf',l1b(dxfText));
+  if(url)add(pre+'plano-editable/',base+'.jpg',d2u8(url));
+  list.push({file:base,label:label,ext:ext,S:G.S,paper:rec.paper==='a3'?'A3':'A4',photo:!!url});
+}
+function dxPlanoLeeme(name,list){
+  var f3=function(v){return v.toFixed(3)}, t=['PLANO EDITABLE EN DXF · '+name,'Creado con Mapa de Fincas el '+new Date().toLocaleDateString('es-ES'),'',
+    'Cada plano es un archivo DXF dibujado en METROS, en el sistema ETRS89 / UTM 30N (el mismo del DXF de recintos). La hoja entera (marco, cuadrícula, cajetines, leyenda, escala gráfica) está dibujada al tamaño que tiene sobre el terreno.',
+    'PARA IMPRIMIR: elige el tamaño de papel del plano y la escala personalizada «1 milímetro = (escala/1000) unidades». Ejemplo: a escala 1:25.000, 1 mm = 25 unidades.','',
+    'CAPAS: MARCO_HOJA, MARCO_MAPA, CUADRICULA_UTM, REC_<cultivo> (un contorno por recinto), BORDE_ECOLOGICO, ETIQUETAS_HA, ZONAS (recuadros numerados), ESCALA_GRAFICA, CREDITOS, CAJETIN_ORIENTACION, CAJETIN_LEYENDA, CAJETIN_DATOS.','',
+    'PLANOS:'];
+  list.forEach(function(p){
+    t.push('- '+p.file+'.dxf · hoja '+p.paper+' · escala 1:'+nf(p.S,0)+(p.photo?' · foto: '+p.file+'.jpg':' · sin foto'));
+    if(p.photo)t.push('    Foto: IMAGEATTACH (o ADJUNTARIMAGEN), punto de inserción X = '+f3(p.ext.minx)+'  Y = '+f3(p.ext.miny)+', escala = '+f3(p.ext.maxx-p.ext.minx)+' (es el ANCHO de la foto en metros), rotación 0. Después DRAWORDER para enviarla detrás de las líneas.');
+  });
+  t.push('','LÍMITES:','- Los recintos van solo con su contorno de color: no llevan relleno ni transparencia (en el PDF sí). Si los quieres rellenos, usa HATCH en AutoCAD / ZWCAD.','- La foto no va dentro del DXF: hay que enlazarla como dice arriba.','- Los textos usan la fuente por defecto del programa, así que pueden ocupar algo más o menos que en el PDF.','- Los colores de las capas son los del plano; el negro del plano se ve blanco o negro según el fondo de tu programa.','- Este archivo no se ha podido probar en AutoCAD ni en ZWCAD desde donde se crea; si algo no abre bien, dímelo.');
+  return t.join('\r\n')+'\r\n';
+}
 function dwGo(){
   if(dl.busy||!dwCanNext())return;
-  if(!loadPdfLib()&&(dl.f.plano||dl.f.informe||dl.f.ficha)){toast('No he podido preparar el generador de PDF.');return}
+  if(!loadPdfLib()&&(dl.f.plano||dl.f.dxfplano||dl.f.informe||dl.f.ficha)){toast('No he podido preparar el generador de PDF.');return}
   var units=dwUnits(), sp=units.length>1, files=[], notes=[], title=(dl.title||'').trim()||'Plano', base=safeName(title), steps=[], oldPaper=rec.paper, oldScale=rec.scale, oldOnly=rec.only, oldOr=rec.orient;
   rec.only=null; rec.orient=dl.orient; IGNDOWN=false;IGNWHY="";NOPH.asked=false;NOPH.skip=false;NOPH.fails=0;
   var add=function(pre,n,d){files.push({n:pre+n,d:d})};
@@ -6175,7 +6275,7 @@ function dwGo(){
     if(dl.f.kml)steps.push(['KML de '+u.name,function(){add(pre,nm+'.kml',u8s(kmlBuild(u.rows,u.name)));return Promise.resolve()}]);
     if(dl.f.csv)steps.push(['CSV de '+u.name,function(){add(pre,nm+'.csv',u8s(csvBuild(u.rows)));return Promise.resolve()}]);
     if(dl.f.informe&&dwFmtOk('informe'))steps.push(['Informe de '+u.name,function(){var o=reportPdf(null,{fincas:u.ids,title:u.name,ret:true});if(!o){notes.push('No se ha podido crear el informe de '+u.name+'.');return Promise.resolve()}return blobBytes(o.blob).then(function(by){add(pre,'informe-'+nm+'.pdf',by)})}]);
-    var zs=(dl.f.plano&&dl.zones)?dwZones(u.rows):null;
+    var wantP=dl.f.plano||dl.f.dxfplano, zs=(wantP&&dl.zones)?dwZones(u.rows):null, dxP=[];
     if(zs&&zs.length>1)steps.push(['Plano por zonas de '+u.name,function(){
       rec.paper=dl.paper; rec.scale=dl.scale;
       /* Entrega 18: una página general con foto por cada grupo de zonas que cabe en DWGEN (15 km); un grupo de una sola zona ya tiene su página de zona */
@@ -6212,13 +6312,14 @@ function dwGo(){
           var url=ph.url, rows=pg.rows||(u.zone?recRowsInBox(ext):u.rows); /* Entrega 21: en cada plano solo se dibujan los recintos de su zona (o zonas) */
           if(!url)notes.push('«'+u.name+'» '+pg.sub+': sin foto de fondo'+(nofoto?' (la escala elegida abarca demasiado terreno para la foto; elige una escala más pequeña).':(ph.why?' ('+ph.why+').':' (no se ha intentado: elegiste seguir sin foto tras el aviso).')));
           else if(ph.src==='esri')esr.push(pg.sub);
-          var d=planoBuild(u.name,G,ext,rows,url,{doc:doc,sub:pg.sub,over:pg.over,zones:pg.zones,esri:ph.src==='esri',kind:u.kind,who:u.who,toneRows:u.rows}); if(!doc)doc=d;
+          var dx=dl.f.dxfplano?{}:null, d=planoBuild(u.name,G,ext,rows,url,{doc:doc,sub:pg.sub,over:pg.over,zones:pg.zones,esri:ph.src==='esri',kind:u.kind,who:u.who,toneRows:u.rows,dxf:dx}); if(!doc)doc=d;
+          if(dx&&dx.out)dxPlano(add,pre,dxP,u.name+'-'+pg.sub,dx.out,url,ext,G);
           return one();
         });
       };
-      return one().then(function(){if(esr.length)notes.push('«'+u.name+'»: el IGN falló ('+IGNWHY+'); la foto de fondo de '+esr.join(', ')+' es de Esri (menos resolución que el PNOA).');if(!doc)return;return blobBytes(doc.output('blob')).then(function(by){add(pre,nm+'-plano-por-zonas.pdf',by)})});
+      return one().then(function(){if(esr.length)notes.push('«'+u.name+'»: el IGN falló ('+IGNWHY+'); la foto de fondo de '+esr.join(', ')+' es de Esri (menos resolución que el PNOA).');if(dl.f.dxfplano&&dxP.length)add(pre+'plano-editable/','LEEME-plano-editable.txt',u8s(dxPlanoLeeme(u.name,dxP)));if(!doc||!dl.f.plano)return;return blobBytes(doc.output('blob')).then(function(by){add(pre,nm+'-plano-por-zonas.pdf',by)})});
     }]);
-    else if(dl.f.plano)steps.push(['Plano de '+u.name,function(){
+    else if(wantP)steps.push(['Plano de '+u.name,function(){
       if(!b||big){notes.push('Plano de '+u.name+' no creado: la zona pasa de 15 km por lado.');return Promise.resolve()}
       rec.paper=dl.paper; rec.scale=dl.scale;
       var G=recPlanGeom(b), ew0=G.mw*G.S/1000, eh0=G.mh*G.S/1000, ext0={minx:b.cx-ew0/2,maxx:b.cx+ew0/2,miny:b.cy-eh0/2,maxy:b.cy+eh0/2};
@@ -6228,9 +6329,11 @@ function dwGo(){
       return locEnsure(u.rows).then(pf1).then(function(ph){
         return photoGate(ph,false,pf1);
       }).then(function(ph){
-        var url=ph.url, rows=u.zone?(function(){return recRowsInBox(ext)})():u.rows, doc=planoBuild(u.name,G,ext,rows,url,{esri:ph.src==='esri',kind:u.kind,who:u.who,toneRows:u.rows});
+        var url=ph.url, rows=u.zone?(function(){return recRowsInBox(ext)})():u.rows, dx1=dl.f.dxfplano?{}:null, doc=planoBuild(u.name,G,ext,rows,url,{esri:ph.src==='esri',kind:u.kind,who:u.who,toneRows:u.rows,dxf:dx1});
+        if(dx1&&dx1.out){var dxP1=[];dxPlano(add,pre,dxP1,u.name,dx1.out,url,ext,G);add(pre+'plano-editable/','LEEME-plano-editable.txt',u8s(dxPlanoLeeme(u.name,dxP1)))}
         if(!url)notes.push('El plano de '+u.name+' no tiene foto de fondo ('+(ph.why||'no se ha intentado: elegiste seguir sin foto tras el aviso')+').');
         else if(ph.src==='esri')notes.push('El plano de '+u.name+': la foto de fondo es de Esri porque el IGN no respondía (menos resolución que el PNOA).');
+        if(!dl.f.plano)return;
         return blobBytes(doc.output('blob')).then(function(by){add(pre,nm+'-plano-1a'+G.S+'.pdf',by)});
       });
     }]);
@@ -7852,7 +7955,7 @@ setTimeout(function(){map.invalidateSize();refreshSigpac();if(OV.ndvi){ndviPill(
 
 window.__mf={GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
-Object.assign(window.__mf,{recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
+Object.assign(window.__mf,{dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
 })();
 </script>
 <script type="text/plain" id="pdflib">/** @license
