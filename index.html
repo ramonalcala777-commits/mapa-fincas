@@ -843,6 +843,10 @@ button.pill{cursor:pointer}
 .fdlist{max-height:176px;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:2px}
 .fdi{display:flex;align-items:center;gap:9px;width:100%;min-height:42px;padding:6px 8px;border:0;border-radius:10px;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer}
 .fdi:hover,.fdi:focus-visible{background:var(--line)}
+.selist{max-height:150px;overflow-y:auto;-webkit-overflow-scrolling:touch;margin-top:8px;border:1px solid var(--line);border-radius:12px}
+.selrow{display:flex;align-items:center;border-bottom:1px solid var(--line)}.selrow:last-child{border-bottom:0}
+.selgo{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:6px 10px;border:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer}.selgo span{font-size:12px;opacity:.75}
+.selrow .x{position:static;flex:none}
 .fdi i{width:14px;height:14px;border-radius:50%;flex:none}
 .fdi .n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fdi .h{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
@@ -1856,7 +1860,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-11T10:18:12Z',n:'Entrega 33 · 11 oct · 12:18'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-11T14:10:28Z',n:'Entrega 34 · 11 oct · 16:10'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -2335,8 +2339,9 @@ function renderCard(){
       if(fdOpen)h+=fdropHTML();
     }
   }
-  h+='<div class="pkact"><a class="btn sm pkdir" href="'+dirUrl(pt[1],pt[0])+'" target="_blank" rel="noopener">Cómo llegar</a><button class="btn sm" data-act="card-size">'+(full?'Ver menos ▴':'Ver más ▾')+'</button></div>';
+  h+='<div class="pkact"><button class="btn sm" data-act="sel-from-card">Seleccionar recintos</button><button class="btn sm" data-act="card-size">'+(full?'Ver menos ▴':'Ver más ▾')+'</button></div>';
   h+='<div class="cbody">';
+  h+='<div class="acts"><a class="btn sm pkdir2" href="'+dirUrl(pt[1],pt[0])+'" target="_blank" rel="noopener">Cómo llegar</a></div>';
   if(fi&&pfOthers(fi).length)h+='<div class="pfnote">Finca compartida con: '+esc(pfOthersTxt(fi))+'. Cambiar el recinto de finca vale para todas.</div>';
   h+='<div id="sigbox">'+sigHTML(sel.ref)+'</div>';
   h+='<div id="catbox">'+catBoxHTML(pt)+'</div>';
@@ -5225,6 +5230,7 @@ function expBtns(scope,id,dis){
 }
 
 /* ---- herramientas y selección de varios recintos ---- */
+var selDrop=false, selQ='', selNew=false, selConf=null;
 var msel={on:false,items:{}}, selMulti=L.layerGroup().addTo(map);
 function selItems(){return Object.keys(msel.items).map(function(k){return msel.items[k]})}
 function endModes(){if(med.on)medOpen(false);selOff();recOff();afOff()}
@@ -5234,11 +5240,11 @@ function renderTools(){
     '<button class="lopt" data-act="dw-open"><i class="sq"></i><span>Descargar planos y datos…<small>Asistente: eliges fincas, propietarios o recintos y qué archivos quieres</small></span></button>'+
     (GTOK?'':'<button class="lopt" data-act="af-open"><i class="sq"></i><span>Aforos de cosecha<small>Apunta los kg/ha de cada recinto y saca el informe en PDF y Excel</small></span></button>')+'<button class="lopt" data-act="sel-start"><i class="sq"></i><span>Seleccionar recintos<small>Suma hectáreas y descarga lo elegido</small></span></button>';
 }
-function selStart(){
-  endModes(); msel.on=true; msel.items={}; sel=null; catCard=null; tagCard=null; activeFinca=null; goMark.clearLayers(); drawSel(); renderCard(); renderChip(); closePops(); toMap(); drawSelMulti(); renderSel();
-  toast('Toca los recintos que quieras sumar');
+function selStart(pre){
+  endModes(); msel.on=true; msel.items={}; selDrop=false; selQ=''; selNew=false; selConf=null; if(pre)msel.items[pre.ref]={ref:pre.ref,ha:pre.ha,uso:pre.uso,geom:pre.geom}; sel=null; catCard=null; tagCard=null; activeFinca=null; goMark.clearLayers(); drawSel(); renderCard(); renderChip(); closePops(); toMap(); drawSelMulti(); renderSel();
+  toast(pre?'Recinto marcado. Toca más recintos para sumarlos':'Toca los recintos que quieras sumar');
 }
-function selOff(){if(!msel.on)return;dwPick=false;msel.on=false;msel.items={};drawSelMulti();renderSel()}
+function selOff(){if(!msel.on)return;dwPick=false;selDrop=false;selQ='';selNew=false;selConf=null;msel.on=false;msel.items={};drawSelMulti();renderSel()}
 function selClick(ll){
   var h=hitAt([ll.lng,ll.lat]); if(!h)return; var o=h.saved||h.free;
   if(msel.items[o.ref])delete msel.items[o.ref]; else msel.items[o.ref]={ref:o.ref,ha:o.ha,uso:o.uso,geom:o.geom};
@@ -5252,13 +5258,48 @@ function drawSelMulti(){
     selMulti.addLayer(L.polygon(ll,{renderer:canvasTop,color:'#ffe14d',weight:3.5,fillColor:'#ffe14d',fillOpacity:.3,interactive:false}));
   });
 }
+function selConflicts(fid){return selItems().filter(function(o){var q=S.recintos[o.ref];return q&&finca(q.fincaId)&&q.fincaId!==fid}).length}
+function selListHTML(){
+  return selItems().map(function(o){var q=S.recintos[o.ref], f=q&&finca(q.fincaId);
+    return '<div class="selrow"><button class="selgo" data-act="sel-go" data-ref="'+esc(o.ref)+'"><b>'+esc(refLabel(o.ref))+'</b><span>'+ha4(o.ha)+' ha'+(f?' · '+esc(f.nombre):'')+'</span></button><button class="x" data-act="sel-rm" data-ref="'+esc(o.ref)+'" aria-label="Quitar de la selección">×</button></div>'}).join('');
+}
+function selDropHTML(){
+  var q=norm(selQ), h='', n=0;
+  abc(VF()).forEach(function(f){
+    if(isOc(f))return; if(q&&norm(f.nombre).indexOf(q)<0)return; n++;
+    h+='<button class="fdi" data-act="sel-add" data-id="'+f.id+'"><i style="background:'+fcolor(f)+'"></i><span class="n">'+esc(f.nombre)+'</span><span class="h">'+ha2(fincaHa(f.id))+' ha</span></button>';
+  });
+  return n?h:'<div class="small" style="padding:8px">Ninguna finca coincide.</div>';
+}
+function selDoAdd(fid){
+  var its=selItems(); if(!its.length)return;
+  undoPush(); its.forEach(function(o){addTo(fid,o)});
+  var nm=(finca(fid)||{}).nombre||'';
+  msel.items={}; selDrop=false; selQ=''; selNew=false; selConf=null; drawSelMulti(); renderSel();
+  undoToast(its.length+(its.length===1?' recinto añadido':' recintos añadidos')+' a «'+nm+'»');
+}
 function renderSel(){
   var el=$('#selbar'); if(!msel.on){el.hidden=true;el.innerHTML='';return}
   var it=selItems(), ha=it.reduce(function(s,o){return s+(o.ha||0)},0), n=it.length;
+  el.classList.toggle('big',!!(n&&(selDrop||selConf)));
   var h='<div class="chd"><div><div class="ref" style="font-family:var(--sans)">Selección de recintos</div><div class="sub">Toca recintos en el mapa para sumarlos o quitarlos</div></div><button class="x" data-act="sel-close" aria-label="Cerrar">×</button></div>';
   h+='<div class="mbig">'+ha4(ha)+' ha</div><div class="small">'+n+(n===1?' recinto seleccionado':' recintos seleccionados')+'</div>';
   if(dwPick)h+='<div class="acts"><button class="btn primary" data-act="dw-from-sel"'+(n?'':' disabled')+'>Usar estos recintos en el asistente →</button></div>';
-  if(n&&selItems().some(function(o){var q=S.recintos[o.ref];return q&&finca(q.fincaId)}))h+='<div class="lbl" style="margin-top:10px">Producción de los recintos elegidos</div><div class="chips">'+prodChips('','selp')+'</div>';
+  if(n){
+    h+='<div class="selist" id="selist">'+selListHTML()+'</div>';
+    if(selConf){
+      var nc=selConflicts(selConf.id), tn=selConf.id?((finca(selConf.id)||{}).nombre||''):selConf.name;
+      h+='<div class="note">'+nc+(nc===1?' de estos recintos ya está en otra finca; pasará':' de estos recintos ya están en otra finca; pasarán')+' a «'+esc(tn)+'».<div class="acts"><button class="btn primary sm" data-act="sel-add-ok">Mover</button><button class="btn sm" data-act="sel-add-no">Cancelar</button></div></div>';
+    }else{
+      h+='<button class="btn fdbtn" data-act="sel-drop" style="margin-top:8px">+ Añadir a una finca '+(selDrop?'▴':'▾')+'</button>';
+      if(selDrop){
+        h+='<div class="fdrop"><input id="sd-q" class="in" placeholder="Buscar finca" autocomplete="off" value="'+esc(selQ)+'"><div class="fdlist" id="sdlist">'+selDropHTML()+'</div>';
+        if(selNew)h+='<div class="row"><input id="sd-name" class="in" placeholder="Nombre de la finca" autocomplete="off"><button class="btn primary" data-act="sel-new-create">Crear</button></div>';
+        else h+='<button class="fdnew" data-act="sel-new">+ Crear una finca nueva con estos recintos</button>';
+        h+='</div>';
+      }
+    }
+  }
   h+='<div class="lbl" style="margin-top:10px">Descargar la selección</div>'+expBtns('sel','',!n);
   h+='<div class="acts"><button class="btn sm" data-act="sel-clear"'+(n?'':' disabled')+'>Vaciar</button></div>';
   el.innerHTML=h; el.hidden=false;
@@ -7668,11 +7709,6 @@ document.addEventListener('click',function(ev){
     case 'bulkp-apply':
       undoPush(); fincaRecs(detailId).forEach(function(r){r.prod=bulkP});
       bulkP=null; bulkAll=false; save(); renderAll(); undoToast('Producción actualizada'); break;
-    case 'selp':{
-      var sp=b.dataset.v, nsp=0; undoPush();
-      selItems().forEach(function(o){var q=S.recintos[o.ref];if(q&&finca(q.fincaId)){q.prod=sp;nsp++}});
-      if(nsp){save();renderAll();renderSel();undoToast('Producción puesta en '+nsp+(nsp===1?' recinto':' recintos'))}else toast('Ninguno de los recintos elegidos está en una finca.');
-      break}
     case 'flt-p':flt.p=flt.p===b.dataset.v?'':b.dataset.v;renderFincas();break;
     case 'riego':{
       var rq=sel&&S.recintos[sel.ref]; if(!rq)break;
@@ -7904,6 +7940,18 @@ document.addEventListener('click',function(ev){
     case 'ndv-scale':NDC.full=b.dataset.v==='full';ndcRender();break;
     case 'tools':{var tl=$('#tools'),opT=tl.hidden;closePops();if(opT){renderTools();tl.hidden=false}popLight();break}
     case 'sel-start':selStart();break;
+    case 'sel-from-card':{var pre=sel; if(!pre)break; selStart(pre);break}
+    case 'sel-drop':selDrop=!selDrop;selQ='';selNew=false;renderSel();break;
+    case 'sel-new':selNew=true;renderSel();{var ni=$('#sd-name');if(ni)ni.focus()}break;
+    case 'sel-add':{var fx=finca(id); if(!fx)break; if(selConflicts(id)){selConf={id:id};renderSel()}else selDoAdd(id);break}
+    case 'sel-new-create':{
+      var nmx=($('#sd-name')||{}).value||''; nmx=nmx.trim(); if(!nmx){toast('Escribe un nombre para la finca');break}
+      if(selConflicts(null)){selConf={id:null,name:nmx};renderSel()}else{var nf2=createFinca(nmx); if(nf2)selDoAdd(nf2.id)}
+      break}
+    case 'sel-add-ok':{var sc=selConf; if(!sc)break; if(sc.id)selDoAdd(sc.id); else{var nf3=createFinca(sc.name); if(nf3)selDoAdd(nf3.id)} break}
+    case 'sel-add-no':selConf=null;renderSel();break;
+    case 'sel-rm':delete msel.items[b.dataset.ref];drawSelMulti();renderSel();break;
+    case 'sel-go':{var so=msel.items[b.dataset.ref]; if(so){map.fitBounds(geomBounds(so.geom),{padding:[40,40],maxZoom:18})}break}
     case 'sel-close':selOff();break;
     case 'sel-clear':msel.items={};drawSelMulti();renderSel();break;
     case 'rec-start':recStart();break;
@@ -8067,6 +8115,7 @@ $('#goinput').addEventListener('focus',function(){if(Date.now()-lastUser>1500){t
 document.addEventListener('input',function(ev){
   var id=ev.target&&ev.target.id;
   if(id==='goinput'){if(!ev.target.value){sresMode='home';renderSres()}else if(sresMode==='home'||sresMode==='places')closePops()}
+  else if(id==='sd-q'){selQ=ev.target.value;var sl2=$('#sdlist');if(sl2)sl2.innerHTML=selDropHTML()}
   else if(id==='fd-q'){fdQ=ev.target.value;var fl2=$('#fdlist');if(fl2)fl2.innerHTML=fdListHTML()}
   else if(id==='fq'){flt.q=ev.target.value;var fl=$('#flist');if(fl)fl.innerHTML=fincasListHTML()}
   else if(id==='ndvi-op'){OV.nop=Math.max(.2,Math.min(1,+ev.target.value/100));if(ndviLayer)ndviLayer.setOpacity(OV.nop);lsSet(KEYO,JSON.stringify(OV))}
