@@ -804,6 +804,7 @@ button.pill{cursor:pointer}
 #medbar,#selbar,#recbar{max-height:34%;padding:24px 12px 10px;font-size:14px}
 #afbar{max-height:42%;padding:24px 12px 10px;font-size:14px}
 #medbar.big,#selbar.big,#recbar.big,#afbar.big{max-height:72%}
+#selbar.tall{max-height:72%}
 #medbar::before,#selbar::before,#recbar::before,#afbar::before{content:"";position:absolute;left:50%;top:9px;width:44px;height:5px;margin-left:-22px;border-radius:3px;background:var(--line)}
 #afbar .chd{align-items:center}#afbar .x{margin:-8px -6px -8px 0;height:34px}
 .aft{font-size:15px;font-weight:700;line-height:1.25}.aft span{font-weight:500;color:var(--ink2)}
@@ -1860,7 +1861,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-11T14:10:28Z',n:'Entrega 34 · 11 oct · 16:10'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-11T14:27:45Z',n:'Entrega 35 · 11 oct · 16:27'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -5281,7 +5282,7 @@ function selDoAdd(fid){
 function renderSel(){
   var el=$('#selbar'); if(!msel.on){el.hidden=true;el.innerHTML='';return}
   var it=selItems(), ha=it.reduce(function(s,o){return s+(o.ha||0)},0), n=it.length;
-  el.classList.toggle('big',!!(n&&(selDrop||selConf)));
+  el.classList.remove('big');el.classList.toggle('tall',!!(n&&(selDrop||selConf)));
   var h='<div class="chd"><div><div class="ref" style="font-family:var(--sans)">Selección de recintos</div><div class="sub">Toca recintos en el mapa para sumarlos o quitarlos</div></div><button class="x" data-act="sel-close" aria-label="Cerrar">×</button></div>';
   h+='<div class="mbig">'+ha4(ha)+' ha</div><div class="small">'+n+(n===1?' recinto seleccionado':' recintos seleccionados')+'</div>';
   if(dwPick)h+='<div class="acts"><button class="btn primary" data-act="dw-from-sel"'+(n?'':' disabled')+'>Usar estos recintos en el asistente →</button></div>';
