@@ -803,8 +803,7 @@ button.pill{cursor:pointer}
 #rcard,#empty,#medbar,#selbar,#recbar,#afbar{position:absolute;z-index:550;left:8px;right:8px;bottom:8px;max-height:60%;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:10px 14px 12px;-webkit-overflow-scrolling:touch}
 #medbar,#selbar,#recbar{max-height:34%;padding:24px 12px 10px;font-size:14px}
 #afbar{max-height:42%;padding:24px 12px 10px;font-size:14px}
-#medbar.big,#selbar.big,#recbar.big,#afbar.big{max-height:72%}
-#selbar.tall{max-height:72%}
+#medbar.tall,#selbar.tall,#recbar.tall,#afbar.tall{max-height:72%}
 #medbar::before,#selbar::before,#recbar::before,#afbar::before{content:"";position:absolute;left:50%;top:9px;width:44px;height:5px;margin-left:-22px;border-radius:3px;background:var(--line)}
 #afbar .chd{align-items:center}#afbar .x{margin:-8px -6px -8px 0;height:34px}
 .aft{font-size:15px;font-weight:700;line-height:1.25}.aft span{font-weight:500;color:var(--ink2)}
@@ -1108,6 +1107,31 @@ button.cbtn.on{background:var(--accent-soft)}
 .leaflet-control-attribution{max-width:70vw}#verbtn{position:absolute;z-index:500;left:8px;bottom:30px;max-width:calc(100% - 16px);padding:3px 9px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--surface) 82%,transparent);color:var(--ink2);font:11px/1.3 var(--sans);cursor:pointer;opacity:.85}#verbtn.new{background:#ffb300;color:#1d1d1d;border-color:#c68a00;font-weight:700;opacity:1}.afbar{height:8px;border-radius:5px;background:var(--line);margin:8px 0;overflow:hidden}.afbar i{display:block;height:100%;background:#43a047}.afed{margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:12px}.lsec{display:flex;align-items:center;gap:8px;width:100%;text-align:left;min-height:44px;margin:6px 0 2px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card,transparent);color:inherit;font:inherit;font-weight:700;cursor:pointer}.lsec .lt{flex:0 0 auto}.lsec small{flex:1;min-width:0;font-weight:400;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}.lsec i{font-style:normal;flex:0 0 auto}.lbody{padding:2px 0 4px}.impsel{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:10px 0 6px}.pbox{width:20px;height:20px;border:2px solid var(--line);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:13px;color:#fff;grid-row:1/3}.pbox.on{background:var(--green,#4b7a1f);border-color:var(--green,#4b7a1f)}.pacrow{cursor:pointer;align-items:center}.pacrow.off{opacity:.45}.pacrow.off b{text-decoration:line-through}.pacrow{display:grid;grid-template-columns:auto 1fr auto;gap:0 10px;padding:8px 12px;border-bottom:1px solid var(--line);font-size:14px}
 .pacrow small{grid-column:2/4;color:var(--ink2);font-size:12px}
 
+/* Entrega 36: paneles de medir y de etiqueta nueva compactos */
+.mhd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
+.mhd .ref{margin:0}
+.mk{gap:6px}
+.mrow{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.macts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tpa,.tpb{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.tpb .tpmore{width:100%;margin:0}
+@media (max-width:899px){
+  #medbar{padding:20px 12px 8px}
+  #medbar .chd .x{width:34px;height:34px;margin:-4px -6px 0 0}
+  #medbar .msub{font-size:12px;margin-top:2px;line-height:1.25}
+  #medbar .chip{min-height:30px;padding:0 10px;font-size:13px}
+  #medbar .mbig{font-size:20px;margin:0}
+  #medbar .mrow{margin-top:4px}
+  #medbar .minfo summary{min-height:26px;font-size:12px;padding:0}
+  #medbar .acts{margin-top:6px}
+  #medbar .macts .btn{min-height:34px;padding:0 4px;font-size:12.5px}
+  #medbar .acts .btn.sm,#medbar .row .btn{min-height:34px;font-size:13px}
+  #medbar .row .in{min-height:38px;padding:6px 10px}
+  .tpw .in{min-height:38px;padding:6px 10px}
+  .tpw .tpa,.tpw .tpb{margin-top:6px;gap:6px}
+  .tpw .tpa .btn{min-height:38px;font-size:14px;padding:0 10px}
+  .tpw .tpb .btn{min-height:34px;font-size:12.5px;padding:0 6px}
+}
 @media (min-width:900px){
   #nav{left:0;top:0;bottom:auto;width:var(--side);height:56px;padding-bottom:0;border-top:0;border-bottom:1px solid var(--line);grid-template-columns:repeat(4,1fr);z-index:810}
   #nav button[data-tab=mapa]{display:none}
@@ -1861,7 +1885,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-11T14:27:45Z',n:'Entrega 35 · 11 oct · 16:27'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-15T15:23:16Z',n:'Entrega 36 · 15 oct · 17:23'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -2637,18 +2661,18 @@ function renderMed(){
     hv+='<div class="acts" style="margin-top:10px"><button class="btn sm primary" data-act="med-edit">Editar</button><button class="btn sm" data-act="med-copy">Copiar</button>'+(med.id?pfBtn('med',med.id):'')+'</div>'+(med.id?gPickHTML('med',med.id)+pfShared(pfItem('med',med.id)||{},'Esta medición'):'');
     el.innerHTML=hv; el.hidden=false; return;
   }
-  var h='<div class="chd"><div><div class="ref" style="font-family:var(--sans)">'+(med.id?esc(med.name):'Medir')+'</div><div class="sub">Toca el mapa para poner puntos; arrástralos para moverlos</div></div><button class="x" data-act="med-close" aria-label="Cerrar">×</button></div>';
-  h+='<div class="chips" style="margin-top:8px"><button class="chip'+(med.kind==='dist'?' on':'')+'" data-act="med-kind" data-v="dist">Distancia</button><button class="chip'+(med.kind==='area'?' on':'')+'" data-act="med-kind" data-v="area">Superficie</button></div>';
+  var h='<div class="chd"><div class="mhd"><div class="ref" style="font-family:var(--sans)">'+(med.id?esc(med.name):'Medir')+'</div><div class="chips mk"><button class="chip'+(med.kind==='dist'?' on':'')+'" data-act="med-kind" data-v="dist">Distancia</button><button class="chip'+(med.kind==='area'?' on':'')+'" data-act="med-kind" data-v="area">Superficie</button></div></div><button class="x" data-act="med-close" aria-label="Cerrar">×</button></div>';
+  h+='<div class="sub msub">Toca el mapa para poner puntos; arrástralos para moverlos</div>';
   if(med.kind==='area'){
-    h+=n<3?'<div class="small" style="margin-top:10px">Pon al menos 3 puntos.</div>':'<div class="mbig">'+nf(s.area/1e4,4)+' ha</div><div class="small">'+nf(s.area,0)+' m² · Perímetro '+fmtLen(s.per)+'</div>';
+    h+=n<3?'<div class="small" style="margin-top:6px">Pon al menos 3 puntos.</div>':'<div class="mrow"><span class="mbig">'+nf(s.area/1e4,4)+' ha</span><span class="small">'+nf(s.area,0)+' m² · Perímetro '+fmtLen(s.per)+'</span></div>';
   }else{
-    h+=n<2?'<div class="small" style="margin-top:10px">Pon al menos 2 puntos.</div>':'<div class="mbig">'+fmtLen(s.len)+'</div><div class="small">'+(n-1)+(n===2?' tramo':' tramos')+'</div>';
+    h+=n<2?'<div class="small" style="margin-top:6px">Pon al menos 2 puntos.</div>':'<div class="mrow"><span class="mbig">'+fmtLen(s.len)+'</span><span class="small">'+(n-1)+(n===2?' tramo':' tramos')+'</span></div>';
   }
-  h+='<details class="more" style="margin-top:6px"><summary>Cómo se mide</summary><div class="small">Los puntos se pegan a los vértices de los recintos cercanos. Medida sobre el elipsoide; sirve como referencia, no como levantamiento topográfico.</div></details>';
+  h+='<details class="more minfo" style="margin-top:4px"><summary>ⓘ Cómo se mide</summary><div class="small">Los puntos se pegan a los vértices de los recintos cercanos. Medida sobre el elipsoide; sirve como referencia, no como levantamiento topográfico.</div></details>';
   if(med.saving){
     h+='<div class="row" style="margin:10px 0 0"><input id="medname" class="in" value="'+esc(med.name||nextName(med.kind==='area'?'Superficie':'Distancia',S.x.meds))+'" autocomplete="off"><button class="btn primary" data-act="med-save-ok">Guardar</button></div>';
   }else{
-    h+='<div class="acts"><button class="btn sm" data-act="med-undo"'+(n?'':' disabled')+'>Deshacer punto</button><button class="btn sm" data-act="med-clear"'+(n?'':' disabled')+'>Vaciar</button><button class="btn sm" data-act="med-copy"'+(n>1?'':' disabled')+'>Copiar</button><button class="btn sm primary" data-act="med-save"'+(n>1?'':' disabled')+'>'+(med.id?'Guardar cambios':'Guardar')+'</button></div>';
+    h+='<div class="acts macts"><button class="btn sm" data-act="med-undo"'+(n?'':' disabled')+'>Deshacer</button><button class="btn sm" data-act="med-clear"'+(n?'':' disabled')+'>Vaciar</button><button class="btn sm" data-act="med-copy"'+(n>1?'':' disabled')+'>Copiar</button><button class="btn sm primary" data-act="med-save"'+(n>1?'':' disabled')+'>'+(med.id?'Guardar':'Guardar')+'</button></div>';
   }
   el.innerHTML=h; el.hidden=false;
   if(med.saving){var i=$('#medname');if(i&&document.activeElement!==i){i.focus();i.select()}}
@@ -2816,18 +2840,18 @@ function tpCoordRefresh(){var e=$('#tpcoord');if(e&&tp)e.textContent=tp.lat.toFi
 function tpMove(ll){if(!tp)return;tp.mk.setLatLng(ll);tp.lat=rnd(ll.lat);tp.lng=rnd(ll.lng);tpCoordRefresh()}
 function tpClear(){if(tp){phDropTp();if(tp.mk)map.removeLayer(tp.mk);tp=null}}
 function tpHTML(){
-  var h='<div class="chd tpchd"><div class="tpt">Nueva etiqueta</div><button class="x" data-act="tp-cancel" aria-label="Cancelar">×</button></div>';
+  var h='<div class="tpw"><div class="chd tpchd"><div class="tpt">Nueva etiqueta</div><button class="x" data-act="tp-cancel" aria-label="Cancelar">×</button></div>';
   h+='<input id="tpname" class="in" style="margin-top:6px" value="'+esc(tp.name)+'" aria-label="Nombre de la etiqueta" autocomplete="off">';
-  h+='<div class="acts" style="margin-top:8px"><button class="btn primary" data-act="tp-create">Crear etiqueta</button><button class="btn" data-act="tp-cancel">Cancelar</button></div>';
-  h+='<a class="btn sm" id="tpgm" style="margin-top:8px" href="'+mapsUrl(tp.lat,tp.lng)+'" target="_blank" rel="noopener">Abrir en Google Maps</a>';
-  h+='<button class="btn tpmore" data-act="tp-more" aria-expanded="'+(tp.more?'true':'false')+'">Más opciones '+(tp.more?'▴':'▾')+'</button>';
+  h+='<div class="tpa"><button class="btn primary" data-act="tp-create">Crear etiqueta</button><button class="btn" data-act="tp-cancel">Cancelar</button></div>';
+  h+='<div class="tpb"><a class="btn sm" id="tpgm" href="'+mapsUrl(tp.lat,tp.lng)+'" target="_blank" rel="noopener">Abrir en Google Maps</a>';
+  h+='<button class="btn sm tpmore" data-act="tp-more" aria-expanded="'+(tp.more?'true':'false')+'">Más opciones '+(tp.more?'▴':'▾')+'</button></div>';
   if(tp.more){
     h+='<div class="sub" style="margin-top:8px">Arrastra el pin o toca el mapa para ajustar la posición.</div>';
     h+='<div class="lbl" style="margin-top:10px">Color</div>'+tagColsHTML(tp.c,'tp-col');
     h+=phSectionHTML(tp.ph||[],'tp');
     h+='<div class="lbl" style="margin-top:10px">Posición</div><div class="tpc" id="tpcoord">'+tp.lat.toFixed(6)+', '+tp.lng.toFixed(6)+'</div>';
   }
-  return h;
+  return h+'</div>';
 }
 /* mueve el mapa para que el pin no quede tapado por la tarjeta */
 function tpReveal(){
@@ -5282,7 +5306,7 @@ function selDoAdd(fid){
 function renderSel(){
   var el=$('#selbar'); if(!msel.on){el.hidden=true;el.innerHTML='';return}
   var it=selItems(), ha=it.reduce(function(s,o){return s+(o.ha||0)},0), n=it.length;
-  el.classList.remove('big');el.classList.toggle('tall',!!(n&&(selDrop||selConf)));
+  el.classList.toggle('tall',!!(n&&(selDrop||selConf)));
   var h='<div class="chd"><div><div class="ref" style="font-family:var(--sans)">Selección de recintos</div><div class="sub">Toca recintos en el mapa para sumarlos o quitarlos</div></div><button class="x" data-act="sel-close" aria-label="Cerrar">×</button></div>';
   h+='<div class="mbig">'+ha4(ha)+' ha</div><div class="small">'+n+(n===1?' recinto seleccionado':' recintos seleccionados')+'</div>';
   if(dwPick)h+='<div class="acts"><button class="btn primary" data-act="dw-from-sel"'+(n?'':' disabled')+'>Usar estos recintos en el asistente →</button></div>';
@@ -7661,7 +7685,7 @@ try{if(bkAdopt())lsSet(KEY,JSON.stringify(S))}catch(e){}
 /* ───────── eventos ───────── */
 document.addEventListener('click',function(ev){
   var pb=ev.target&&ev.target.id&&/^(medbar|selbar|recbar|afbar)$/.test(ev.target.id)?ev.target:null;
-  if(pb&&!isDesk()){var rr=pb.getBoundingClientRect();if(ev.clientY-rr.top<30){pb.classList.toggle('big');return}}
+  if(pb&&!isDesk()){var rr=pb.getBoundingClientRect();if(ev.clientY-rr.top<30){pb.classList.toggle('tall');return}}
   var b=ev.target.closest&&ev.target.closest('[data-act],#nav button[data-tab]'); if(!b)return;
   if(b.dataset.tab){setTab(b.dataset.tab);return}
   var act=b.dataset.act, id=b.dataset.id;
