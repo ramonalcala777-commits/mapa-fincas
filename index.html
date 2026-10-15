@@ -936,6 +936,10 @@ h3{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2
 .pht{position:relative;width:64px;height:64px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);padding:0;overflow:hidden;cursor:pointer;color:var(--ink2);font-size:12px;font-weight:700}
 .pht img{width:100%;height:100%;object-fit:cover;display:block}
 .pht.add{border-style:dashed;color:var(--accent)}
+.dian{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:8px 0;background:var(--surface)}
+.diah{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.diat{white-space:pre-wrap;word-break:break-word;margin-top:6px;line-height:1.4}
+.diaf{margin:8px 0}
 .pht.pend::after{content:"↑";position:absolute;right:3px;bottom:3px;background:rgba(0,0,0,.65);color:#fff;border-radius:8px;font-size:11px;line-height:1;padding:2px 5px}
 .pht.miss{opacity:.5}
 #phv .phbox{width:min(560px,100%);max-height:96%;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:14px}
@@ -1885,7 +1889,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-15T15:23:16Z',n:'Entrega 36 · 15 oct · 17:23'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-15T21:29:42Z',n:'Entrega 37 · 15 oct · 23:29'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -3149,7 +3153,7 @@ var emptyT=function(t){return '<div class="empty-t">'+t+'</div>'};
 function renderFincas(){
   var el=$('#p-fincas');
   if(pfWiz){el.innerHTML=pfWizHTML();return}
-  if(detailId&&finca(detailId)){el.innerHTML=fincaDetailHTML(detailId);return}
+  if(detailId&&finca(detailId)){el.innerHTML=fincaDetailHTML(detailId);phFill('#p-fincas');return}
   detailId=null; var st=stats();
   if(grpId&&grupo(grpId)){el.innerHTML=grupoDetailHTML(grpId);return}
   grpId=null;
@@ -3211,6 +3215,7 @@ function fincaDetailHTML(id){
   }
   var pt=fincaPoint(id);
   if(pt)h+='<details class="more" data-sec="ub"'+op('ub')+'><summary>Punto central de la finca</summary>'+coordHTML(pt,'Coordenadas (formato Google Maps)',f.nombre)+'</details>';
+  h+=diaHTML(f);
   if(recs.length){
     h+='<h3>Recintos</h3>';
     recs.forEach(function(r){
@@ -4010,13 +4015,14 @@ function phProcess(file){
 function phThumbFrom(dataUrl){return phLoadImg(dataUrl).then(function(i){return phScale(i,220,.6)})}
 function phList(){ /* fotos de lo que está abierto: etiqueta o etiqueta nueva */
   if(PH.target==='tp'&&tp)return tp.ph||(tp.ph=[]);
+  if(PH.target==='dia')return DIA.ed?DIA.ed.ph:null;
   var t=tagById(tagCard); return t?(t.ph||(t.ph=[])):null;
 }
 function phAdd(files){
   var arr=phList(); if(!arr||!files||!files.length)return;
-  var tgt=PH.target, tagId=tgt==='tag'?tagCard:null, list=[].slice.call(files), left=PH.max-arr.length;
-  if(left<=0){toast('Máximo '+PH.max+' fotos por etiqueta');return}
-  if(list.length>left){list=list.slice(0,left);toast('Solo caben '+PH.max+' fotos por etiqueta')}
+  var tgt=PH.target, tagId=tgt==='tag'?tagCard:null, list=[].slice.call(files), left=(tgt==='dia'?DIA.maxph:PH.max)-arr.length, unit=tgt==='dia'?'nota':'etiqueta';
+  if(left<=0){toast('Máximo '+(tgt==='dia'?DIA.maxph:PH.max)+' fotos por '+unit);return}
+  if(list.length>left){list=list.slice(0,left);toast('Solo caben '+(tgt==='dia'?DIA.maxph:PH.max)+' fotos por '+unit)}
   toast('Preparando '+(list.length===1?'la foto':list.length+' fotos')+'…');
   var chain=Promise.resolve();
   list.forEach(function(f){
@@ -4030,11 +4036,16 @@ function phAdd(files){
   });
   chain.then(function(){
     if(tgt==='tag'){save();drawMarks();}
-    renderCard(); if(tab==='datos')renderDatos(); setTimeout(phFlush,50);
+    if(tgt==='dia'){renderFincas();phFill('#p-fincas')}else renderCard();
+    if(tab==='datos')renderDatos(); setTimeout(phFlush,50);
   });
 }
 function phRemove(id){
   var arr=phList(); if(!arr)return; var i=arr.indexOf(id); if(i>=0)arr.splice(i,1);
+  if(PH.target==='dia'){ /* en el editor de una nota: solo se quita de la lista; el borrado real se hace al guardar */
+    if(DIA.ed&&DIA.ed.orig.indexOf(id)<0){idbDel('full',id);idbDel('th',id);delete PH.pend[id]}
+    renderFincas();phFill('#p-fincas');return Promise.resolve();
+  }
   var tagId=PH.target==='tag'?tagCard:null;
   return idbDel('full',id).then(function(){return idbDel('th',id)}).then(function(){
     delete PH.pend[id];
@@ -4134,8 +4145,8 @@ function phSectionHTML(ids,kind){
   return h;
 }
 /* visor */
-function phViewOpen(id,kind){
-  var arr=(kind==='tp'?(tp&&tp.ph):(tagById(tagCard)||{}).ph)||[]; var i=arr.indexOf(id); if(i<0)return;
+function phViewOpen(id,kind,nid){
+  var arr=(kind==='tp'?(tp&&tp.ph):kind==='dia'?(DIA.ed&&DIA.ed.ph):kind==='dv'?((diaNote(detailId,nid)||{}).ph):(tagById(tagCard)||{}).ph)||[]; var i=arr.indexOf(id); if(i<0)return;
   PH.view={ids:arr.slice(),i:i,kind:kind}; PH.target=kind; phViewRender();
 }
 function phViewRender(){
@@ -4143,7 +4154,7 @@ function phViewRender(){
   if(!v){el.hidden=true;el.innerHTML='';return}
   var id=v.ids[v.i], arm=(delArm==='ph:'+id);
   el.hidden=false;
-  el.innerHTML='<div class="phbox"><div class="phtop"><span>Foto '+(v.i+1)+' de '+v.ids.length+'</span><button class="x" data-act="ph-close" aria-label="Cerrar">×</button></div><div class="phimg"><img id="phbig" alt="Foto de la etiqueta"><div class="phload">Cargando…</div></div><div class="acts" style="justify-content:space-between"><div style="display:flex;gap:8px"><button class="btn" data-act="ph-prev"'+(v.i<=0?' disabled':'')+'>‹</button><button class="btn" data-act="ph-next"'+(v.i>=v.ids.length-1?' disabled':'')+'>›</button></div><button class="btn danger'+(arm?' armed':'')+'" data-act="ph-del" data-id="'+id+'">'+(arm?'Pulsa otra vez para borrarla':'Borrar foto')+'</button></div></div>';
+  el.innerHTML='<div class="phbox"><div class="phtop"><span>Foto '+(v.i+1)+' de '+v.ids.length+'</span><button class="x" data-act="ph-close" aria-label="Cerrar">×</button></div><div class="phimg"><img id="phbig" alt="Foto de la etiqueta"><div class="phload">Cargando…</div></div><div class="acts" style="justify-content:space-between"><div style="display:flex;gap:8px"><button class="btn" data-act="ph-prev"'+(v.i<=0?' disabled':'')+'>‹</button><button class="btn" data-act="ph-next"'+(v.i>=v.ids.length-1?' disabled':'')+'>›</button></div>'+(v.kind==='dv'?'':'<button class="btn danger'+(arm?' armed':'')+'" data-act="ph-del" data-id="'+id+'">'+(arm?'Pulsa otra vez para borrarla':'Borrar foto')+'</button>')+'</div></div>';
   phFull(id).then(function(d){var im=$('#phbig');if(im&&PH.view&&PH.view.ids[PH.view.i]===id){im.src=d;var l=$('.phload');if(l)l.hidden=true}},function(){var l=$('.phload');if(l)l.textContent='Esta foto todavía no está disponible en este aparato (hace falta internet).'});
 }
 /* Datos: fotos */
@@ -4177,6 +4188,105 @@ function phZip(){
     var dt=new Date(); var ds=dt.getFullYear()+'-'+('0'+(dt.getMonth()+1)).slice(-2)+'-'+('0'+dt.getDate()).slice(-2);
     showDl(zipStore(files),'fotos-etiquetas-'+ds+'.zip','Fotos listas',files.length+(files.length===1?' foto':' fotos')+' en carpetas por etiqueta.'+(miss?' '+miss+' no se han podido descargar (sin conexión o aún sin subir).':''));
   });
+}
+
+/* ───────── Entrega 37: diario de campo por finca ───────── */
+/* Cada nota vive dentro de su finca (f.dia): {id, f:'aaaa-mm-dd', t:tipo, x:texto, r:ref de recinto|'', ph:[ids de foto], c:creada, m:modificada}.
+   Así viaja sola con la sincronización, la copia JSON y la papelera. Las fotos usan el mismo sistema que las de las etiquetas (tag_id = id de la nota). */
+var DIA_T=[['visita','Visita'],['labor','Labor'],['tratamiento','Tratamiento'],['riego','Riego'],['abonado','Abonado'],['otro','Otro']];
+var DIA={ed:null,all:{},maxph:4,gcT:null};
+var diaMes=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+var diaTName=function(k){var t=DIA_T.filter(function(x){return x[0]===k})[0];return t?t[1]:'Otro'};
+var diaToday=function(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)};
+function diaFmt(iso){var m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(iso||'');return m?(+m[3])+' '+diaMes[+m[2]-1]+' '+m[1]:'Sin fecha'}
+function diaList(f){return (f.dia||[]).slice().sort(function(a,b){return (b.f||'').localeCompare(a.f||'')||(b.c||0)-(a.c||0)})}
+function diaNote(fid,nid){var f=finca(fid);return f?(f.dia||[]).filter(function(n){return n.id===nid})[0]:null}
+function diaRecTxt(f,ref){
+  if(!ref)return '';
+  var r=S.recintos[ref]; if(!r||r.fincaId!==f.id)return 'Un recinto que ya no está en la finca';
+  return refShort(ref)+(r.nombre?' · '+r.nombre:'');
+}
+function diaThumbs(ids,nid){
+  if(!(ids||[]).length)return '';
+  return '<div class="phs">'+ids.map(function(id){return '<button type="button" class="pht" data-act="ph-open" data-id="'+id+'" data-k="dv" data-n="'+esc(nid)+'" aria-label="Ver foto"><img data-pid="'+id+'" alt="Foto"></button>'}).join('')+'</div>';
+}
+function diaFormHTML(f,ed){
+  var recs=fincaRecs(f.id).sort(function(a,b){return a.ref.localeCompare(b.ref,'es',{numeric:true})});
+  var h='<div class="note diaf"><b>'+(ed.id?'Editar nota':'Nota nueva')+'</b>';
+  h+='<div class="lbl" style="margin-top:8px">Fecha</div><input id="dia-f" class="in" type="date" value="'+esc(ed.f)+'">';
+  h+='<div class="lbl" style="margin-top:8px">Tipo</div><div class="chips" id="dia-tipos">'+DIA_T.map(function(t){return '<button type="button" class="chip'+(ed.t===t[0]?' on':'')+'" data-act="dia-tipo" data-t="'+t[0]+'">'+t[1]+'</button>'}).join('')+'</div>';
+  if(recs.length)h+='<div class="lbl" style="margin-top:8px">Recinto (opcional)</div><select id="dia-r" class="in"><option value="">Toda la finca</option>'+recs.map(function(r){return '<option value="'+esc(r.ref)+'"'+(ed.r===r.ref?' selected':'')+'>'+esc(refShort(r.ref)+(r.nombre?' · '+r.nombre:''))+'</option>'}).join('')+'</select>';
+  h+='<div class="lbl" style="margin-top:8px">Nota</div><textarea id="dia-x" class="in" rows="4" placeholder="Qué has visto o hecho…">'+esc(ed.x)+'</textarea>';
+  h+='<div class="lbl" style="margin-top:8px">Fotos ('+ed.ph.length+' de '+DIA.maxph+')</div><div class="phs">'+ed.ph.map(function(id){return '<button type="button" class="pht'+(PH.pend[id]?' pend':'')+'" data-act="ph-open" data-id="'+id+'" data-k="dia" aria-label="Ver foto"><img data-pid="'+id+'" alt="Foto"></button>'}).join('')+(ed.ph.length<DIA.maxph?'<button type="button" class="pht add" data-act="ph-add" data-k="dia" aria-label="Añadir foto">+ Foto</button>':'')+'</div>';
+  h+='<div class="acts"><button class="btn primary" data-act="dia-save">Guardar nota</button><button class="btn" data-act="dia-cancel">Cancelar</button></div></div>';
+  return h;
+}
+function diaHTML(f){
+  if(GTOK&&!VC)return '';
+  var ro=!!GTOK, all=diaList(f), ed=(DIA.ed&&DIA.ed.fid===f.id)?DIA.ed:null, shown=DIA.all[f.id]?all:all.slice(0,8);
+  var h='<h3>Diario'+(all.length?' <span class="small">('+all.length+')</span>':'')+'</h3>';
+  if(!ro&&!ed)h+='<div class="acts" style="margin-top:0"><button class="btn primary" data-act="dia-new">+ Nota rápida</button></div>';
+  if(ed)h+=diaFormHTML(f,ed);
+  if(!all.length&&!ed)h+='<div class="small">Aún no hay notas. Apunta aquí visitas, labores, tratamientos, riegos y abonados de esta finca.</div>';
+  shown.forEach(function(n){
+    if(ed&&ed.id===n.id)return;
+    var rt=diaRecTxt(f,n.r);
+    h+='<div class="dian"><div class="diah"><b>'+esc(diaFmt(n.f))+'</b><span class="chip static">'+esc(diaTName(n.t))+'</span></div>'+(rt?'<div class="small">'+esc(rt)+'</div>':'')+(n.x?'<div class="diat">'+esc(n.x)+'</div>':'')+diaThumbs(n.ph,n.id)+(ro?'':'<div class="acts" style="margin:8px 0 0"><button class="btn sm" data-act="dia-edit" data-id="'+esc(n.id)+'">Editar</button><button class="btn sm danger" data-act="dia-del" data-id="'+esc(n.id)+'">Borrar</button></div>')+'</div>';
+  });
+  if(all.length>8)h+='<div class="acts"><button class="btn sm" data-act="dia-more" data-id="'+f.id+'">'+(DIA.all[f.id]?'Ver solo las últimas 8':'Ver las '+all.length+' notas')+'</button></div>';
+  return h;
+}
+function diaNew(fid){
+  var f=finca(fid); if(!f||GTOK)return;
+  DIA.ed={fid:fid,id:null,f:diaToday(),t:'visita',x:'',r:'',ph:[],orig:[],c:Date.now()};
+  renderFincas(); phFill('#p-fincas');
+  setTimeout(function(){var t=$('#dia-x');if(t){try{t.scrollIntoView({block:'center'})}catch(e){}t.focus()}},60);
+}
+function diaEdit(fid,nid){
+  var n=diaNote(fid,nid); if(!n||GTOK)return;
+  DIA.ed={fid:fid,id:n.id,f:n.f||diaToday(),t:n.t||'otro',x:n.x||'',r:n.r||'',ph:(n.ph||[]).slice(),orig:(n.ph||[]).slice(),c:n.c||Date.now()};
+  renderFincas(); phFill('#p-fincas');
+  setTimeout(function(){var t=$('#dia-x');if(t){try{t.scrollIntoView({block:'center'})}catch(e){}t.focus()}},60);
+}
+function diaCancel(){
+  var ed=DIA.ed; DIA.ed=null; if(!ed)return;
+  ed.ph.forEach(function(id){if(ed.orig.indexOf(id)<0){idbDel('full',id);idbDel('th',id);delete PH.pend[id]}});
+  renderFincas(); phFill('#p-fincas');
+}
+/* las fotos que ya nadie usa se borran de la nube un rato después (así «Deshacer» sigue funcionando) */
+function diaGC(ids){
+  ids=(ids||[]).filter(Boolean); if(!ids.length)return;
+  setTimeout(function(){
+    var s=dataStr(), gone=ids.filter(function(id){return s.indexOf(id)<0});
+    if(gone.length)phDropIds(gone);
+  },12000);
+}
+function phDropIds(ids){
+  ids.forEach(function(id){idbDel('full',id);idbDel('th',id);idbDel('q','up:'+id);delete PH.pend[id];idbPut('q','del:'+id,{op:'del',id:id})});
+  setTimeout(phFlush,50);
+}
+function diaSave(){
+  var ed=DIA.ed; if(!ed)return;
+  var f=finca(ed.fid); if(!f){DIA.ed=null;renderFincas();return}
+  var tx=String(ed.x||'').trim();
+  if(!tx&&!ed.ph.length){toast('Escribe algo o añade una foto');return}
+  undoPush();
+  var now=Date.now(), id=ed.id||uid();
+  var n={id:id,f:/^\d{4}-\d\d-\d\d$/.test(ed.f)?ed.f:diaToday(),t:ed.t||'otro',x:tx,r:ed.r||'',ph:ed.ph.slice(),c:ed.c||now,m:now};
+  if(!n.r)delete n.r;
+  var list=(f.dia||[]).filter(function(q){return q.id!==id}); list.push(n); f.dia=list;
+  var added=ed.ph.filter(function(p){return ed.orig.indexOf(p)<0}), removed=ed.orig.filter(function(p){return ed.ph.indexOf(p)<0});
+  added.forEach(function(p){idbPut('q','up:'+p,{op:'up',id:p,tag:id}).then(function(){PH.pend[p]=1})});
+  DIA.ed=null; save(); renderFincas(); phFill('#p-fincas');
+  setTimeout(phFlush,80); diaGC(removed.concat(added));
+  undoToast(ed.id?'Nota actualizada':'Nota guardada');
+}
+function diaDel(fid,nid){
+  var f=finca(fid), n=diaNote(fid,nid); if(!f||!n||GTOK)return;
+  undoPush();
+  f.dia=(f.dia||[]).filter(function(q){return q.id!==nid});
+  if(DIA.ed&&DIA.ed.id===nid)DIA.ed=null;
+  save(); renderFincas(); phFill('#p-fincas'); diaGC(n.ph||[]); undoToast('Nota borrada');
 }
 
 /* ───────── copias automáticas diarias en la nube ───────── */
@@ -7799,8 +7909,15 @@ document.addEventListener('click',function(ev){
     case 'fav-go':{var fv=S.x.favs[b.dataset.ref];if(!fv)break;toMap();setTimeout(function(){map.invalidateSize();select({ref:fv.ref,ha:fv.ha,uso:fv.uso,geom:fv.geom,pt:fv.pt},true)},80);break}
     case 'fav-rm':{var fvx=S.x.favs[b.dataset.ref];if(fvx&&pfOf(fvx).length>1){pfAsk('fav',b.dataset.ref);break}if(delArm==='fav:'+b.dataset.ref){delFavAll(b.dataset.ref)}else{arm('fav:'+b.dataset.ref);renderGuardados()}break}
     case 'tag-here':tagHere();break;
+    case 'dia-new':diaNew(detailId);break;
+    case 'dia-edit':diaEdit(detailId,id);break;
+    case 'dia-del':diaDel(detailId,id);break;
+    case 'dia-save':diaSave();break;
+    case 'dia-cancel':diaCancel();break;
+    case 'dia-more':DIA.all[id]=!DIA.all[id];renderFincas();phFill('#p-fincas');break;
+    case 'dia-tipo':if(DIA.ed){DIA.ed.t=b.dataset.t;$$('#dia-tipos .chip').forEach(function(c){c.classList.toggle('on',c.dataset.t===DIA.ed.t)})}break;
     case 'ph-add':PH.target=b.dataset.k;{var pf=$('#phfile');if(pf){pf.value='';pf.click()}}break;
-    case 'ph-open':phViewOpen(id,b.dataset.k);break;
+    case 'ph-open':phViewOpen(id,b.dataset.k,b.dataset.n);break;
     case 'ph-close':PH.view=null;disarm();phViewRender();break;
     case 'ph-prev':if(PH.view&&PH.view.i>0){PH.view.i--;disarm();phViewRender()}break;
     case 'ph-next':if(PH.view&&PH.view.i<PH.view.ids.length-1){PH.view.i++;disarm();phViewRender()}break;
@@ -8128,6 +8245,8 @@ document.addEventListener('keydown',function(ev){
     if(ev.target.id==='nfp-name'){ev.preventDefault();var c=$('[data-act=nfp-create]');c&&c.click()}
   }
 });
+document.addEventListener('input',function(ev){var t=ev.target;if(DIA.ed&&t&&t.id==='dia-x')DIA.ed.x=t.value;if(DIA.ed&&t&&t.id==='dia-f')DIA.ed.f=t.value});
+document.addEventListener('change',function(ev){var t=ev.target;if(DIA.ed&&t){if(t.id==='dia-r')DIA.ed.r=t.value;if(t.id==='dia-f')DIA.ed.f=t.value}});
 document.addEventListener('change',function(ev){if(ev.target&&ev.target.id==='phfile'){var fl=ev.target.files;if(fl&&fl.length)phAdd(fl)}});
 window.addEventListener('online',function(){phFlush()});
 $('#goform').addEventListener('submit',function(ev){ev.preventDefault();goTo($('#goinput').value)});
@@ -8242,7 +8361,7 @@ setTimeout(function(){map.invalidateSize();refreshSigpac();if(OV.ndvi){ndviPill(
 
 window.__mf={GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
-Object.assign(window.__mf,{srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
+Object.assign(window.__mf,{DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
 })();
 </script>
 <script type="text/plain" id="pdflib">/** @license
