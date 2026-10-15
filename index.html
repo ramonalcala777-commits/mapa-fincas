@@ -943,7 +943,18 @@ h3{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2
 .expbox{margin:12px 0 4px;padding:12px;border-radius:14px;background:var(--surface2);border:1px solid var(--line)}
 .exptt{font-size:22px;font-weight:800;line-height:1.2}
 .exphd{margin:6px 0 4px}
-.expnav{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:10px -16px 12px;padding:2px 16px 8px;scrollbar-width:none;position:sticky;top:0;z-index:2;background:var(--bg)}
+.expnav{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px -16px 0;padding:2px 16px 8px;scrollbar-width:none}
+.exphead{position:sticky;top:0;z-index:5;background:var(--bg);margin:0 -16px 12px;padding:calc(10px + env(safe-area-inset-top,0px)) 16px 0;border-bottom:1px solid var(--line)}
+.exptop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.exptop .btn{flex:0 0 auto}
+.expin{max-width:980px;margin:0 auto}
+#app.expfull #panels{z-index:1500;left:0;right:0;top:0;bottom:0;width:auto;border-right:0}
+#p-fincas.expmode{padding-top:0}
+#app.expfull .pills{z-index:1600;top:auto;bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+#app.expfull .pills>*:not(#toast){display:none}
+.afyr{padding:12px;border:1px solid var(--line);border-radius:12px;margin:8px 0;background:var(--surface)}
+.afyr h4{margin:0 0 4px;font-size:17px}
+.afyr table{border-collapse:collapse;font-size:13px}.afyr th,.afyr td{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}.afyr th:first-child,.afyr td:first-child{text-align:left}
 .expnav::-webkit-scrollbar{display:none}
 .expnav .chip{flex:0 0 auto}
 .expnav .chip.soon:not(.on){opacity:.6}
@@ -1899,7 +1910,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-15T22:18:02Z',n:'Entrega 39 · 16 oct · 00:18'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-15T22:45:11Z',n:'Entrega 40 · 16 oct · 00:45'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -3164,6 +3175,7 @@ function renderFincas(){
   var el=$('#p-fincas');
   if(pfWiz){el.innerHTML=pfWizHTML();return}
   if(EXP.fid&&EXP.fid!==detailId)EXP.fid=null;
+  var xon=!!(EXP.fid&&detailId&&finca(detailId)&&expOK()); $('#app').classList.toggle('expfull',xon); el.classList.toggle('expmode',xon);
   if(detailId&&finca(detailId)){el.innerHTML=(EXP.fid===detailId&&expOK())?expHTML(detailId):fincaDetailHTML(detailId);phFill('#p-fincas');return}
   detailId=null; var st=stats();
   if(grpId&&grupo(grpId)){el.innerHTML=grupoDetailHTML(grpId);return}
@@ -3664,7 +3676,7 @@ function renderChip(){
 /* ───────── navegación ───────── */
 function setTab(t){
   if(isDesk()&&t==='mapa')t='fincas';
-  tab=t;
+  tab=t; if(t!=='fincas'&&EXP.fid){EXP.fid=null;DIA.ed=null;DOC.ed=null;$('#app').classList.remove('expfull');$('#p-fincas').classList.remove('expmode')}
   $$('#nav button').forEach(function(b){b.classList.toggle('on',b.dataset.tab===t)});
   $('#panels').classList.toggle('open',t!=='mapa'||isDesk());
   $$('.panel').forEach(function(p){p.classList.toggle('on',p.id==='p-'+t)});
@@ -4205,8 +4217,10 @@ function phZip(){
 
 /* ───────── Entrega 39: Ficha de la explotación (una explotación = una finca) ───────── */
 var EXP={fid:null,sec:'resumen'}, KEYEXP='mapa-fincas:expsec';
-var EXP_S=[['resumen','Resumen'],['cuaderno','Cuaderno'],['documentos','Documentos'],['datos','Datos'],['historico','Histórico'],['informes','Informes'],['gestion','Gestión']];
+var EXP_S=[['resumen','Resumen'],['cuaderno','Cuaderno'],['aforos','Aforos'],['tratamientos','Tratamientos'],['abonado','Abonado'],['documentos','Documentos'],['datos','Datos'],['historico','Histórico'],['informes','Informes'],['gestion','Gestión']];
 var EXP_SOON={
+  tratamientos:['Tratamientos','Productos aplicados, dosis, plaga o motivo, recintos tratados y plazo de seguridad con la fecha en que se puede cosechar.'],
+  abonado:['Abonado','Abonos aplicados, dosis, riqueza (N, P₂O₅, K₂O) y unidades fertilizantes por hectárea y campaña.'],
   datos:['Datos de la explotación','Titular y contacto, agua (pozo, comunidad de regantes, caudal) e infraestructuras (balsas, naves, riego).'],
   historico:['Histórico y seguimiento','Línea de tiempo de la finca, comparación entre campañas y fotos con fecha para ver la evolución.'],
   informes:['Informes','Ficha completa con las notas del diario, informe de visita y resumen por campaña.'],
@@ -4220,6 +4234,31 @@ function expOpen(fid,sec){
   EXP.fid=fid; EXP.sec=sec||expSecGet(fid); if(!EXP_S.some(function(x){return x[0]===EXP.sec}))EXP.sec='resumen';
   expSecSet(fid,EXP.sec); renderFincas();
   var el=$('#p-fincas'); if(el&&el.parentNode&&el.parentNode.scrollTo)try{el.parentNode.scrollTo(0,0)}catch(e){} if(el)try{el.scrollTop=0}catch(e){}
+}
+function expClose(){
+  var was=!!EXP.fid; EXP.fid=null; DIA.ed=null; DOC.ed=null;
+  var a=$('#app'); if(a)a.classList.remove('expfull'); var pf=$('#p-fincas'); if(pf)pf.classList.remove('expmode');
+  if(was)renderFincas();
+}
+function expAforosHTML(f){
+  var id=f.id, recs=fincaRecs(id), af0=S.x.af||{};
+  var ys=Object.keys(af0).filter(function(y){return recs.some(function(r){return af0[y][r.ref]!==undefined})}).sort(function(a,b){return b-a});
+  var h='<div class="acts"><button class="btn primary" data-act="af-open" data-fid="'+esc(id)+'"'+(recs.length&&!isOc(f)?'':' disabled')+'>Nuevo aforo de cosecha</button></div>';
+  if(!ys.length)return h+'<div class="note">Esta finca todavía no tiene aforos de cosecha. Pulsa «Nuevo aforo de cosecha» para empezar uno (se hace sobre el mapa).</div>';
+  ys.forEach(function(y){
+    var a=af0[y], done=0, omit=0, kg=0, hs=0, rows=[];
+    recs.slice().sort(function(p,q){return p.ref.localeCompare(q.ref,'es',{numeric:true})}).forEach(function(r){
+      var v=a[r.ref]; if(v===undefined)return; done++;
+      if(v==='x'){omit++;rows.push('<tr><td>'+esc(refShort(r.ref))+'</td><td>'+ha4(r.ha)+'</td><td colspan="2">sin aforar</td></tr>');return}
+      kg+=r.ha*v; hs+=r.ha; rows.push('<tr><td>'+esc(refShort(r.ref))+'</td><td>'+ha4(r.ha)+'</td><td>'+nf(v,0)+'</td><td>'+nf(r.ha*v,0)+'</td></tr>');
+    });
+    var at='data-s="finca" data-i="'+esc(id)+'" data-y="'+y+'"';
+    h+='<div class="afyr"><h4>Campaña '+y+'</h4><div class="small">Hechos '+done+' de '+recs.length+(omit?' ('+omit+' sin aforar)':'')+'</div>';
+    h+=hs?'<div class="big3" style="margin-top:8px"><div><span>kg/ha (media)</span><b>'+nf(kg/hs,0)+'</b></div><div><span>Producción total</span><b>'+nf(kg,0)+' kg</b></div><div><span>Superficie aforada</span><b>'+ha2(hs)+' ha</b></div></div>':'<div class="small" style="margin-top:6px">Aún no hay recintos con kg/ha.</div>';
+    if(rows.length)h+='<details class="more" style="margin-top:8px"><summary>Detalle por recinto</summary><table style="width:100%;margin-top:6px"><thead><tr><th>Recinto</th><th>ha</th><th>kg/ha</th><th>kg</th></tr></thead><tbody>'+rows.join('')+'</tbody></table></details>';
+    h+='<div class="acts" style="margin-top:8px"><button class="btn sm" data-act="afm-go" '+at+'>Continuar o corregir</button><button class="btn sm" data-act="afm-rep" '+at+'>Informe (PDF / Excel)</button></div></div>';
+  });
+  return h;
 }
 function expLinkHTML(f){
   if(!expOK())return '';
@@ -4249,15 +4288,15 @@ function expResumenHTML(f){
 }
 function expHTML(id){
   var f=finca(id), s=stats([id],true).per[id]||{ha:0,n:0};
-  var h='<button class="back" data-act="exp-back">‹ '+esc(f.nombre)+'</button>';
-  h+='<div class="exphd"><div class="lbl" style="margin:0">Ficha de la explotación</div><div class="exptt">'+esc(f.nombre)+'</div><div class="small">'+ha2(s.ha)+' ha · '+s.n+(s.n===1?' recinto':' recintos')+(isOc(f)?' · oculta':'')+'</div></div>';
+  var h='<div class="exphead"><div class="expin"><div class="exptop"><div><div class="lbl" style="margin:0">Ficha de la explotación</div><div class="exptt">'+esc(f.nombre)+'</div><div class="small">'+ha2(s.ha)+' ha · '+s.n+(s.n===1?' recinto':' recintos')+(isOc(f)?' · oculta':'')+'</div></div><button class="btn" data-act="exp-back">✕ Cerrar</button></div>';
   var cnt={cuaderno:(f.dia||[]).length,documentos:GTOK?0:(f.docs||[]).length};
-  h+='<div class="expnav" role="tablist">'+EXP_S.filter(function(x){return !(GTOK&&x[0]==='documentos')}).map(function(x){var soon=!!EXP_SOON[x[0]];return '<button type="button" role="tab" class="chip'+(EXP.sec===x[0]?' on':'')+(soon?' soon':'')+'" aria-selected="'+(EXP.sec===x[0])+'" data-act="exp-sec" data-s="'+x[0]+'">'+x[1]+(cnt[x[0]]?' ('+cnt[x[0]]+')':'')+'</button>'}).join('')+'</div>';
+  h+='<div class="expnav" role="tablist">'+EXP_S.filter(function(x){return !(GTOK&&(x[0]==='documentos'||x[0]==='aforos'))}).map(function(x){var soon=!!EXP_SOON[x[0]];return '<button type="button" role="tab" class="chip'+(EXP.sec===x[0]?' on':'')+(soon?' soon':'')+'" aria-selected="'+(EXP.sec===x[0])+'" data-act="exp-sec" data-s="'+x[0]+'">'+x[1]+(cnt[x[0]]?' ('+cnt[x[0]]+')':'')+'</button>'}).join('')+'</div></div></div><div class="expin">';
   if(EXP.sec==='resumen')h+=expResumenHTML(f);
   else if(EXP.sec==='cuaderno')h+=diaHTML(f);
+  else if(EXP.sec==='aforos')h+=GTOK?'<div class="small">Los aforos no están disponibles en esta vista.</div>':expAforosHTML(f);
   else if(EXP.sec==='documentos')h+=GTOK?'<div class="small">Los documentos no están disponibles en esta vista.</div>':docHTML(f);
   else if(EXP_SOON[EXP.sec])h+='<div class="note"><b>'+EXP_SOON[EXP.sec][0]+'</b> · próximamente<div class="small" style="margin-top:6px">'+EXP_SOON[EXP.sec][1]+'</div></div>';
-  return h;
+  return h+'</div>';
 }
 
 /* ───────── Entrega 37: diario de campo por finca ───────── */
@@ -7087,7 +7126,7 @@ function renderAf(){
 }
 function afStartMap(){
   if(!afRecs().length){toast('No hay recintos que aforar aquí.');return}
-  endModes(); af.on=true; af.cur=null; sel=null; catCard=null; tagCard=null; activeFinca=null; goMark.clearLayers(); drawSel(); renderCard(); renderChip(); closePops(); toMap();
+  expClose(); endModes(); af.on=true; af.cur=null; sel=null; catCard=null; tagCard=null; activeFinca=null; goMark.clearLayers(); drawSel(); renderCard(); renderChip(); closePops(); toMap();
   $('#afmodal').hidden=true; $('#afmodal').innerHTML=''; cLabels.clearLayers(); afLbl.clearLayers();
   setTimeout(function(){map.invalidateSize();var bb=null;afRecs().forEach(function(r){var g=geomBounds(r.geom);bb=bb?bb.extend(g):g});if(bb)map.fitBounds(bb.pad(.1),{paddingBottomRight:[0,isDesk()?0:200]})},90);
   afDraw(); renderAf(); drawSaved();
@@ -8145,7 +8184,7 @@ document.addEventListener('click',function(ev){
     case 'exp-open':expOpen(detailId);break;
     case 'exp-go':expOpen(detailId,b.dataset.s);break;
     case 'exp-sec':if(EXP.fid){EXP.sec=b.dataset.s;expSecSet(EXP.fid,EXP.sec);renderFincas()}break;
-    case 'exp-back':EXP.fid=null;DIA.ed=null;DOC.ed=null;renderFincas();break;
+    case 'exp-back':expClose();break;
     case 'doc-new':docNew(detailId);break;
     case 'doc-pick':{var df=$('#docfile');if(df){df.value='';df.click()}break}
     case 'doc-tipo':if(DOC.ed){DOC.ed.t=b.dataset.t;$$('#doc-tipos .chip').forEach(function(c){c.classList.toggle('on',c.dataset.t===DOC.ed.t)})}break;
@@ -8288,7 +8327,7 @@ document.addEventListener('click',function(ev){
     case 'flt-open':fltOpen=!fltOpen;renderFincas();break;
     case 'finca-color':{var f1=finca(detailId);if(f1){if(PF==='main')f1.color=b.dataset.c;else{f1.pcol=Object.assign({},f1.pcol);f1.pcol[PF]=b.dataset.c}colOpen=false;save();drawSaved();renderFincas()}break}
     case 'finca-map':{
-      finOn();
+      expClose(); finOn();
       var rs=fincaRecs(detailId); if(!rs.length)break;
       var bb=null;rs.forEach(function(r){var g=geomBounds(r.geom);bb=bb?bb.extend(g):g});
       pendingFit=null; toMap(); setTimeout(function(){map.invalidateSize();map.fitBounds(bb,{padding:[40,40],maxZoom:18})},80); break}
@@ -8312,6 +8351,7 @@ document.addEventListener('click',function(ev){
       if(delArm==='finca:'+detailId){delFincaAll(detailId)}else{arm('finca:'+detailId);renderFincas()}break;
     case 'rec-open':{
       var rr=S.recintos[b.dataset.ref]; if(!rr)break;
+      expClose();
       toMap(); setTimeout(function(){map.invalidateSize();select({ref:rr.ref,ha:rr.ha,uso:rr.uso,geom:rr.geom,pt:rr.pt},true)},80); break}
     case 'sync-now':syncNow(true);break;
     case 'sync-out':signOut();toast('Has salido. Los datos siguen en este aparato.');break;
