@@ -1927,7 +1927,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-16T07:36:12Z',n:'Entrega 42 · 16 oct · 09:36'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-16T08:12:27Z',n:'Entrega 42 · 16 oct · 10:12'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -4235,8 +4235,9 @@ function phZip(){
 
 /* ───────── Entrega 39: Ficha de la explotación (una explotación = una finca) ───────── */
 var EXP={fid:null,sec:'resumen'}, KEYEXP='mapa-fincas:expsec';
-var EXP_S=[['resumen','Resumen'],['cuaderno','Cuaderno'],['aforos','Aforos'],['tratamientos','Tratamientos'],['abonado','Abonado'],['documentos','Documentos'],['datos','Datos'],['historico','Histórico'],['informes','Informes'],['gestion','Gestión']];
+var EXP_S=[['resumen','Resumen'],['cuaderno','Cuaderno'],['aforos','Aforos'],['tratamientos','Tratamientos'],['abonado','Abonado'],['fertirrigacion','Fertirrigación'],['documentos','Documentos'],['datos','Datos'],['historico','Histórico'],['informes','Informes'],['gestion','Gestión']];
 var EXP_SOON={
+  fertirrigacion:['Fertirrigación','Abonos líquidos y solubles aplicados con el riego: productos, dosis, agua y unidades fertilizantes por hectárea y campaña.'],
   datos:['Datos de la explotación','Titular y contacto, agua (pozo, comunidad de regantes, caudal) e infraestructuras (balsas, naves, riego).'],
   historico:['Histórico y seguimiento','Línea de tiempo de la finca, comparación entre campañas y fotos con fecha para ver la evolución.'],
   informes:['Informes','Ficha completa con las notas del diario, informe de visita y resumen por campaña.'],
@@ -4839,32 +4840,43 @@ function abCalc(f,t,refs){
 }
 function abDates(t){return diaFmt(t.f)+(t.f2&&t.f2!==t.f?' → '+diaFmt(t.f2):'')}
 function abUFtxt(u){return 'N '+trTxt(u.n,1)+' · P₂O₅ '+trTxt(u.p,1)+' · K₂O '+trTxt(u.k,1)}
-/* resumen por campaña: U.F./ha medias (kg de nutriente entre las hectáreas de la finca o del cultivo) de lo hecho y de lo pendiente, y cantidad de cada abono */
+/* resumen por campaña: U.F./ha medias sobre las hectáreas realmente abonadas (hechos) o previstas (pendientes), y cantidad de cada abono */
 function abResumen(f,cult){
   var base=fincaRecs(f.id).filter(function(r){return !cult||trCultOf(r)===cult}), haB=base.reduce(function(a,r){return a+r.ha},0), ys={};
+  function sumHa(o){return Object.keys(o).reduce(function(a,r){return a+((S.recintos[r]&&S.recintos[r].ha)||0)},0)}
   (f.abon||[]).forEach(function(t){
     var y=(t.f||'').slice(0,4)||'Sin fecha', refs=trRefs(f,t).filter(function(r){return !cult||trCultOf(S.recintos[r])===cult});
     if(!refs.length)return;
-    var c=abCalc(f,t,refs), e=ys[y]||(ys[y]={y:y,h:{n:0,p:0,k:0,c:0},p:{n:0,p:0,k:0,c:0},prods:{}}), g=t.e==='p'?e.p:e.h;
-    g.c++; g.n+=c.tot.n*c.ha; g.p+=c.tot.p*c.ha; g.k+=c.tot.k*c.ha;
+    var c=abCalc(f,t,refs), e=ys[y]||(ys[y]={y:y,h:{n:0,p:0,k:0,c:0,refs:{}},p:{n:0,p:0,k:0,c:0,refs:{}},prods:{}}), g=t.e==='p'?e.p:e.h;
+    g.c++; g.n+=c.tot.n*c.ha; g.p+=c.tot.p*c.ha; g.k+=c.tot.k*c.ha; refs.forEach(function(r){g.refs[r]=1});
     c.ps.forEach(function(x){
       if(x.qty===null)return;
       var k=x.q.n.toLowerCase()+'|'+x.q.u, p=e.prods[k]||(e.prods[k]={n:x.q.n,u:x.q.u,h:0,p:0});
       if(t.e==='p')p.p+=x.qty;else p.h+=x.qty;
     });
   });
-  Object.keys(ys).forEach(function(y){['h','p'].forEach(function(k){var g=ys[y][k];g.n=haB?g.n/haB:0;g.p=haB?g.p/haB:0;g.k=haB?g.k/haB:0})});
+  Object.keys(ys).forEach(function(y){['h','p'].forEach(function(k){
+    var g=ys[y][k]; g.ha=sumHa(g.refs); g.n=g.ha?g.n/g.ha:0; g.p=g.ha?g.p/g.ha:0; g.k=g.ha?g.k/g.ha:0;
+  });
+    ys[y].sin=base.filter(function(r){return !ys[y].h.refs[r.ref]}).map(function(r){return r.ref});
+    ys[y].haSin=ys[y].sin.reduce(function(a,r){return a+S.recintos[r].ha},0);
+  });
   return {ys:ys,haB:haB};
 }
 function abResumenHTML(f,cult){
   var R=abResumen(f,cult), yl=Object.keys(R.ys).sort(function(a,b){return b.localeCompare(a)}); if(!yl.length)return '';
-  var h='<div class="note"><b>Resumen por campaña</b>'+(cult?' <span class="small">· '+esc(cult)+' ('+ha2(R.haB)+' ha)</span>':'');
+  var h='<div class="note"><b>Resumen por campaña</b>';
   yl.forEach(function(y){
-    var e=R.ys[y], op=!!AB.open['y'+y], pl=Object.keys(e.prods).map(function(k){return e.prods[k]}).sort(function(a,b){return a.n.localeCompare(b.n,'es')});
-    h+='<div style="margin-top:8px"><div class="lbl" style="margin:0">Campaña '+esc(y)+'</div>';
-    h+=e.h.c?'<div class="small" style="color:inherit"><b>Aportado:</b> '+abUFtxt(e.h)+' U.F./ha</div>':'<div class="small" style="color:inherit">Todavía nada aportado</div>';
-    if(e.p.c)h+='<div class="small" style="color:inherit"><b>Pendiente:</b> '+abUFtxt(e.p)+' U.F./ha</div>';
-    h+='<button type="button" class="btn sm" style="margin-top:6px" data-act="ab-sum-toggle" data-y="'+esc(y)+'">'+(op?'Ocultar abonos ▴':'Ver abonos ▾')+'</button><div class="trcr" id="abs-'+esc(y)+'"'+(op?'':' hidden')+'>'+pl.map(function(p){return '<div class="trcl"><span>'+esc(p.n)+'</span><b>'+(p.h?trTxt(p.h,0)+' '+esc(p.u)+(p.p?' + '+trTxt(p.p,0)+' pend.':''):trTxt(p.p,0)+' '+esc(p.u)+' pend.')+'</b></div>'}).join('')+'</div></div>';
+    var e=R.ys[y], op=!!AB.open['y'+y], ou=!!AB.open['u'+y], pl=Object.keys(e.prods).map(function(k){return e.prods[k]}).sort(function(a,b){return a.n.localeCompare(b.n,'es')});
+    h+='<div style="margin-top:10px"><div class="lbl" style="margin:0">Campaña '+esc(y)+'</div>';
+    h+='<div class="small" style="color:inherit"><b>'+(cult?esc(cult):'Toda la finca')+':</b> '+ha2(R.haB)+' ha · <b>abonadas '+ha2(e.h.ha)+' ha</b> · sin abonar '+ha2(e.haSin)+' ha</div>';
+    h+=e.h.c?'<div class="small" style="color:inherit;margin-top:2px"><b>Aportado</b> (sobre '+ha2(e.h.ha)+' ha): '+abUFtxt(e.h)+' U.F./ha</div>':'<div class="small" style="color:inherit;margin-top:2px">Todavía nada aportado</div>';
+    if(e.p.c)h+='<div class="small" style="color:inherit;margin-top:2px"><b>Pendiente</b> (sobre '+ha2(e.p.ha)+' ha): '+abUFtxt(e.p)+' U.F./ha</div>';
+    h+='<div class="acts" style="margin:8px 0 0">';
+    if(e.sin.length)h+='<button type="button" class="btn sm" data-act="ab-sum-toggle" data-k="u" data-y="'+esc(y)+'">'+(ou?'Ocultar recintos sin abonar ▴':'Ver recintos sin abonar ▾')+'</button>';
+    h+='<button type="button" class="btn sm" data-act="ab-sum-toggle" data-k="y" data-y="'+esc(y)+'">'+(op?'Ocultar abonos ▴':'Ver abonos ▾')+'</button></div>';
+    if(e.sin.length)h+='<div class="trcr" id="abu-'+esc(y)+'"'+(ou?'':' hidden')+'>'+trCardRecs(e.sin)+'</div>';
+    h+='<div class="trcr" id="abs-'+esc(y)+'"'+(op?'':' hidden')+'>'+pl.map(function(p){return '<div class="trcl"><span>'+esc(p.n)+'</span><b>'+(p.h?trTxt(p.h,0)+' '+esc(p.u)+(p.p?' + '+trTxt(p.p,0)+' pend.':''):trTxt(p.p,0)+' '+esc(p.u)+' pend.')+'</b></div>'}).join('')+'</div></div>';
   });
   return h+'</div>';
 }
@@ -4885,9 +4897,8 @@ function abPForm(q,i,n){
   var h='<div class="trp"><div class="diah"><b>Abono '+(i+1)+'</b>'+(n>1?'<button type="button" class="btn sm" data-act="ab-pdel" data-i="'+i+'">Quitar</button>':'')+'</div>';
   h+='<input id="abp-'+i+'-n" class="in" list="ab-dl" value="'+esc(q.n)+'" placeholder="Abono (nombre comercial)" autocomplete="off" aria-label="Abono '+(i+1)+'">';
   h+='<div class="lbl" style="margin-top:12px">Riqueza (% de cada nutriente)</div><div class="abrich"><label>N<input id="abp-'+i+'-qn" class="in" inputmode="decimal" value="'+esc(q.qn)+'" autocomplete="off"></label><label>P₂O₅<input id="abp-'+i+'-qp" class="in" inputmode="decimal" value="'+esc(q.qp)+'" autocomplete="off"></label><label>K₂O<input id="abp-'+i+'-qk" class="in" inputmode="decimal" value="'+esc(q.qk)+'" autocomplete="off"></label></div>';
-  h+='<div class="lbl" style="margin-top:12px">Dosis por hectárea (o un rango, ej. 20-25)</div><input id="abp-'+i+'-d" class="in" inputmode="decimal" value="'+esc(q.d)+'" placeholder="Ej. 20" autocomplete="off">';
-  h+='<div class="chips" id="abp-'+i+'-u" style="margin-top:8px"><button type="button" class="chip'+(q.u!=='L'?' on':'')+'" data-act="ab-unit" data-i="'+i+'" data-u="kg">kg/ha</button><button type="button" class="chip'+(q.u==='L'?' on':'')+'" data-act="ab-unit" data-i="'+i+'" data-u="L">L/ha</button></div>';
-  h+='<div id="abp-'+i+'-dew"'+(q.u==='L'?'':' hidden')+'><div class="lbl" style="margin-top:12px">Densidad (kg por litro; la lleva el abono líquido)</div><input id="abp-'+i+'-de" class="in" inputmode="decimal" value="'+esc(q.de)+'" placeholder="Ej. 1,3" autocomplete="off"></div>';
+  h+='<div class="lbl" style="margin-top:12px">Dosis (kg por hectárea, o un rango, ej. 20-25)</div><input id="abp-'+i+'-d" class="in" inputmode="decimal" value="'+esc(q.d)+'" placeholder="Ej. 20" autocomplete="off">';
+  if(q.u==='L')h+='<div class="small" style="margin-top:6px">Este abono se guardó en litros por hectárea. Los abonos líquidos irán en Fertirrigación.</div><div class="lbl" style="margin-top:8px">Densidad (kg por litro)</div><input id="abp-'+i+'-de" class="in" inputmode="decimal" value="'+esc(q.de)+'" autocomplete="off">';
   h+='<div class="lbl" style="margin-top:12px">Precio (€ por kg o por L, opcional)</div><input id="abp-'+i+'-pr" class="in" inputmode="decimal" value="'+esc(q.pr)+'" autocomplete="off"></div>';
   return h;
 }
@@ -4942,8 +4953,8 @@ function abCardHTML(f,t,today){
 }
 function abProdsHTML(){
   var list=abProds().slice().sort(function(a,b){return String(a.n).localeCompare(String(b.n),'es')}), pe=AB.pe, h='<button class="back" data-act="ab-prods-back">‹ Abonado</button><h3>Mis abonos'+(list.length?' <span class="small">('+list.length+')</span>':'')+'</h3>';
-  h+='<div class="small">Se forma solo con los abonos que usas. Al escribir uno en un abonado nuevo, se rellenan su riqueza, su densidad y su precio. Borrar un abono de aquí no cambia los abonados ya guardados.</div>';
-  if(pe)h+='<div class="note diaf"><b>Editar abono</b><div class="lbl" style="margin-top:8px">Nombre</div><input id="ra-n" class="in" value="'+esc(pe.n)+'" autocomplete="off"><div class="lbl" style="margin-top:8px">Riqueza (% de N, P₂O₅ y K₂O)</div><div class="abrich"><label>N<input id="ra-qn" class="in" inputmode="decimal" value="'+esc(pe.qn)+'"></label><label>P₂O₅<input id="ra-qp" class="in" inputmode="decimal" value="'+esc(pe.qp)+'"></label><label>K₂O<input id="ra-qk" class="in" inputmode="decimal" value="'+esc(pe.qk)+'"></label></div><div class="chips" id="ra-u" style="margin-top:8px"><button type="button" class="chip'+(pe.u!=='L'?' on':'')+'" data-act="ra-unit" data-u="kg">kg/ha</button><button type="button" class="chip'+(pe.u==='L'?' on':'')+'" data-act="ra-unit" data-u="L">L/ha</button></div><div class="lbl" style="margin-top:8px">Densidad (kg por litro, solo líquidos)</div><input id="ra-de" class="in" inputmode="decimal" value="'+esc(pe.de)+'"><div class="lbl" style="margin-top:8px">Precio (€ por kg o por L)</div><input id="ra-pr" class="in" inputmode="decimal" value="'+esc(pe.pr)+'"><div class="acts"><button class="btn primary" data-act="ra-save">Guardar</button><button class="btn" data-act="ra-cancel">Cancelar</button></div></div>';
+  h+='<div class="small">Se forma solo con los abonos que usas. Al escribir uno en un abonado nuevo, se rellenan su riqueza y su precio. Borrar un abono de aquí no cambia los abonados ya guardados.</div>';
+  if(pe)h+='<div class="note diaf"><b>Editar abono</b><div class="lbl" style="margin-top:8px">Nombre</div><input id="ra-n" class="in" value="'+esc(pe.n)+'" autocomplete="off"><div class="lbl" style="margin-top:8px">Riqueza (% de N, P₂O₅ y K₂O)</div><div class="abrich"><label>N<input id="ra-qn" class="in" inputmode="decimal" value="'+esc(pe.qn)+'"></label><label>P₂O₅<input id="ra-qp" class="in" inputmode="decimal" value="'+esc(pe.qp)+'"></label><label>K₂O<input id="ra-qk" class="in" inputmode="decimal" value="'+esc(pe.qk)+'"></label></div>'+(pe.u==='L'?'<div class="lbl" style="margin-top:8px">Densidad (kg por litro; abono guardado en litros)</div><input id="ra-de" class="in" inputmode="decimal" value="'+esc(pe.de)+'">':'')+'<div class="lbl" style="margin-top:8px">Precio (€ por '+(pe.u==='L'?'L':'kg')+')</div><input id="ra-pr" class="in" inputmode="decimal" value="'+esc(pe.pr)+'"><div class="acts"><button class="btn primary" data-act="ra-save">Guardar</button><button class="btn" data-act="ra-cancel">Cancelar</button></div></div>';
   if(!list.length&&!pe)h+='<div class="note">Todavía no hay abonos. Aparecerán aquí cuando guardes tu primer abonado.</div>';
   list.forEach(function(p){
     if(pe&&pe.id===p.id)return;
@@ -5046,7 +5057,7 @@ function raEdit(id){var p=abProds().filter(function(x){return x.id===id})[0]; if
 function raSave(){
   var e=AB.pe; if(!e)return; var n=String(e.n||'').trim(); if(!n){toast('El abono necesita un nombre');return}
   if(abProds().some(function(p){return p.id!==e.id&&String(p.n).toLowerCase()===n.toLowerCase()})){toast('Ya tienes un abono con ese nombre');return}
-  var qn,qp,qk,pr=trNum(e.pr),de=trNum(e.de);
+  var qn,qp,qk,pr=trNum(e.pr),de=e.u==='L'?trNum(e.de):null;
   try{qn=abPct(e.qn,n,'N');qp=abPct(e.qp,n,'P₂O₅');qk=abPct(e.qk,n,'K₂O')}catch(x){toast(x.message);return}
   if(pr!==null&&(isNaN(pr)||pr<0)){toast('El precio tiene que ser un número');return}
   if(de!==null&&(isNaN(de)||de<=0)){toast('La densidad tiene que ser un número mayor que 0');return}
@@ -5059,10 +5070,8 @@ function abFill(i){
   var ed=AB.ed; if(!ed||!ed.ps[i])return; var q=ed.ps[i], p=abProdByName(q.n); if(!p)return;
   var set=function(k,v){q[k]=v;var e=$('#abp-'+i+'-'+k);if(e)e.value=v};
   ['qn','qp','qk'].forEach(function(k){if(!String(q[k]||'').trim()&&abHas(p[k]))set(k,abEd(p[k]))});
-  if(!String(q.de||'').trim()&&abHas(p.de))set('de',abEd(p.de));
+  if(q.u==='L'&&!String(q.de||'').trim()&&abHas(p.de))set('de',abEd(p.de));
   if(!String(q.pr||'').trim()&&abHas(p.pr))set('pr',abEd(p.pr));
-  q.u=p.u==='L'?'L':'kg'; $$('#abp-'+i+'-u .chip').forEach(function(c){c.classList.toggle('on',c.dataset.u===q.u)});
-  var w=$('#abp-'+i+'-dew'); if(w)w.hidden=q.u!=='L';
 }
 function abRecRefresh(){
   var ed=AB.ed, f=ed&&finca(ed.fid); if(!f)return;
@@ -8906,7 +8915,6 @@ document.addEventListener('click',function(ev){
     case 'ab-prods':AB.view='abs';AB.pe=null;renderFincas();break;
     case 'ab-prods-back':AB.view='';AB.pe=null;renderFincas();break;
     case 'ab-est':if(AB.ed){AB.ed.e=b.dataset.v;$$('#ab-est .chip').forEach(function(c){c.classList.toggle('on',c.dataset.v===AB.ed.e)})}break;
-    case 'ab-unit':if(AB.ed&&AB.ed.ps[+b.dataset.i]){var ai=+b.dataset.i;AB.ed.ps[ai].u=b.dataset.u;$$('#abp-'+ai+'-u .chip').forEach(function(c){c.classList.toggle('on',c.dataset.u===b.dataset.u)});var aw=$('#abp-'+ai+'-dew');if(aw)aw.hidden=b.dataset.u!=='L'}break;
     case 'ab-padd':if(AB.ed&&AB.ed.ps.length<AB_MAX){AB.ed.ps.push(abBlankP());renderFincas();setTimeout(function(){var e=$('#abp-'+(AB.ed.ps.length-1)+'-n');if(e){try{e.scrollIntoView({block:'center'})}catch(x){}e.focus()}},60)}break;
     case 'ab-pdel':if(AB.ed&&AB.ed.ps.length>1){AB.ed.ps.splice(+b.dataset.i,1);renderFincas()}break;
     case 'ab-cult':if(AB.ed){var fa=finca(AB.ed.fid),ca=fa&&trCultList(fa).filter(function(x){return x.c===b.dataset.c})[0];if(ca){AB.ed.r=trToggleCult(ca.refs,AB.ed.r);abRecRefresh()}}break;
@@ -8915,12 +8923,11 @@ document.addEventListener('click',function(ev){
     case 'ab-rec-none':if(AB.ed){AB.ed.r=[];abRecRefresh()}break;
     case 'ab-recs-toggle':{AB.recOpen=!AB.recOpen;var abx=$('#ab-recbox');if(abx)abx.hidden=!AB.recOpen;b.textContent=AB.recOpen?'Ocultar lista ▴':'Ver lista ▾';break}
     case 'ab-card-recs':{AB.open[id]=!AB.open[id];var abb=$('#abr-'+id);if(abb)abb.hidden=!AB.open[id];b.textContent=AB.open[id]?'Ocultar recintos ▴':'Ver recintos ▾';break}
-    case 'ab-sum-toggle':{var yk='y'+b.dataset.y;AB.open[yk]=!AB.open[yk];var abs=$('#abs-'+b.dataset.y);if(abs)abs.hidden=!AB.open[yk];b.textContent=AB.open[yk]?'Ocultar abonos ▴':'Ver abonos ▾';break}
+    case 'ab-sum-toggle':{var kk=b.dataset.k==='u'?'u':'y',yk=kk+b.dataset.y;AB.open[yk]=!AB.open[yk];var abs=$((kk==='u'?'#abu-':'#abs-')+b.dataset.y);if(abs)abs.hidden=!AB.open[yk];b.textContent=kk==='u'?(AB.open[yk]?'Ocultar recintos sin abonar ▴':'Ver recintos sin abonar ▾'):(AB.open[yk]?'Ocultar abonos ▴':'Ver abonos ▾');break}
     case 'ra-edit':raEdit(id);break;
     case 'ra-del':raDel(id);break;
     case 'ra-save':raSave();break;
     case 'ra-cancel':AB.pe=null;renderFincas();break;
-    case 'ra-unit':if(AB.pe){AB.pe.u=b.dataset.u;$$('#ra-u .chip').forEach(function(c){c.classList.toggle('on',c.dataset.u===AB.pe.u)})}break;
     case 'trm-ok':trmDone(true);break;
     case 'trm-cancel':trmDone(false);break;
     case 'trm-all':trm.sel=trmRecs().map(function(r){return r.ref});trmDraw();trmRender();break;
