@@ -953,6 +953,7 @@ h3{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2
 #app.expfull .pills{z-index:1600;top:auto;bottom:calc(16px + env(safe-area-inset-bottom,0px))}
 #app.expfull .pills>*:not(#toast){display:none}
 .afyr{padding:12px;border:1px solid var(--line);border-radius:12px;margin:8px 0;background:var(--surface)}
+.trp{border:1px solid var(--line);border-radius:12px;padding:10px;margin:8px 0;background:var(--surface)}
 .afyr h4{margin:0 0 4px;font-size:17px}
 .afyr table{border-collapse:collapse;font-size:13px}.afyr th,.afyr td{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right}.afyr th:first-child,.afyr td:first-child{text-align:left}
 .expnav::-webkit-scrollbar{display:none}
@@ -1910,7 +1911,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-16T05:26:39Z',n:'Entrega 41 · 16 oct · 07:26'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-16T05:48:53Z',n:'Entrega 41 · 16 oct · 07:48'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -3676,7 +3677,7 @@ function renderChip(){
 /* ───────── navegación ───────── */
 function setTab(t){
   if(isDesk()&&t==='mapa')t='fincas';
-  tab=t; if(t!=='fincas'&&EXP.fid){EXP.fid=null;DIA.ed=null;DOC.ed=null;TR.ed=null;$('#app').classList.remove('expfull');$('#p-fincas').classList.remove('expmode')}
+  tab=t; if(t!=='fincas'&&EXP.fid){EXP.fid=null;DIA.ed=null;DOC.ed=null;TR.ed=null;TR.pe=null;TR.view='';$('#app').classList.remove('expfull');$('#p-fincas').classList.remove('expmode')}
   $$('#nav button').forEach(function(b){b.classList.toggle('on',b.dataset.tab===t)});
   $('#panels').classList.toggle('open',t!=='mapa'||isDesk());
   $$('.panel').forEach(function(p){p.classList.toggle('on',p.id==='p-'+t)});
@@ -4235,7 +4236,7 @@ function expOpen(fid,sec){
   var el=$('#p-fincas'); if(el&&el.parentNode&&el.parentNode.scrollTo)try{el.parentNode.scrollTo(0,0)}catch(e){} if(el)try{el.scrollTop=0}catch(e){}
 }
 function expClose(){
-  var was=!!EXP.fid; EXP.fid=null; DIA.ed=null; DOC.ed=null; TR.ed=null;
+  var was=!!EXP.fid; EXP.fid=null; DIA.ed=null; DOC.ed=null; TR.ed=null; TR.pe=null; TR.view='';
   var a=$('#app'); if(a)a.classList.remove('expfull'); var pf=$('#p-fincas'); if(pf)pf.classList.remove('expmode');
   if(was)renderFincas();
 }
@@ -4399,13 +4400,30 @@ function diaDel(fid,nid){
 }
 
 /* ───────── Entrega 41: tratamientos por finca ───────── */
-/* Cada tratamiento vive dentro de su finca (f.trat): {id, f:fecha, p:producto, a:materia activa, d:dosis (número), u:'L/ha'|'kg/ha', z:plaga o motivo, r:[refs de recinto] (vacío = toda la finca), s:plazo de seguridad en días|null, c, m}.
-   El producto y el plazo los escribe la persona: la herramienta no lleva base de datos de productos ni comprueba autorizaciones. */
-var TR={ed:null};
+/* Cada tratamiento vive dentro de su finca (f.trat): {id, f:fecha, e:'h'|'p' (hecho o pendiente), z:objetivo, cl:caldo L/ha, r:[refs de recinto] (vacío = toda la finca), o:observaciones,
+   ps:[{n:producto, a:materia activa, d:dosis por 1.000 L de caldo, u:'L'|'kg', pr:precio €/unidad, s:plazo de seguridad en días}] (de 1 a 6), c, m}.
+   El registro de productos (S.x.prods: {id,n,a,u,pr,s}) se va formando solo al guardar tratamientos y es común a todas las fincas.
+   El producto y el plazo los escribe la persona: no hay base de datos de productos ni comprobación de autorizaciones. */
+var TR={ed:null,flt:'todos',view:'',pe:null}, TR_MAX=6;
 function trItem(fid,tid){var f=finca(fid);return f?(f.trat||[]).filter(function(t){return t.id===tid})[0]:null}
 function trList(f){return (f.trat||[]).slice().sort(function(a,b){return (b.f||'').localeCompare(a.f||'')||(b.c||0)-(a.c||0)})}
 function trAdd(iso,n){var m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(iso||'');if(!m)return '';var d=new Date(Date.UTC(+m[1],+m[2]-1,+m[3]+n));return d.getUTCFullYear()+'-'+('0'+(d.getUTCMonth()+1)).slice(-2)+'-'+('0'+d.getUTCDate()).slice(-2)}
-function trSafe(t){return (t.s===null||t.s===undefined||t.s==='')?'':trAdd(t.f,+t.s)}
+function trNum(v){var t=String(v==null?'':v).trim().replace(/\s/g,'').replace(',','.');if(!t)return null;var n=Number(t);return isFinite(n)?n:NaN}
+function trTxt(n,d,trim){if(n===null||n===undefined||n===''||isNaN(n))return '';var t=nf(n,d==null?2:d);if(trim&&t.indexOf(',')>=0)t=t.replace(/0+$/,'').replace(/,$/,'');return t}
+function trPlazo(t){var m=null;(t.ps||[]).forEach(function(q){if(q.s!==null&&q.s!==undefined&&q.s!==''&&isFinite(+q.s)){m=m===null?+q.s:Math.max(m,+q.s)}});return m}
+function trSafe(t){var z=trPlazo(t);return z===null?'':trAdd(t.f,z)}
+function trRefs(f,t){return (t.r&&t.r.length)?t.r.filter(function(r){var x=S.recintos[r];return x&&x.fincaId===f.id}):fincaRecs(f.id).map(function(r){return r.ref})}
+function trHa(f,t){return trRefs(f,t).reduce(function(a,r){return a+((S.recintos[r]&&S.recintos[r].ha)||0)},0)}
+function trCalc(f,t){
+  var ha=trHa(f,t), cl=(t.cl===null||t.cl===undefined||t.cl==='')?null:+t.cl, cost=0, hasCost=false;
+  var ps=(t.ps||[]).map(function(q){
+    var dh=(q.d===null||q.d===undefined||q.d===''||cl===null)?null:(+q.d)*cl/1000, qty=dh===null?null:dh*ha;
+    var pr=(q.pr===null||q.pr===undefined||q.pr==='')?null:+q.pr, ch=(dh!==null&&pr!==null)?dh*pr:null;
+    if(ch!==null){cost+=ch*ha;hasCost=true}
+    return {q:q,dh:dh,qty:qty,ch:ch};
+  });
+  return {ha:ha,cl:cl,clTot:cl===null?null:cl*ha,ps:ps,costHa:hasCost&&ha?cost/ha:null,cost:hasCost?cost:null};
+}
 function trRecTxt(f,t){
   var rs=(t.r||[]); if(!rs.length)return 'Toda la finca';
   var ok=rs.filter(function(r){var x=S.recintos[r];return x&&x.fincaId===f.id});
@@ -4413,64 +4431,130 @@ function trRecTxt(f,t){
   if(ok.length<rs.length)txt+=(txt?' · ':'')+(rs.length-ok.length)+' que ya no está(n) en la finca';
   return rs.length+(rs.length===1?' recinto: ':' recintos: ')+txt;
 }
-function trDose(t){return (t.d===null||t.d===undefined||t.d==='')?'':String(t.d).replace('.',',')+' '+(t.u||'L/ha')}
+function trProds(){return S.x.prods||[]}
+function trProdByName(n){var k=String(n||'').trim().toLowerCase();return k?trProds().filter(function(p){return String(p.n).toLowerCase()===k})[0]:null}
+function trRegUpdate(ps){
+  var list=trProds().map(function(p){return Object.assign({},p)});
+  ps.forEach(function(q){
+    var k=q.n.toLowerCase(), e=list.filter(function(p){return String(p.n).toLowerCase()===k})[0];
+    if(!e){e={id:uid(),n:q.n};list.push(e)}
+    e.n=q.n; if(q.a)e.a=q.a; e.u=q.u; if(q.pr!==undefined&&q.pr!==null)e.pr=q.pr; if(q.s!==undefined&&q.s!==null)e.s=q.s;
+  });
+  S.x.prods=list;
+}
+function trBlankP(){return {n:'',a:'',d:'',u:'L',pr:'',s:''}}
+function trPForm(q,i,n){
+  var h='<div class="trp"><div class="diah"><b>Producto '+(i+1)+'</b>'+(n>1?'<button type="button" class="btn sm" data-act="tr-pdel" data-i="'+i+'">Quitar</button>':'')+'</div>';
+  h+='<input id="trp-'+i+'-n" class="in" list="tr-dl" value="'+esc(q.n)+'" placeholder="Producto (nombre comercial)" autocomplete="off" aria-label="Producto '+(i+1)+'">';
+  h+='<input id="trp-'+i+'-a" class="in" style="margin-top:6px" value="'+esc(q.a)+'" placeholder="Materia activa (opcional)" autocomplete="off" aria-label="Materia activa">';
+  h+='<div class="lbl" style="margin-top:8px">Dosis por 1.000 L de caldo</div><input id="trp-'+i+'-d" class="in" inputmode="decimal" value="'+esc(q.d)+'" placeholder="Ej. 2,5" autocomplete="off">';
+  h+='<div class="chips" id="trp-'+i+'-u" style="margin-top:8px"><button type="button" class="chip'+(q.u==='L'?' on':'')+'" data-act="tr-unit" data-i="'+i+'" data-u="L">L</button><button type="button" class="chip'+(q.u==='kg'?' on':'')+'" data-act="tr-unit" data-i="'+i+'" data-u="kg">kg</button></div>';
+  h+='<div class="lbl" style="margin-top:8px">Precio (€ por L o kg, opcional)</div><input id="trp-'+i+'-pr" class="in" inputmode="decimal" value="'+esc(q.pr)+'" autocomplete="off">';
+  h+='<div class="lbl" style="margin-top:8px">Plazo de seguridad (días, opcional)</div><input id="trp-'+i+'-s" class="in" inputmode="numeric" value="'+esc(q.s)+'" autocomplete="off"></div>';
+  return h;
+}
 function trFormHTML(f,ed){
   var recs=fincaRecs(f.id).sort(function(a,b){return a.ref.localeCompare(b.ref,'es',{numeric:true})});
   var h='<div class="note diaf"><b>'+(ed.id?'Editar tratamiento':'Tratamiento nuevo')+'</b>';
+  h+='<datalist id="tr-dl">'+trProds().map(function(p){return '<option value="'+esc(p.n)+'">'}).join('')+'</datalist>';
+  h+='<div class="lbl" style="margin-top:8px">Estado</div><div class="chips" id="tr-est"><button type="button" class="chip'+(ed.e==='h'?' on':'')+'" data-act="tr-est" data-v="h">Hecho</button><button type="button" class="chip'+(ed.e==='p'?' on':'')+'" data-act="tr-est" data-v="p">Pendiente</button></div>';
   h+='<div class="lbl" style="margin-top:8px">Fecha</div><input id="tr-f" class="in" type="date" value="'+esc(ed.f)+'">';
-  h+='<div class="lbl" style="margin-top:8px">Producto</div><input id="tr-p" class="in" value="'+esc(ed.p)+'" placeholder="Nombre comercial" autocomplete="off">';
-  h+='<div class="lbl" style="margin-top:8px">Materia activa (opcional)</div><input id="tr-a" class="in" value="'+esc(ed.a)+'" autocomplete="off">';
-  h+='<div class="lbl" style="margin-top:8px">Dosis</div><input id="tr-d" class="in" inputmode="decimal" value="'+esc(ed.d)+'" placeholder="Ej. 2,5" autocomplete="off"><div class="chips" id="tr-unid" style="margin-top:8px"><button type="button" class="chip'+(ed.u==='L/ha'?' on':'')+'" data-act="tr-unit" data-u="L/ha">L/ha</button><button type="button" class="chip'+(ed.u==='kg/ha'?' on':'')+'" data-act="tr-unit" data-u="kg/ha">kg/ha</button></div>';
-  h+='<div class="lbl" style="margin-top:8px">Plaga o motivo</div><input id="tr-z" class="in" value="'+esc(ed.z)+'" placeholder="Ej. mosca del olivo, hongos…" autocomplete="off">';
-  h+='<div class="lbl" style="margin-top:8px">Plazo de seguridad (días, el que pone la etiqueta)</div><input id="tr-s" class="in" inputmode="numeric" value="'+esc(ed.s)+'" placeholder="Ej. 21" autocomplete="off">';
+  h+='<div class="lbl" style="margin-top:8px">Objetivo o plaga</div><input id="tr-z" class="in" value="'+esc(ed.z)+'" placeholder="Ej. brotes nuevos, mosca del olivo…" autocomplete="off">';
+  h+='<div class="lbl" style="margin-top:8px">Caldo (L por hectárea)</div><input id="tr-cl" class="in" inputmode="decimal" value="'+esc(ed.cl)+'" placeholder="Ej. 450" autocomplete="off">';
   if(recs.length)h+='<div class="lbl" style="margin-top:8px">Recintos tratados</div><div class="chips" id="tr-recs"><button type="button" class="chip'+(ed.r.length?'':' on')+'" data-act="tr-rec" data-r="">Toda la finca</button>'+recs.map(function(r){return '<button type="button" class="chip'+(ed.r.indexOf(r.ref)>=0?' on':'')+'" data-act="tr-rec" data-r="'+esc(r.ref)+'">'+esc(refShort(r.ref)+(r.nombre?' · '+r.nombre:''))+'</button>'}).join('')+'</div>';
+  h+='<div class="lbl" style="margin-top:12px">Productos (de 1 a '+TR_MAX+')</div>'+ed.ps.map(function(q,i){return trPForm(q,i,ed.ps.length)}).join('');
+  if(ed.ps.length<TR_MAX)h+='<div class="acts" style="margin:8px 0 0"><button class="btn sm" data-act="tr-padd">+ Añadir otro producto</button></div>';
+  h+='<div class="lbl" style="margin-top:12px">Observaciones (opcional)</div><textarea id="tr-o" class="in" rows="2">'+esc(ed.o)+'</textarea>';
   h+='<div class="acts"><button class="btn primary" data-act="tr-save">Guardar tratamiento</button><button class="btn" data-act="tr-cancel">Cancelar</button></div></div>';
+  return h;
+}
+function trCardHTML(f,t,today){
+  var c=trCalc(f,t), sd=trSafe(t), pend=t.e==='p', past=pend&&(t.f||'')<today;
+  var h='<div class="dian"><div class="diah"><b>'+esc(diaFmt(t.f))+'</b><span class="chip static" style="'+(pend?'':'background:var(--accent);color:#fff')+'">'+(pend?'Pendiente':'Hecho')+'</span></div>';
+  if(past)h+='<div><span class="docb">Pendiente con fecha pasada: ¿lo hiciste?</span></div>';
+  if(t.z)h+='<div class="diat" style="margin-top:4px"><b>'+esc(t.z)+'</b></div>';
+  (t.ps||[]).forEach(function(q,i){
+    var x=c.ps[i], l='<b>'+esc(q.n)+'</b>'+(q.a?' · '+esc(q.a):'');
+    l+='<div class="small">'+(q.d!==null&&q.d!==undefined&&q.d!==''?trTxt(q.d,3,1)+' '+esc(q.u||'L')+' / 1.000 L':'Sin dosis');
+    if(x.dh!==null)l+=' → '+trTxt(x.dh,3,1)+' '+esc(q.u||'L')+'/ha · total '+trTxt(x.qty,2,1)+' '+esc(q.u||'L');
+    if(x.ch!==null)l+=' · '+trTxt(x.ch,2)+' €/ha';
+    l+='</div>'; h+='<div style="margin-top:6px">'+l+'</div>';
+  });
+  h+='<div class="small" style="margin-top:8px">'+esc(trRecTxt(f,t))+' · '+ha2(c.ha)+' ha'+(c.cl!==null?' · Caldo '+trTxt(c.cl,0)+' L/ha ('+trTxt(c.clTot,0)+' L en total)':'')+(c.cost!==null?' · Coste '+trTxt(c.costHa,2)+' €/ha, '+trTxt(c.cost,2)+' € en total':'')+'</div>';
+  if(t.o)h+='<div class="diat">'+esc(t.o)+'</div>';
+  if(sd)h+=pend?'<div class="small" style="margin-top:6px">Si se aplica el '+esc(diaFmt(t.f))+', se podría cosechar desde el '+esc(diaFmt(sd))+'</div>':(sd>today?'<div><span class="docb">Cosecha a partir del '+esc(diaFmt(sd))+'</span></div>':'<div class="small" style="margin-top:6px">Plazo de seguridad cumplido ('+trPlazo(t)+' días, desde el '+esc(diaFmt(sd))+')</div>');
+  h+='<div class="acts" style="margin:8px 0 0"><button class="btn sm primary" data-act="tr-state" data-id="'+esc(t.id)+'">'+(pend?'Marcar como hecho':'Volver a pendiente')+'</button><button class="btn sm" data-act="tr-edit" data-id="'+esc(t.id)+'">Editar</button><button class="btn sm" data-act="tr-dup" data-id="'+esc(t.id)+'">Duplicar</button><button class="btn sm danger" data-act="tr-del" data-id="'+esc(t.id)+'">Borrar</button></div></div>';
+  return h;
+}
+function trProdsHTML(){
+  var list=trProds().slice().sort(function(a,b){return String(a.n).localeCompare(String(b.n),'es')}), pe=TR.pe, h='<button class="back" data-act="tr-prods-back">‹ Tratamientos</button><h3>Mis productos'+(list.length?' <span class="small">('+list.length+')</span>':'')+'</h3>';
+  h+='<div class="small">Se forma solo con los productos que usas en los tratamientos. Sirve para rellenar rápido: al escribir un producto aparece en la lista. Borrar un producto de aquí no cambia los tratamientos ya guardados.</div>';
+  if(pe)h+='<div class="note diaf"><b>Editar producto</b><div class="lbl" style="margin-top:8px">Nombre</div><input id="rp-n" class="in" value="'+esc(pe.n)+'" autocomplete="off"><div class="lbl" style="margin-top:8px">Materia activa</div><input id="rp-a" class="in" value="'+esc(pe.a)+'" autocomplete="off"><div class="chips" id="rp-u" style="margin-top:8px"><button type="button" class="chip'+(pe.u==='L'?' on':'')+'" data-act="rp-unit" data-u="L">L</button><button type="button" class="chip'+(pe.u==='kg'?' on':'')+'" data-act="rp-unit" data-u="kg">kg</button></div><div class="lbl" style="margin-top:8px">Precio (€ por L o kg)</div><input id="rp-pr" class="in" inputmode="decimal" value="'+esc(pe.pr)+'"><div class="lbl" style="margin-top:8px">Plazo de seguridad habitual (días)</div><input id="rp-s" class="in" inputmode="numeric" value="'+esc(pe.s)+'"><div class="acts"><button class="btn primary" data-act="rp-save">Guardar</button><button class="btn" data-act="rp-cancel">Cancelar</button></div></div>';
+  if(!list.length&&!pe)h+='<div class="note">Todavía no hay productos. Aparecerán aquí cuando guardes tu primer tratamiento.</div>';
+  list.forEach(function(p){
+    if(pe&&pe.id===p.id)return;
+    h+='<div class="dian"><div class="diah"><b>'+esc(p.n)+'</b><span class="small">'+esc(p.u||'L')+'</span></div><div class="small">'+(p.a?esc(p.a)+' · ':'')+(p.pr!==undefined&&p.pr!==null&&p.pr!==''?trTxt(p.pr,2)+' €/'+esc(p.u||'L')+' · ':'')+(p.s!==undefined&&p.s!==null&&p.s!==''?'Plazo '+esc(String(p.s))+' días':'Sin plazo')+'</div><div class="acts" style="margin:8px 0 0"><button class="btn sm" data-act="rp-edit" data-id="'+esc(p.id)+'">Editar</button><button class="btn sm danger" data-act="rp-del" data-id="'+esc(p.id)+'">Borrar</button></div></div>';
+  });
   return h;
 }
 function treHTML(f){
   if(GTOK)return '<div class="small">Los tratamientos no están disponibles en esta vista.</div>';
+  if(TR.view==='prods')return trProdsHTML();
   var all=trList(f), ed=(TR.ed&&TR.ed.fid===f.id)?TR.ed:null, today=diaToday(), h='';
-  if(!ed)h+='<div class="acts" style="margin-top:0"><button class="btn primary" data-act="tr-new">+ Nuevo tratamiento</button></div>';
+  if(!ed)h+='<div class="acts" style="margin-top:0"><button class="btn primary" data-act="tr-new">+ Nuevo tratamiento</button><button class="btn" data-act="tr-prods">Mis productos'+(trProds().length?' ('+trProds().length+')':'')+'</button></div>';
   if(ed)h+=trFormHTML(f,ed);
-  var inf=all.filter(function(t){var d=trSafe(t);return d&&d>today}).sort(function(a,b){return trSafe(b).localeCompare(trSafe(a))});
-  if(inf.length)h+='<div class="note" style="background:var(--warn-bg);color:var(--warn-ink)"><b>Plazos de seguridad en vigor</b>'+inf.map(function(t){return '<div class="small" style="color:inherit;margin-top:4px">No cosechar '+(t.r&&t.r.length?'('+esc(trRecTxt(f,t))+') ':'')+'antes del <b>'+esc(diaFmt(trSafe(t)))+'</b> · '+esc(t.p)+'</div>'}).join('')+'</div>';
-  if(!all.length&&!ed)h+='<div class="small">Aún no hay tratamientos. Apunta aquí los productos que aplicas, la dosis y el plazo de seguridad: la herramienta calcula desde qué día se puede cosechar.</div>';
-  var yr=null;
-  all.forEach(function(t){
+  var inf=all.filter(function(t){var d=trSafe(t);return t.e!=='p'&&d&&d>today}).sort(function(a,b){return trSafe(b).localeCompare(trSafe(a))});
+  if(inf.length&&!ed)h+='<div class="note" style="background:var(--warn-bg);color:var(--warn-ink)"><b>Plazos de seguridad en vigor</b>'+inf.map(function(t){return '<div class="small" style="color:inherit;margin-top:4px">No cosechar '+(t.r&&t.r.length?'('+esc(trRecTxt(f,t))+') ':'')+'antes del <b>'+esc(diaFmt(trSafe(t)))+'</b> · '+esc((t.ps||[]).map(function(q){return q.n}).join(', '))+'</div>'}).join('')+'</div>';
+  var np=all.filter(function(t){return t.e==='p'}).length, nh=all.length-np;
+  if(all.length&&!ed)h+='<div class="chips" id="tr-flt" style="margin:10px 0">'+[['todos','Todos ('+all.length+')'],['p','Pendientes ('+np+')'],['h','Hechos ('+nh+')']].map(function(x){return '<button type="button" class="chip'+(TR.flt===x[0]?' on':'')+'" data-act="tr-flt" data-v="'+x[0]+'">'+x[1]+'</button>'}).join('')+'</div>';
+  if(!all.length&&!ed)h+='<div class="small">Aún no hay tratamientos. Apunta aquí lo que has aplicado o lo que tienes previsto: hasta 6 productos por tratamiento, con las cantidades y el coste calculados.</div>';
+  var yr=null, shown=all.filter(function(t){return TR.flt==='todos'||t.e===TR.flt||(TR.flt==='h'&&t.e!=='p')});
+  if(all.length&&!shown.length&&!ed)h+='<div class="small">No hay tratamientos con este filtro.</div>';
+  shown.forEach(function(t){
     if(ed&&ed.id===t.id)return;
     var y=(t.f||'').slice(0,4)||'Sin fecha'; if(y!==yr){yr=y;h+='<h3>Campaña '+esc(y)+'</h3>'}
-    var sd=trSafe(t), dose=trDose(t);
-    h+='<div class="dian"><div class="diah"><b>'+esc(t.p)+'</b><span class="small">'+esc(diaFmt(t.f))+'</span></div>'+
-      '<div class="small">'+(t.a?esc(t.a)+' · ':'')+(dose?esc(dose)+' · ':'')+esc(trRecTxt(f,t))+'</div>'+(t.z?'<div class="diat">'+esc(t.z)+'</div>':'')+
-      (sd?(sd>today?'<div><span class="docb">Cosecha a partir del '+esc(diaFmt(sd))+'</span></div>':'<div class="small">Plazo de seguridad cumplido ('+esc(String(t.s))+' días, desde el '+esc(diaFmt(sd))+')</div>'):'')+
-      '<div class="acts" style="margin:8px 0 0"><button class="btn sm" data-act="tr-edit" data-id="'+esc(t.id)+'">Editar</button><button class="btn sm danger" data-act="tr-del" data-id="'+esc(t.id)+'">Borrar</button></div></div>';
+    h+=trCardHTML(f,t,today);
   });
   return h;
 }
 function trOpenForm(ed){
   TR.ed=ed; renderFincas();
-  setTimeout(function(){var t=$('#tr-p');if(t){try{t.scrollIntoView({block:'center'})}catch(e){}t.focus()}},60);
+  setTimeout(function(){var t=$('#trp-0-n');if(t){try{t.scrollIntoView({block:'center'})}catch(e){}t.focus()}},60);
 }
-function trNew(fid){if(!finca(fid)||GTOK)return;trOpenForm({fid:fid,id:null,f:diaToday(),p:'',a:'',d:'',u:'L/ha',z:'',s:'',r:[],c:Date.now()})}
-function trEdit(fid,tid){
-  var t=trItem(fid,tid); if(!t||GTOK)return;
-  trOpenForm({fid:fid,id:t.id,f:t.f||diaToday(),p:t.p||'',a:t.a||'',d:(t.d===null||t.d===undefined)?'':String(t.d).replace('.',','),u:t.u||'L/ha',z:t.z||'',s:(t.s===null||t.s===undefined)?'':String(t.s),r:(t.r||[]).slice(),c:t.c||Date.now()});
+function trNew(fid){if(!finca(fid)||GTOK)return;trOpenForm({fid:fid,id:null,e:'h',f:diaToday(),z:'',cl:'',r:[],o:'',ps:[trBlankP()],c:Date.now()})}
+function trToEd(fid,t,asNew){
+  return {fid:fid,id:asNew?null:t.id,e:asNew?'p':(t.e==='p'?'p':'h'),f:asNew?diaToday():(t.f||diaToday()),z:t.z||'',cl:(t.cl===null||t.cl===undefined)?'':String(t.cl).replace('.',','),r:(t.r||[]).slice(),o:t.o||'',
+    ps:(t.ps&&t.ps.length?t.ps:[{}]).map(function(q){return {n:q.n||'',a:q.a||'',d:(q.d===null||q.d===undefined)?'':String(q.d).replace('.',','),u:q.u==='kg'?'kg':'L',pr:(q.pr===null||q.pr===undefined)?'':String(q.pr).replace('.',','),s:(q.s===null||q.s===undefined)?'':String(q.s)}}),c:asNew?Date.now():(t.c||Date.now())};
 }
+function trEdit(fid,tid){var t=trItem(fid,tid); if(!t||GTOK)return; trOpenForm(trToEd(fid,t,false))}
+function trDup(fid,tid){var t=trItem(fid,tid); if(!t||GTOK)return; trOpenForm(trToEd(fid,t,true)); toast('Copia lista: elige la fecha y guárdala')}
 function trCancel(){TR.ed=null;renderFincas()}
 function trSave(){
   var ed=TR.ed; if(!ed)return;
   var f=finca(ed.fid); if(!f){TR.ed=null;renderFincas();return}
-  var p=String(ed.p||'').trim(); if(!p){toast('Escribe el nombre del producto');return}
   if(!/^\d{4}-\d\d-\d\d$/.test(ed.f||'')){toast('Elige la fecha del tratamiento');return}
-  var d=null, ds=String(ed.d||'').trim().replace(/\s/g,'').replace(',','.');
-  if(ds){d=Number(ds); if(!isFinite(d)||d<0){toast('La dosis tiene que ser un número (ej. 2,5)');return} d=Math.round(d*1000)/1000}
-  var sz=null, ss=String(ed.s||'').trim();
-  if(ss){if(!/^\d{1,3}$/.test(ss)){toast('El plazo de seguridad son días, en número entero (ej. 21)');return} sz=+ss}
+  var cl=trNum(ed.cl); if(cl!==null&&(isNaN(cl)||cl<0)){toast('El caldo tiene que ser un número (L por hectárea)');return}
+  var ps=[], bad='';
+  ed.ps.forEach(function(q,i){
+    if(bad)return;
+    var n=String(q.n||'').trim(), a=String(q.a||'').trim();
+    if(!n&&!a&&!String(q.d||'').trim()&&!String(q.pr||'').trim()&&!String(q.s||'').trim())return;
+    if(!n){bad='Falta el nombre del producto '+(i+1);return}
+    var d=trNum(q.d), pr=trNum(q.pr), ss=String(q.s||'').trim();
+    if(d!==null&&(isNaN(d)||d<0)){bad='La dosis de «'+n+'» tiene que ser un número (ej. 2,5)';return}
+    if(pr!==null&&(isNaN(pr)||pr<0)){bad='El precio de «'+n+'» tiene que ser un número';return}
+    if(ss&&!/^\d{1,3}$/.test(ss)){bad='El plazo de seguridad de «'+n+'» son días, en número entero (ej. 21)';return}
+    var o={n:n,u:q.u==='kg'?'kg':'L'}; if(a)o.a=a; if(d!==null)o.d=Math.round(d*1000)/1000; if(pr!==null)o.pr=Math.round(pr*10000)/10000; if(ss)o.s=+ss;
+    ps.push(o);
+  });
+  if(bad){toast(bad);return}
+  if(!ps.length){toast('Añade al menos un producto');return}
   undoPush();
   var now=Date.now(), id=ed.id||uid();
-  var t={id:id,f:ed.f,p:p,a:String(ed.a||'').trim(),d:d,u:ed.u==='kg/ha'?'kg/ha':'L/ha',z:String(ed.z||'').trim(),r:ed.r.slice(),s:sz,c:ed.c||now,m:now};
-  if(!t.a)delete t.a; if(!t.z)delete t.z; if(d===null){delete t.d;delete t.u}
+  var t={id:id,f:ed.f,e:ed.e==='p'?'p':'h',ps:ps,r:ed.r.slice(),c:ed.c||now,m:now};
+  var z=String(ed.z||'').trim(), ob=String(ed.o||'').trim(); if(z)t.z=z; if(ob)t.o=ob; if(cl!==null)t.cl=cl;
   var list=(f.trat||[]).filter(function(q){return q.id!==id}); list.push(t); f.trat=list;
+  trRegUpdate(ps);
   TR.ed=null; save(); renderFincas(); undoToast(ed.id?'Tratamiento actualizado':'Tratamiento guardado');
 }
 function trDel(fid,tid){
@@ -4478,6 +4562,33 @@ function trDel(fid,tid){
   undoPush(); f.trat=(f.trat||[]).filter(function(q){return q.id!==tid});
   if(TR.ed&&TR.ed.id===tid)TR.ed=null;
   save(); renderFincas(); undoToast('Tratamiento borrado');
+}
+function trState(fid,tid){
+  var f=finca(fid), t=trItem(fid,tid); if(!f||!t||GTOK)return;
+  undoPush(); var n=Object.assign({},t,{e:t.e==='p'?'h':'p',m:Date.now()});
+  f.trat=(f.trat||[]).map(function(q){return q.id===tid?n:q});
+  save(); renderFincas(); undoToast(n.e==='h'?'Marcado como hecho':'Vuelve a pendiente');
+}
+function rpEdit(id){var p=trProds().filter(function(x){return x.id===id})[0]; if(!p)return; TR.pe={id:p.id,n:p.n||'',a:p.a||'',u:p.u==='kg'?'kg':'L',pr:(p.pr===undefined||p.pr===null)?'':String(p.pr).replace('.',','),s:(p.s===undefined||p.s===null)?'':String(p.s)}; renderFincas()}
+function rpSave(){
+  var e=TR.pe; if(!e)return; var n=String(e.n||'').trim(); if(!n){toast('El producto necesita un nombre');return}
+  if(trProds().some(function(p){return p.id!==e.id&&String(p.n).toLowerCase()===n.toLowerCase()})){toast('Ya tienes un producto con ese nombre');return}
+  var pr=trNum(e.pr), ss=String(e.s||'').trim();
+  if(pr!==null&&(isNaN(pr)||pr<0)){toast('El precio tiene que ser un número');return}
+  if(ss&&!/^\d{1,3}$/.test(ss)){toast('El plazo son días, en número entero');return}
+  undoPush();
+  S.x.prods=trProds().map(function(p){if(p.id!==e.id)return p;var o={id:p.id,n:n,u:e.u==='kg'?'kg':'L'};var a=String(e.a||'').trim();if(a)o.a=a;if(pr!==null)o.pr=pr;if(ss)o.s=+ss;return o});
+  TR.pe=null; save(); renderFincas(); undoToast('Producto actualizado');
+}
+function rpDel(id){undoPush();S.x.prods=trProds().filter(function(p){return p.id!==id});if(TR.pe&&TR.pe.id===id)TR.pe=null;save();renderFincas();undoToast('Producto borrado del registro')}
+function trFill(i){
+  /* al elegir un producto del registro, rellena lo que esté vacío */
+  var ed=TR.ed; if(!ed||!ed.ps[i])return; var q=ed.ps[i], p=trProdByName(q.n); if(!p)return;
+  var set=function(k,v){q[k]=v;var e=$('#trp-'+i+'-'+k);if(e)e.value=v};
+  if(!q.a&&p.a)set('a',p.a);
+  if(!String(q.pr||'').trim()&&p.pr!==undefined&&p.pr!==null)set('pr',String(p.pr).replace('.',','));
+  if(!String(q.s||'').trim()&&p.s!==undefined&&p.s!==null)set('s',String(p.s));
+  q.u=p.u==='kg'?'kg':'L'; $$('#trp-'+i+'-u .chip').forEach(function(c){c.classList.toggle('on',c.dataset.u===q.u)});
 }
 
 /* ───────── Entrega 38: documentos por finca (PDF y fotos, hasta 10 MB) ───────── */
@@ -8265,7 +8376,7 @@ document.addEventListener('click',function(ev){
     case 'tag-here':tagHere();break;
     case 'exp-open':expOpen(detailId);break;
     case 'exp-go':expOpen(detailId,b.dataset.s);break;
-    case 'exp-sec':if(EXP.fid){EXP.sec=b.dataset.s;expSecSet(EXP.fid,EXP.sec);renderFincas()}break;
+    case 'exp-sec':if(EXP.fid){TR.view='';TR.pe=null;EXP.sec=b.dataset.s;expSecSet(EXP.fid,EXP.sec);renderFincas()}break;
     case 'exp-back':expClose();break;
     case 'doc-new':docNew(detailId);break;
     case 'doc-pick':{var df=$('#docfile');if(df){df.value='';df.click()}break}
@@ -8281,11 +8392,24 @@ document.addEventListener('click',function(ev){
     case 'doc-retry':DOC.missing=false;toast('Probando…');docFlush();renderFincas();break;
     case 'tr-new':trNew(detailId);break;
     case 'tr-edit':trEdit(detailId,id);break;
+    case 'tr-dup':trDup(detailId,id);break;
     case 'tr-del':trDel(detailId,id);break;
+    case 'tr-state':trState(detailId,id);break;
     case 'tr-save':trSave();break;
     case 'tr-cancel':trCancel();break;
-    case 'tr-unit':if(TR.ed){TR.ed.u=b.dataset.u;$$('#tr-unid .chip').forEach(function(c){c.classList.toggle('on',c.dataset.u===TR.ed.u)})}break;
+    case 'tr-flt':TR.flt=b.dataset.v;renderFincas();break;
+    case 'tr-prods':TR.view='prods';TR.pe=null;renderFincas();break;
+    case 'tr-prods-back':TR.view='';TR.pe=null;renderFincas();break;
+    case 'tr-est':if(TR.ed){TR.ed.e=b.dataset.v;$$('#tr-est .chip').forEach(function(c){c.classList.toggle('on',c.dataset.v===TR.ed.e)})}break;
+    case 'tr-unit':if(TR.ed&&TR.ed.ps[+b.dataset.i]){var qi=+b.dataset.i;TR.ed.ps[qi].u=b.dataset.u;$$('#trp-'+qi+'-u .chip').forEach(function(c){c.classList.toggle('on',c.dataset.u===b.dataset.u)})}break;
+    case 'tr-padd':if(TR.ed&&TR.ed.ps.length<TR_MAX){TR.ed.ps.push(trBlankP());renderFincas();setTimeout(function(){var e=$('#trp-'+(TR.ed.ps.length-1)+'-n');if(e){try{e.scrollIntoView({block:'center'})}catch(x){}e.focus()}},60)}break;
+    case 'tr-pdel':if(TR.ed&&TR.ed.ps.length>1){TR.ed.ps.splice(+b.dataset.i,1);renderFincas()}break;
     case 'tr-rec':if(TR.ed){var rr0=b.dataset.r;if(!rr0)TR.ed.r=[];else{var ix=TR.ed.r.indexOf(rr0);if(ix>=0)TR.ed.r.splice(ix,1);else TR.ed.r.push(rr0)}$$('#tr-recs .chip').forEach(function(c){c.classList.toggle('on',c.dataset.r?TR.ed.r.indexOf(c.dataset.r)>=0:!TR.ed.r.length)})}break;
+    case 'rp-edit':rpEdit(id);break;
+    case 'rp-del':rpDel(id);break;
+    case 'rp-save':rpSave();break;
+    case 'rp-cancel':TR.pe=null;renderFincas();break;
+    case 'rp-unit':if(TR.pe){TR.pe.u=b.dataset.u;$$('#rp-u .chip').forEach(function(c){c.classList.toggle('on',c.dataset.u===TR.pe.u)})}break;
     case 'dia-new':diaNew(detailId);break;
     case 'dia-edit':diaEdit(detailId,id);break;
     case 'dia-del':diaDel(detailId,id);break;
@@ -8625,7 +8749,8 @@ document.addEventListener('keydown',function(ev){
 });
 document.addEventListener('input',function(ev){var t=ev.target;if(DOC.ed&&t){if(t.id==='doc-n')DOC.ed.n=t.value;if(t.id==='doc-f')DOC.ed.f=t.value;if(t.id==='doc-v')DOC.ed.v=t.value}});
 document.addEventListener('change',function(ev){var t=ev.target;if(t&&t.id==='docfile'&&t.files&&t.files[0])docPicked(t.files[0])});
-document.addEventListener('input',function(ev){var t=ev.target;if(TR.ed&&t&&/^tr-[fpadzs]$/.test(t.id))TR.ed[t.id.slice(3)]=t.value});
+document.addEventListener('input',function(ev){var t=ev.target,m;if(!t||!t.id)return;if(TR.ed){if(/^tr-(f|z|cl|o)$/.test(t.id))TR.ed[t.id.slice(3)]=t.value;else if((m=/^trp-(\d)-(n|a|d|pr|s)$/.exec(t.id))&&TR.ed.ps[+m[1]])TR.ed.ps[+m[1]][m[2]]=t.value}if(TR.pe&&(m=/^rp-(n|a|pr|s)$/.exec(t.id)))TR.pe[m[1]]=t.value});
+document.addEventListener('change',function(ev){var t=ev.target,m=t&&t.id&&/^trp-(\d)-n$/.exec(t.id);if(m&&TR.ed)trFill(+m[1])});
 document.addEventListener('input',function(ev){var t=ev.target;if(DIA.ed&&t&&t.id==='dia-x')DIA.ed.x=t.value;if(DIA.ed&&t&&t.id==='dia-f')DIA.ed.f=t.value});
 document.addEventListener('change',function(ev){var t=ev.target;if(DIA.ed&&t){if(t.id==='dia-r')DIA.ed.r=t.value;if(t.id==='dia-f')DIA.ed.f=t.value}});
 document.addEventListener('change',function(ev){if(ev.target&&ev.target.id==='phfile'){var fl=ev.target.files;if(fl&&fl.length)phAdd(fl)}});
