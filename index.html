@@ -955,6 +955,10 @@ h3{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2
 .afyr{padding:12px;border:1px solid var(--line);border-radius:12px;margin:8px 0;background:var(--surface)}
 .trp{border:1px solid var(--line);border-radius:12px;padding:14px 14px 16px;margin:10px 0;background:var(--surface)}
 .trp .diah{margin-bottom:10px;min-height:32px}
+.trrow{display:flex;flex-wrap:wrap;gap:0 28px}
+.trwarn{color:#b42318;font-weight:700}
+.trcr{margin-top:6px;padding:4px 10px 8px;border:1px solid var(--line);border-radius:12px;background:var(--surface2)}
+.trcl{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:3px 0;border-bottom:1px dashed var(--line)}.trcl:last-child{border-bottom:0}.trcl b{white-space:nowrap}
 .trrs{margin:2px 0 0}.trrs #tr-recsum{font-weight:700}
 .trrb{margin-top:8px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
 .trrl{display:flex;flex-direction:column;gap:6px;max-height:260px;overflow:auto}
@@ -1919,7 +1923,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-16T06:12:05Z',n:'Entrega 41 · 16 oct · 08:12'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-16T06:48:45Z',n:'Entrega 41 · 16 oct · 08:48'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -2599,12 +2603,13 @@ function buildFichaPdf(f,rs,img){
   return doc;
 }
 function pdfSave(){
-  if(!pdfOut)return; var a=document.createElement('a'); a.href=URL.createObjectURL(pdfOut.blob); a.download=pdfOut.name; document.body.appendChild(a); a.click(); a.remove();
-  var u=a.href; setTimeout(function(){URL.revokeObjectURL(u)},15000); toast('PDF guardado: '+pdfOut.name);
+  if(!pdfOut)return; var a=document.createElement('a'),nm=pdfOut.name; a.href=URL.createObjectURL(pdfOut.blob); a.download=nm; document.body.appendChild(a); a.click(); a.remove();
+  var u=a.href; setTimeout(function(){URL.revokeObjectURL(u)},15000); toast('PDF guardado: '+nm);
+  pdfOut=null; if(typeof tab!=='undefined'&&tab==='fincas')renderFincas();
 }
 function pdfShare(){
   if(!pdfOut)return; var fl=new File([pdfOut.blob],pdfOut.name,{type:'application/pdf'});
-  navigator.share({files:[fl],title:'Ficha de finca'}).catch(function(){});
+  navigator.share({files:[fl],title:'Ficha de finca'}).then(function(){pdfOut=null;if(typeof tab!=='undefined'&&tab==='fincas')renderFincas()},function(){});
 }
 
 /* ───────── medición ───────── */
@@ -4244,6 +4249,7 @@ function expOpen(fid,sec){
   var el=$('#p-fincas'); if(el&&el.parentNode&&el.parentNode.scrollTo)try{el.parentNode.scrollTo(0,0)}catch(e){} if(el)try{el.scrollTop=0}catch(e){}
 }
 function expClose(){
+  if(pdfOut&&/^tr:/.test(pdfOut.id))pdfOut=null;
   var was=!!EXP.fid; EXP.fid=null; DIA.ed=null; DOC.ed=null; TR.ed=null; TR.pe=null; TR.view='';
   var a=$('#app'); if(a)a.classList.remove('expfull'); var pf=$('#p-fincas'); if(pf)pf.classList.remove('expmode');
   if(was)renderFincas();
@@ -4413,7 +4419,7 @@ function diaDel(fid,nid){
    ps:[{n:producto, a:materia activa, d:dosis por 1.000 L de caldo (la más alta), d0:dosis mínima si hay rango, u:'L'|'kg', pr:precio €/unidad, s:plazo de seguridad en días}] (de 1 a 6), c, m}.
    Los cálculos usan siempre el valor más alto del rango. El registro de productos (S.x.prods: {id,n,a,u,pr,s}) se forma solo al guardar tratamientos y es común a todas las fincas.
    El producto y el plazo los escribe la persona: no hay base de datos de productos ni comprobación de autorizaciones. */
-var TR={ed:null,flt:'todos',view:'',pe:null,recOpen:false}, TR_MAX=6;
+var TR={ed:null,flt:'todos',cult:'',view:'',pe:null,recOpen:false,open:{}}, TR_MAX=6;
 var trMes=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 function trItem(fid,tid){var f=finca(fid);return f?(f.trat||[]).filter(function(t){return t.id===tid})[0]:null}
 function trList(f){return (f.trat||[]).slice().sort(function(a,b){return (b.f||'').localeCompare(a.f||'')||(b.c||0)-(a.c||0)})}
@@ -4463,6 +4469,30 @@ function trRecSum(f,refs){
   return ok.length+' de '+all.length+(all.length===1?' recinto':' recintos')+' · '+ha2(ok.reduce(function(a,r){return a+S.recintos[r].ha},0))+' ha';
 }
 function trRecLbl(r){return refShort(r.ref)+(r.nombre?' · '+r.nombre:'')+' · '+(r.cultivo||'Sin cultivo')+' · '+ha2(r.ha)+' ha'}
+function trRefS(r){var a=r.split(':');return 'Pol. '+a[4]+' · Parc. '+a[5]+' · Rec. '+a[6]}
+function trCultOf(r){return r.cultivo||'Sin cultivo'}
+/* cultivos de una finca con sus recintos y hectáreas */
+function trCultList(f){
+  var m={},o=[]; fincaRecs(f.id).forEach(function(r){var c=trCultOf(r),e=m[c];if(!e){e=m[c]={c:c,n:0,ha:0,refs:[]};o.push(e)}e.n++;e.ha+=r.ha;e.refs.push(r.ref)});
+  return o.sort(function(a,b){return b.ha-a.ha});
+}
+/* tipo (convencional o ecológico) que dicen los recintos tratados; null si no lo dicen o hay mezcla */
+function trTipoInfo(f,refs){
+  var rs=(refs&&refs.length?refs.filter(function(r){return S.recintos[r]&&S.recintos[r].fincaId===f.id}).map(function(r){return S.recintos[r]}):fincaRecs(f.id));
+  if(!rs.length)return {tp:null,why:'La finca no tiene recintos: elige el tipo.'};
+  var e=0,c=0,u=0,cv=0; rs.forEach(function(r){var k=prodKind(r.prod);if(k==='eco')e++;else if(k==='cv'){e++;cv++}else if(k==='cn')c++;else u++});
+  if(u)return {tp:null,why:'Hay recintos sin indicar si son ecológicos o convencionales: elige el tipo.'};
+  if(e&&c)return {tp:null,why:'Hay recintos ecológicos y convencionales: elige el tipo.'};
+  var n=rs.length+(rs.length===1?' recinto':' recintos');
+  return e?{tp:'e',why:'Según los recintos: Ecológico ('+n+(cv?', '+cv+' en conversión':'')+')'}:{tp:'c',why:'Según los recintos: Convencional ('+n+')'};
+}
+function trTipoApply(ed,f){var i=trTipoInfo(f,ed.r); if(!ed.tpm)ed.tp=i.tp; return i}
+function trTipoRefresh(){
+  var ed=TR.ed,f=ed&&finca(ed.fid); if(!f)return; var i=trTipoApply(ed,f);
+  $$('#tr-tp .chip').forEach(function(c){c.classList.toggle('on',c.dataset.v===ed.tp)});
+  var n=$('#tr-tpnote'); if(n){n.textContent=ed.tpm?(i.tp&&i.tp===ed.tp?i.why:'Tipo elegido por ti'):i.why; n.className='small'+(ed.tp?'':' trwarn')}
+}
+function trCultCount(f,refs){var m={};refs.forEach(function(r){var x=S.recintos[r];if(x&&x.fincaId===f.id)m[trCultOf(x)]=1});return Object.keys(m)}
 function trProds(){return S.x.prods||[]}
 function trProdByName(n){var k=String(n||'').trim().toLowerCase();return k?trProds().filter(function(p){return String(p.n).toLowerCase()===k})[0]:null}
 function trRegUpdate(ps){
@@ -4485,16 +4515,22 @@ function trPForm(q,i,n){
   h+='<div class="lbl" style="margin-top:12px">Plazo de seguridad (días, opcional)</div><input id="trp-'+i+'-s" class="in" inputmode="numeric" value="'+esc(q.s)+'" autocomplete="off"></div>';
   return h;
 }
+function trCultBtns(f,ed,act){
+  var cl=trCultList(f); if(cl.length<2)return '';
+  return '<div class="lbl" style="margin:0 0 6px">Escoger por cultivo</div><div class="chips" id="tr-cults" style="margin-bottom:8px">'+cl.map(function(c){var on=ed.r.length&&c.refs.every(function(r){return ed.r.indexOf(r)>=0});return '<button type="button" class="chip'+(on?' on':'')+'" data-act="'+act+'" data-c="'+esc(c.c)+'">'+esc(c.c)+' ('+ha2(c.ha)+' ha)</button>'}).join('')+'</div>';
+}
 function trRecChips(f,ed){
   var recs=fincaRecs(f.id).sort(function(a,b){return a.ref.localeCompare(b.ref,'es',{numeric:true})});
-  return '<div class="acts" style="margin:0 0 8px"><button type="button" class="btn sm" data-act="tr-rec-all">Marcar todos</button><button type="button" class="btn sm" data-act="tr-rec-none">Quitar todos</button></div><div class="trrl" id="tr-recs">'+recs.map(function(r){return '<button type="button" class="chip'+(ed.r.indexOf(r.ref)>=0?' on':'')+'" data-act="tr-rec" data-r="'+esc(r.ref)+'">'+esc(trRecLbl(r))+'</button>'}).join('')+'</div>';
+  return trCultBtns(f,ed,'tr-cult')+'<div class="acts" style="margin:0 0 8px"><button type="button" class="btn sm" data-act="tr-rec-all">Marcar todos</button><button type="button" class="btn sm" data-act="tr-rec-none">Quitar todos</button></div><div class="trrl" id="tr-recs">'+recs.map(function(r){return '<button type="button" class="chip'+(ed.r.indexOf(r.ref)>=0?' on':'')+'" data-act="tr-rec" data-r="'+esc(r.ref)+'">'+esc(trRecLbl(r))+'</button>'}).join('')+'</div>';
 }
 function trFormHTML(f,ed){
   var recs=fincaRecs(f.id), cult=((S.x.cl&&0)||'');
   var h='<div class="note diaf"><b>'+(ed.id?'Editar tratamiento':'Tratamiento nuevo')+'</b>';
   h+='<datalist id="tr-dl">'+trProds().map(function(p){return '<option value="'+esc(p.n)+'">'}).join('')+'</datalist>';
-  h+='<div class="lbl" style="margin-top:8px">Estado</div><div class="chips" id="tr-est"><button type="button" class="chip'+(ed.e==='h'?' on':'')+'" data-act="tr-est" data-v="h">Hecho</button><button type="button" class="chip'+(ed.e==='p'?' on':'')+'" data-act="tr-est" data-v="p">Pendiente</button></div>';
-  h+='<div class="lbl" style="margin-top:8px">Tipo</div><div class="chips" id="tr-tp"><button type="button" class="chip'+(ed.tp==='c'?' on':'')+'" data-act="tr-tp" data-v="c">Convencional</button><button type="button" class="chip'+(ed.tp==='e'?' on':'')+'" data-act="tr-tp" data-v="e">Ecológico</button></div>';
+  var ti=trTipoInfo(f,ed.r);
+  h+='<div class="trrow"><div><div class="lbl" style="margin-top:8px">Estado</div><div class="chips" id="tr-est"><button type="button" class="chip'+(ed.e==='h'?' on':'')+'" data-act="tr-est" data-v="h">Hecho</button><button type="button" class="chip'+(ed.e==='p'?' on':'')+'" data-act="tr-est" data-v="p">Pendiente</button></div></div>';
+  h+='<div><div class="lbl" style="margin-top:8px">Tipo</div><div class="chips" id="tr-tp"><button type="button" class="chip'+(ed.tp==='c'?' on':'')+'" data-act="tr-tp" data-v="c">Convencional</button><button type="button" class="chip'+(ed.tp==='e'?' on':'')+'" data-act="tr-tp" data-v="e">Ecológico</button></div></div></div>';
+  h+='<div id="tr-tpnote" class="small'+(ed.tp?'':' trwarn')+'" style="margin-top:4px">'+esc(ed.tpm?(ti.tp&&ti.tp===ed.tp?ti.why:'Tipo elegido por ti'):ti.why)+'</div>';
   h+='<div class="lbl" style="margin-top:8px">Fecha (desde)</div><input id="tr-f" class="in" type="date" value="'+esc(ed.f)+'">';
   h+='<div class="lbl" style="margin-top:8px">Hasta (opcional, si es una ventana de fechas)</div><input id="tr-f2" class="in" type="date" value="'+esc(ed.f2)+'">';
   h+='<div class="lbl" style="margin-top:8px">Nº de tratamiento (vacío = automático)</div><input id="tr-num" class="in" inputmode="numeric" value="'+esc(ed.num)+'" placeholder="Ej. 1" autocomplete="off">';
@@ -4510,6 +4546,14 @@ function trFormHTML(f,ed){
   h+='<div class="acts"><button class="btn primary" data-act="tr-save">Guardar tratamiento</button><button class="btn" data-act="tr-cancel">Cancelar</button></div></div>';
   return h;
 }
+function trCardRecs(refs){
+  var g={},o=[]; refs.forEach(function(r){var x=S.recintos[r];if(!x)return;var c=trCultOf(x),e=g[c];if(!e){e=g[c]={c:c,ha:0,l:[]};o.push(e)}e.ha+=x.ha;e.l.push(x)});
+  o.sort(function(a,b){return b.ha-a.ha});
+  return o.map(function(e){
+    e.l.sort(function(a,b){return a.ref.localeCompare(b.ref,'es',{numeric:true})});
+    return '<div class="lbl" style="margin:8px 0 4px">'+esc(e.c)+' · '+e.l.length+(e.l.length===1?' recinto':' recintos')+' · '+ha2(e.ha)+' ha</div>'+e.l.map(function(x){return '<div class="trcl"><span>'+esc(trRefS(x.ref))+(x.nombre?' · '+esc(x.nombre):'')+'</span><b>'+ha2(x.ha)+' ha</b></div>'}).join('');
+  }).join('');
+}
 function trCardHTML(f,t,today){
   var c=trCalc(f,t), sd=trSafe(t), pend=t.e==='p', past=pend&&(t.f2||t.f||'')<today, mx=c.rng?' (máx.)':'';
   var h='<div class="dian"><div class="diah"><b>Tratamiento '+trOrd(f,t)+'.º · '+esc(trDates(t))+'</b><span class="chip static" style="'+(pend?'':'background:var(--accent);color:#fff')+'">'+(pend?'Pendiente':'Hecho')+'</span></div>';
@@ -4523,7 +4567,13 @@ function trCardHTML(f,t,today){
     if(x.ch!==null)l+=' · '+trTxt(x.ch,2)+' €/ha';
     l+='</div>'; h+='<div style="margin-top:6px">'+l+'</div>';
   });
-  h+='<div class="small" style="margin-top:8px">'+esc(trRecTxt(f,t))+' · '+ha2(c.ha)+' ha'+(c.cl!==null?' · Caldo '+trRngTxt(t.cl0,t.cl,0)+' L/ha ('+trTxt(c.clTot,0)+' L en total'+mx+')':'')+(c.cost!==null?' · Coste '+trTxt(c.costHa,2)+' €/ha, '+trTxt(c.cost,2)+' € en total':'')+'</div>';
+  var refs=trRefs(f,t), cults=trCultCount(f,refs), nAll=fincaRecs(f.id).length, whole=!(t.r&&t.r.length);
+  h+='<div class="small" style="margin-top:8px"><b>'+(whole?'Toda la finca · '+nAll+(nAll===1?' recinto':' recintos'):refs.length+(refs.length===1?' recinto':' recintos'))+' · '+ha2(c.ha)+' ha</b>'+(trCultList(f).length>1?' · '+esc(cults.join(', ')):'')+'</div>';
+  if(c.cl!==null||c.cost!==null)h+='<div class="small" style="margin-top:2px">'+(c.cl!==null?'Caldo '+trRngTxt(t.cl0,t.cl,0)+' L/ha ('+trTxt(c.clTot,0)+' L en total'+mx+')':'')+(c.cost!==null?(c.cl!==null?' · ':'')+'Coste '+trTxt(c.costHa,2)+' €/ha, '+trTxt(c.cost,2)+' € en total':'')+'</div>';
+  if(!whole&&refs.length){
+    var op=!!TR.open[t.id];
+    h+='<div class="acts" style="margin:6px 0 0"><button type="button" class="btn sm" data-act="tr-card-recs" data-id="'+esc(t.id)+'">'+(op?'Ocultar recintos ▴':'Ver recintos ▾')+'</button></div><div class="trcr" id="trr-'+esc(t.id)+'"'+(op?'':' hidden')+'>'+trCardRecs(refs)+'</div>';
+  }
   if(t.o)h+='<div class="diat"><b>Importante:</b> '+esc(t.o)+'</div>';
   if(sd)h+=pend?'<div class="small" style="margin-top:6px">Si se aplica el '+esc(diaFmt(t.f2||t.f))+', se podría cosechar desde el '+esc(diaFmt(sd))+'</div>':(sd>today?'<div><span class="docb">Cosecha a partir del '+esc(diaFmt(sd))+'</span></div>':'<div class="small" style="margin-top:6px">Plazo de seguridad cumplido ('+trPlazo(t)+' días, desde el '+esc(diaFmt(sd))+')</div>');
   var po=pdfOut&&pdfOut.id==='tr:'+t.id;
@@ -4557,24 +4607,28 @@ function treHTML(f){
   var all=trList(f), ed=(TR.ed&&TR.ed.fid===f.id)?TR.ed:null, today=diaToday(), h='';
   if(!ed)h+='<div class="acts" style="margin-top:0"><button class="btn primary" data-act="tr-new">+ Nuevo tratamiento</button><button class="btn" data-act="tr-prods">Mis productos'+(trProds().length?' ('+trProds().length+')':'')+'</button></div>';
   if(ed)h+=trFormHTML(f,ed);
+  var culs=trCultList(f); if(TR.cult&&!culs.some(function(c){return c.c===TR.cult}))TR.cult='';
+  if(TR.cult)all=all.filter(function(t){return trCultCount(f,trRefs(f,t)).indexOf(TR.cult)>=0});
   var inf=all.filter(function(t){var d=trSafe(t);return t.e!=='p'&&d&&d>today}).sort(function(a,b){return trSafe(b).localeCompare(trSafe(a))});
   if(inf.length&&!ed)h+='<div class="note" style="background:var(--warn-bg);color:var(--warn-ink)"><b>Plazos de seguridad en vigor</b>'+inf.map(function(t){return '<div class="small" style="color:inherit;margin-top:4px">No cosechar '+(t.r&&t.r.length?'('+esc(trRecTxt(f,t))+') ':'')+'antes del <b>'+esc(diaFmt(trSafe(t)))+'</b> · '+esc((t.ps||[]).map(function(q){return q.n}).join(', '))+'</div>'}).join('')+'</div>';
   var hechos=all.filter(function(t){return t.e!=='p'}), pend=all.filter(function(t){return t.e==='p'});
-  if(all.length&&!ed)h+='<div class="chips" id="tr-flt" style="margin:10px 0">'+[['todos','Todos ('+all.length+')'],['p','Pendientes ('+pend.length+')'],['h','Hechos ('+hechos.length+')']].map(function(x){return '<button type="button" class="chip'+(TR.flt===x[0]?' on':'')+'" data-act="tr-flt" data-v="'+x[0]+'">'+x[1]+'</button>'}).join('')+'</div>';
-  if(!all.length&&!ed)h+='<div class="small">Aún no hay tratamientos. Apunta aquí lo que has aplicado o lo que tienes previsto: hasta 6 productos por tratamiento, con las cantidades y el coste calculados, y PDF con las instrucciones.</div>';
+  if((f.trat||[]).length&&!ed)h+='<div class="chips" id="tr-flt" style="margin:10px 0">'+[['todos','Todos ('+all.length+')'],['p','Pendientes ('+pend.length+')'],['h','Hechos ('+hechos.length+')']].map(function(x){return '<button type="button" class="chip'+(TR.flt===x[0]?' on':'')+'" data-act="tr-flt" data-v="'+x[0]+'">'+x[1]+'</button>'}).join('')+'</div>';
+  if(culs.length>1&&(f.trat||[]).length&&!ed)h+='<div class="chips" id="tr-cflt" style="margin:0 0 10px"><button type="button" class="chip'+(TR.cult?'':' on')+'" data-act="tr-cflt" data-c="">Todos los cultivos</button>'+culs.map(function(c){return '<button type="button" class="chip'+(TR.cult===c.c?' on':'')+'" data-act="tr-cflt" data-c="'+esc(c.c)+'">'+esc(c.c)+'</button>'}).join('')+'</div>';
+  if(!(f.trat||[]).length&&!ed)h+='<div class="small">Aún no hay tratamientos. Apunta aquí lo que has aplicado o lo que tienes previsto: hasta 6 productos por tratamiento, con las cantidades y el coste calculados, y PDF con las instrucciones.</div>';
   var sh=TR.flt==='p'?[]:hechos, sp=TR.flt==='h'?[]:pend;
   if(ed){sh=sh.filter(function(t){return t.id!==ed.id});sp=sp.filter(function(t){return t.id!==ed.id})}
-  if(all.length&&!ed&&!sh.length&&!sp.length)h+='<div class="small">No hay tratamientos con este filtro.</div>';
+  if((f.trat||[]).length&&!ed&&!sh.length&&!sp.length)h+='<div class="small">No hay tratamientos con este filtro.</div>';
   h+=trGroupHTML(f,sh,'Hechos',today)+trGroupHTML(f,sp,'Pendientes',today);
   return h;
 }
 function trOpenForm(ed){
+  var f0=finca(ed.fid); if(f0)trTipoApply(ed,f0);
   TR.ed=ed; TR.recOpen=false; renderFincas();
   setTimeout(function(){var t=$('#trp-0-n');if(t){try{t.scrollIntoView({block:'center'})}catch(e){}t.focus()}},60);
 }
-function trNew(fid){if(!finca(fid)||GTOK)return;trOpenForm({fid:fid,id:null,e:'h',tp:'c',f:diaToday(),f2:'',num:'',fe:'',z:'',cl:'',r:[],o:'',ps:[trBlankP()],c:Date.now()})}
+function trNew(fid){if(!finca(fid)||GTOK)return;trOpenForm({fid:fid,id:null,e:'h',tp:null,tpm:false,f:diaToday(),f2:'',num:'',fe:'',z:'',cl:'',r:[],o:'',ps:[trBlankP()],c:Date.now()})}
 function trToEd(fid,t,asNew){
-  return {fid:fid,id:asNew?null:t.id,e:asNew?'p':(t.e==='p'?'p':'h'),tp:t.tp==='e'?'e':'c',f:asNew?diaToday():(t.f||diaToday()),f2:asNew?'':(t.f2||''),num:asNew?'':(t.num?String(t.num):''),fe:t.fe||'',z:t.z||'',cl:trRngEd(t.cl0,t.cl),r:(t.r||[]).slice(),o:t.o||'',
+  return {fid:fid,id:asNew?null:t.id,e:asNew?'p':(t.e==='p'?'p':'h'),tp:t.tp==='e'?'e':'c',tpm:!asNew,f:asNew?diaToday():(t.f||diaToday()),f2:asNew?'':(t.f2||''),num:asNew?'':(t.num?String(t.num):''),fe:t.fe||'',z:t.z||'',cl:trRngEd(t.cl0,t.cl),r:(t.r||[]).slice(),o:t.o||'',
     ps:(t.ps&&t.ps.length?t.ps:[{}]).map(function(q){return {n:q.n||'',a:q.a||'',d:trRngEd(q.d0,q.d),u:q.u==='kg'?'kg':'L',pr:(q.pr===null||q.pr===undefined)?'':String(q.pr).replace('.',','),s:(q.s===null||q.s===undefined)?'':String(q.s)}}),c:asNew?Date.now():(t.c||Date.now())};
 }
 function trEdit(fid,tid){var t=trItem(fid,tid); if(!t||GTOK)return; trOpenForm(trToEd(fid,t,false))}
@@ -4585,6 +4639,7 @@ function trSave(){
   var f=finca(ed.fid); if(!f){TR.ed=null;renderFincas();return}
   if(!/^\d{4}-\d\d-\d\d$/.test(ed.f||'')){toast('Elige la fecha del tratamiento');return}
   var f2=String(ed.f2||'').trim(); if(f2&&(!/^\d{4}-\d\d-\d\d$/.test(f2)||f2<ed.f)){toast('La fecha «hasta» no puede ser anterior a la fecha «desde»');return}
+  if(ed.tp!=='c'&&ed.tp!=='e'){toast('Elige el tipo: convencional o ecológico');return}
   var cl=trRange(ed.cl); if(cl!==null&&typeof cl==='number'){toast('El caldo tiene que ser un número o un rango (ej. 250-300)');return}
   var nm=String(ed.num||'').trim(); if(nm&&!/^\d{1,2}$/.test(nm)){toast('El número de tratamiento es un número entero (ej. 1)');return}
   var ps=[], bad='';
@@ -4653,6 +4708,12 @@ function trRecRefresh(){
   var ed=TR.ed, f=ed&&finca(ed.fid); if(!f)return;
   var sm=$('#tr-recsum'); if(sm)sm.textContent=trRecSum(f,ed.r);
   $$('#tr-recs .chip').forEach(function(c){c.classList.toggle('on',ed.r.indexOf(c.dataset.r)>=0)});
+  var cl=trCultList(f); $$('#tr-cults .chip').forEach(function(b){var c=cl.filter(function(x){return x.c===b.dataset.c})[0];b.classList.toggle('on',!!(c&&ed.r.length&&c.refs.every(function(r){return ed.r.indexOf(r)>=0})))});
+  trTipoRefresh();
+}
+function trToggleCult(refs,r0){
+  var all=refs.every(function(r){return r0.indexOf(r)>=0});
+  return all?r0.filter(function(r){return refs.indexOf(r)<0}):r0.concat(refs.filter(function(r){return r0.indexOf(r)<0}));
 }
 /* ---- elegir los recintos en el mapa ---- */
 var trm={on:false,fid:null,sel:[],cur:null}, trmGrp=L.layerGroup().addTo(map);
@@ -4671,6 +4732,7 @@ function trmBarHTML(){
   h+='<div class="afsum"><b>'+(ok.length?ok.length+' de '+recs.length+' marcados · '+ha2(ha)+' ha':'Ninguno marcado = toda la finca')+'</b></div>';
   var r=trm.cur&&S.recintos[trm.cur];
   h+=r?'<div class="small" style="margin-top:4px">'+esc(trRecLbl(r))+'</div>':'<div class="small" style="margin-top:4px">Toca los recintos en el mapa para marcarlos o desmarcarlos (borde amarillo = marcado).</div>';
+  var cl=trCultList(f); if(cl.length>1)h+='<div class="chips" style="margin-top:8px">'+cl.map(function(c){var on=trm.sel.length&&c.refs.every(function(r){return trm.sel.indexOf(r)>=0});return '<button type="button" class="chip'+(on?' on':'')+'" data-act="trm-cult" data-c="'+esc(c.c)+'">'+esc(c.c)+' ('+ha2(c.ha)+' ha)</button>'}).join('')+'</div>';
   h+='<div class="acts"><button class="btn" data-act="trm-all">Marcar todos</button><button class="btn" data-act="trm-none">Quitar todos</button></div><div class="acts"><button class="btn primary" data-act="trm-ok">Aceptar</button><button class="btn" data-act="trm-cancel">Cancelar</button></div>';
   return h;
 }
@@ -4694,7 +4756,7 @@ function trmClick(ll){
 }
 function trmDone(accept){
   var ed=TR.ed, fid=trm.fid;
-  if(accept&&ed){ed.r=trm.sel.filter(function(r){return S.recintos[r]});if(ed.r.length>=trmRecs().length)ed.r=[]}
+  if(accept&&ed){ed.r=trm.sel.filter(function(r){return S.recintos[r]});if(ed.r.length>=trmRecs().length)ed.r=[];var f7=finca(fid);if(f7)trTipoApply(ed,f7)}
   trmOff(); TR.recOpen=false; setTab('fincas'); if(ed&&finca(fid))expOpen(fid,'tratamientos');
 }
 /* ---- PDF del tratamiento (instrucciones para quien lo aplica) ---- */
@@ -8530,7 +8592,7 @@ document.addEventListener('click',function(ev){
     case 'tag-here':tagHere();break;
     case 'exp-open':expOpen(detailId);break;
     case 'exp-go':expOpen(detailId,b.dataset.s);break;
-    case 'exp-sec':if(EXP.fid){TR.view='';TR.pe=null;EXP.sec=b.dataset.s;expSecSet(EXP.fid,EXP.sec);renderFincas()}break;
+    case 'exp-sec':if(EXP.fid){if(pdfOut&&/^tr:/.test(pdfOut.id))pdfOut=null;TR.view='';TR.pe=null;EXP.sec=b.dataset.s;expSecSet(EXP.fid,EXP.sec);renderFincas()}break;
     case 'exp-back':expClose();break;
     case 'doc-new':docNew(detailId);break;
     case 'doc-pick':{var df=$('#docfile');if(df){df.value='';df.click()}break}
@@ -8558,7 +8620,11 @@ document.addEventListener('click',function(ev){
     case 'tr-unit':if(TR.ed&&TR.ed.ps[+b.dataset.i]){var qi=+b.dataset.i;TR.ed.ps[qi].u=b.dataset.u;$$('#trp-'+qi+'-u .chip').forEach(function(c){c.classList.toggle('on',c.dataset.u===b.dataset.u)})}break;
     case 'tr-padd':if(TR.ed&&TR.ed.ps.length<TR_MAX){TR.ed.ps.push(trBlankP());renderFincas();setTimeout(function(){var e=$('#trp-'+(TR.ed.ps.length-1)+'-n');if(e){try{e.scrollIntoView({block:'center'})}catch(x){}e.focus()}},60)}break;
     case 'tr-pdel':if(TR.ed&&TR.ed.ps.length>1){TR.ed.ps.splice(+b.dataset.i,1);renderFincas()}break;
-    case 'tr-tp':if(TR.ed){TR.ed.tp=b.dataset.v;$$('#tr-tp .chip').forEach(function(c){c.classList.toggle('on',c.dataset.v===TR.ed.tp)})}break;
+    case 'tr-tp':if(TR.ed){TR.ed.tp=b.dataset.v;TR.ed.tpm=true;trTipoRefresh()}break;
+    case 'tr-cult':if(TR.ed){var f9=finca(TR.ed.fid),c9=f9&&trCultList(f9).filter(function(x){return x.c===b.dataset.c})[0];if(c9){TR.ed.r=trToggleCult(c9.refs,TR.ed.r);trRecRefresh()}}break;
+    case 'trm-cult':{var c8=trCultList(finca(trm.fid)).filter(function(x){return x.c===b.dataset.c})[0];if(c8){trm.sel=trToggleCult(c8.refs,trm.sel);trmDraw();trmRender()}break}
+    case 'tr-cflt':TR.cult=b.dataset.c||'';renderFincas();break;
+    case 'tr-card-recs':{TR.open[id]=!TR.open[id];var bx2=$('#trr-'+id);if(bx2)bx2.hidden=!TR.open[id];b.textContent=TR.open[id]?'Ocultar recintos ▴':'Ver recintos ▾';break}
     case 'tr-pdf':trPdf(detailId,id);break;
     case 'tr-rec':if(TR.ed){var rr0=b.dataset.r,ix=TR.ed.r.indexOf(rr0);if(ix>=0)TR.ed.r.splice(ix,1);else TR.ed.r.push(rr0);trRecRefresh()}break;
     case 'tr-rec-all':if(TR.ed){TR.ed.r=fincaRecs(TR.ed.fid).map(function(r){return r.ref});trRecRefresh()}break;
