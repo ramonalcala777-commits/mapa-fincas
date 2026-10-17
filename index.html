@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
+<script>try{var __pc=localStorage.getItem('mapa-fincas:palcss');if(__pc){var __i=__pc.indexOf('|'),__st=document.createElement('style');__st.id='palstyle';__st.textContent=__pc.slice(__i+1);document.head.appendChild(__st);document.documentElement.setAttribute('data-pal',__pc.slice(0,__i))}}catch(e){}</script>
 <script>try{var __t=localStorage.getItem('mapa-fincas:tema');if(__t==='light'||__t==='dark')document.documentElement.setAttribute('data-theme',__t)}catch(e){}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -696,6 +697,10 @@ svg.leaflet-image-layer.leaflet-interactive path {
   }
 }
 
+.palg{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.palb{display:flex;align-items:center;gap:8px;min-height:46px;padding:6px 10px;border:2px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit;font-weight:600;cursor:pointer;text-align:left}
+.palb.on{border-color:var(--ink);background:var(--surface2)}
+.sw3{display:inline-flex;flex:none;border-radius:6px;overflow:hidden;border:1px solid var(--line2)}.sw3 i{display:block;width:12px;height:24px}
 /* perfiles */
 .pft{background:none;border:0;padding:0;display:flex;align-items:center;gap:8px;cursor:pointer;color:inherit;min-width:0;text-align:left}
 .pft span{font-family:var(--serif);font-size:26px;font-weight:700;letter-spacing:.2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -2217,7 +2222,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-17T18:18:36Z',n:'Entrega 55 · 17 oct · 20:18'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-17T19:28:44Z',n:'Entrega 56 · 17 oct · 21:28'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -3747,6 +3752,73 @@ function renderResumen(){
 }
 var staleBackup=function(){return backupDue()};
 function updateDot(){$('#navdot').hidden=!staleBackup()}
+/* ---- Entrega 56: paletas de colores por usuario (se guardan en la cuenta: S.x.pal) ---- */
+var PALS=[
+  {id:'',n:'Original'},
+  {id:'campo',n:'Verde campo',h:150,s:12,a:[135,55]},
+  {id:'pistacho',n:'Pistacho',h:85,s:14,a:[82,60]},
+  {id:'menta',n:'Menta',h:170,s:12,a:[168,60]},
+  {id:'cielo',n:'Cielo',h:195,s:12,a:[192,70]},
+  {id:'azul',n:'Azul',h:215,s:12,a:[214,75]},
+  {id:'violeta',n:'Violeta',h:265,s:12,a:[268,60]},
+  {id:'rosa',n:'Rosa',h:325,s:12,a:[328,65]},
+  {id:'granate',n:'Granate',h:350,s:12,a:[352,65]},
+  {id:'naranja',n:'Naranja',h:22,s:14,a:[24,85]},
+  {id:'tierra',n:'Tierra',h:30,s:12,a:[30,55]},
+  {id:'trigo',n:'Trigo',h:42,s:14,a:[44,80]},
+  {id:'grafito',n:'Grafito',h:210,s:5,a:[210,8]}
+];
+function palH2X(h,s,l){s/=100;l/=100;var k=function(n){return (n+h/30)%12},a=s*Math.min(l,1-l),f=function(n){var v=l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));return ('0'+Math.round(v*255).toString(16)).slice(-2)};return '#'+f(0)+f(8)+f(4)}
+function palLum(x){var c=[1,3,5].map(function(i){var v=parseInt(x.substr(i,2),16)/255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*c[0]+.7152*c[1]+.0722*c[2]}
+function palCR(a,b){var x=palLum(a),y=palLum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
+/* Variables de color de una paleta, en claro o en oscuro */
+function palVars(p,dark){
+  var h=p.h,s=p.s,ah=p.a[0],as=p.a[1],o={};
+  if(!dark){
+    o.bg=palH2X(h,s,95);o.surface='#ffffff';o.surface2=palH2X(h,s,91);o.ink=palH2X(h,s+8,11);o.ink2=palH2X(h,Math.max(4,s*.6),34);o.line=palH2X(h,s,85);o.line2=palH2X(h,s,70);
+    var l=46,ac=palH2X(ah,as,l); while(l>8&&palCR(ac,'#ffffff')<5){l-=1;ac=palH2X(ah,as,l)}
+    o.accent=ac;o['accent-ink']='#ffffff';o['accent-soft']=palH2X(ah,Math.min(as,70),90);
+    var l2=62,hi=palH2X(ah,as,l2); while(l2<92&&palCR(hi,'#172126')<6){l2+=1;hi=palH2X(ah,as,l2)} o['accent-hi']=hi;
+  }else{
+    o.bg=palH2X(h,s+4,10);o.surface=palH2X(h,s+3,14);o.surface2=palH2X(h,s+3,19);o.ink=palH2X(h,Math.min(s,14),94);o.ink2=palH2X(h,Math.max(6,s*.5),68);o.line=palH2X(h,s,25);o.line2=palH2X(h,s,34);
+    var m=60,ac2=palH2X(ah,as,m); while(m<92&&palCR(ac2,o.surface)<6){m+=1;ac2=palH2X(ah,as,m)}
+    o.accent=ac2;o['accent-ink']=palCR(ac2,'#111111')>=palCR(ac2,'#ffffff')?'#111111':'#ffffff';o['accent-soft']=palH2X(ah,Math.min(as,45),21);o['accent-hi']=ac2;
+  }
+  o.muted=o.ink2; return o;
+}
+function palDecl(o){return Object.keys(o).map(function(k){return '--'+k+':'+o[k]}).join(';')}
+function palCSS(p){
+  var L=palDecl(palVars(p,false)), D=palDecl(palVars(p,true));
+  return 'html:root[data-pal]{'+L+'}@media (prefers-color-scheme:dark){html:root[data-pal]:not([data-theme=light]){'+D+';color-scheme:dark}}html:root[data-pal][data-theme=dark]{'+D+';color-scheme:dark}'
+   +'html:root[data-pal] .pill b,html:root[data-pal] .pill.leg .lgi.on,html:root[data-pal] #chip b{color:var(--accent-hi)}html:root[data-pal] .trsel.on{color:var(--accent-ink)}';
+}
+function palFind(id){return PALS.filter(function(p){return p.id===id})[0]||PALS[0]}
+var palCur=null;
+function palApply(){
+  var id=GTOK?'':((S.x&&S.x.pal)||''), p=palFind(id); if(!p.id)id='';
+  if(palCur===id)return; palCur=id;
+  var r=document.documentElement, st=$('#palstyle');
+  if(!st){st=document.createElement('style');st.id='palstyle';document.head.appendChild(st)}
+  document.head.appendChild(st);
+  if(id){r.setAttribute('data-pal',id);st.textContent=palCSS(p);try{localStorage.setItem('mapa-fincas:palcss',id+'|'+st.textContent)}catch(e){}}
+  else{r.removeAttribute('data-pal');st.textContent='';try{localStorage.removeItem('mapa-fincas:palcss')}catch(e){}}
+  temaNav();
+}
+function palSet(id){
+  if(GTOK)return; var p=palFind(id); undoPush();
+  if(p.id)S.x.pal=p.id; else delete S.x.pal;
+  save(); palApply(); if($('#p-datos')&&$('#p-datos').classList.contains('on'))renderDatos();
+  toast('Paleta: '+p.n);
+}
+function palSw(p){
+  if(!p.id)return '<i style="background:#F3F5F4"></i><i style="background:#F5C400"></i><i style="background:#1B2427"></i>';
+  var l=palVars(p,false),d=palVars(p,true); return '<i style="background:'+l.bg+'"></i><i style="background:'+l.accent+'"></i><i style="background:'+d.bg+'"></i>';
+}
+function palHTML(){
+  if(GTOK)return '';
+  var cur=(S.x&&S.x.pal)||'';
+  return '<h3 style="margin-top:14px">Paleta de colores</h3><div class="small" style="margin-bottom:6px">Solo te afecta a ti: se guarda en tu cuenta y te sigue a todos tus aparatos. Funciona con el modo claro y el oscuro.</div><div class="palg" role="group" aria-label="Paleta de colores">'+PALS.map(function(p){return '<button type="button" class="palb'+(cur===p.id?' on':'')+'" aria-pressed="'+(cur===p.id)+'" data-act="pal-set" data-id="'+p.id+'"><span class="sw3">'+palSw(p)+'</span><span>'+esc(p.n)+'</span></button>'}).join('')+'</div>';
+}
 /* Entrega 49: apariencia (automático, claro u oscuro) */
 function temaGet(){try{var t=localStorage.getItem('mapa-fincas:tema');return t==='light'||t==='dark'?t:'auto'}catch(e){return 'auto'}}
 function temaSet(v){
@@ -3757,7 +3829,7 @@ function temaSet(v){
 }
 function temaOscuro(){var t=temaGet();return t==='dark'||(t==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)}
 function temaNav(){var b=$('#nav .navtheme');if(!b)return;var t=temaGet();b.setAttribute('aria-label','Apariencia: '+(t==='light'?'claro':t==='dark'?'oscuro':'automático')+'. Tocar para cambiar');b.title=b.getAttribute('aria-label');b.innerHTML=t==='dark'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg>':t==='light'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor"/></svg>'}
-function temaHTML(){var t=temaGet();return '<h3>Apariencia</h3><div class="thseg" role="group" aria-label="Apariencia">'+[['auto','Automático'],['light','Claro'],['dark','Oscuro']].map(function(o){return '<button type="button" class="'+(t===o[0]?'on':'')+'" aria-pressed="'+(t===o[0])+'" data-act="tema" data-v="'+o[0]+'">'+o[1]+'</button>'}).join('')+'</div><p class="small" style="margin-top:6px">Automático sigue el modo claro u oscuro de este aparato. Se recuerda en cada aparato.</p>'}
+function temaHTML(){var t=temaGet();return '<h3>Apariencia</h3><div class="thseg" role="group" aria-label="Apariencia">'+[['auto','Automático'],['light','Claro'],['dark','Oscuro']].map(function(o){return '<button type="button" class="'+(t===o[0]?'on':'')+'" aria-pressed="'+(t===o[0])+'" data-act="tema" data-v="'+o[0]+'">'+o[1]+'</button>'}).join('')+'</div><p class="small" style="margin-top:6px">Automático sigue el modo claro u oscuro de este aparato. Se recuerda en cada aparato.</p>'+palHTML()}
 function renderDatos(){
   var el=$('#p-datos'), st=stats(null,true,true);
   if(hist.st==='idle'&&SY.rt)setTimeout(histLoad,0);
@@ -4052,7 +4124,7 @@ function cmSrv(op,cid,tx){
                       :sbFetch('/rest/v1/enlace_comentarios?id=eq.'+uuid,{method:'DELETE',headers:{Prefer:'return=minimal'}},t);
   }).then(function(r){if(!r.ok)throw 1;toast(op==='edit'?'Comentario cambiado':'Comentario borrado');return lkLoad(true)}).catch(function(){toast('No he podido hacerlo. Mira la conexión.')});
 }
-function renderAll(){pfFix();pfPill();renderCard();if(tab==='fincas')renderFincas();else if(tab==='guardados')renderGuardados();else if(tab==='resumen')renderResumen();else if(tab==='datos')renderDatos();syncFocus();updateDot()}
+function renderAll(){palApply();pfFix();pfPill();renderCard();if(tab==='fincas')renderFincas();else if(tab==='guardados')renderGuardados();else if(tab==='resumen')renderResumen();else if(tab==='datos')renderDatos();syncFocus();updateDot()}
 function renderChip(){
   var c=$('#chip'), fin=$('#finish'), lg=$('#cleg'), f=activeFinca&&finca(activeFinca), fo=focusId(), vg=(viewG&&grupo(viewG))?viewG:null, vc=viewCrop;
   if(activeFinca&&!f)activeFinca=null;
@@ -11136,6 +11208,7 @@ document.addEventListener('click',function(ev){
     case 'lay-sec':layOpen[b.dataset.k]=!layOpen[b.dataset.k];renderLayers();break;
     case 'exp-hl':if(!isDesk()&&EXP.fid){EXP.hl={k:b.dataset.k,id:b.dataset.id};var fh=finca(EXP.fid),em=$('#p-fincas .expmap');if(fh&&em){var tmp=document.createElement('div');tmp.innerHTML=expMapHTML(fh);if(tmp.firstChild)em.replaceWith(tmp.firstChild)}}break;
     case 'tema':temaSet(b.dataset.v);break;
+    case 'pal-set':palSet(b.dataset.id||'');break;
     case 'tema-ciclo':{var tc=temaGet();temaSet(tc==='auto'?(temaOscuro()?'light':'dark'):tc==='dark'?'light':'auto');break}
     case 'ver-tap':if(verNew)verUpdate();else verCheck(true);break;
     case 'af-open':if(b.dataset.fid)afOpen('finca',b.dataset.fid);else afOpen();break;
@@ -11351,7 +11424,7 @@ setTimeout(function(){map.invalidateSize();refreshSigpac();if(OV.ndvi){ndviPill(
 
 window.__mf={loadPdfLib:loadPdfLib,pvState:function(){return PV},boxPad:boxPad,pdfFont:pdfFont,pdfFontC:pdfFontC,expMapHTML:expMapHTML,buildFichaPdf:buildFichaPdf,afCompute:afCompute,afCompare:afCompare,hatchOf:hatchOf,swBg:swBg,OV:OV,polyC:polyC,mmHTML:mmHTML,expClose:expClose,temaGet:temaGet,temaSet:temaSet,pvOpen:pvOpen,pvClose:pvClose,cvMatch:cvMatch,cvLabel:cvLabel,trVarList:trVarList,varReal:varReal,GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
-Object.assign(window.__mf,{trVarParts:trVarParts,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
+Object.assign(window.__mf,{trVarParts:trVarParts,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
 })();
 </script>
 <script type="text/plain" id="pdflib">/** @license
