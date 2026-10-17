@@ -2217,7 +2217,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-17T17:10:44Z',n:'Entrega 54 · 17 oct · 19:10'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-17T18:18:36Z',n:'Entrega 55 · 17 oct · 20:18'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -2366,23 +2366,24 @@ function updateHint(){
 }
 
 /* dibujo de lo guardado y de la selección */
-var cardFull=false, swipeT=0, drawnKey=null, viewId=null, viewG=null, viewCrop=null, bulkOtro=false, grpOpen=false, grpId=null, gOpen={}, fgNew=false, moveOpen=false, fdOpen=false, fdQ='', secOpen={cr:false,pl:false,ub:false,dl:false};
+var cardFull=false, swipeT=0, drawnKey=null, viewId=null, viewG=null, viewCrop=null, viewRG=null, bulkOtro=false, grpOpen=false, grpId=null, gOpen={}, fgNew=false, moveOpen=false, fdOpen=false, fdQ='', secOpen={cr:false,pl:false,ub:false,dl:false};
 function focusId(){return detailId&&finca(detailId)&&!isHid(detailId)?detailId:(viewId&&finca(viewId)&&!isHid(viewId)?viewId:null)}
 function recSel(){return sel&&S.recintos[sel.ref]&&recIn(S.recintos[sel.ref])&&finca(S.recintos[sel.ref].fincaId)&&!isHid(S.recintos[sel.ref].fincaId)?S.recintos[sel.ref]:null}
 var varOpen={};
 function varFocus(){var f=focusId();return (f&&varOpen['f:'+f])?f:null}
 function varFocusG(){var g=(grpId&&grupo(grpId))?grpId:((viewG&&grupo(viewG))?viewG:null);return (g&&varOpen['g:'+g])?g:null}
 function rgbHex(c){return '#'+c.map(function(n){return ('0'+Math.max(0,Math.min(255,n)).toString(16)).slice(-2)}).join('')}
-function viewKey(){var r=recSel();return (r?'r:'+r.ref+'|'+r.fincaId:'')+'|'+(focusId()||'')+'|'+(viewG||'')+'|'+(viewCrop||'')+'|'+(varFocus()?'v':'')+'|'+(varFocusG()||'')}
+function viewKey(){var r=recSel();return (r?'r:'+r.ref+'|'+r.fincaId:'')+'|'+(focusId()||'')+'|'+(viewG||'')+'|'+(viewCrop||'')+'|'+(viewRG||'')+'|'+(varFocus()?'v':'')+'|'+(varFocusG()||'')}
 function syncFocus(){if(viewKey()!==drawnKey)drawSaved();renderChip()}
 var polyC=new Map(), llC=new WeakMap(), drawGen=0, dashDrawn=false, cLabels=L.layerGroup().addTo(map);
 function llOf(g){var l=llC.get(g);if(!l){l=toLL(g);llC.set(g,l)}return l}
 function ownerColor(g){if(!g)return '#ffffff';if(g.color)return g.color;var i=S.x.grupos.indexOf(g);return COLORS[(i<0?0:i)%COLORS.length]}
-function drawCtx(){var focus=focusId(), vg=(!focus&&viewG&&grupo(viewG))?viewG:null;return {focus:focus,vg:vg,vc:viewCrop,byCrop:!!(focus||vg||viewCrop||OV.colby==='cultivo')}}
+function drawCtx(){var focus=focusId(), vg=(!focus&&viewG&&grupo(viewG))?viewG:null;return {focus:focus,vg:vg,vc:viewCrop,rg:(focus&&viewRG&&grOf(finca(focus),viewRG))?viewRG:null,byCrop:!!(focus||vg||viewCrop||OV.colby==='cultivo')}}
 function recOn(r,f,cx){
   if(cx.focus&&r.fincaId!==cx.focus)return false;
   if(cx.vg&&f.grupo!==cx.vg)return false;
   if(cx.vc&&CSK(r.cultivo||NOCROP)!==CSK(cx.vc))return false;
+  if(cx.rg&&r.gr!==cx.rg)return false;
   return true;
 }
 /* ---- Entrega 51: rayado por cultivo (mapa, leyendas y tablas) ---- */
@@ -3447,7 +3448,7 @@ function newGrupo(nm){
 }
 function goGrupo(id,fromMap){
   if(!grupo(id))return;
-  viewId=null; detailId=null; grpId=id; viewG=id; viewCrop=null; bulk=null; bulkR=null;bulkP=null; disarm(); finOn();
+  viewId=null; detailId=null; grpId=id; viewG=id; viewCrop=null;viewRG=null; bulk=null; bulkR=null;bulkP=null; disarm(); finOn();
   if(isDesk()){setTab('fincas');renderFincas();setTimeout(function(){map.invalidateSize();fitGrupo(id)},90)}
   else if(fromMap){syncFocus();renderFincas();fitGrupo(id)}
   else{setTab('fincas');renderFincas()}
@@ -3818,7 +3819,7 @@ function pfMenuHTML(){
   return h+'</div>';
 }
 function pfReset(){
-  sel=null; activeFinca=null; detailId=null; grpId=null; viewId=null; viewG=null; viewCrop=null; tagCard=null; catCard=null; hidOpen=false; pfMenu=false; pfRn=false; pfWiz=null; disarm();
+  sel=null; activeFinca=null; detailId=null; grpId=null; viewId=null; viewG=null; viewCrop=null;viewRG=null; tagCard=null; catCard=null; hidOpen=false; pfMenu=false; pfRn=false; pfWiz=null; disarm();
   flt.q='';flt.c='';flt.r='';flt.p='';
 }
 function pfSwitch(id,quiet){
@@ -4056,14 +4057,14 @@ function renderChip(){
   var c=$('#chip'), fin=$('#finish'), lg=$('#cleg'), f=activeFinca&&finca(activeFinca), fo=focusId(), vg=(viewG&&grupo(viewG))?viewG:null, vc=viewCrop;
   if(activeFinca&&!f)activeFinca=null;
   var scope=null, title='';
-  if(fo&&!recSel()&&!(isDesk()&&detailId)){scope='f';title=finca(fo).nombre}
+  if(fo&&!recSel()&&!(isDesk()&&detailId)){scope='f';title=finca(fo).nombre; if(viewRG&&grOf(finca(fo),viewRG))title+=' · '+grOf(finca(fo),viewRG).n}
   else if(vg&&!recSel()){scope='g';title=grupo(vg).nombre}
   else if(vc&&!recSel()){scope='c'}
   if(f){c.hidden=false;c.removeAttribute('data-act');c.innerHTML='Añadiendo a: <b>'+esc(f.nombre)+'</b> · '+ha2(fincaHa(f.id))+' ha';fin.hidden=false}
   else if(scope){c.hidden=false;c.setAttribute('data-act','focus-clear');c.innerHTML='Viendo: '+(title?'<b>'+esc(title)+'</b>':'')+(vc?(title?' · ':'')+'<b>'+esc(vc)+'</b>':'')+' &nbsp;✕';fin.hidden=true}
   else{c.hidden=true;fin.hidden=true}
   var sf=null, showAll=false;
-  if(scope==='f')sf=stats().per[fo];
+  if(scope==='f'){sf=stats().per[fo]; if(sf&&viewRG&&grOf(finca(fo),viewRG)){var gcr={},gn=0;grRecs(finca(fo),viewRG).forEach(function(r){var c=r.cultivo||NOCROP;gcr[c]=(gcr[c]||0)+r.ha;gn++});sf={n:gn,crops:gcr}}}
   else if(scope==='g'){var gs0=stats(grupoFincas(vg).map(function(x){return x.id}));if(gs0.n)sf={n:gs0.n,crops:gs0.byCrop}}
   else if(scope==='c'||showAll){var gs1=stats();if(gs1.n)sf={n:gs1.n,crops:gs1.byCrop}}
   if(sf&&sf.n){lg.hidden=false;lg.innerHTML=Object.keys(sf.crops).sort(function(a,b){return sf.crops[b]-sf.crops[a]}).map(function(k){return '<button type="button" class="lgi'+((vc&&CSK(vc)===CSK(k))?' on':'')+'" data-act="crop-view" data-c="'+esc(k)+'"><i style="background:'+swBg(k)+'"></i>'+esc(k)+' '+ha2(sf.crops[k])+' ha</button>'}).join('')}
@@ -4090,7 +4091,7 @@ function fitFinca(id){
   map.fitBounds(bb,{padding:[40,40],maxZoom:18});
 }
 function goFinca(id,fromMap){
-  viewId=null; viewG=null; viewCrop=null; grpId=null; hidOpen=false; colOpen=false; grpPick=false; bulkAll=false; detailId=id; bulk=null; bulkR=null;bulkP=null; bulkOtro=false; disarm();
+  viewId=null; viewG=null; viewCrop=null;viewRG=null; grpId=null; hidOpen=false; colOpen=false; grpPick=false; bulkAll=false; detailId=id; bulk=null; bulkR=null;bulkP=null; bulkOtro=false; disarm();
   if(isDesk()){setTab('fincas');renderFincas();setTimeout(function(){fitFinca(id)},90)}
   else if(fromMap){syncFocus();renderFincas();fitFinca(id)}
   else{pendingFit=id;setTab('fincas')}
@@ -4786,12 +4787,13 @@ function expResumenHTML(f){
   if(og)h+='<div class="small" style="margin-top:8px">Propietario: '+esc(og.nombre)+'</div>';
   h+='</section><section class="kbox kmapbox" style="padding:0;overflow:hidden;display:flex;flex-direction:column"><button type="button" class="kmapbtn" data-act="finca-map" aria-label="Ver la finca en el mapa"'+(isOc(f)?' disabled':'')+'>'+mmHTML(recs,null,{h:260,ar:1.3,cls:'fill',cap:s.n+(s.n===1?' recinto':' recintos')+' · tocar para abrir el mapa'})+'</button>';
   h+='</section></div>';
+  h+=grSecHTML(f);
   h+=expCampHTML(f);
   h+=expNutrHTML(f);
   h+='<div style="margin-top:14px">'; 
     h+='<details class="more" data-sec="exrec"'+(secOpen.exrec?' open':'')+'><summary>Recintos ('+recs.length+')</summary>';
     recs.forEach(function(r){var c=r.cultivo||NOCROP;
-      h+='<button class="rrow" data-act="rec-open" data-ref="'+esc(r.ref)+'"><span class="rr">'+esc(refShort(r.ref))+(r.nombre?' · '+esc(r.nombre):'')+'</span><span class="rh">'+ha4(r.ha)+' ha</span><span class="rc"><i style="background:'+cropColor(c)+'"></i>'+esc(c)+(r.riego?' · '+riegoName(r.riego):'')+(prodTag(r.prod)?' · '+prodTag(r.prod):'')+(r.variedad?' · '+esc(r.variedad):'')+'</span></button>';
+      h+='<button class="rrow" data-act="rec-open" data-ref="'+esc(r.ref)+'"><span class="rr">'+esc(refShort(r.ref))+(r.nombre?' · '+esc(r.nombre):'')+'</span><span class="rh">'+ha4(r.ha)+' ha</span><span class="rc"><i style="background:'+cropColor(c)+'"></i>'+esc(c)+(r.riego?' · '+riegoName(r.riego):'')+(prodTag(r.prod)?' · '+prodTag(r.prod):'')+(r.variedad?' · '+esc(r.variedad):'')+(grNameOf(r)?' · Grupo '+esc(grNameOf(r)):'')+'</span></button>';
     });
     h+='</details>';
   h+='</div>';
@@ -4988,7 +4990,100 @@ function trRecSum(f,refs){
   if(!ok.length)return 'Toda la finca ('+all.length+(all.length===1?' recinto':' recintos')+' · '+ha2(tot)+' ha)';
   return ok.length+' de '+all.length+(all.length===1?' recinto':' recintos')+' · '+ha2(ok.reduce(function(a,r){return a+S.recintos[r].ha},0))+' ha';
 }
-function trRecLbl(r){var vn=varReal(r)?varName(varStrip(trCultOf(r),r.variedad)):''; return refShort(r.ref)+(r.nombre?' · '+r.nombre:'')+' · '+(r.cultivo||'Sin cultivo')+(vn?' · '+vn:'')+' · '+ha2(r.ha)+' ha'}
+function trRecLbl(r){var gn=grNameOf(r),vn=varReal(r)?varName(varStrip(trCultOf(r),r.variedad)):''; return refShort(r.ref)+(r.nombre?' · '+r.nombre:'')+' · '+(r.cultivo||'Sin cultivo')+(vn?' · '+vn:'')+(gn?' · Grupo '+gn:'')+' · '+ha2(r.ha)+' ha'}
+/* ---- Entrega 55: grupos de recintos dentro de cada finca. f.gr=[{id,n}], recinto.gr=id (un recinto, un solo grupo) ---- */
+var GRS={ed:null,name:'',sel:[]};
+function grList(f){return (f&&f.gr)||[]}
+function grOf(f,id){return id?(grList(f).filter(function(g){return g.id===id})[0]||null):null}
+function grRecs(f,id){return fincaRecs(f.id).filter(function(r){return r.gr===id})}
+function grRefs(f,id){return grRecs(f,id).map(function(r){return r.ref})}
+function grNameOf(r){var f=r&&finca(r.fincaId), g=f&&grOf(f,r.gr); return g?g.n:''}
+function grBtns(f,ed,act,id){
+  var gl=grList(f).filter(function(g){return grRecs(f,g.id).length}); if(!gl.length)return '';
+  return '<div class="lbl" style="margin:0 0 6px">Escoger por grupo</div><div class="chips" id="'+id+'" style="margin-bottom:8px">'+gl.map(function(g){var rs=grRecs(f,g.id);return '<button type="button" class="chip'+(grOn(rs,ed.r)?' on':'')+'" data-act="'+act+'" data-id="'+esc(g.id)+'">'+esc(g.n)+' ('+ha2(rs.reduce(function(a,r){return a+r.ha},0))+' ha)</button>'}).join('')+'</div>';
+}
+function grOn(rs,sel){return !!(sel.length&&rs.length&&rs.every(function(r){return sel.indexOf(r.ref)>=0}))}
+function grSync(f,sel,id){$$('#'+id+' .chip').forEach(function(b){b.classList.toggle('on',grOn(grRecs(f,b.dataset.id),sel))})}
+/* texto de grupos de unos recintos (vacío si la finca no tiene grupos) */
+function grParts(f,refs){
+  if(!grList(f).length)return [];
+  var m={},o=[]; (refs||[]).forEach(function(r){var x=S.recintos[r];if(!x||x.fincaId!==f.id)return;var g=grOf(f,x.gr),k=g?g.id:'',e=m[k];if(!e){e=m[k]={n:g?g.n:'Sin grupo',ha:0};o.push(e)}e.ha+=x.ha});
+  return o.sort(function(a,b){return (a.n==='Sin grupo')-(b.n==='Sin grupo')||b.ha-a.ha});
+}
+function grTxt(f,refs){var p=grParts(f,refs); return p.length?'Grupos: '+p.map(function(e){return e.n+' '+ha2(e.ha)+' ha'}).join(', '):''}
+function grHTML(f,refs){var p=grParts(f,refs); return p.length?'<div class="small" style="margin-top:2px"><b>Grupos:</b> '+p.map(function(e){return esc(e.n)+' '+ha2(e.ha)+' ha'}).join(' · ')+'</div>':''}
+function grOpts(f,cur){var gl=grList(f).filter(function(g){return grRecs(f,g.id).length}); if(!gl.length)return ''; return '<optgroup label="Grupos">'+gl.map(function(g){var v='gr§'+g.id;return '<option value="'+esc(v)+'"'+(cur===v?' selected':'')+'>Grupo: '+esc(g.n)+' · '+ha2(grRecs(f,g.id).reduce(function(a,r){return a+r.ha},0))+' ha</option>'}).join('')+'</optgroup>'}
+function grStart(id){
+  var f=finca(detailId); if(!f)return;
+  GRS.ed=id; GRS.name=id==='new'?'':(grOf(f,id)||{n:''}).n; GRS.sel=id==='new'?[]:grRefs(f,id);
+  renderFincas(); setTimeout(function(){var i=$('#gr-in');if(i)i.focus()},60);
+}
+function grSelSum(){var e=$('#gr-sum');if(e)e.textContent=trRecSum(finca(detailId),GRS.sel)}
+function grSave(){
+  var f=finca(detailId); if(!f||!GRS.ed)return; var inp=$('#gr-in'), n=(inp?inp.value:GRS.name).trim().replace(/\s+/g,' ');
+  if(!n){toast('Escribe un nombre para el grupo');return}
+  var dup=grList(f).filter(function(g){return g.id!==GRS.ed&&norm(g.n)===norm(n)})[0];
+  if(dup){toast('Ya existe un grupo llamado «'+dup.n+'». Pon otro nombre.');return}
+  undoPush(); var id=GRS.ed;
+  if(id==='new'){id=uid(); f.gr=grList(f).concat([{id:id,n:n}])}
+  else f.gr=grList(f).map(function(g){return g.id===id?{id:id,n:n}:g});
+  Object.keys(S.recintos).forEach(function(k){var r=S.recintos[k]; if(r.fincaId!==f.id)return; if(GRS.sel.indexOf(k)>=0)r.gr=id; else if(r.gr===id)delete r.gr});
+  GRS.ed=null; save(); renderFincas(); undoToast('Grupo «'+n+'» guardado');
+}
+function grDel(id){
+  var f=finca(detailId), g=f&&grOf(f,id); if(!g)return; undoPush();
+  f.gr=grList(f).filter(function(x){return x.id!==id});
+  Object.keys(S.recintos).forEach(function(k){var r=S.recintos[k]; if(r.fincaId===f.id&&r.gr===id)delete r.gr});
+  if(viewRG===id)viewRG=null; GRS.ed=null; save(); renderFincas(); undoToast('Grupo «'+g.n+'» eliminado (los recintos siguen en la finca)');
+}
+/* atajo: un grupo por cada variedad con nombre */
+function grByVar(){
+  var f=finca(detailId); if(!f)return; var vl=trVarList(f).filter(function(v){return v.refs.length&&!/§-$/.test(v.k)}); if(!vl.length){toast('Esta finca no tiene variedades anotadas');return}
+  var cnt={}; vl.forEach(function(v){var nm=v.l.split(' · ').slice(1).join(' · ');cnt[nm]=(cnt[nm]||0)+1});
+  undoPush(); var gl=grList(f).slice();
+  vl.forEach(function(v){
+    var nm=v.l.split(' · ').slice(1).join(' · '); if(cnt[nm]>1)nm=v.l;
+    var g=gl.filter(function(x){return norm(x.n)===norm(nm)})[0]; if(!g){g={id:uid(),n:nm};gl.push(g)}
+    v.refs.forEach(function(ref){S.recintos[ref].gr=g.id});
+  });
+  f.gr=gl; save(); renderFincas(); undoToast('Grupos creados por variedad');
+}
+function grApplied(f,id){
+  var rs=grRefs(f,id), y=diaToday().slice(0,4), out=[];
+  [['trat','tratamiento','tratamientos'],['abon','abonado','abonados'],['fert','fertirrigación','fertirrigaciones']].forEach(function(k){
+    var n=(f[k[0]]||[]).filter(function(t){return t.e!=='p'&&yrOf(t)===y&&trRefs(f,t).some(function(r){return rs.indexOf(r)>=0})}).length;
+    if(n)out.push(n+' '+(n===1?k[1]:k[2]));
+  });
+  return out.length?'En '+y+': '+out.join(' · '):'Sin aplicaciones en '+y;
+}
+function grSecHTML(f){
+  if(GTOK)return '';
+  var gl=grList(f), recs=fincaRecs(f.id).sort(function(a,b){return a.ref.localeCompare(b.ref,'es',{numeric:true})});
+  var h='<div class="kbox" style="margin-top:12px"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><h4>Grupos de recintos</h4>'+(GRS.ed?'':'<button type="button" class="btn sm" data-act="gr-new">+ Nuevo grupo</button>')+'</div>';
+  if(GRS.ed){
+    h+='<div class="lbl">Nombre del grupo</div><input id="gr-in" class="in" maxlength="40" placeholder="Por ejemplo: La Vega" value="'+esc(GRS.name)+'" autocomplete="off">';
+    h+='<div class="lbl" style="margin-top:10px">Recintos del grupo <span id="gr-sum" class="small">'+esc(trRecSum(f,GRS.sel))+'</span></div>';
+    var vl=trVarList(f); if(vl.length)h+='<div class="chips" style="margin-bottom:8px">'+vl.map(function(v){return '<button type="button" class="chip" data-act="gr-var" data-k="'+esc(v.k)+'">'+esc(v.l)+' ('+ha2(v.ha)+' ha)</button>'}).join('')+'</div>';
+    h+='<div class="acts" style="margin:0 0 8px"><button type="button" class="btn sm" data-act="gr-all">Marcar todos</button><button type="button" class="btn sm" data-act="gr-none">Quitar todos</button></div>';
+    h+='<div class="trrl" id="gr-recs">'+recs.map(function(r){var o=grOf(f,r.gr);return '<button type="button" class="chip'+(GRS.sel.indexOf(r.ref)>=0?' on':'')+'" data-act="gr-rec" data-r="'+esc(r.ref)+'">'+esc(trRecLbl(r).replace(/ · Grupo .*? · (?=[\d.,]+ ha$)/,' · '))+(o&&o.id!==GRS.ed?' · (ahora en «'+esc(o.n)+'»)':'')+'</button>'}).join('')+'</div>';
+    h+='<div class="small" style="margin-top:6px">Un recinto solo puede estar en un grupo: si marcas uno que ya está en otro, pasa a este.</div>';
+    h+='<div class="acts"><button class="btn primary" data-act="gr-save">Guardar grupo</button><button class="btn" data-act="gr-cancel">Cancelar</button>'+(GRS.ed!=='new'?'<button class="btn danger" data-act="gr-del" data-id="'+esc(GRS.ed)+'">Eliminar grupo</button>':'')+'</div></div>';
+    return h;
+  }
+  if(!gl.length){
+    h+='<div class="small">Agrupa recintos (por ejemplo «La Vega») para abonar, fertirrigar o tratar de una vez, y ver lo aplicado en cada grupo por separado. Un recinto solo puede estar en un grupo.</div>';
+    if(trVarList(f).some(function(v){return !/§-$/.test(v.k)}))h+='<div class="acts"><button type="button" class="btn sm" data-act="gr-byvar">Crear un grupo por cada variedad</button></div>';
+    return h+'</div>';
+  }
+  gl.forEach(function(g){
+    var rs=grRecs(f,g.id), ha=rs.reduce(function(a,r){return a+r.ha},0);
+    h+='<div class="kline" style="display:block;padding:8px 0;border-top:1px solid var(--line)"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap"><b>'+esc(g.n)+'</b><span class="small">'+rs.length+(rs.length===1?' recinto':' recintos')+' · '+ha2(ha)+' ha</span></div><div class="small">'+esc(grApplied(f,g.id))+'</div><div class="acts" style="margin:6px 0 0">'+(rs.length&&!isOc(f)?'<button type="button" class="btn sm" data-act="gr-map" data-id="'+esc(g.id)+'">Ver en el mapa</button>':'')+'<button type="button" class="btn sm" data-act="gr-edit" data-id="'+esc(g.id)+'">Editar</button></div></div>';
+  });
+  var ng=recs.filter(function(r){return !grOf(f,r.gr)});
+  if(ng.length)h+='<div class="kline" style="display:block;padding:8px 0;border-top:1px solid var(--line)"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><b>Sin grupo</b><span class="small">'+ng.length+(ng.length===1?' recinto':' recintos')+' · '+ha2(ng.reduce(function(a,r){return a+r.ha},0))+' ha</span></div></div>';
+  h+='<div class="acts"><button type="button" class="btn sm" data-act="gr-byvar">Un grupo por cada variedad</button></div>';
+  return h+'</div>';
+}
 /* Entrega 48: escoger recintos por variedad. [{k:'Cultivo§clave',c,l,ha,refs}] solo de cultivos con alguna variedad anotada */
 function trVarList(f){
   var out=[]; trCultList(f).forEach(function(c){
@@ -5087,7 +5182,7 @@ function trCultBtns(f,ed,act){
 }
 function trRecChips(f,ed){
   var recs=fincaRecs(f.id).sort(function(a,b){return a.ref.localeCompare(b.ref,'es',{numeric:true})});
-  return trCultBtns(f,ed,'tr-cult')+trVarBtns(f,ed,'tr-var','tr-vars')+'<div class="acts" style="margin:0 0 8px"><button type="button" class="btn sm" data-act="tr-rec-all">Marcar todos</button><button type="button" class="btn sm" data-act="tr-rec-none">Quitar todos</button></div><div class="trrl" id="tr-recs">'+recs.map(function(r){return '<button type="button" class="chip'+(ed.r.indexOf(r.ref)>=0?' on':'')+'" data-act="tr-rec" data-r="'+esc(r.ref)+'">'+esc(trRecLbl(r))+'</button>'}).join('')+'</div>';
+  return grBtns(f,ed,'tr-gr','tr-grs')+trCultBtns(f,ed,'tr-cult')+trVarBtns(f,ed,'tr-var','tr-vars')+'<div class="acts" style="margin:0 0 8px"><button type="button" class="btn sm" data-act="tr-rec-all">Marcar todos</button><button type="button" class="btn sm" data-act="tr-rec-none">Quitar todos</button></div><div class="trrl" id="tr-recs">'+recs.map(function(r){return '<button type="button" class="chip'+(ed.r.indexOf(r.ref)>=0?' on':'')+'" data-act="tr-rec" data-r="'+esc(r.ref)+'">'+esc(trRecLbl(r))+'</button>'}).join('')+'</div>';
 }
 function trFormHTML(f,ed){
   var recs=fincaRecs(f.id), cult=((S.x.cl&&0)||'');
@@ -5138,7 +5233,7 @@ function trCardHTML(f,t,today){
   }
   h+='</div><div class="tc-w"><div class="trw"><div class="trwt">Dónde se aplicó</div>';
   var nAll=fincaRecs(f.id).length, whole=!vf&&!(t.r&&t.r.length);
-  h+='<div class="small" style="margin-top:6px"><b>'+(whole?'Toda la finca · '+nAll+(nAll===1?' recinto':' recintos'):refs.length+(refs.length===1?' recinto':' recintos'))+' · '+ha2(c.ha)+' ha</b>'+'</div>'+trVarHTML(trVarParts(f,refs));
+  h+='<div class="small" style="margin-top:6px"><b>'+(whole?'Toda la finca · '+nAll+(nAll===1?' recinto':' recintos'):refs.length+(refs.length===1?' recinto':' recintos'))+' · '+ha2(c.ha)+' ha</b>'+'</div>'+trVarHTML(trVarParts(f,refs))+grHTML(f,refs);
   if(c.cl!==null||c.cost!==null)h+='<div class="small" style="margin-top:2px">'+(c.cl!==null?'Caldo '+trRngTxt(t.cl0,t.cl,0)+' L/ha ('+trTxt(c.clTot,0)+' L en total'+mx+')':'')+(c.cost!==null?(c.cl!==null?' · ':'')+'Coste '+trTxt(c.costHa,2)+' €/ha, '+trTxt(c.cost,2)+' € en total':'')+'</div>';
   if(refs.length){
     var op=!!TR.open[t.id];
@@ -5187,7 +5282,7 @@ function treHTML(f){
   var hechos=all.filter(function(t){return t.e!=='p'}), pend=all.filter(function(t){return t.e==='p'});
   var nT=(f.trat||[]).length, sel2=[];
   if(nT>1&&!ed)sel2.push('<select id="tr-flt" class="trsel'+(TR.flt!=='todos'?' on':'')+'" aria-label="Estado"><option value="todos"'+(TR.flt==='todos'?' selected':'')+'>Estado: Todos ('+all.length+')</option><option value="p"'+(TR.flt==='p'?' selected':'')+'>Pendientes ('+pend.length+')</option><option value="h"'+(TR.flt==='h'?' selected':'')+'>Hechos ('+hechos.length+')</option></select>');
-  if(culs.length>1&&nT&&!ed){sel2.push(cvCropSel(f,TR.cult,'tr-cflt','Cultivo: Todos',culs)); var vs0=cvVarSel(f,TR.cult,'tr-vflt'); if(vs0)sel2.push(vs0)}
+  if((culs.length>1||grList(f).length)&&nT&&!ed){sel2.push(cvCropSel(f,TR.cult,'tr-cflt','Cultivo: Todos',culs)); var vs0=cvVarSel(f,TR.cult,'tr-vflt'); if(vs0)sel2.push(vs0)}
   var ysel=yrSelHTML('tr-yflt',TR.yr,yrAll,ed); if(ysel)sel2.unshift(ysel);
   if(sel2.length)h+='<div class="trfl">'+sel2.join('')+'</div>';
   if(!(f.trat||[]).length&&!ed)h+='<div class="small">Aún no hay tratamientos. Apunta aquí lo que has aplicado o lo que tienes previsto: hasta 6 productos por tratamiento, con las cantidades y el coste calculados, y PDF con las instrucciones.</div>';
@@ -5388,7 +5483,7 @@ function trRecRefresh(){
   var sm=$('#tr-recsum'); if(sm)sm.textContent=trRecSum(f,ed.r);
   $$('#tr-recs .chip').forEach(function(c){c.classList.toggle('on',ed.r.indexOf(c.dataset.r)>=0)});
   var cl=trCultList(f); $$('#tr-cults .chip').forEach(function(b){var c=cl.filter(function(x){return x.c===b.dataset.c})[0];b.classList.toggle('on',!!(c&&ed.r.length&&c.refs.every(function(r){return ed.r.indexOf(r)>=0})))});
-  trVarSync(f,ed.r,'tr-vars');
+  trVarSync(f,ed.r,'tr-vars'); grSync(f,ed.r,'tr-grs');
   trTipoRefresh();
 }
 function trToggleCult(refs,r0){
@@ -5643,7 +5738,7 @@ function abCultBtns(f,ed){
 }
 function abRecChips(f,ed){
   var recs=fincaRecs(f.id).sort(function(a,b){return a.ref.localeCompare(b.ref,'es',{numeric:true})});
-  return abCultBtns(f,ed)+'<div class="acts" style="margin:0 0 8px"><button type="button" class="btn sm" data-act="ab-rec-all">Marcar todos</button><button type="button" class="btn sm" data-act="ab-rec-none">Quitar todos</button></div><div class="trrl" id="ab-recs">'+recs.map(function(r){return '<button type="button" class="chip'+(ed.r.indexOf(r.ref)>=0?' on':'')+'" data-act="ab-rec" data-r="'+esc(r.ref)+'">'+esc(trRecLbl(r))+'</button>'}).join('')+'</div>';
+  return grBtns(f,ed,'ab-gr','ab-grs')+abCultBtns(f,ed)+'<div class="acts" style="margin:0 0 8px"><button type="button" class="btn sm" data-act="ab-rec-all">Marcar todos</button><button type="button" class="btn sm" data-act="ab-rec-none">Quitar todos</button></div><div class="trrl" id="ab-recs">'+recs.map(function(r){return '<button type="button" class="chip'+(ed.r.indexOf(r.ref)>=0?' on':'')+'" data-act="ab-rec" data-r="'+esc(r.ref)+'">'+esc(trRecLbl(r))+'</button>'}).join('')+'</div>';
 }
 function abFormHTML(f,ed){
   var recs=fincaRecs(f.id);
@@ -5677,7 +5772,7 @@ function abCardHTML(f,t,today){
   }
   h+='</div><div class="tc-w"><div class="trw"><div class="trwt">Dónde se aplicó</div>';
   var nAll=fincaRecs(f.id).length, whole=!vf&&!(t.r&&t.r.length);
-  h+='<div class="small" style="margin-top:4px"><b>'+(whole?'Toda la finca · '+nAll+(nAll===1?' recinto':' recintos'):refs.length+(refs.length===1?' recinto':' recintos'))+' · '+ha2(c.ha)+' ha</b>'+'</div>'+trVarHTML(trVarParts(f,refs));
+  h+='<div class="small" style="margin-top:4px"><b>'+(whole?'Toda la finca · '+nAll+(nAll===1?' recinto':' recintos'):refs.length+(refs.length===1?' recinto':' recintos'))+' · '+ha2(c.ha)+' ha</b>'+'</div>'+trVarHTML(trVarParts(f,refs))+grHTML(f,refs);
   if((t.ps||[]).length>1)h+='<div class="small" style="margin-top:2px"><b>Total: '+abUFtxt(c.tot)+' U.F./ha</b></div>';
   if(c.cost!==null)h+='<div class="small" style="margin-top:2px">Coste '+trTxt(c.costHa,2)+' €/ha, '+trTxt(c.cost,2)+' € en total'+mx+'</div>';
   if(refs.length){
@@ -5722,7 +5817,7 @@ function aboHTML(f){
   var hechos=all.filter(function(t){return t.e!=='p'}), pend=all.filter(function(t){return t.e==='p'});
   var nT=(f.abon||[]).length, sel2=[];
   if(nT>1&&!ed)sel2.push('<select id="ab-flt" class="trsel'+(AB.flt!=='todos'?' on':'')+'" aria-label="Estado"><option value="todos"'+(AB.flt==='todos'?' selected':'')+'>Estado: Todos ('+all.length+')</option><option value="p"'+(AB.flt==='p'?' selected':'')+'>Pendientes ('+pend.length+')</option><option value="h"'+(AB.flt==='h'?' selected':'')+'>Hechos ('+hechos.length+')</option></select>');
-  if(culs.length>1&&nT&&!ed){sel2.push(cvCropSel(f,AB.cult,'ab-cflt','Cultivo: Todos',culs)); var vs0=cvVarSel(f,AB.cult,'ab-vflt'); if(vs0)sel2.push(vs0)}
+  if((culs.length>1||grList(f).length)&&nT&&!ed){sel2.push(cvCropSel(f,AB.cult,'ab-cflt','Cultivo: Todos',culs)); var vs0=cvVarSel(f,AB.cult,'ab-vflt'); if(vs0)sel2.push(vs0)}
   var ysel=yrSelHTML('ab-yflt',AB.yr,yrAll,ed); if(ysel)sel2.unshift(ysel);
   if(sel2.length)h+='<div class="trfl">'+sel2.join('')+'</div>';
   if(nT&&!ed)h+=abResumenHTML(f,AB.cult,yrE);
@@ -5820,6 +5915,7 @@ function abRecRefresh(){
   var sm=$('#ab-recsum'); if(sm)sm.textContent=trRecSum(f,ed.r);
   $$('#ab-recs .chip').forEach(function(c){c.classList.toggle('on',ed.r.indexOf(c.dataset.r)>=0)});
   var cl=trCultList(f); $$('#ab-cults .chip').forEach(function(b){var c=cl.filter(function(x){return x.c===b.dataset.c})[0];b.classList.toggle('on',!!(c&&ed.r.length&&c.refs.every(function(r){return ed.r.indexOf(r)>=0})))}); trVarSync(f,ed.r,'ab-vars');
+  grSync(f,ed.r,'ab-grs');
 }
 
 /* ───────── Entrega 43: fertirrigación por finca ───────── */
@@ -5901,7 +5997,7 @@ function feCultBtns(f,ed){
 }
 function feRecChips(f,ed){
   var recs=fincaRecs(f.id).sort(function(a,b){return a.ref.localeCompare(b.ref,'es',{numeric:true})});
-  return feCultBtns(f,ed)+'<div class="acts" style="margin:0 0 8px"><button type="button" class="btn sm" data-act="fe-rec-all">Marcar todos</button><button type="button" class="btn sm" data-act="fe-rec-none">Quitar todos</button></div><div class="trrl" id="fe-recs">'+recs.map(function(r){return '<button type="button" class="chip'+(ed.r.indexOf(r.ref)>=0?' on':'')+'" data-act="fe-rec" data-r="'+esc(r.ref)+'">'+esc(trRecLbl(r))+'</button>'}).join('')+'</div>';
+  return grBtns(f,ed,'fe-gr','fe-grs')+feCultBtns(f,ed)+'<div class="acts" style="margin:0 0 8px"><button type="button" class="btn sm" data-act="fe-rec-all">Marcar todos</button><button type="button" class="btn sm" data-act="fe-rec-none">Quitar todos</button></div><div class="trrl" id="fe-recs">'+recs.map(function(r){return '<button type="button" class="chip'+(ed.r.indexOf(r.ref)>=0?' on':'')+'" data-act="fe-rec" data-r="'+esc(r.ref)+'">'+esc(trRecLbl(r))+'</button>'}).join('')+'</div>';
 }
 function feFormHTML(f,ed){
   var recs=fincaRecs(f.id);
@@ -5936,7 +6032,7 @@ function feCardHTML(f,t,today){
   }
   h+='</div><div class="tc-w"><div class="trw"><div class="trwt">Dónde se aplicó</div>';
   var nAll=fincaRecs(f.id).length, whole=!vf&&!(t.r&&t.r.length);
-  h+='<div class="small" style="margin-top:4px"><b>'+(whole?'Toda la finca · '+nAll+(nAll===1?' recinto':' recintos'):refs.length+(refs.length===1?' recinto':' recintos'))+' · '+ha2(c.ha)+' ha</b>'+'</div>'+trVarHTML(trVarParts(f,refs));
+  h+='<div class="small" style="margin-top:4px"><b>'+(whole?'Toda la finca · '+nAll+(nAll===1?' recinto':' recintos'):refs.length+(refs.length===1?' recinto':' recintos'))+' · '+ha2(c.ha)+' ha</b>'+'</div>'+trVarHTML(trVarParts(f,refs))+grHTML(f,refs);
   if((t.ps||[]).length>1)h+='<div class="small" style="margin-top:2px"><b>Total: '+abUFtxt(c.tot)+' U.F./ha</b></div>';
   if(abHas(t.w))h+='<div class="small" style="margin-top:2px"><b>Agua:</b> '+trTxt(t.w,1,1)+' m³/ha · total '+trTxt(t.w*c.ha,0)+' m³</div>';
   if(c.cost!==null)h+='<div class="small" style="margin-top:2px">Coste '+trTxt(c.costHa,2)+' €/ha, '+trTxt(c.cost,2)+' € en total'+mx+'</div>';
@@ -5982,7 +6078,7 @@ function fertHTML(f){
   var hechos=all.filter(function(t){return t.e!=='p'}), pend=all.filter(function(t){return t.e==='p'});
   var nT=(f.fert||[]).length, sel2=[];
   if(nT>1&&!ed)sel2.push('<select id="fe-flt" class="trsel'+(FE.flt!=='todos'?' on':'')+'" aria-label="Estado"><option value="todos"'+(FE.flt==='todos'?' selected':'')+'>Estado: Todos ('+all.length+')</option><option value="p"'+(FE.flt==='p'?' selected':'')+'>Pendientes ('+pend.length+')</option><option value="h"'+(FE.flt==='h'?' selected':'')+'>Hechos ('+hechos.length+')</option></select>');
-  if(culs.length>1&&nT&&!ed){sel2.push(cvCropSel(f,FE.cult,'fe-cflt','Cultivo: Todos',culs)); var vs0=cvVarSel(f,FE.cult,'fe-vflt'); if(vs0)sel2.push(vs0)}
+  if((culs.length>1||grList(f).length)&&nT&&!ed){sel2.push(cvCropSel(f,FE.cult,'fe-cflt','Cultivo: Todos',culs)); var vs0=cvVarSel(f,FE.cult,'fe-vflt'); if(vs0)sel2.push(vs0)}
   var ysel=yrSelHTML('fe-yflt',FE.yr,yrAll,ed); if(ysel)sel2.unshift(ysel);
   if(sel2.length)h+='<div class="trfl">'+sel2.join('')+'</div>';
   if(nT&&!ed)h+=feResumenHTML(f,FE.cult,yrE);
@@ -6082,6 +6178,7 @@ function feRecRefresh(){
   var sm=$('#fe-recsum'); if(sm)sm.textContent=trRecSum(f,ed.r);
   $$('#fe-recs .chip').forEach(function(c){c.classList.toggle('on',ed.r.indexOf(c.dataset.r)>=0)});
   var cl=trCultList(f); $$('#fe-cults .chip').forEach(function(b){var c=cl.filter(function(x){return x.c===b.dataset.c})[0];b.classList.toggle('on',!!(c&&ed.r.length&&c.refs.every(function(r){return ed.r.indexOf(r)>=0})))}); trVarSync(f,ed.r,'fe-vars');
+  grSync(f,ed.r,'fe-grs');
 }
 
 
@@ -6158,11 +6255,11 @@ function hiProds(ps,n){var a=(ps||[]).map(function(q){return q.n}).filter(Boolea
 function cvCrop(s){return String(s||'').split('§')[0]}
 function cvVar(s){var p=String(s||'').split('§');return p.length>1&&p[1]?p[1]:null}
 function cvKeyOf(r){return varKey(trCultOf(r),r.variedad)||'-'}
-function cvMatch(r,s){if(!s)return true; if(!r||trCultOf(r)!==cvCrop(s))return false; var v=cvVar(s); return v===null||cvKeyOf(r)===v}
+function cvMatch(r,s){if(!s)return true; if(/^gr§/.test(s))return r&&r.gr===s.slice(3); if(!r||trCultOf(r)!==cvCrop(s))return false; var v=cvVar(s); return v===null||cvKeyOf(r)===v}
 function cvGroups(f,crop){var rows=fincaRecs(f.id).filter(function(r){return trCultOf(r)===crop}).map(function(r){return {cultivo:r.cultivo,variedad:r.variedad,ha:r.ha}}); var o=varGroups(rows)[0]; return o?o.g:[]}
-function cvLabel(f,s){var c=cvCrop(s), v=cvVar(s); if(!v)return c; var g=cvGroups(f,c).filter(function(x){return (x.key||'-')===v})[0]; return c+' · '+(g?g.name:'Sin variedad')}
-function cvFix(f,cur,culs){var c=cvCrop(cur); if(!c)return ''; if(!culs.some(function(x){return x.c===c}))return ''; var v=cvVar(cur); if(v&&!cvGroups(f,c).some(function(x){return (x.key||'-')===v}))return c; return cur}
-function cvCropSel(f,cur,id,allTxt,culs){return '<select id="'+id+'" class="trsel'+(cur?' on':'')+'" aria-label="Cultivo"><option value=""'+(cur?'':' selected')+'>'+allTxt+'</option>'+culs.map(function(c){return '<option value="'+esc(c.c)+'"'+(cvCrop(cur)===c.c?' selected':'')+'>'+esc(c.c)+'</option>'}).join('')+'</select>'}
+function cvLabel(f,s){var c=cvCrop(s), v=cvVar(s); if(c==='gr'){var gg=grOf(f,s.slice(3));return 'Grupo '+(gg?gg.n:'')} if(!v)return c; var g=cvGroups(f,c).filter(function(x){return (x.key||'-')===v})[0]; return c+' · '+(g?g.name:'Sin variedad')}
+function cvFix(f,cur,culs){var c=cvCrop(cur); if(!c)return ''; if(c==='gr')return (f&&grOf(f,cur.slice(3)))?cur:''; if(!culs.some(function(x){return x.c===c}))return ''; var v=cvVar(cur); if(v&&!cvGroups(f,c).some(function(x){return (x.key||'-')===v}))return c; return cur}
+function cvCropSel(f,cur,id,allTxt,culs){return '<select id="'+id+'" class="trsel'+(cur?' on':'')+'" aria-label="Cultivo"><option value=""'+(cur?'':' selected')+'>'+allTxt+'</option>'+culs.map(function(c){return '<option value="'+esc(c.c)+'"'+(cvCrop(cur)===c.c?' selected':'')+'>'+esc(c.c)+'</option>'}).join('')+grOpts(f,cur)+'</select>'}
 function cvVarSel(f,cur,id){
   var c=cvCrop(cur); if(!c)return ''; var g=cvGroups(f,c); if(!g.some(function(x){return x.key}))return '';
   var v=cvVar(cur);
@@ -6227,7 +6324,7 @@ function hisHTML(f){
   var culs=trCultList(f); HI.cult=cvFix(f,HI.cult,culs);
   var ev=hiEvents(f,HI.cult); if(!ev.length&&!HI.cult)return '<div class="note"><b>Histórico</b><div class="small" style="margin-top:6px">Todavía no hay nada que mostrar. Aquí aparecerán por fecha los tratamientos, abonados, fertirrigaciones, aforos y documentos de la finca.</div></div>';
   var h=hiTableHTML(f,HI.cult), yrE=yrEff(HI.yr,ev), sel=[];
-  if(culs.length>1){sel.push(cvCropSel(f,HI.cult,'hi-cflt','Cultivo: Todos',culs)); var vs1=cvVarSel(f,HI.cult,'hi-vflt'); if(vs1)sel.push(vs1)}
+  if(culs.length>1||grList(f).length){sel.push(cvCropSel(f,HI.cult,'hi-cflt','Cultivo: Todos',culs)); var vs1=cvVarSel(f,HI.cult,'hi-vflt'); if(vs1)sel.push(vs1)}
   var ysel=yrSelHTML('hi-yflt',HI.yr,ev,false); if(ysel)sel.push(ysel);
   var used={}; ev.forEach(function(x){used[x.k]=1});
   if(Object.keys(used).length>1)sel.push('<select id="hi-tflt" class="trsel'+(HI.tipo!=='todos'?' on':'')+'" aria-label="Tipo">'+HI_T.filter(function(x){return x[0]==='todos'||used[x[0]]}).map(function(x){return '<option value="'+x[0]+'"'+(HI.tipo===x[0]?' selected':'')+'>'+(x[0]==='todos'?'Tipo: Todos':x[1])+'</option>'}).join('')+'</select>');
@@ -6254,7 +6351,7 @@ function infHTML(f){
   var culs=trCultList(f); INF.cult=cvFix(f,INF.cult,culs);
   var yl=infYears(f,INF.cult), h='<div class="note"><b>Informe de la finca</b><div class="small" style="margin-top:6px;color:inherit">Elige la campaña, qué partes entran y el formato. Se crea al momento, sin subir nada.</div>';
   h+='<div class="lbl" style="margin-top:12px">Campaña</div><select id="inf-yr" class="trsel'+(INF.yr!=='all'?' on':'')+'" aria-label="Campaña"><option value="all"'+(INF.yr==='all'?' selected':'')+'>Todas las campañas</option>'+yl.map(function(y){return '<option value="'+esc(y)+'"'+(INF.yr===y?' selected':'')+'>Campaña '+esc(y)+'</option>'}).join('')+'</select>';
-  if(culs.length>1){h+='<div class="lbl" style="margin-top:12px">Cultivo</div>'+cvCropSel(f,INF.cult,'inf-cult','Todos los cultivos',culs); var vs2=cvVarSel(f,INF.cult,'inf-vflt'); if(vs2)h+='<div class="lbl" style="margin-top:8px">Variedad</div>'+vs2; if(INF.cult)h+='<div class="small" style="margin-top:4px;color:inherit">Solo cuenta lo hecho en los recintos de '+esc(cvLabel(f,INF.cult))+'. La lista de documentos no se incluye (no se asignan a un cultivo).</div>'}
+  if(culs.length>1||grList(f).length){h+='<div class="lbl" style="margin-top:12px">Cultivo</div>'+cvCropSel(f,INF.cult,'inf-cult','Todos los cultivos',culs); var vs2=cvVarSel(f,INF.cult,'inf-vflt'); if(vs2)h+='<div class="lbl" style="margin-top:8px">Variedad</div>'+vs2; if(INF.cult)h+='<div class="small" style="margin-top:4px;color:inherit">Solo cuenta lo hecho en los recintos de '+esc(cvLabel(f,INF.cult))+'. La lista de documentos no se incluye (no se asignan a un cultivo).</div>'}
   h+='<div class="lbl" style="margin-top:12px">Qué incluir</div>';
   INF_P.forEach(function(p){if(p[0]==='doc'&&INF.cult)return;h+='<label class="infck"><input type="checkbox" data-inf="'+p[0]+'"'+(INF.p[p[0]]?' checked':'')+'> <span>'+p[1]+'</span></label>'});
   h+='<div class="lbl" style="margin-top:12px">Formato</div><div class="chips"><button type="button" class="chip'+(INF.fmt.pdf?' on':'')+'" data-act="inf-fmt" data-v="pdf">PDF</button><button type="button" class="chip'+(INF.fmt.xlsx?' on':'')+'" data-act="inf-fmt" data-v="xlsx">Excel</button></div>';
@@ -6263,7 +6360,7 @@ function infHTML(f){
 }
 /* filas del informe: una función por apartado, usadas por el PDF y por el Excel */
 function infItems(list,yr){return list.filter(function(t){return yr==='all'||yrOf(t)===yr}).sort(function(a,b){return (a.f||'').localeCompare(b.f||'')})}
-function infVT(f,t,cult){return trVarTxt(trVarParts(f,hiRefs(f,t,cult)))}
+function infVT(f,t,cult){var rf=hiRefs(f,t,cult), a=trVarTxt(trVarParts(f,rf)), g=grTxt(f,rf); return a&&g?a+' | '+g:(a||g)}
 function infData(f,yr,o,cult){
   var d={yr:yr}, cos=!!o.cos, fl=function(l){return cult?l.filter(function(t){return hiRefs(f,t,cult).length}):l}, rc=function(t){return cult?Object.assign({},t,{r:hiRefs(f,t,cult)}):t};
   d.tr=infItems(fl(f.trat||[]),yr).map(function(t){var c=trCalc(f,t,cult?hiRefs(f,t,cult):null);return {f:diaFmt(t.f)+(t.f2&&t.f2!==t.f?' → '+diaFmt(t.f2):''),e:t.e==='p'?'Pendiente':'Hecho',n:trOrd(f,t),z:t.z||'',tp:t.tp==='e'?'Ecológico':'Convencional',
@@ -10577,7 +10674,7 @@ document.addEventListener('click',function(ev){
       var fa=finca(activeFinca); activeFinca=null; renderChip();
       if(fa){var s2=stats().per[fa.id]||{ha:0,n:0}; toast('Finca «'+fa.nombre+'» guardada · '+s2.n+(s2.n===1?' recinto':' recintos')+' · '+ha2(s2.ha)+' ha')}
       break}
-    case 'focus-clear':viewId=null;viewG=null;viewCrop=null;detailId=null;bulk=null;bulkR=null;bulkP=null;disarm();syncFocus();if(tab==='fincas')renderFincas();break;
+    case 'focus-clear':viewId=null;viewG=null;viewCrop=null;viewRG=null;detailId=null;bulk=null;bulkR=null;bulkP=null;disarm();syncFocus();if(tab==='fincas')renderFincas();break;
     case 'prod':{
       var rp=sel&&S.recintos[sel.ref]; if(!rp)break;
       rp.prod=(rp.prod===b.dataset.v)?'':b.dataset.v; save(); renderAll(); break}
@@ -10886,9 +10983,9 @@ document.addEventListener('click',function(ev){
     case 'pf-bring':{var fb=finca(id);if(fb){pfAdd(fb,PF);save();afterDataChange(false);toast('Finca «'+fb.nombre+'» traída a esta pestaña')}break}
     case 'nfp-create':{var nf2=createFinca($('#nfp-name').value);if(nf2){nfpOpen=false;drawSaved();openFinca(nf2.id)}break}
     case 'finca-open':openFinca(id);break;
-    case 'finca-view':if(finca(id)&&isOc(finca(id))){openFinca(id);break}finOn();viewId=id;viewG=null;viewCrop=null;detailId=null;toMap();syncFocus();setTimeout(function(){map.invalidateSize();fitFinca(id)},90);break;
+    case 'finca-view':if(finca(id)&&isOc(finca(id))){openFinca(id);break}finOn();viewId=id;viewG=null;viewCrop=null;viewRG=null;detailId=null;toMap();syncFocus();setTimeout(function(){map.invalidateSize();fitFinca(id)},90);break;
     case 'move-open':fdOpen=!fdOpen;fdQ='';newFincaOpen=false;renderCard();break;
-    case 'finca-back':colOpen=false;grpPick=false;bulkAll=false;viewId=null;viewG=null;viewCrop=null;detailId=null;bulk=null;bulkR=null;bulkP=null;disarm();renderFincas();syncFocus();break;
+    case 'finca-back':colOpen=false;grpPick=false;bulkAll=false;viewId=null;viewG=null;viewCrop=null;viewRG=null;detailId=null;bulk=null;bulkR=null;bulkP=null;disarm();renderFincas();syncFocus();break;
     case 'finca-hide':if(finca(id)&&isOc(finca(id)))hideFincas([id],false,'Finca visible');else hideFincas([id],true,'Finca oculta');break;
     case 'finca-show':hideFincas([id],false,'Finca visible');break;
     case 'grp-hide':{var gl=grupoFincas(id),vis=gl.filter(function(x){return !isOc(x)});if(!gl.length)break;if(vis.length)hideFincas(vis.map(function(x){return x.id}),true,'Fincas ocultas');else hideFincas(gl.map(function(x){return x.id}),false,'Fincas visibles');break}
@@ -10902,8 +10999,21 @@ document.addEventListener('click',function(ev){
     case 'bulk-all':bulkAll=!bulkAll;if(!bulkAll){bulk=null;bulkR=null;bulkP=null;bulkOtro=false}renderFincas();break;
     case 'flt-open':fltOpen=!fltOpen;renderFincas();break;
     case 'finca-color':{var f1=finca(detailId);if(f1){if(PF==='main')f1.color=b.dataset.c;else{f1.pcol=Object.assign({},f1.pcol);f1.pcol[PF]=b.dataset.c}colOpen=false;save();drawSaved();renderFincas()}break}
+    case 'tr-gr':if(TR.ed){var fgt=finca(TR.ed.fid);if(fgt){TR.ed.r=trToggleCult(grRefs(fgt,id),TR.ed.r);trRecRefresh()}}break;
+    case 'ab-gr':if(AB.ed){var fga=finca(AB.ed.fid);if(fga){AB.ed.r=trToggleCult(grRefs(fga,id),AB.ed.r);abRecRefresh()}}break;
+    case 'fe-gr':if(FE.ed){var fgf=finca(FE.ed.fid);if(fgf){FE.ed.r=trToggleCult(grRefs(fgf,id),FE.ed.r);feRecRefresh()}}break;
+    case 'gr-new':grStart('new');break;
+    case 'gr-edit':grStart(id);break;
+    case 'gr-cancel':GRS.ed=null;renderFincas();break;
+    case 'gr-save':grSave();break;
+    case 'gr-del':grDel(id);break;
+    case 'gr-byvar':grByVar();break;
+    case 'gr-rec':{var i9=GRS.sel.indexOf(b.dataset.r);if(i9<0)GRS.sel.push(b.dataset.r);else GRS.sel.splice(i9,1);b.classList.toggle('on',i9<0);grSelSum();break}
+    case 'gr-all':case 'gr-none':{var f9=finca(detailId);if(f9){GRS.sel=act==='gr-all'?fincaRecs(f9.id).map(function(r){return r.ref}):[];$$('#gr-recs .chip').forEach(function(c){c.classList.toggle('on',GRS.sel.indexOf(c.dataset.r)>=0)});grSelSum()}break}
+    case 'gr-var':{var f8=finca(detailId),v8=f8&&trVarList(f8).filter(function(x){return x.k===b.dataset.k})[0];if(v8){GRS.sel=trToggleCult(v8.refs,GRS.sel);$$('#gr-recs .chip').forEach(function(c){c.classList.toggle('on',GRS.sel.indexOf(c.dataset.r)>=0)});grSelSum()}break}
+    case 'gr-map':{var fgm=finca(detailId); if(!fgm||!grRecs(fgm,id).length)break; var rsg=grRecs(fgm,id),bbg=null; rsg.forEach(function(r){var g=geomBounds(r.geom);bbg=bbg?bbg.extend(g):g}); expClose(); finOn(); viewRG=id; pendingFit=null; toMap(); syncFocus(); setTimeout(function(){map.invalidateSize();map.fitBounds(bbg,{padding:[40,40],maxZoom:18})},80); break}
     case 'finca-map':{
-      expClose(); finOn();
+      viewRG=null; expClose(); finOn();
       var rs=fincaRecs(detailId); if(!rs.length)break;
       var bb=null;rs.forEach(function(r){var g=geomBounds(r.geom);bb=bb?bb.extend(g):g});
       pendingFit=null; toMap(); setTimeout(function(){map.invalidateSize();map.fitBounds(bb,{padding:[40,40],maxZoom:18})},80); break}
@@ -11000,9 +11110,9 @@ document.addEventListener('click',function(ev){
       if(S.x.grupos.some(function(g){return CSK(g.nombre)===CSK(gnm)})){toast('Ya existe ese propietario');break}
       newGrupo(gnm);grpOpen=false;save();renderFincas();toast('Propietario creado');break}
     case 'grp-toggle':gOpen[id]=!gOpen[id];renderFincas();break;
-    case 'grp-open':grpId=id;detailId=null;viewId=null;viewG=id;viewCrop=null;bulk=null;disarm();if(tab!=='fincas')setTab('fincas');else renderFincas();syncFocus();if(isDesk())setTimeout(function(){fitGrupo(id)},90);break;
-    case 'grp-back':grpId=null;viewG=null;viewCrop=null;disarm();renderFincas();syncFocus();break;
-    case 'grp-map':{if(!grupoFincas(id).some(function(f){return fincaHa(f.id)>0}))break;finOn();viewId=null;detailId=null;viewG=id;viewCrop=null;toMap();syncFocus();setTimeout(function(){map.invalidateSize();fitGrupo(id)},90);break}
+    case 'grp-open':grpId=id;detailId=null;viewId=null;viewG=id;viewCrop=null;viewRG=null;bulk=null;disarm();if(tab!=='fincas')setTab('fincas');else renderFincas();syncFocus();if(isDesk())setTimeout(function(){fitGrupo(id)},90);break;
+    case 'grp-back':grpId=null;viewG=null;viewCrop=null;viewRG=null;disarm();renderFincas();syncFocus();break;
+    case 'grp-map':{if(!grupoFincas(id).some(function(f){return fincaHa(f.id)>0}))break;finOn();viewId=null;detailId=null;viewG=id;viewCrop=null;viewRG=null;toMap();syncFocus();setTimeout(function(){map.invalidateSize();fitGrupo(id)},90);break}
     case 'grp-pdf':reportPdf(id);break;
     case 'grp-color':{var gg=grupo(id);if(gg){gg.color=b.dataset.c;save();drawSaved();renderFincas()}break}
     case 'crop-view':{var cv=b.dataset.c;viewCrop=(viewCrop&&CSK(viewCrop)===CSK(cv))?null:cv;renderAll();break}
@@ -11241,7 +11351,7 @@ setTimeout(function(){map.invalidateSize();refreshSigpac();if(OV.ndvi){ndviPill(
 
 window.__mf={loadPdfLib:loadPdfLib,pvState:function(){return PV},boxPad:boxPad,pdfFont:pdfFont,pdfFontC:pdfFontC,expMapHTML:expMapHTML,buildFichaPdf:buildFichaPdf,afCompute:afCompute,afCompare:afCompare,hatchOf:hatchOf,swBg:swBg,OV:OV,polyC:polyC,mmHTML:mmHTML,expClose:expClose,temaGet:temaGet,temaSet:temaSet,pvOpen:pvOpen,pvClose:pvClose,cvMatch:cvMatch,cvLabel:cvLabel,trVarList:trVarList,varReal:varReal,GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
-Object.assign(window.__mf,{trVarParts:trVarParts,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
+Object.assign(window.__mf,{trVarParts:trVarParts,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
 })();
 </script>
 <script type="text/plain" id="pdflib">/** @license
