@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-rHJWP2u7t9r+WERrFT9Po1j4qMfjNTEwMoWGx0HocJA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-Mr0J8QxOm3/ncfC3PAC6o2cJYK5cDZHl468lZ8o6drA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -2232,7 +2232,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-18T07:29:27Z',n:'Entrega 60 · 18 oct · 09:29'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-18T07:43:44Z',n:'Entrega 61 · 18 oct · 09:43'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -3856,14 +3856,15 @@ function renderDatos(){
   if(!storageOK)h+='<div class="note" style="background:var(--warn-bg);color:var(--warn-ink)">Este navegador no deja guardar datos. Guarda una copia ahora para no perder el trabajo.</div>';
   else if(staleBackup())h+='<div class="note" style="background:var(--warn-bg);color:var(--warn-ink)">Haz una copia de seguridad.'+(SY.rt?'':' Los datos viven solo en este aparato.')+'</div>';
   T.apar+=temaHTML();
-  T.copias+='<h3>Copia de seguridad</h3><div class="acts" style="margin-top:0"><button class="btn primary" data-act="export">Guardar copia</button>';
+  if(!GTOK)T.copias+=fbHTML();
+  T.copias+='<h3>Copia rápida (solo datos)</h3><div class="acts" style="margin-top:0"><button class="btn" data-act="export">Guardar copia</button>';
   if(canShareFiles())T.copias+='<button class="btn" data-act="export-share">Enviar copia…</button>';
-  T.copias+='</div><p class="small">Se guarda un archivo con todas tus fincas y recintos.</p>';
+  T.copias+='</div><p class="small">Un archivo ligero con tus fincas y recintos, sin los documentos ni las fotos.</p>';
   T.copias+='<h3>'+(SY.rt?'Recuperar desde una copia':'Pasar los datos a otro aparato')+'</h3><p class="small" style="margin-top:0">'+(SY.rt?'Si alguna vez lo necesitas, carga aquí una copia guardada. Sustituye los datos actuales (y se sincronizan).':'Guarda la copia en el móvil, llévala al ordenador y púlsala en «Cargar copia». Los datos del ordenador se sustituyen por los de la copia, así que hazlo siempre del móvil al ordenador.')+'</p>';
-  T.copias+='<div class="acts"><button class="btn" data-act="import-pick">Cargar copia</button></div><input type="file" id="impfile" accept=".json,application/json" hidden>';
+  T.copias+='<div class="acts"><button class="btn" data-act="import-pick">Cargar copia</button></div><input type="file" id="impfile" accept=".json,.zip,application/json,application/zip" hidden>';
   if(pendingImport){
     var p=pendingImport;
-    T.copias+='<div class="note">La copia tiene <b>'+p.nf+'</b> '+(p.nf===1?'finca':'fincas')+' y <b>'+p.nr+'</b> '+(p.nr===1?'recinto':'recintos')+' ('+ha2(p.ha)+' ha). Al cargarla se sustituyen los datos de este aparato.<div class="acts"><button class="btn primary sm" data-act="import-apply">Cargar y sustituir</button><button class="btn sm" data-act="import-cancel">Cancelar</button></div></div>';
+    T.copias+='<div class="note">La copia tiene <b>'+p.nf+'</b> '+(p.nf===1?'finca':'fincas')+' y <b>'+p.nr+'</b> '+(p.nr===1?'recinto':'recintos')+' ('+ha2(p.ha)+' ha)'+(p.full?(p.full.docs.length||p.full.fotos.length?', <b>'+p.full.docs.length+'</b> '+(p.full.docs.length===1?'documento':'documentos')+' y <b>'+p.full.fotos.length+'</b> '+(p.full.fotos.length===1?'foto':'fotos'):''):'')+'. Al cargarla se sustituyen los datos de este aparato'+(p.full&&(p.full.docs.length||p.full.fotos.length)?' y los documentos y fotos se vuelven a subir a la nube (los que ya estén, no se duplican)':'')+'.<div class="acts"><button class="btn primary sm" data-act="import-apply">Cargar y sustituir</button><button class="btn sm" data-act="import-cancel">Cancelar</button></div></div>';
   }
   if(lsGet(KEYP))T.copias+='<div class="acts"><button class="btn sm" data-act="import-undo">Recuperar los datos anteriores a la última carga</button></div>';
   T.copias+=histHTML();
@@ -4447,6 +4448,7 @@ function doExportShare(){
   navigator.share({files:[f],title:'Copia de mis fincas'}).then(markExported,function(){});
 }
 function readImport(file){
+  if(/\.zip$/i.test(file.name||'')||/zip/.test(file.type||'')){fbRead(file);return}
   var rd=new FileReader();
   rd.onload=function(){
     try{
@@ -4460,8 +4462,14 @@ function readImport(file){
 function applyImport(){
   if(!pendingImport)return;
   lsSet(KEYP,JSON.stringify(S));
-  var d=pendingImport.data; S=Object.assign(blank(),{fincas:d.fincas,recintos:d.recintos,lastCrop:d.lastCrop||{},x:normX(d.x),base:S.base,lastExport:S.lastExport});
-  pendingImport=null; sel=null; activeFinca=null; detailId=null; save(); afterDataChange(true); toast('Copia cargada','Deshacer',undoImport);
+  var d=pendingImport.data, FF=pendingImport.full; S=Object.assign(blank(),{fincas:d.fincas,recintos:d.recintos,lastCrop:d.lastCrop||{},x:normX(d.x),base:S.base,lastExport:S.lastExport});
+  pendingImport=null; sel=null; activeFinca=null; detailId=null; save(); afterDataChange(true);
+  if(FF&&(FF.docs.length||FF.fotos.length)){
+    fbRestoreFiles(FF).then(function(r){
+      setTimeout(phFlush,50); if(tab==='datos')renderDatos();
+      toast('Copia cargada: '+r.nd+(r.nd===1?' documento':' documentos')+' y '+r.nf+(r.nf===1?' foto':' fotos')+' recuperados'+(r.bad?' ('+r.bad+' no se han podido leer)':'')+(SY.rt?'. Se están subiendo a la nube.':'. Se subirán a la nube cuando entres con tu usuario.'));
+    });
+  } else toast('Copia cargada','Deshacer',undoImport);
 }
 function undoImport(){
   var t=lsGet(KEYP); if(!t)return;
@@ -10175,6 +10183,108 @@ function afGenerate(){
   }).catch(function(){af.busy=false;afOpenReport();toast('No he podido crear el informe.')});
 }
 
+/* ───────── Entrega 61: copia completa (datos + documentos + fotos) y restauración ───────── */
+/* El ZIP lleva: datos.json (el mismo formato de la copia de siempre), manifiesto.json (qué archivo es cada documento y cada foto), LEEME.txt,
+   documentos/<finca>/… y fotos/… Al restaurar se leen los datos y los archivos se suben otra vez a Supabase por la cola de siempre (sin duplicar). */
+var FB={busy:false,msg:''};
+var u8b64=function(u8){var s='',i,CH=0x8000;for(i=0;i<u8.length;i+=CH)s+=String.fromCharCode.apply(null,u8.subarray(i,i+CH));return btoa(s)};
+function fbDate(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function fbSafe(s,max){return String(s||'sin nombre').replace(/[\\/:*?"<>|\u0000-\u001f]+/g,' ').replace(/\s+/g,' ').trim().slice(0,max||60)||'sin nombre'}
+function fbItems(){
+  var docs=[], fotos=[];
+  S.fincas.forEach(function(f){
+    (f.docs||[]).forEach(function(d){docs.push({fid:f.id,fn:f.nombre,d:d})});
+    (f.dia||[]).forEach(function(n){(n.ph||[]).forEach(function(id,i){fotos.push({id:id,k:'nota',tag:n.id,fid:f.id,fn:f.nombre,f:n.f||'',i:i})})});
+  });
+  ((S.x&&S.x.tags)||[]).forEach(function(t){(t.ph||[]).forEach(function(id,i){fotos.push({id:id,k:'etiqueta',tag:t.id,tn:t.name,i:i})})});
+  return {docs:docs,fotos:fotos};
+}
+function fbProg(m){FB.msg=m; var el=$('#fbprog'); if(el)el.textContent=m; else toast(m)}
+/* monta la copia completa; devuelve una promesa con {blob,name,nd,nf,miss:[…]} */
+function fbBuild(){
+  var it=fbItems(), files=[], miss=[], man={app:'mapa-fincas',tipo:'copia-completa',v:2,fecha:new Date().toISOString(),documentos:[],fotos:[]}, tot=it.docs.length+it.fotos.length, done=0, used={};
+  var uniq=function(p){var q=p,k=1;while(used[q]){k++;q=p.replace(/(\.[A-Za-z0-9]{1,5})?$/,function(e){return ' ('+k+')'+(e||'')})}used[q]=1;return q};
+  var chain=Promise.resolve();
+  it.docs.forEach(function(x){
+    chain=chain.then(function(){return docGet(x.d)}).then(function(bl){return bl.arrayBuffer()}).then(function(buf){
+      var ext=x.d.e||'pdf', path=uniq('documentos/'+fbSafe(x.fn,50)+'/'+fbSafe(x.d.n,70)+'.'+ext);
+      files.push({n:path,d:new Uint8Array(buf)}); man.documentos.push({id:x.d.id,fid:x.fid,finca:x.fn,nombre:x.d.n||'',ext:ext,mt:x.d.mt||'',archivo:path});
+    },function(){miss.push('documento «'+(x.d.n||x.d.id)+'» ('+x.fn+')')}).then(function(){done++;fbProg('Preparando la copia… '+done+' de '+tot)});
+  });
+  it.fotos.forEach(function(x){
+    chain=chain.then(function(){return phFull(x.id)}).then(function(d){
+      var path=uniq(x.k==='etiqueta'?'fotos/etiquetas/'+fbSafe(x.tn,50)+'/'+fbSafe(x.tn,50)+'-'+(x.i+1)+'.jpg':'fotos/notas/'+fbSafe(x.fn,50)+'/'+(x.f||'sin-fecha')+'-'+(x.i+1)+'-'+String(x.id).slice(0,6)+'.jpg');
+      files.push({n:path,d:d2u8(d)}); man.fotos.push({id:x.id,k:x.k,tag:x.tag,fid:x.fid||'',archivo:path});
+    },function(){miss.push('foto de '+(x.k==='etiqueta'?'la etiqueta «'+(x.tn||'')+'»':'una nota de '+(x.fn||''))+' (no está en este aparato ni en la nube)')}).then(function(){done++;fbProg('Preparando la copia… '+done+' de '+tot)});
+  });
+  return chain.then(function(){
+    man.faltan=miss;
+    var leeme='COPIA COMPLETA DE MAPA DE FINCAS\r\nFecha: '+new Date().toLocaleString('es-ES')+'\r\n\r\n'+
+      'datos.json ........ tus fincas, recintos, tratamientos, notas, etiquetas y ajustes (se carga en Datos > Copias > Cargar copia)\r\n'+
+      'manifiesto.json ... qué archivo es cada documento y cada foto\r\n'+
+      'documentos/ ....... los PDF y fotos de cada finca\r\n'+
+      'fotos/ ............ las fotos de las etiquetas y de las notas\r\n\r\n'+
+      'Para recuperarlo todo: en la herramienta, Datos > Copias > Cargar copia, y elige este mismo archivo ZIP (sin descomprimir).\r\n'+
+      (miss.length?'\r\nNO SE HAN PODIDO INCLUIR ('+miss.length+'):\r\n- '+miss.join('\r\n- ')+'\r\n':'');
+    files.unshift({n:'LEEME.txt',d:u8s(leeme)});
+    files.unshift({n:'manifiesto.json',d:u8s(JSON.stringify(man))});
+    files.unshift({n:'datos.json',d:u8s(buildBackup())});
+    var nm='Copia-completa-'+fbDate()+'.zip';
+    return {blob:zipStore(files),name:nm,nd:man.documentos.length,nf:man.fotos.length,miss:miss};
+  });
+}
+function fbStart(){
+  if(FB.busy||GTOK)return; FB.busy=true; FB.msg='Preparando la copia…'; if(tab==='datos')renderDatos(); bkHide(); toast('Preparando la copia completa…');
+  fbBuild().then(function(r){
+    FB.busy=false; FB.msg=''; markExported();
+    var sub=S.fincas.length+' fincas'+(r.nd?', '+r.nd+(r.nd===1?' documento':' documentos'):'')+(r.nf?' y '+r.nf+(r.nf===1?' foto':' fotos'):'')+'.'+(r.miss.length?' Ojo: '+r.miss.length+' no se han podido incluir (sin conexión o sin subir); están listados en el LEEME dentro del ZIP.':'')+' Guárdala en Drive.';
+    showDl(r.blob,r.name,'Copia completa lista',sub); if(tab==='datos')renderDatos();
+  },function(){FB.busy=false;FB.msg='';if(tab==='datos')renderDatos();toast('No he podido preparar la copia completa. Prueba otra vez o usa «Copia rápida (solo datos)».')});
+}
+function fbHTML(){
+  var it=fbItems(), nd=it.docs.length, nf=it.fotos.length;
+  var h='<h3>Copia completa</h3><div class="acts" style="margin-top:0"><button class="btn primary" data-act="fb-now"'+(FB.busy?' disabled':'')+'>'+(FB.busy?'Preparando…':'Descargar copia completa')+'</button></div>';
+  h+='<p class="small" id="fbprog">'+(FB.busy?esc(FB.msg):'Un solo archivo ZIP con tus fincas y datos'+(nd||nf?', '+nd+(nd===1?' documento':' documentos')+' y '+nf+(nf===1?' foto':' fotos'):'')+'. Guárdalo en Drive. Se puede volver a cargar entero en «Cargar copia».')+'</p>';
+  return h;
+}
+/* ---- restaurar ---- */
+function fbRead(file){
+  toast('Leyendo la copia completa…');
+  return new Promise(function(ok,ko){var rd=new FileReader();rd.onload=function(){ok(rd.result)};rd.onerror=function(){ko(new Error('leer'))};rd.readAsArrayBuffer(file)}).then(function(buf){
+    var b=new Uint8Array(buf), L=xZipList(b), keys=Object.keys(L);
+    var key=keys.filter(function(n){return n==='datos.json'||/\/datos\.json$/.test(n)})[0]; if(!key)throw new Error('nodatos');
+    var base=key.slice(0,key.length-'datos.json'.length), mk=base+'manifiesto.json';
+    var rj=function(k){return xZipGet(b,L[k]).then(function(u){return JSON.parse(new TextDecoder('utf-8').decode(u))})};
+    return rj(key).then(function(j){
+      var d=j&&j.datos; if(!j||j.app!=='mapa-fincas'||!d||!Array.isArray(d.fincas)||typeof d.recintos!=='object')throw new Error('x');
+      return (L[mk]?rj(mk):Promise.resolve({documentos:[],fotos:[]})).then(function(man){
+        var rs=Object.keys(d.recintos).map(function(k){return d.recintos[k]});
+        var docs=(man.documentos||[]).filter(function(x){return x&&x.id&&L[base+x.archivo]}), fotos=(man.fotos||[]).filter(function(x){return x&&x.id&&L[base+x.archivo]});
+        pendingImport={data:d,nf:d.fincas.length,nr:rs.length,ha:rs.reduce(function(s,r){return s+(r.ha||0)},0),full:{b:b,L:L,base:base,docs:docs,fotos:fotos}};
+        renderDatos(); var n=$('[data-act=import-apply]'); if(n&&n.scrollIntoView)n.scrollIntoView({block:'center'});
+        return pendingImport;
+      });
+    });
+  }).then(null,function(){pendingImport=null;toast('Ese archivo no es una copia de Mapa de Fincas.');renderDatos()});
+}
+/* mete los documentos y las fotos en este aparato y en la cola de subida a la nube; devuelve una promesa con {nd,nf,bad} */
+function fbRestoreFiles(F){
+  var tot=F.docs.length+F.fotos.length, done=0, nd=0, nf=0, bad=0, chain=Promise.resolve();
+  var step=function(){done++; if(done%3===0||done===tot)toast('Recuperando archivos… '+done+' de '+tot)};
+  F.docs.forEach(function(x){
+    chain=chain.then(function(){return xZipGet(F.b,F.L[F.base+x.archivo])}).then(function(u){
+      var buf=u.buffer.slice(u.byteOffset,u.byteOffset+u.byteLength), mt=x.mt||(x.ext==='pdf'?'application/pdf':x.ext==='png'?'image/png':'image/jpeg');
+      return idbPut('doc',x.id,{buf:buf,mt:mt}).then(function(){return idbPut('q','dup:'+x.id,{op:'dup',id:x.id})}).then(function(){DOC.pend[x.id]=1;nd++});
+    }).then(null,function(){bad++}).then(step);
+  });
+  F.fotos.forEach(function(x){
+    chain=chain.then(function(){return xZipGet(F.b,F.L[F.base+x.archivo])}).then(function(u){
+      var url='data:image/jpeg;base64,'+u8b64(u);
+      return idbPut('full',x.id,url).then(function(){return idbDel('th',x.id)}).then(function(){return idbPut('q','up:'+x.id,{op:'up',id:x.id,tag:x.tag||null})}).then(function(){PH.pend[x.id]=1;nf++});
+    }).then(null,function(){bad++}).then(step);
+  });
+  return chain.then(function(){return {nd:nd,nf:nf,bad:bad}});
+}
 /* ---- aviso grande de copia de seguridad ---- */
 var KEYB='mapa-fincas:copia';
 var BK=(function(){try{var j=JSON.parse(lsGet(KEYB)||'null');return {chg:+(j&&j.chg)||0,snooze:+(j&&j.snooze)||0}}catch(e){return {chg:0,snooze:0}}})();
@@ -10190,9 +10300,9 @@ function bkShow(){
   var last=S.lastExport?new Date(S.lastExport).toLocaleDateString('es-ES',{day:'numeric',month:'long'}):null, phone=!isDesk();
   var h='<div class="dlbox bk"><div class="bkic">⚠️</div><h2>Haz una copia de seguridad</h2>'+
     '<p class="bkbig">'+(last?(BK.chg>0?'Has hecho '+BK.chg+(BK.chg===1?' cambio':' cambios')+' desde la última copia ('+esc(last)+').':'Hace más de 3 días de la última copia ('+esc(last)+').'):'Todavía no has guardado ninguna copia de seguridad.')+'</p>'+
-    '<p>Si se borran los datos del navegador o pierdes este aparato, podrías perder todo tu trabajo.</p>'+
-    '<p class="small">'+(phone?'Guárdala en la app Archivos (por ejemplo en iCloud Drive).':'Guárdala en la carpeta «Herramienta gestión fincas» del Escritorio, dentro de «Copia seguridad».')+'</p>'+
-    '<div class="dlacts"><button class="btn primary xl green" data-act="bk-now">Guardar copia ahora</button><button class="btn" data-act="bk-later">Recordármelo más tarde</button></div></div>';
+    '<p>Si se borran los datos del navegador o pierdes este aparato, podrías perder todo tu trabajo. La copia completa incluye también tus documentos y fotos.</p>'+
+    '<p class="small">'+(phone?'Guárdala en Google Drive (desde «Guardar en Archivos»).':'Guárdala en tu Google Drive, en «Herramienta gestión fincas», dentro de «Copia seguridad».')+'</p>'+
+    '<div class="dlacts"><button class="btn primary xl green" data-act="fb-now">Guardar copia completa</button><button class="btn" data-act="bk-now">Solo datos (rápida)</button><button class="btn" data-act="bk-later">Recordármelo más tarde</button></div></div>';
   el.innerHTML=h; el.hidden=false;
 }
 function bkHide(){var el=$('#bkmodal');if(el){el.hidden=true;el.innerHTML=''}}
@@ -11230,6 +11340,7 @@ document.addEventListener('click',function(ev){
     case 'sync-out':signOut();toast('Has salido. Los datos siguen en este aparato.');break;
     case 'sync-out-all':signOut('global').then(function(ok){toast(ok?'Sesión cerrada en todos los aparatos.':'Has salido aquí, pero no he podido avisar al servidor (¿sin conexión?). Repite desde otro aparato con internet.')});break;
     case 'export':doExport();break;
+    case 'fb-now':fbStart();break;
     case 'export-share':doExportShare();break;
     case 'import-pick':{var inp=$('#impfile');if(inp)inp.click();break}
     case 'import-apply':applyImport();break;
@@ -11541,7 +11652,7 @@ setTimeout(function(){map.invalidateSize();refreshSigpac();if(OV.ndvi){ndviPill(
 
 window.__mf={loadPdfLib:loadPdfLib,pvState:function(){return PV},boxPad:boxPad,pdfFont:pdfFont,pdfFontC:pdfFontC,expMapHTML:expMapHTML,buildFichaPdf:buildFichaPdf,afCompute:afCompute,afCompare:afCompare,hatchOf:hatchOf,swBg:swBg,OV:OV,polyC:polyC,mmHTML:mmHTML,expClose:expClose,temaGet:temaGet,temaSet:temaSet,pvOpen:pvOpen,pvClose:pvClose,cvMatch:cvMatch,cvLabel:cvLabel,trVarList:trVarList,varReal:varReal,GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
-Object.assign(window.__mf,{phProcess:phProcess,phMax:function(n){PH_MAXB=n},trVarParts:trVarParts,numEs:numEs,nf:nf,trList:trList,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
+Object.assign(window.__mf,{fbBuild:fbBuild,fbRead:fbRead,fbItems:fbItems,fbRestoreFiles:fbRestoreFiles,idbPut:idbPut,idbGet:idbGet,idbKeys:idbKeys,applyImport:applyImport,pending:function(){return pendingImport},docPend:function(){return DOC.pend},phPend:function(){return PH.pend},phProcess:phProcess,phMax:function(n){PH_MAXB=n},trVarParts:trVarParts,numEs:numEs,nf:nf,trList:trList,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
 })();
 </script>
 <script type="text/plain" id="pdflib">/** @license
