@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-UpNDbRpvtKtQVfird+nATbrpoqJMgbbzTwaio0oT9/M='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-+scwqBlaNqV9HVI7naNclCKF89sEd3o3RWB37/oOsAg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -2288,7 +2288,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-19T14:49:22Z',n:'Entrega 70 · 19 oct · 16:49'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-19T15:27:10Z',n:'Entrega 71 · 19 oct · 17:27'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -6637,7 +6637,8 @@ function plTotTxt(C0,o,sep){var t=plTotParts(C0,o);return t?t.map(function(x){re
 /* U.F./ha de la campaña por grupo (solo si hay dosis distintas entre grupos) */
 function plUfTxt(C0){var u=function(t){return 'N '+trTxt(t.n,1)+' · P₂O₅ '+trTxt(t.p,1)+' · K₂O '+trTxt(t.k,1)};return C0.split?C0.GB.map(function(b){return b.g.n+': '+u(b.tot)}):[u(C0.tot)]}
 /* Entrega 70: total por ha = media de la finca, señalada con * cuando el abono no va igual a todos los grupos */
-function plTotNote(C0,unit){var L=[];C0.rows.forEach(function(o){if(o.split)L.push(o.r.n+': '+plTotParts(C0,o).map(function(x){return x[0]+' '+trTxt(x[1],2,1)}).join(' · ')+' '+(o.r.u==='L'?'L':'kg')+'/ha')});return L.length?'* Media de la finca; estos abonos no van igual a todos los grupos: '+L.join(' — '):''}
+function plTitle(p){return ((p.tr||[]).length?'Plan de campaña ':'Plan de fertirrigación ')+p.y}
+function plTotNote(C0,unit){if(C0.rows.some(function(o){return o.split}))return '* Media de la finca.';var L=[];C0.rows.forEach(function(o){if(o.split)L.push(o.r.n+': '+plTotParts(C0,o).map(function(x){return x[0]+' '+trTxt(x[1],2,1)}).join(' · ')+' '+(o.r.u==='L'?'L':'kg')+'/ha')});return L.length?'* Media de la finca; estos abonos no van igual a todos los grupos: '+L.join(' — '):''}
 /* fechas de un periodo: «enero 2026» si es el mes entero, «1–15 ene 2026» si es dentro del mismo mes */
 function plRangeTxt(a,b){if(!a)return '';if(!b||b===a)return diaFmt(a);var A=a.split('-'),B=b.split('-');if(A[0]===B[0]&&A[1]===B[1]){var last=new Date(+A[0],+A[1],0).getDate();if(+A[2]===1&&+B[2]===last)return PL_MES[+A[1]-1]+' '+A[0];return (+A[2])+'–'+(+B[2])+' '+diaMes[+A[1]-1]+' '+A[0]}return diaFmt(a)+' → '+diaFmt(b)}
 /* cantidades: 2 decimales si son pequeñas, sin el error de redondeo de los decimales (15,75 y no 15,7) */
@@ -6767,7 +6768,7 @@ function plTrEdHTML(f,p){
   var e=PL.tr, h='<div class="note diaf"><b>'+(e.id?'Editar tratamiento del plan':'Tratamiento nuevo del plan')+'</b><datalist id="pl-tdl">'+trProds().map(function(x){return '<option value="'+esc(x.n)+'">'}).join('')+'</datalist>';
   var src=plTrSources(f), cap=plCap0(f), haS=plHaOf(plRecs(f,p)), gl=p.g?[]:grList(f).filter(function(g){return grRecs(f,g.id).length});
   if(!e.id&&src.length)h+='<div class="lbl" style="margin-top:8px">Copiar de otro tratamiento (opcional)</div><select id="pl-tcp" class="trsel" style="width:100%"><option value="">— Elegir —</option>'+src.map(function(s,i){return '<option value="'+i+'">'+esc(s.l)+'</option>'}).join('')+'</select>';
-  h+='<div class="lbl" style="margin-top:8px">Objetivo o estado fenológico</div><input id="pl-tfe" class="in" value="'+esc(e.fe)+'" placeholder="Ej. yema hinchada, crecimiento del fruto, postcosecha…" autocomplete="off">';
+  h+='<div class="lbl" style="margin-top:8px">Estado fenológico</div><input id="pl-tfe" class="in" value="'+esc(e.fe)+'" placeholder="Ej. yema hinchada, crecimiento del fruto, postcosecha…" autocomplete="off">';
   h+='<div class="lbl" style="margin-top:8px">Tipo</div><div class="chips" id="pl-ttp"><button type="button" class="chip'+(e.tp==='c'?' on':'')+'" data-act="pl-ttp" data-v="c">Convencional</button><button type="button" class="chip'+(e.tp==='e'?' on':'')+'" data-act="pl-ttp" data-v="e">Ecológico</button></div>';
   /* fecha: fija (por defecto), intervalo o una fecha por grupo */
   h+='<div class="lbl" style="margin-top:12px">Fecha</div><div class="chips" id="pl-tdm"><button type="button" class="chip'+(e.dm==='f'?' on':'')+'" data-act="pl-tdm" data-v="f">Fecha fija</button><button type="button" class="chip'+(e.dm==='i'?' on':'')+'" data-act="pl-tdm" data-v="i">Intervalo</button>'+(gl.length?'<button type="button" class="chip'+(e.dm==='g'?' on':'')+'" data-act="pl-tdm" data-v="g">Una fecha por grupo</button>':'')+'</div>';
@@ -6813,7 +6814,7 @@ function plAtTxt(n,cap){return trTxt(n,1,1)+(Math.abs(n-1)<1e-9?' atomizador':' 
 /* tabla resumida (en pantalla); toda la información, al tocar «Ver» */
 function plTrTable(f,p,C0){
   if(!C0.trs.length)return '<div class="small">Sin tratamientos en el plan. Añade uno con su fecha y saldrá solo en su semana.</div>';
-  var h='<div class="plwrap"><table class="ktb pltt"><thead><tr><th>Código</th><th>Objetivo</th><th>Fecha</th><th class="c">Caldo L/ha</th><th>Productos · dosis por 1.000 L</th><th class="c">Caldo para la finca</th><th>Cantidades para la finca</th>'+(PL.cos?'<th class="r">€/ha</th>':'')+'</tr></thead><tbody>';
+  var h='<div class="plwrap"><table class="ktb pltt"><thead><tr><th>Código</th><th>Estado fenológico</th><th>Fecha</th><th class="c">Caldo L/ha</th><th>Productos · dosis por 1.000 L</th><th class="c">Caldo para la finca</th><th>Cantidades para la finca</th>'+(PL.cos?'<th class="r">€/ha</th>':'')+'</tr></thead><tbody>';
   C0.trs.forEach(function(o){
     var t=o.t, fe=o.pls.map(function(x){return '<div>'+esc(plPlTxt(f,x))+'</div>'}).join('');
     h+='<tr class="pltrow" data-act="pl-trv" data-id="'+esc(t.id)+'" title="Ver toda la información"><td class="b pltb">'+esc(o.code)+(t.tp==='e'?'<small>Ecológico</small>':'')+'<div class="pltbb"><button type="button" class="btn sm" data-act="pl-trv" data-id="'+esc(t.id)+'">Ver</button><button type="button" class="btn sm" data-act="pl-tr" data-id="'+esc(t.id)+'">Editar</button></div></td><td>'+esc(t.fe||'')+'</td><td>'+(fe||'<span class="plwarn">sin fecha</span>')+'</td><td class="c">'+(o.cl!==null?trTxt(o.cl,0):'—')+'</td>';
@@ -7082,9 +7083,9 @@ function buildPlanPdf(f,p,cos){
   var para=function(t,sz,col){doc.setFont(FN,'normal');doc.setFontSize(sz||9);doc.setTextColor.apply(doc,col||ink);var ls=doc.splitTextToSize(String(t),CW);room(ls.length*4+1);doc.text(ls,M,y);y+=ls.length*4+1.5};
   /* cabecera */
   doc.setFillColor.apply(doc,ink); doc.rect(0,0,PW,24,'F'); doc.setFillColor(245,196,0); doc.rect(0,24,PW,1.2,'F');
-  doc.setTextColor(255,255,255); doc.setFont(FN,'normal'); doc.setFontSize(8.5); doc.text('Mapa de Fincas · Plan de campaña',M,8); doc.text(new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}),PW-M,8,{align:'right'});
-  doc.setFont(FN,'bold'); doc.setFontSize(17); doc.text('Plan de fertirrigación '+p.y+' · '+f.nombre+(p.g?' · '+plScopeName(f,p):''),M,17);
-  doc.setFont(FN,'normal'); doc.setFontSize(9); doc.text(haTxt(C0.recs),PW-M,17,{align:'right'});
+  doc.setTextColor(255,255,255); doc.setFont(FN,'normal'); doc.setFontSize(8.5); doc.text(new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}),PW-M,8,{align:'right'});
+  doc.setFont(FN,'bold'); doc.setFontSize(17); doc.text(plTitle(p)+' · '+f.nombre+(p.g?' · '+plScopeName(f,p):''),M,17);
+  doc.setFont(FN,'normal'); doc.setFontSize(9); var hp=haPair(C0.recs); doc.text(ha2(hp.d?hp.c:hp.s)+' ha',PW-M,17,{align:'right'});
   y=32;
   /* cuadrícula (Entrega 69): con líneas en cada casilla y solo las semanas que llevan algo */
   var W=plWeeksUsed(f,p,C0);
@@ -7113,7 +7114,7 @@ function buildPlanPdf(f,p,cos){
     y+=rh;
   };
   rows.forEach(function(o){var r=o.r, tp=plTotParts(C0,o);cellRow(r.n,(r.k==='a'?(abRich(r)||'sin riqueza'):'producto')+' · '+(r.u==='L'?'L':'kg')+'/ha',W.map(function(w){var c=(r.c||{})[w.k];if(!c||!(+c.d>0))return null;var g=c.g&&plGrp(f,c.g);return {t:trTxt(c.d,2,1),s:g?g.n:'',bg:[227,241,232]}}),o.dHa?trTxt(o.dHa,2,1)+(o.split?' *':''):'')});
-  if((p.tr||[]).length)cellRow('Tratamientos','código (detalle abajo)',W.map(function(w){var xs=plWeekTr(f,p,C0,w.k);if(!xs.length)return null;return {t:xs.map(function(x){return C0.code[x.t.id]}).join(' '),s:xs.map(function(x){var g=x.g?plGrp(f,x.g):null;return g?g.n:''}).filter(Boolean).join(' '),bg:[245,196,0]}}),'',[255,247,214]);
+  if((p.tr||[]).length)cellRow('Tratamientos','código',W.map(function(w){var xs=plWeekTr(f,p,C0,w.k);if(!xs.length)return null;return {t:xs.map(function(x){return C0.code[x.t.id]}).join(' '),s:xs.map(function(x){var g=x.g?plGrp(f,x.g):null;return g?g.n:''}).filter(Boolean).join(' '),bg:[245,196,0]}}),'',[255,247,214]);
   var tn=plTotNote(C0); if(tn){doc.setFont(FN,'normal');doc.setFontSize(6.8);doc.setTextColor.apply(doc,gray);var tl=doc.splitTextToSize(tn,CW);doc.text(tl,M,y+3.6);y+=tl.length*3+1.5}
   y+=6;
   /* notas del plan, debajo de la cuadrícula */
@@ -7131,7 +7132,7 @@ function buildPlanPdf(f,p,cos){
   /* tratamientos */
   if(C0.trs.length){
     title('Tratamientos del plan',30);
-    var cols=[{h:'Código',w:18},{h:'Objetivo',w:38},{h:'Fecha',w:34},{h:'Caldo L/ha',w:18,a:'c'},{h:'Productos · dosis por 1.000 L → por ha',w:cos?70:84},{h:'Caldo para la finca',w:38,a:'c'},{h:'Cantidades para la finca',w:cos?37:43}]; if(cos)cols.push({h:'€/ha',w:20,a:'r'});
+    var cols=[{h:'Código',w:18},{h:'Estado fenológico',w:38},{h:'Fecha',w:34},{h:'Caldo L/ha',w:18,a:'c'},{h:'Productos · dosis por 1.000 L → por ha',w:cos?70:84},{h:'Caldo para la finca',w:38,a:'c'},{h:'Cantidades para la finca',w:cos?37:43}]; if(cos)cols.push({h:'€/ha',w:20,a:'r'});
     var hdr=function(){doc.setFont(FN,'bold');doc.setFontSize(7.6);doc.setTextColor.apply(doc,ink);var x=M;cols.forEach(function(c){doc.text(c.h,c.a==='r'?x+c.w-1:(c.a==='c'?x+c.w/2:x+1),y,{align:c.a==='r'?'right':(c.a==='c'?'center':'left')});x+=c.w});doc.setDrawColor.apply(doc,ink);doc.setLineWidth(.25);doc.line(M,y+1.3,PW-M,y+1.3);y+=5};
     hdr();
     C0.trs.forEach(function(o,ri){
@@ -7156,7 +7157,7 @@ function buildPlanPdf(f,p,cos){
   if(any){
     title('Gráficas de unidades fertilizantes',78);
     doc.setFontSize(7.5); [['N',0],['P₂O₅',1],['K₂O',2]].forEach(function(l,i){var c=rgb(PL_C[l[1]]);doc.setFillColor(c[0],c[1],c[2]);doc.rect(M+i*22,y-2.4,3,3,'F');doc.setTextColor.apply(doc,ink);doc.setFont(FN,'normal');doc.text(l[0],M+i*22+4.5,y)});
-    doc.setTextColor.apply(doc,gray); doc.text('Línea discontinua: objetivo de U.F./ha',M+70,y); y+=5;
+    if(['n','p','k'].some(function(x){return C0.cub[x]})){doc.setTextColor.apply(doc,gray); doc.text('Línea discontinua: objetivo de U.F./ha',M+70,y)} y+=5;
     var gw=(CW-12)/3, gh=52, gy=y+2;
     plPdfBars(doc,FN,C0,M,gy,gw,gh); plPdfAcc(doc,FN,C0,M+gw+6,gy,gw,gh); plPdfShare(doc,FN,C0,M+2*(gw+6),gy,gw,gh);
     y=gy+gh+10;
@@ -7164,7 +7165,7 @@ function buildPlanPdf(f,p,cos){
   /* coste */
   if(cos){var c=C0.cost, pt=[]; if(c.fe!==null)pt.push('fertirrigación '+trTxt(c.fe,0)+' €'); if(c.fo!==null)pt.push('abonado de fondo '+trTxt(c.fo,0)+' €'); if(c.tr!==null)pt.push('tratamientos '+trTxt(c.tr,0)+' €');
     if(pt.length){title('Coste previsto de la campaña');para(pt.join(' · ')+' · total '+trTxt(c.tot,0)+' € ('+trTxt(c.ha,2)+' €/ha)',9)}}
-  var n=doc.getNumberOfPages(); for(var pg=1;pg<=n;pg++){doc.setPage(pg);doc.setFont(FN,'normal');doc.setFontSize(7.5);doc.setTextColor.apply(doc,gray);doc.text('Mapa de Fincas · '+f.nombre+' · plan '+p.y+(p.g?' · '+plScopeName(f,p):''),M,PH-6);doc.text(pg+' / '+n,PW-M,PH-6,{align:'right'})}
+  var n=doc.getNumberOfPages(); for(var pg=1;pg<=n;pg++){doc.setPage(pg);doc.setFont(FN,'normal');doc.setFontSize(7.5);doc.setTextColor.apply(doc,gray);doc.text(plTitle(p)+' · '+f.nombre+(p.g?' · '+plScopeName(f,p):''),M,PH-6);doc.text(pg+' / '+n,PW-M,PH-6,{align:'right'})}
   return doc.output('blob');
 }
 function plPdfFrame(doc,FN,x,y,w,h,t){doc.setFont(FN,'bold');doc.setFontSize(8);doc.setTextColor(23,33,38);doc.text(t,x,y);doc.setDrawColor(225,230,228);doc.setLineWidth(.2)}
@@ -7177,7 +7178,7 @@ function plPdfBars(doc,FN,C0,x,y,w,h){
   SR.forEach(function(e,i){['n','p','k'].forEach(function(k,q){var c=hex2rgb(PL_C[q]),bh=e.v[k]/mx*gh;doc.setFillColor(c[0],c[1],c[2]);if(bh>0)doc.rect(x0+i*bw+bw*.12+q*bw*.26,y0+gh-bh,bw*.24,bh,'F')});doc.setFont(FN,'normal');doc.setFontSize(5.8);doc.setTextColor(90,103,101);doc.text(e.l,x0+i*bw+bw/2,y0+gh+3.5,{align:'center'})});
 }
 function plPdfAcc(doc,FN,C0,x,y,w,h){
-  plPdfFrame(doc,FN,x,y,w,h,'Acumulado frente al objetivo'); var A=[C0.acc[0]].concat(plMonRange(C0).map(function(m){return C0.acc[m-1]})), mx=0; A.forEach(function(a){mx=Math.max(mx,a.n,a.p,a.k)}); ['n','p','k'].forEach(function(k){if(C0.cub[k])mx=Math.max(mx,C0.cub[k].o)}); mx=plNice((mx||1)*1.05);
+  plPdfFrame(doc,FN,x,y,w,h,['n','p','k'].some(function(k){return C0.cub[k]})?'Acumulado frente al objetivo':'Acumulado de la campaña'); var A=[C0.acc[0]].concat(plMonRange(C0).map(function(m){return C0.acc[m-1]})), mx=0; A.forEach(function(a){mx=Math.max(mx,a.n,a.p,a.k)}); ['n','p','k'].forEach(function(k){if(C0.cub[k])mx=Math.max(mx,C0.cub[k].o)}); mx=plNice((mx||1)*1.05);
   var x0=x+8,y0=y+4,gw=w-12,gh=h-10,st=gw/(A.length-1); plPdfAxis(doc,FN,x0,y0,gw,gh,mx);
   ['n','p','k'].forEach(function(k,q){var c=hex2rgb(PL_C[q]);doc.setDrawColor(c[0],c[1],c[2]);
     if(C0.cub[k]){doc.setLineWidth(.3);doc.setLineDashPattern([1.2,1],0);var yy=y0+gh-C0.cub[k].o/mx*gh;doc.line(x0,yy,x0+gw,yy);doc.setLineDashPattern([],0)}
@@ -7194,7 +7195,7 @@ function plPdfShare(doc,FN,C0,x,y,w,h){
 /* ---- Excel del plan ---- */
 function buildPlanXlsx(f,p,cos){
   var C0=plCalc(f,p), W=plWeeksUsed(f,p,C0), H=function(a){return a.map(function(t){return {v:t,s:1}})}, N=function(v,s){return v===null||v===undefined||v===''||isNaN(+v)?'':{v:Math.round(+v*10000)/10000,s:s||3}}, sh=[];
-  var r0=[[{v:'Plan de fertirrigación '+p.y+' · '+f.nombre+(p.g?' · '+plScopeName(f,p):''),s:1}],[haPair(C0.recs).d?'Superficie cultivada (ha)':'Superficie (ha)',N(C0.ha)],[]];
+  var r0=[[{v:plTitle(p)+' · '+f.nombre+(p.g?' · '+plScopeName(f,p):''),s:1}],[haPair(C0.recs).d?'Superficie cultivada (ha)':'Superficie (ha)',N(C0.ha)],[]];
   r0.push(H(['Producto','Riqueza','Unidad/ha'].concat(W.map(function(w){return plWkLbl(w)+' ('+plWkDates(w)+')'})).concat(['Total/ha','Total finca','N U.F./ha','P₂O₅ U.F./ha','K₂O U.F./ha'].concat(cos?['Coste €']:[]))));
   C0.rows.forEach(function(o){var r=o.r;r0.push([r.n,r.k==='a'?abRich(r):'producto',r.u==='L'?'L':'kg'].concat(W.map(function(w){var c=(r.c||{})[w.k];if(!c||!(+c.d>0))return '';var g=c.g&&plGrp(f,c.g);return g?trTxt(c.d,2,1)+' ('+g.n+')':N(c.d)})).concat([N(o.dHa),N(o.qty)].concat(r.k==='a'?[N(o.uf.n),N(o.uf.p),N(o.uf.k)]:['','',''])).concat(cos?[o.cost===null?'sin precio':N(o.cost)]:[]))});
   if((p.tr||[]).length)r0.push(['Tratamientos','',''].concat(W.map(function(w){return plWeekTr(f,p,C0,w.k).map(function(x){var g=x.g?plGrp(f,x.g):null;return C0.code[x.t.id]+(g?' ('+g.n+')':'')}).join(', ')})));
@@ -7204,7 +7205,7 @@ function buildPlanXlsx(f,p,cos){
   r0.push([C0.split?'Total U.F./ha · media de la finca':'Total U.F./ha','','','N',N(C0.tot.n),'P₂O₅',N(C0.tot.p),'K₂O',N(C0.tot.k)]);
   ['n','p','k'].forEach(function(x){var c=C0.cub[x];if(c)r0.push(['Objetivo '+({n:'N',p:'P₂O₅',k:'K₂O'})[x],'','',N(c.o),'% cubierto',N(c.pc),'diferencia',N(c.dif)])});
   sh.push({name:'Plan',rows:r0,widths:[30,12,9].concat(W.map(function(){return 9})).concat([10,11,10,10,10,10])});
-  var r1=[H(['Código','Objetivo','Tipo','Fechas','Caldo L/ha','Producto','Materia activa','Dosis /1.000 L','Unidad','Dosis /ha','Cantidad para la finca','Caldo para la finca (L)','Atomizadores'].concat(cos?['Precio','Coste €/ha']:[]).concat(['Observaciones']))];
+  var r1=[H(['Código','Estado fenológico','Tipo','Fechas','Caldo L/ha','Producto','Materia activa','Dosis /1.000 L','Unidad','Dosis /ha','Cantidad para la finca','Caldo para la finca (L)','Atomizadores'].concat(cos?['Precio','Coste €/ha']:[]).concat(['Observaciones']))];
   C0.trs.forEach(function(o){var t=o.t,wk=o.pls.map(function(x){return plPlTxt(f,x)}).join(', ')||'sin fecha';
     o.ps.forEach(function(x,i){var q=x.q;r1.push([o.code,t.fe||'',t.tp==='e'?'Ecológico':'Convencional',wk,N(o.cl),q.n,q.a||'',N(q.d),q.u==='kg'?'kg':'L',N(x.dh),x.qty===null?'':N(x.qty),i?'':N(o.clFinca),i?'':N(o.atom)].concat(cos?[N(q.pr),x.ch===null?'':N(x.ch)]:[]).concat([i?'':t.o||'']))})});
   sh.push({name:'Tratamientos',rows:r1,widths:[8,24,12,30,10,22,18,11,7,10,14,14,12].concat(cos?[9,10]:[]).concat([30])});
