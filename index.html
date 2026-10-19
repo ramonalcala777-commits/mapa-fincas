@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-dvI3PlveE4f6WbH93iANeQfvhLHJYg784D3GsaOOr2g='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-CvmvXIntNb+BULMTM0UXRRDVJ1bmdQbprUzqs1lKK+w='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -1517,7 +1517,7 @@ h3{color:var(--ink);font-size:16.5px;font-weight:700;line-height:1.25;padding-le
 .ktb th.c,.ktb td.c{text-align:center;white-space:nowrap}
 .ktb td.c{font-family:var(--cond);font-variant-numeric:tabular-nums}
 .ktb td.c small{white-space:normal}
-.pltb{width:1%}.pltb .btn{display:block;width:100%;margin:6px 0 0;white-space:nowrap}.pltt td:nth-child(2){min-width:96px}.pltt td div{white-space:normal}.pltt td:nth-child(5),.pltt td:nth-child(7){min-width:150px}
+.pltb{width:1%}.pltbb{display:flex;gap:6px;margin-top:6px}.pltbb .btn{min-height:32px;padding:4px 10px}.pltt td:nth-child(2){min-width:110px}.pltt td div,.pltt td small,.pltt td.c small,.pltt td:nth-child(3){white-space:nowrap}.pltrow{cursor:pointer}.pltrow:hover td{background:color-mix(in srgb,var(--ink) 4%,transparent)}
 .plgd{display:grid;gap:8px;margin-top:6px}.plgd label{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.plgd span{font-weight:600}.plgd small{color:var(--ink2);font-weight:400}.plgd .in{max-width:210px}
 .tc-w .mmap{margin-top:10px}
 .expmap{display:none}
@@ -2287,7 +2287,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-19T07:51:25Z',n:'Entrega 67 · 19 oct · 09:51'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-19T08:56:03Z',n:'Entrega 68 · 19 oct · 10:56'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -6606,7 +6606,7 @@ function plCalc(f,p){
   });
   var TO=plTrOrder(f,p), cap=plCap0(f);
   var trs=TO.list.map(function(t){
-    var pls=plTrPlaces(f,p,t), haT=pls.reduce(function(a,x){return a+x.ha},0), cl=plTrCl(f,t,ha), o={t:t,code:TO.code[t.id],pls:pls,n:pls.length,haT:haT,cl:cl,clFinca:cl!==null&&haT?cl*haT:null,atom:(cl!==null&&cap&&haT)?cl*haT/cap:null,ps:[],costHa:null,cost:null};
+    var pls=plTrPlaces(f,p,t), haT=pls.length?pls.reduce(function(a,x){return a+x.ha},0):ha, cl=plTrCl(f,t,ha), o={t:t,code:TO.code[t.id],pls:pls,n:pls.length,haT:haT,cl:cl,clFinca:cl!==null&&haT?cl*haT:null,atom:(cl!==null&&cap&&haT)?cl*haT/cap:null,ps:[],costHa:null,cost:null};
     (t.ps||[]).forEach(function(q){
       var dh=(cl!==null&&abHas(q.d))?(+q.d)*cl/1000:null, x={q:q,dh:dh,qty:dh!==null&&haT?dh*haT:null,ch:(dh!==null&&abHas(q.pr))?dh*(+q.pr):null};
       if(x.ch!==null)o.costHa=(o.costHa||0)+x.ch; o.ps.push(x);
@@ -6791,10 +6791,10 @@ function plTrTable(f,p,C0){
   var h='<div class="plwrap"><table class="ktb pltt"><thead><tr><th>Código</th><th>Objetivo</th><th>Fecha</th><th class="c">Caldo L/ha</th><th>Productos · dosis por 1.000 L</th><th class="c">Caldo para la finca</th><th>Cantidades para la finca</th>'+(PL.cos?'<th class="r">€/ha</th>':'')+'</tr></thead><tbody>';
   C0.trs.forEach(function(o){
     var t=o.t, fe=o.pls.map(function(x){return '<div>'+esc(plPlTxt(f,x))+'</div>'}).join('');
-    h+='<tr><td class="b pltb">'+esc(o.code)+'<button type="button" class="btn sm" data-act="pl-trv" data-id="'+esc(t.id)+'">Ver</button><button type="button" class="btn sm" data-act="pl-tr" data-id="'+esc(t.id)+'">Editar</button></td><td>'+esc(t.fe||'—')+(t.tp==='e'?'<small>Ecológico</small>':'')+'</td><td>'+(fe||'<span class="plwarn">sin fecha</span>')+'</td><td class="c">'+(o.cl!==null?trTxt(o.cl,0):'—')+'</td>';
-    h+='<td>'+o.ps.map(function(x){var q=x.q;return '<div>'+esc(q.n)+(abHas(q.d)?' '+trTxt(q.d,3,1)+' '+(q.u==='kg'?'kg':'L'):'')+'</div>'}).join('')+'</td>';
-    h+='<td class="c">'+(o.clFinca!==null?trTxt(o.clFinca,0)+' L'+(o.atom?'<small>'+plAtTxt(o.atom,C0.cap)+'</small>':''):'—')+'</td>';
-    h+='<td>'+o.ps.map(function(x){return x.qty!==null?'<div>'+esc(x.q.n)+' '+trTxt(x.qty,1,1)+' '+(x.q.u==='kg'?'kg':'L')+'</div>':''}).join('')+'</td>';
+    h+='<tr class="pltrow" data-act="pl-trv" data-id="'+esc(t.id)+'" title="Ver toda la información"><td class="b pltb">'+esc(o.code)+'<div class="pltbb"><button type="button" class="btn sm" data-act="pl-trv" data-id="'+esc(t.id)+'">Ver</button><button type="button" class="btn sm" data-act="pl-tr" data-id="'+esc(t.id)+'">Editar</button></div></td><td>'+esc(t.fe||'—')+(t.tp==='e'?'<small>Ecológico</small>':'')+'</td><td>'+(fe||'<span class="plwarn">sin fecha</span>')+'</td><td class="c">'+(o.cl!==null?trTxt(o.cl,0):'—')+'</td>';
+    h+='<td>'+o.ps.map(function(x){var q=x.q;return '<div>'+esc(q.n)+(abHas(q.d)?' '+trTxt(q.d,3,1)+'&nbsp;'+(q.u==='kg'?'kg':'L'):'')+'</div>'}).join('')+'</td>';
+    h+='<td class="c">'+(o.clFinca!==null?trTxt(o.clFinca,0)+'&nbsp;L'+(o.atom?'<small>'+plAtTxt(o.atom,C0.cap)+'</small>':''):'—')+'</td>';
+    h+='<td>'+o.ps.map(function(x){return x.qty!==null?'<div>'+esc(x.q.n)+' '+trTxt(x.qty,1,1)+'&nbsp;'+(x.q.u==='kg'?'kg':'L')+'</div>':''}).join('')+'</td>';
     if(PL.cos)h+='<td class="r">'+(o.costHa!==null?trTxt(o.costHa,2):'sin precio')+'</td>';
     h+='</tr>';
   });
