@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-+scwqBlaNqV9HVI7naNclCKF89sEd3o3RWB37/oOsAg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-Wu66+soyO/T3jQ0bGft2YoLjBIULwueW8ZuoFyHPhTU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -2288,7 +2288,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-19T15:27:10Z',n:'Entrega 71 · 19 oct · 17:27'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-19T15:55:33Z',n:'Entrega 72 · 19 oct · 17:55'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -6645,6 +6645,42 @@ function plRangeTxt(a,b){if(!a)return '';if(!b||b===a)return diaFmt(a);var A=a.s
 function plQt(v){if(v===null||v===undefined||isNaN(v))return '';v=+(+v).toFixed(9);return trTxt(v,v>=1000?0:v>=100?1:2,1)}
 /* semanas que llevan algo (abono, producto o tratamiento): las únicas que salen en el PDF y el Excel */
 function plWeeksUsed(f,p,C0){var W=C0.W.filter(function(w){return C0.rows.some(function(o){var c=(o.r.c||{})[w.k];return c&&+c.d>0})||plWeekTr(f,p,C0,w.k).length>0});return W.length?W:C0.W}
+/* Entrega 72: desglose de costes de la campaña (precios sin IVA) */
+function plCostCalc(f,p,C0){
+  var wm={}; C0.W.forEach(function(w){wm[w.k]=w});
+  var mon={}, MS=[2,3,4,5,6,7,8,9]; MS.forEach(function(m){mon[m]={fe:0,tr:0}});
+  var miss={}, unit=function(q){return q.u==='L'?'L':'kg'};
+  var fe=C0.rows.map(function(o){var r=o.r, pr=abHas(r.pr)?+r.pr:null;
+    if(pr!==null)Object.keys(r.c||{}).forEach(function(k){var c=r.c[k],w=wm[k],d=+c.d;if(!w||!(d>0))return;mon[w.m].fe+=d*pr*plHaOf(plCellRecs(f,p,c))});
+    else if(o.qty)miss[r.n]=1;
+    return {n:r.n,u:unit(r),pr:pr,dHa:o.dHa,split:o.split,qty:o.qty,cost:o.cost,costHa:o.cost!==null&&C0.ha?o.cost/C0.ha:null}}).filter(function(x){return x.qty>0});
+  var fo=C0.fo.map(function(o){var q=o.q,pr=abHas(q.pr)?+q.pr:null;if(pr===null&&o.qty)miss[q.n]=1;return {n:q.n,u:unit(q),pr:pr,dHa:+q.d,qty:o.qty,cost:o.cost,costHa:o.cost!==null&&C0.ha?o.cost/C0.ha:null,f:q.f,f2:q.f2}}).filter(function(x){return x.qty>0});
+  var agg={}, aggL=[];
+  var trs=C0.trs.map(function(o){
+    o.pls.forEach(function(x){if(o.costHa!==null&&x.w)mon[x.w.m].tr+=o.costHa*x.ha});
+    var ps=o.ps.map(function(x){var q=x.q,pr=abHas(q.pr)?+q.pr:null,c=pr!==null&&x.qty!==null?x.qty*pr:null;if(pr===null&&x.qty)miss[q.n]=1;
+      var k=q.n.toLowerCase()+'|'+unit(q),a=agg[k];if(!a){a=agg[k]={n:q.n,u:unit(q),pr:pr,qty:0,cost:0,nc:false,codes:[]};aggL.push(a)}a.qty+=x.qty||0;if(c!==null)a.cost+=c;else a.nc=true;if(a.codes.indexOf(o.code)<0)a.codes.push(o.code);
+      return {n:q.n,u:unit(q),pr:pr,qty:x.qty,cost:c}});
+    return {code:o.code,fe:o.t.fe||'',fecha:o.pls.map(function(x){return plPlTxt(f,x)}).join(', ')||'sin fecha',costHa:o.costHa,cost:o.cost,ps:ps,pls:o.pls};
+  });
+  var c=C0.cost, tot=c.tot, months=[], first=null, last=null;
+  MS.forEach(function(m){if(mon[m].fe+mon[m].tr>0){if(first===null)first=m;last=m}});
+  if(c.fo)months.push({l:'Fondo',fo:c.fo,fe:0,tr:0});
+  if(first!==null)for(var m=first;m<=last;m++)months.push({l:plCap(PL_MES[m]),fo:0,fe:mon[m].fe,tr:mon[m].tr});
+  var run=0; months.forEach(function(e){e.tot=e.fo+e.fe+e.tr;run+=e.tot;e.acc=run});
+  /* €/ha de cada grupo, cuando no todos los grupos llevan lo mismo */
+  var grp=[];
+  if(C0.GB.length>1){
+    grp=C0.GB.map(function(b){var e={n:b.g.n,ha:b.ha,fo:0,fe:0,tr:0};
+      fo.forEach(function(x){if(x.pr!==null)e.fo+=x.dHa*x.pr});
+      C0.rows.forEach(function(o){var r=o.r;if(!abHas(r.pr))return;Object.keys(r.c||{}).forEach(function(k){var cc=r.c[k];if(!wm[k]||!(+cc.d>0))return;if(!cc.g||cc.g===b.g.id)e.fe+=(+cc.d)*(+r.pr)})});
+      trs.forEach(function(t){if(t.costHa===null)return;t.pls.forEach(function(x){if(!x.g||x.g===b.g.id)e.tr+=t.costHa})});
+      e.tot=e.fo+e.fe+e.tr; return e});
+    var dif=grp.some(function(e){return Math.abs(e.tot-grp[0].tot)>0.005}); if(!dif)grp=[];
+  }
+  var sum=[['Abonado de fondo',c.fo],['Fertirrigación',c.fe],['Tratamientos',c.tr]].filter(function(x){return x[1]!==null}).map(function(x){return {n:x[0],cost:x[1],costHa:C0.ha?x[1]/C0.ha:null,pct:tot?x[1]/tot*100:null}});
+  return {sum:sum,tot:tot,totHa:c.ha,fe:fe,fo:fo,trs:trs,trProd:aggL,months:months,grp:grp,miss:Object.keys(miss)};
+}
 /* ---- apuntes ya creados desde el plan ---- */
 function plDoneRec(f,p,key){
   var id=(p.hd||{})[key]; if(!id)return null; var k=key.charAt(0), list=k==='t'?f.trat:(k==='f'?f.abon:f.fert);
@@ -6840,13 +6876,18 @@ function plTrViewHTML(f,p,C0){
   if(t.o)h+=daLine('Observaciones',t.o);
   return h+'<div class="acts"><button class="btn primary" data-act="pl-tr" data-id="'+esc(t.id)+'">Editar</button><button class="btn" data-act="pl-tdup" data-id="'+esc(t.id)+'">Duplicar con otra fecha</button><button class="btn" data-act="pl-trv-close">Cerrar</button></div></div>';
 }
-function plCostHTML(C0){
+function plCostHTML(C0,f,p){
   var L=[]; C0.rows.forEach(function(o){if(o.qty)L.push([o.r.n,o.dHa,o.qty,o.r.u==='L'?'L':'kg',o.cost,o])});
   C0.fo.forEach(function(o){if(o.qty)L.push([o.q.n+' (fondo)',+o.q.d,o.qty,o.q.u==='L'?'L':'kg',o.cost])});
   if(!L.length&&!C0.trs.length)return '';
   var h='<div class="plwrap"><table class="ktb"><thead><tr><th>Producto</th><th class="r">Total /ha</th><th class="r">Para la finca</th>'+(PL.cos?'<th class="r">€/ha</th><th class="r">€</th>':'')+'</tr></thead><tbody>';
   L.forEach(function(x){h+='<tr><td class="b">'+esc(x[0])+'</td><td class="r">'+trTxt(x[1],2,1)+' '+x[3]+(x[5]&&x[5].split?'*':'')+'</td><td class="r">'+trTxt(x[2],0)+' '+x[3]+'</td>'+(PL.cos?'<td class="r">'+(x[4]!==null?trTxt(x[4]/(C0.ha||1),2):'sin precio')+'</td><td class="r">'+(x[4]!==null?trTxt(x[4],0):'—')+'</td>':'')+'</tr>'});
   h+='</tbody></table></div>';
+  if(PL.cos&&C0.cost.tot!==null){var K=plCostCalc(f,p,C0);
+    h+='<div class="plwrap" style="margin-top:10px"><table class="ktb"><thead><tr><th>Coste de la campaña (sin IVA)</th><th class="r">€ total</th><th class="r">€/ha</th><th class="r">%</th></tr></thead><tbody>'+K.sum.map(function(e){return '<tr><td>'+esc(e.n)+'</td><td class="r">'+trTxt(e.cost,0)+'</td><td class="r">'+trTxt(e.costHa,2)+'</td><td class="r">'+trTxt(e.pct,1)+'</td></tr>'}).join('')+'<tr><td class="b">Total</td><td class="r b">'+trTxt(K.tot,0)+'</td><td class="r b">'+trTxt(K.totHa,2)+'</td><td class="r">100</td></tr></tbody></table></div>';
+    if(K.grp.length)h+='<div class="small" style="margin-top:6px"><b>€/ha por grupo:</b> '+K.grp.map(function(e){return esc(e.n)+' '+trTxt(e.tot,2)}).join(' · ')+'</div>';
+    if(K.miss.length)h+='<div class="small plwarn" style="margin-top:6px">Faltan precios: '+esc(K.miss.join(', '))+'.</div>';
+    return h}
   if(PL.cos){var c=C0.cost, pt=[];
     if(c.fe!==null)pt.push('fertirrigación '+trTxt(c.fe,0)+' €'); if(c.fo!==null)pt.push('fondo '+trTxt(c.fo,0)+' €'); if(c.tr!==null)pt.push('tratamientos '+trTxt(c.tr,0)+' €');
     h+='<div class="small" style="margin-top:6px"><b>Coste de la campaña:</b> '+(pt.length?pt.join(' · ')+' · <b>total '+trTxt(c.tot,0)+' € ('+trTxt(c.ha,2)+' €/ha)</b>':'sin precios todavía')+'</div>';}
@@ -6909,7 +6950,7 @@ function planHTML(f){
   if(!C0.cap&&(p.tr||[]).length)h+='<div class="small">Para calcular los atomizadores, pon la capacidad del atomizador en la pestaña Datos.</div>';
   h+='<h3 style="margin-top:16px">Unidades fertilizantes</h3>'+plKpiHTML(C0,p);
   h+='<div class="plch"><div class="plcard"><div class="lbl" style="margin:0">U.F./ha que aporta cada mes</div>'+plLeg()+plSvgBars(C0)+'</div><div class="plcard"><div class="lbl" style="margin:0">Acumulado frente al objetivo (línea discontinua)</div>'+plLeg()+plSvgAcc(C0)+'</div><div class="plcard"><div class="lbl" style="margin:0">Reparto N-P-K de cada mes</div>'+plLeg()+plSvgShare(C0)+'</div></div>';
-  h+='<h3 style="margin-top:16px">Cantidades'+(PL.cos?' y coste':'')+'</h3><label class="small"><input type="checkbox" id="pl-cos"'+(PL.cos?' checked':'')+'> Ver costes (también en el PDF y el Excel)</label>'+plCostHTML(C0);
+  h+='<h3 style="margin-top:16px">Cantidades'+(PL.cos?' y coste':'')+'</h3><label class="small"><input type="checkbox" id="pl-cos"'+(PL.cos?' checked':'')+'> Ver costes (también en el PDF y el Excel)</label>'+plCostHTML(C0,f,p);
   h+='<h3 style="margin-top:16px">Notas del plan</h3><textarea id="pl-nt" class="in" rows="3" placeholder="Ej. El próximo tratamiento lo echaremos en la 4ª semana de junio. En la segunda quincena de julio, análisis de hoja.">'+esc(p.nt||'')+'</textarea><div class="small">Salen en el PDF y en el Excel.</div>';
   return h;
 }
@@ -7132,7 +7173,7 @@ function buildPlanPdf(f,p,cos){
   /* tratamientos */
   if(C0.trs.length){
     title('Tratamientos del plan',30);
-    var cols=[{h:'Código',w:18},{h:'Estado fenológico',w:38},{h:'Fecha',w:34},{h:'Caldo L/ha',w:18,a:'c'},{h:'Productos · dosis por 1.000 L → por ha',w:cos?70:84},{h:'Caldo para la finca',w:38,a:'c'},{h:'Cantidades para la finca',w:cos?37:43}]; if(cos)cols.push({h:'€/ha',w:20,a:'r'});
+    var cols=[{h:'Código',w:18},{h:'Estado fenológico',w:38},{h:'Fecha',w:34},{h:'Caldo L/ha',w:18,a:'c'},{h:'Productos · dosis por 1.000 L → por ha',w:84},{h:'Caldo para la finca',w:38,a:'c'},{h:'Cantidades para la finca',w:43}];
     var hdr=function(){doc.setFont(FN,'bold');doc.setFontSize(7.6);doc.setTextColor.apply(doc,ink);var x=M;cols.forEach(function(c){doc.text(c.h,c.a==='r'?x+c.w-1:(c.a==='c'?x+c.w/2:x+1),y,{align:c.a==='r'?'right':(c.a==='c'?'center':'left')});x+=c.w});doc.setDrawColor.apply(doc,ink);doc.setLineWidth(.25);doc.line(M,y+1.3,PW-M,y+1.3);y+=5};
     hdr();
     C0.trs.forEach(function(o,ri){
@@ -7140,7 +7181,6 @@ function buildPlanPdf(f,p,cos){
         o.ps.map(function(x){var q=x.q,u=q.u==='kg'?'kg':'L';return q.n+' '+(abHas(q.d)?trTxt(q.d,3,1)+' '+u:'')+(x.dh!==null?' → '+trTxt(x.dh,3,1)+' '+u+'/ha':'')}),
         [o.clFinca!==null?trTxt(o.clFinca,0)+' L':'—'].concat(o.atom?[plAtTxt(o.atom,C0.cap)]:[]),
         []];
-      if(cos)cells.push([o.costHa!==null?trTxt(o.costHa,2):'sin precio']);
       /* cantidades para la finca: el nombre a la izquierda y la cantidad aparte, a la derecha y en negrita */
       var cq=6, QW=cols[cq].w, QT=o.ps.filter(function(x){return x.qty!==null}).map(function(x){return {n:x.q.n,q:plQt(x.qty)+' '+(x.q.u==='kg'?'kg':'L')}});
       doc.setFontSize(7.6); QT.forEach(function(e){doc.setFont(FN,'bold');var qw=doc.getTextWidth(e.q)+2.5;doc.setFont(FN,'normal');e.l=doc.splitTextToSize(e.n,Math.max(8,QW-2-qw))});
@@ -7162,11 +7202,74 @@ function buildPlanPdf(f,p,cos){
     plPdfBars(doc,FN,C0,M,gy,gw,gh); plPdfAcc(doc,FN,C0,M+gw+6,gy,gw,gh); plPdfShare(doc,FN,C0,M+2*(gw+6),gy,gw,gh);
     y=gy+gh+10;
   }
-  /* coste */
-  if(cos){var c=C0.cost, pt=[]; if(c.fe!==null)pt.push('fertirrigación '+trTxt(c.fe,0)+' €'); if(c.fo!==null)pt.push('abonado de fondo '+trTxt(c.fo,0)+' €'); if(c.tr!==null)pt.push('tratamientos '+trTxt(c.tr,0)+' €');
-    if(pt.length){title('Coste previsto de la campaña');para(pt.join(' · ')+' · total '+trTxt(c.tot,0)+' € ('+trTxt(c.ha,2)+' €/ha)',9)}}
+  /* costes de la campaña: página aparte (Entrega 72) */
+  if(cos)plPdfCosts(doc,FN,f,p,C0,{M:M,PW:PW,PH:PH,CW:CW,ink:ink,gray:gray});
   var n=doc.getNumberOfPages(); for(var pg=1;pg<=n;pg++){doc.setPage(pg);doc.setFont(FN,'normal');doc.setFontSize(7.5);doc.setTextColor.apply(doc,gray);doc.text(plTitle(p)+' · '+f.nombre+(p.g?' · '+plScopeName(f,p):''),M,PH-6);doc.text(pg+' / '+n,PW-M,PH-6,{align:'right'})}
   return doc.output('blob');
+}
+function plPdfCosts(doc,FN,f,p,C0,G){
+  var K=plCostCalc(f,p,C0), M=G.M, PW=G.PW, PH=G.PH, CW=G.CW, ink=G.ink, gray=G.gray, y;
+  var eur=function(v,d){return v===null||v===undefined?'sin precio':trTxt(v,d==null?0:d)+' €'};
+  var pct=function(v){return v===null||v===undefined?'':trTxt(v,1)+' %'};
+  var newPage=function(){doc.addPage();y=16};
+  var room=function(h){if(y+h>PH-14)newPage()};
+  var title=function(t,need){room(need||18);doc.setFont(FN,'bold');doc.setFontSize(10.5);doc.setTextColor.apply(doc,ink);doc.text(t,M,y);doc.setDrawColor.apply(doc,ink);doc.setLineWidth(.3);doc.line(M,y+1.4,PW-M,y+1.4);y+=6};
+  /* tabla: cols [{h,w,a}], filas = arrays de textos; opts.bold (índices de filas en negrita), opts.sub (filas secundarias) */
+  var table=function(cols,rows,o){o=o||{};var tw=cols.reduce(function(a,c){return a+c.w},0),x0=M,rh=5.2;
+    if(!o.narrow){var sc=CW/tw;cols=cols.map(function(c){return {h:c.h,w:c.w*sc,a:c.a}});tw=CW}
+    var hdr=function(){doc.setFillColor(233,239,236);doc.rect(x0,y-3.7,tw,5.4,'F');doc.setFont(FN,'bold');doc.setFontSize(7.4);doc.setTextColor.apply(doc,ink);var x=x0;cols.forEach(function(c){doc.text(c.h,c.a==='r'?x+c.w-1.5:x+1.5,y,{align:c.a==='r'?'right':'left'});x+=c.w});y+=5.4};
+    room(rh*Math.min(rows.length,3)+8); hdr();
+    rows.forEach(function(r,i){var sub=o.sub&&o.sub.indexOf(i)>=0, bold=o.bold&&o.bold.indexOf(i)>=0;
+      if(bold&&i>0&&o.sub&&o.sub.indexOf(i-1)>=0)y+=1.6;
+      var blk=o.keep&&o.keep[i]?o.keep[i]:1; if(y+rh+(blk-1)*4.2>PH-14){newPage();hdr()}
+      if(bold){doc.setFillColor(247,249,248);doc.rect(x0,y-3.7,tw,rh,'F');doc.setDrawColor(205,212,209);doc.setLineWidth(.2);doc.line(x0,y-3.7,x0+tw,y-3.7)}
+      var x=x0;cols.forEach(function(c,j){var t=r[j]===null||r[j]===undefined?'':String(r[j]);doc.setFont(FN,bold?'bold':'normal');doc.setFontSize(sub?6.8:7.6);doc.setTextColor.apply(doc,sub?gray:ink);if(t==='sin precio')doc.setTextColor(176,64,40);
+        var tt=doc.splitTextToSize(t,c.w-3)[0]||'';doc.text((sub&&j===0?'   ':'')+tt,c.a==='r'?x+c.w-1.5:x+1.5,y,{align:c.a==='r'?'right':'left'});x+=c.w});
+      if(!bold&&!sub){doc.setDrawColor(232,236,234);doc.setLineWidth(.15);doc.line(x0,y+1.5,x0+tw,y+1.5)}
+      y+=sub?4.2:rh});
+    y+=4};
+  newPage();
+  doc.setFont(FN,'bold');doc.setFontSize(14);doc.setTextColor.apply(doc,ink);doc.text('Costes de la campaña',M,y);
+  doc.setFont(FN,'normal');doc.setFontSize(8.5);doc.setTextColor.apply(doc,gray);doc.text('Precios sin IVA · '+ha2(C0.ha)+' ha',PW-M,y,{align:'right'});y+=9;
+  /* 1. resumen */
+  title('Resumen');
+  var rs=K.sum.map(function(e){return [e.n,eur(e.cost),eur(e.costHa,2),pct(e.pct)]}); rs.push(['Total campaña',eur(K.tot),eur(K.totHa,2),K.tot?'100 %':'']);
+  table([{h:'Concepto',w:70},{h:'€ total',w:34,a:'r'},{h:'€/ha',w:30,a:'r'},{h:'% del total',w:28,a:'r'}],rs,{bold:[rs.length-1]});
+  /* coste por grupo */
+  if(K.grp.length){title('Coste por ha de cada grupo');
+    table([{h:'Grupo',w:50},{h:'ha',w:20,a:'r'},{h:'Fondo €/ha',w:28,a:'r'},{h:'Fertirrigación €/ha',w:34,a:'r'},{h:'Tratamientos €/ha',w:32,a:'r'},{h:'Total €/ha',w:28,a:'r'}],
+      K.grp.map(function(e){return [e.n,ha2(e.ha),eur(e.fo,2),eur(e.fe,2),eur(e.tr,2),eur(e.tot,2)]}))}
+  /* 2-3. fertirrigación y fondo por producto */
+  var prodCols=[{h:'Producto',w:62},{h:'Precio',w:24,a:'r'},{h:'Dosis /ha',w:26,a:'r'},{h:'Para la finca',w:30,a:'r'},{h:'€/ha',w:24,a:'r'},{h:'€ total',w:28,a:'r'},{h:'% del apartado',w:26,a:'r'}];
+  var prodRows=function(L,tot){var r=L.map(function(x){return [x.n,x.pr!==null?trTxt(x.pr,2)+' €/'+x.u:'sin precio',trTxt(x.dHa,2,1)+' '+x.u+(x.split?' *':''),plQt(x.qty)+' '+x.u,eur(x.costHa,2),eur(x.cost),x.cost!==null&&tot?pct(x.cost/tot*100):'']});
+    r.push(['Total','','','',eur(tot!==null&&C0.ha?tot/C0.ha:null,2),eur(tot),tot?'100 %':'']);return r};
+  if(K.fe.length){var cf=C0.cost.fe;title('Fertirrigación por producto');var r2=prodRows(K.fe,cf);table(prodCols,r2,{bold:[r2.length-1]});
+    if(K.fe.some(function(x){return x.split})){doc.setFont(FN,'normal');doc.setFontSize(6.8);doc.setTextColor.apply(doc,gray);doc.text('* Media de la finca.',M,y-1.5);y+=3.5}}
+  if(K.fo.length){title('Abonado de fondo');var r3=prodRows(K.fo,C0.cost.fo);table(prodCols,r3,{bold:[r3.length-1]})}
+  /* 4. tratamientos uno a uno, con sus productos */
+  if(K.trs.length){title('Tratamientos',45);
+    var tr=[],bo=[],sb=[];
+    var kp={}; K.trs.forEach(function(t){kp[tr.length]=t.ps.length+1;bo.push(tr.length);tr.push([t.code+(t.fe?' · '+t.fe:''),t.fecha,'',eur(t.costHa,2),eur(t.cost)]);
+      t.ps.forEach(function(x){sb.push(tr.length);tr.push([x.n,x.qty!==null?plQt(x.qty)+' '+x.u:'',x.pr!==null?trTxt(x.pr,2)+' €/'+x.u:'sin precio',x.cost!==null&&C0.ha?eur(x.cost/C0.ha,2):'',eur(x.cost)])})});
+    bo.push(tr.length);tr.push(['Total tratamientos','','',eur(C0.cost.tr!==null&&C0.ha?C0.cost.tr/C0.ha:null,2),eur(C0.cost.tr)]);
+    table([{h:'Tratamiento · producto',w:84},{h:'Fecha · cantidad',w:56},{h:'Precio',w:30,a:'r'},{h:'€/ha',w:28,a:'r'},{h:'€ total',w:30,a:'r'}],tr,{bold:bo,sub:sb,keep:kp});
+    /* 5. productos de tratamientos sumados */
+    title('Productos de tratamientos en toda la campaña',30);
+    var pr5=K.trProd.map(function(a){return [a.n,a.codes.join(', '),plQt(a.qty)+' '+a.u,a.pr!==null?trTxt(a.pr,2)+' €/'+a.u:'sin precio',a.nc?'sin precio':eur(a.cost)]});
+    table([{h:'Producto',w:72},{h:'Tratamientos',w:40},{h:'Cantidad total',w:34,a:'r'},{h:'Precio',w:30,a:'r'},{h:'€ total',w:30,a:'r'}],pr5)}
+  /* 6. coste por mes: tabla y gráfica */
+  if(K.months.length){title('Coste por mes',70);
+    var mr=K.months.map(function(e){return [e.l,e.fo?eur(e.fo):'',e.fe?eur(e.fe):'',e.tr?eur(e.tr):'',eur(e.tot),eur(e.acc)]});
+    var t0=y; table([{h:'Mes',w:30},{h:'Fondo',w:26,a:'r'},{h:'Fertirrigación',w:28,a:'r'},{h:'Tratamientos',w:28,a:'r'},{h:'Total',w:24,a:'r'},{h:'Acumulado',w:26,a:'r'}],mr,{narrow:true});
+    /* gráfica de barras apiladas a la derecha de la tabla */
+    var gx=M+176, gw=PW-M-gx, gh=Math.max(40,K.months.length*5.2+8), gy=t0-3.7, mx=0, CC=[[140,109,70],[59,110,168],[245,196,0]];
+    K.months.forEach(function(e){mx=Math.max(mx,e.tot)}); mx=plNice(mx||1);
+    var x0=gx+12, y0=gy+4, w0=gw-14, h0=gh-12; plPdfAxis(doc,FN,x0,y0,w0,h0,mx);
+    var bw=w0/K.months.length; K.months.forEach(function(e,i){var yy=y0+h0;[e.fo,e.fe,e.tr].forEach(function(v,q){var bh=v/mx*h0;if(bh>0){doc.setFillColor(CC[q][0],CC[q][1],CC[q][2]);yy-=bh;doc.rect(x0+i*bw+bw*.2,yy,bw*.6,bh,'F')}});
+      doc.setFont(FN,'normal');doc.setFontSize(5.8);doc.setTextColor.apply(doc,gray);doc.text(e.l==='Fondo'?e.l:e.l.slice(0,3),x0+i*bw+bw/2,y0+h0+3.5,{align:'center'})});
+    doc.setFontSize(6.5);['Fondo','Fertirrigación','Tratamientos'].forEach(function(l,q){doc.setFillColor(CC[q][0],CC[q][1],CC[q][2]);doc.rect(x0+q*30,gy+gh-1,2.6,2.6,'F');doc.setTextColor.apply(doc,ink);doc.text(l,x0+q*30+3.8,gy+gh+1.3)});
+    y=Math.max(y,gy+gh+8)}
+  if(K.miss.length){room(10);doc.setFont(FN,'bold');doc.setFontSize(8);doc.setTextColor(176,64,40);doc.text(doc.splitTextToSize('Faltan precios: '+K.miss.join(', ')+'. Su coste no está sumado.',CW),M,y);y+=6}
 }
 function plPdfFrame(doc,FN,x,y,w,h,t){doc.setFont(FN,'bold');doc.setFontSize(8);doc.setTextColor(23,33,38);doc.text(t,x,y);doc.setDrawColor(225,230,228);doc.setLineWidth(.2)}
 function plPdfAxis(doc,FN,x0,y0,w,h,mx){var st=mx/5;doc.setFont(FN,'normal');doc.setFontSize(5.8);doc.setTextColor(90,103,101);for(var v=0;v<=mx+1e-9;v+=st){var yy=y0+h-v/mx*h;doc.setDrawColor(230,233,232);doc.line(x0,yy,x0+w,yy);doc.text(trTxt(v,v<10&&st<1?1:0),x0-1,yy+1,{align:'right'})}}
@@ -7215,6 +7318,17 @@ function buildPlanXlsx(f,p,cos){
   if(cos){r2.push([]);[['Fertirrigación',C0.cost.fe],['Abonado de fondo',C0.cost.fo],['Tratamientos',C0.cost.tr],['Total',C0.cost.tot],['€/ha',C0.cost.ha]].forEach(function(x){r2.push(['Coste · '+x[0],x[1]===null?'sin precio':N(x[1])])})}
   if(p.nt){r2.push([]);r2.push([{v:'Notas',s:1}]);r2.push([p.nt])}
   sh.push({name:'Resumen',rows:r2,widths:[22,12,12,12,14,14,14]});
+  if(cos){var K=plCostCalc(f,p,C0), r3=[[{v:'Costes de la campaña · precios sin IVA',s:1}],[]];
+    r3.push(H(['Concepto','€ total','€/ha','% del total']));K.sum.forEach(function(e){r3.push([e.n,N(e.cost),N(e.costHa),N(e.pct)])});r3.push(['Total campaña',N(K.tot),N(K.totHa),K.tot?100:'']);
+    if(K.grp.length){r3.push([]);r3.push(H(['Grupo','ha','Fondo €/ha','Fertirrigación €/ha','Tratamientos €/ha','Total €/ha']));K.grp.forEach(function(e){r3.push([e.n,N(e.ha),N(e.fo),N(e.fe),N(e.tr),N(e.tot)])})}
+    var pr=function(t,L,tot){r3.push([]);r3.push([{v:t,s:1}]);r3.push(H(['Producto','Precio €','Unidad','Dosis /ha','Para la finca','€/ha','€ total']));L.forEach(function(x){r3.push([x.n,x.pr===null?'sin precio':N(x.pr),x.u,N(x.dHa),N(x.qty),N(x.costHa),x.cost===null?'':N(x.cost)])});r3.push(['Total','','','','',tot!==null&&C0.ha?N(tot/C0.ha):'',N(tot)])};
+    if(K.fe.length)pr('Fertirrigación por producto',K.fe,C0.cost.fe); if(K.fo.length)pr('Abonado de fondo',K.fo,C0.cost.fo);
+    if(K.trs.length){r3.push([]);r3.push([{v:'Tratamientos',s:1}]);r3.push(H(['Tratamiento','Producto','Cantidad','Unidad','Precio €','€/ha','€ total']));
+      K.trs.forEach(function(t){r3.push([t.code+(t.fe?' · '+t.fe:'')+' · '+t.fecha,'','','','',N(t.costHa),t.cost===null?'':N(t.cost)]);t.ps.forEach(function(x){r3.push(['',x.n,N(x.qty),x.u,x.pr===null?'sin precio':N(x.pr),x.cost!==null&&C0.ha?N(x.cost/C0.ha):'',x.cost===null?'':N(x.cost)])})});
+      r3.push([]);r3.push([{v:'Productos de tratamientos en toda la campaña',s:1}]);r3.push(H(['Producto','Tratamientos','Cantidad total','Unidad','Precio €','€ total']));K.trProd.forEach(function(a){r3.push([a.n,a.codes.join(', '),N(a.qty),a.u,a.pr===null?'sin precio':N(a.pr),a.nc?'sin precio':N(a.cost)])})}
+    if(K.months.length){r3.push([]);r3.push([{v:'Coste por mes',s:1}]);r3.push(H(['Mes','Fondo €','Fertirrigación €','Tratamientos €','Total €','Acumulado €']));K.months.forEach(function(e){r3.push([e.l,N(e.fo),N(e.fe),N(e.tr),N(e.tot),N(e.acc)])})}
+    if(K.miss.length){r3.push([]);r3.push(['Faltan precios: '+K.miss.join(', ')])}
+    sh.push({name:'Costes',rows:r3,widths:[34,24,14,14,16,14,14]})}
   return xlsxBuild(sh);
 }
 function plOut(f,p,kind){
