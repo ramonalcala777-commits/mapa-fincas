@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-Wu66+soyO/T3jQ0bGft2YoLjBIULwueW8ZuoFyHPhTU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-bxl4pBy3WBT7Zqadgdf3R24x05CFYCTpr8N4S6ROTz4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -2288,7 +2288,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-19T15:55:33Z',n:'Entrega 72 · 19 oct · 17:55'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-19T16:44:23Z',n:'Entrega 73 · 19 oct · 18:44'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -6668,18 +6668,8 @@ function plCostCalc(f,p,C0){
   if(c.fo)months.push({l:'Fondo',fo:c.fo,fe:0,tr:0});
   if(first!==null)for(var m=first;m<=last;m++)months.push({l:plCap(PL_MES[m]),fo:0,fe:mon[m].fe,tr:mon[m].tr});
   var run=0; months.forEach(function(e){e.tot=e.fo+e.fe+e.tr;run+=e.tot;e.acc=run});
-  /* €/ha de cada grupo, cuando no todos los grupos llevan lo mismo */
-  var grp=[];
-  if(C0.GB.length>1){
-    grp=C0.GB.map(function(b){var e={n:b.g.n,ha:b.ha,fo:0,fe:0,tr:0};
-      fo.forEach(function(x){if(x.pr!==null)e.fo+=x.dHa*x.pr});
-      C0.rows.forEach(function(o){var r=o.r;if(!abHas(r.pr))return;Object.keys(r.c||{}).forEach(function(k){var cc=r.c[k];if(!wm[k]||!(+cc.d>0))return;if(!cc.g||cc.g===b.g.id)e.fe+=(+cc.d)*(+r.pr)})});
-      trs.forEach(function(t){if(t.costHa===null)return;t.pls.forEach(function(x){if(!x.g||x.g===b.g.id)e.tr+=t.costHa})});
-      e.tot=e.fo+e.fe+e.tr; return e});
-    var dif=grp.some(function(e){return Math.abs(e.tot-grp[0].tot)>0.005}); if(!dif)grp=[];
-  }
   var sum=[['Abonado de fondo',c.fo],['Fertirrigación',c.fe],['Tratamientos',c.tr]].filter(function(x){return x[1]!==null}).map(function(x){return {n:x[0],cost:x[1],costHa:C0.ha?x[1]/C0.ha:null,pct:tot?x[1]/tot*100:null}});
-  return {sum:sum,tot:tot,totHa:c.ha,fe:fe,fo:fo,trs:trs,trProd:aggL,months:months,grp:grp,miss:Object.keys(miss)};
+  return {sum:sum,tot:tot,totHa:c.ha,fe:fe,fo:fo,trs:trs,trProd:aggL,months:months,miss:Object.keys(miss)};
 }
 /* ---- apuntes ya creados desde el plan ---- */
 function plDoneRec(f,p,key){
@@ -6885,7 +6875,6 @@ function plCostHTML(C0,f,p){
   h+='</tbody></table></div>';
   if(PL.cos&&C0.cost.tot!==null){var K=plCostCalc(f,p,C0);
     h+='<div class="plwrap" style="margin-top:10px"><table class="ktb"><thead><tr><th>Coste de la campaña (sin IVA)</th><th class="r">€ total</th><th class="r">€/ha</th><th class="r">%</th></tr></thead><tbody>'+K.sum.map(function(e){return '<tr><td>'+esc(e.n)+'</td><td class="r">'+trTxt(e.cost,0)+'</td><td class="r">'+trTxt(e.costHa,2)+'</td><td class="r">'+trTxt(e.pct,1)+'</td></tr>'}).join('')+'<tr><td class="b">Total</td><td class="r b">'+trTxt(K.tot,0)+'</td><td class="r b">'+trTxt(K.totHa,2)+'</td><td class="r">100</td></tr></tbody></table></div>';
-    if(K.grp.length)h+='<div class="small" style="margin-top:6px"><b>€/ha por grupo:</b> '+K.grp.map(function(e){return esc(e.n)+' '+trTxt(e.tot,2)}).join(' · ')+'</div>';
     if(K.miss.length)h+='<div class="small plwarn" style="margin-top:6px">Faltan precios: '+esc(K.miss.join(', '))+'.</div>';
     return h}
   if(PL.cos){var c=C0.cost, pt=[];
@@ -7235,10 +7224,6 @@ function plPdfCosts(doc,FN,f,p,C0,G){
   title('Resumen');
   var rs=K.sum.map(function(e){return [e.n,eur(e.cost),eur(e.costHa,2),pct(e.pct)]}); rs.push(['Total campaña',eur(K.tot),eur(K.totHa,2),K.tot?'100 %':'']);
   table([{h:'Concepto',w:70},{h:'€ total',w:34,a:'r'},{h:'€/ha',w:30,a:'r'},{h:'% del total',w:28,a:'r'}],rs,{bold:[rs.length-1]});
-  /* coste por grupo */
-  if(K.grp.length){title('Coste por ha de cada grupo');
-    table([{h:'Grupo',w:50},{h:'ha',w:20,a:'r'},{h:'Fondo €/ha',w:28,a:'r'},{h:'Fertirrigación €/ha',w:34,a:'r'},{h:'Tratamientos €/ha',w:32,a:'r'},{h:'Total €/ha',w:28,a:'r'}],
-      K.grp.map(function(e){return [e.n,ha2(e.ha),eur(e.fo,2),eur(e.fe,2),eur(e.tr,2),eur(e.tot,2)]}))}
   /* 2-3. fertirrigación y fondo por producto */
   var prodCols=[{h:'Producto',w:62},{h:'Precio',w:24,a:'r'},{h:'Dosis /ha',w:26,a:'r'},{h:'Para la finca',w:30,a:'r'},{h:'€/ha',w:24,a:'r'},{h:'€ total',w:28,a:'r'},{h:'% del apartado',w:26,a:'r'}];
   var prodRows=function(L,tot){var r=L.map(function(x){return [x.n,x.pr!==null?trTxt(x.pr,2)+' €/'+x.u:'sin precio',trTxt(x.dHa,2,1)+' '+x.u+(x.split?' *':''),plQt(x.qty)+' '+x.u,eur(x.costHa,2),eur(x.cost),x.cost!==null&&tot?pct(x.cost/tot*100):'']});
@@ -7320,7 +7305,6 @@ function buildPlanXlsx(f,p,cos){
   sh.push({name:'Resumen',rows:r2,widths:[22,12,12,12,14,14,14]});
   if(cos){var K=plCostCalc(f,p,C0), r3=[[{v:'Costes de la campaña · precios sin IVA',s:1}],[]];
     r3.push(H(['Concepto','€ total','€/ha','% del total']));K.sum.forEach(function(e){r3.push([e.n,N(e.cost),N(e.costHa),N(e.pct)])});r3.push(['Total campaña',N(K.tot),N(K.totHa),K.tot?100:'']);
-    if(K.grp.length){r3.push([]);r3.push(H(['Grupo','ha','Fondo €/ha','Fertirrigación €/ha','Tratamientos €/ha','Total €/ha']));K.grp.forEach(function(e){r3.push([e.n,N(e.ha),N(e.fo),N(e.fe),N(e.tr),N(e.tot)])})}
     var pr=function(t,L,tot){r3.push([]);r3.push([{v:t,s:1}]);r3.push(H(['Producto','Precio €','Unidad','Dosis /ha','Para la finca','€/ha','€ total']));L.forEach(function(x){r3.push([x.n,x.pr===null?'sin precio':N(x.pr),x.u,N(x.dHa),N(x.qty),N(x.costHa),x.cost===null?'':N(x.cost)])});r3.push(['Total','','','','',tot!==null&&C0.ha?N(tot/C0.ha):'',N(tot)])};
     if(K.fe.length)pr('Fertirrigación por producto',K.fe,C0.cost.fe); if(K.fo.length)pr('Abonado de fondo',K.fo,C0.cost.fo);
     if(K.trs.length){r3.push([]);r3.push([{v:'Tratamientos',s:1}]);r3.push(H(['Tratamiento','Producto','Cantidad','Unidad','Precio €','€/ha','€ total']));
