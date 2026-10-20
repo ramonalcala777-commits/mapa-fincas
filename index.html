@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-4UUS4NKf36c+xdRwqp2Hctv47yxj6TL4Scsrd9Cs5Rw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-5N4Je2fAIXnHr5/5HA24543nv5WAZseImJPOQM9RDPg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -2305,7 +2305,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-20T12:46:29Z',n:'Entrega 86 · 20 oct · 14:46'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-20T13:32:25Z',n:'Entrega 87 · 20 oct · 15:32'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -3955,6 +3955,7 @@ function renderDatos(){
     T.copias+='<div class="note">La copia tiene <b>'+p.nf+'</b> '+(p.nf===1?'finca':'fincas')+' y <b>'+p.nr+'</b> '+(p.nr===1?'recinto':'recintos')+' ('+ha2(p.ha)+' ha)'+(p.full?(p.full.docs.length||p.full.fotos.length?', <b>'+p.full.docs.length+'</b> '+(p.full.docs.length===1?'documento':'documentos')+' y <b>'+p.full.fotos.length+'</b> '+(p.full.fotos.length===1?'foto':'fotos'):''):'')+'. Al cargarla se sustituyen los datos de este aparato'+(p.full&&(p.full.docs.length||p.full.fotos.length)?' y los documentos y fotos se vuelven a subir a la nube (los que ya estén, no se duplican)':'')+'.<div class="acts"><button class="btn primary sm" data-act="import-apply">Cargar y sustituir</button><button class="btn sm" data-act="import-cancel">Cancelar</button></div></div>';
   }
   if(lsGet(KEYP))T.copias+='<div class="acts"><button class="btn sm" data-act="import-undo">Recuperar los datos anteriores a la última carga</button></div>';
+  T.copias+=aptHTML();
   T.copias+=histHTML();
   T.gest+=phDatosHTML();
   T.imp+='<h3>Descargar mis recintos</h3><p class="small" style="margin-top:0">Todos los recintos de tus fincas, un polígono por recinto.</p>'+expBtns('all','',!st.n);
@@ -4568,15 +4569,15 @@ function undoImport(){
 
 /* ───────── fotos de las etiquetas ───────── */
 var PH_SQL="-- Fotos de las etiquetas de Mapa de Fincas\ncreate table if not exists public.fotos (\n  id uuid primary key,\n  user_id uuid not null,\n  tag_id text,\n  contenido text not null,\n  creado timestamptz not null default now()\n);\n\ncreate index if not exists fotos_user_tag on public.fotos (user_id, tag_id);\n\nalter table public.fotos enable row level security;\n\ndrop policy if exists \"ver mis fotos\" on public.fotos;\ncreate policy \"ver mis fotos\" on public.fotos\n  for select using (auth.uid() = user_id);\n\ndrop policy if exists \"subir mis fotos\" on public.fotos;\ncreate policy \"subir mis fotos\" on public.fotos\n  for insert with check (auth.uid() = user_id);\n\ndrop policy if exists \"borrar mis fotos\" on public.fotos;\ncreate policy \"borrar mis fotos\" on public.fotos\n  for delete using (auth.uid() = user_id);";
-var PH={missing:false,busy:false,sql:false,pend:{},mem:{full:{},th:{},q:{},doc:{}},view:null,target:null,zipBusy:false,max:12};
+var PH={missing:false,busy:false,sql:false,pend:{},mem:{full:{},th:{},q:{},doc:{},sync:{}},view:null,target:null,zipBusy:false,max:12};
 var idbP=null;
 function idb(){
   if(idbP)return idbP;
   idbP=new Promise(function(ok){
     try{
       if(typeof indexedDB==='undefined'||!indexedDB){ok(null);return}
-      var r=indexedDB.open('mf-fotos',2);
-      r.onupgradeneeded=function(){var d=r.result;['full','th','q','doc'].forEach(function(n){if(!d.objectStoreNames.contains(n))d.createObjectStore(n)})};
+      var r=indexedDB.open('mf-fotos',3);
+      r.onupgradeneeded=function(){var d=r.result;['full','th','q','doc','sync'].forEach(function(n){if(!d.objectStoreNames.contains(n))d.createObjectStore(n)})};
       r.onsuccess=function(){ok(r.result)}; r.onerror=function(){ok(null)}; r.onblocked=function(){ok(null)};
     }catch(e){ok(null)}
   });
@@ -9137,13 +9138,23 @@ function getRemote(tok){
     return r.json();
   }).then(function(a){return a&&a[0]?a[0].contenido:null});
 }
-function putRemote(tok,rev){
-  var doc={rev:rev,mod:S.mod||Date.now(),fincas:S.fincas,recintos:S.recintos,lastCrop:S.lastCrop,x:S.x};
-  return sbFetch('/rest/v1/datos?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:SY.uid,contenido:doc,actualizado:new Date().toISOString()})},tok).then(function(r){
+function putRemote(tok,rev,expect){
+  /* solo se guarda si la nube sigue en la versión que se leyó (expect); si otro aparato subió antes, se repite la ronda y se juntan los cambios */
+  var doc={rev:rev,mod:S.mod||Date.now(),fincas:S.fincas,recintos:S.recintos,lastCrop:S.lastCrop,x:S.x}, now=new Date().toISOString(), p;
+  if(expect===null||expect===undefined)
+    p=sbFetch('/rest/v1/datos',{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify({user_id:SY.uid,contenido:doc,actualizado:now})},tok).then(function(r){if(r.status===409)throw {code:'race'};return r});
+  else if(!expect)
+    p=sbFetch('/rest/v1/datos?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:SY.uid,contenido:doc,actualizado:now})},tok);
+  else
+    p=sbFetch('/rest/v1/datos?user_id=eq.'+SY.uid+'&contenido-%3E%3Erev=eq.'+expect+'&select=user_id',{method:'PATCH',headers:{Prefer:'return=representation',Accept:'application/json'},body:JSON.stringify({contenido:doc,actualizado:now})},tok).then(function(r){
+      if(!r.ok)return r;
+      return r.json().then(function(a){if(!Array.isArray(a)||!a.length)throw {code:'race'};return r},function(){throw {code:'net'}});
+    });
+  return p.then(function(r){
     if(r.status===401||r.status===403)throw {code:'expired'};
     if(!r.ok)throw {code:'net'};
     SY.baseRev=rev; if(S.mod===doc.mod){S.dirty=false;lsSet(KEY,JSON.stringify(S))}
-    SY.act='Subidos tus cambios'; return 'push';
+    SY.act='Subidos tus cambios'; return syBaseSet(doc).then(function(){return 'push'});
   });
 }
 function applyRemote(rem,fit){
@@ -9156,29 +9167,95 @@ function applyRemote(rem,fit){
   afterDataChange(!!fit);
 }
 function asPrev(d){return JSON.stringify(Object.assign(blank(),{fincas:d.fincas||[],recintos:d.recintos||{},lastCrop:d.lastCrop||{},x:normX(d.x)}))}
-function syncRound(retry){
-  var tok;
+function syncRound(retry,tries){
+  var tok; tries=tries||0;
   return authToken(retry).then(function(t){tok=t;return getRev(tok)}).then(function(R){
     var base=SY.baseRev||0, hasLocal=!!(S.fincas.length||Object.keys(S.recintos).length), dirty=!!S.dirty;
-    if(R===null){ if(hasLocal)return putRemote(tok,1); SY.act='Todo al día'; return null; }
+    if(R===null){ if(hasLocal)return putRemote(tok,1,null); SY.act='Todo al día'; return null; }
     if(R>base){
       return getRemote(tok).then(function(rem){
-        if(!rem){ return hasLocal?putRemote(tok,R+1):null }
-        if(!dirty){ applyRemote(rem,!hasLocal); return 'pull'; }
-        /* cambios en los dos sitios: gana el más reciente y el otro queda guardado */
-        if((rem.mod||0)>=(S.mod||0)){ lsSet(KEYP,JSON.stringify(S)); applyRemote(rem,false); toast('Había cambios en los dos aparatos. Se han cargado los más recientes. Los de este aparato quedan en Datos, «Recuperar».'); return 'pull'; }
-        lsSet(KEYP,asPrev(rem)); toast('Había cambios en los dos aparatos. Se han subido los de este, que eran más recientes.'); return putRemote(tok,R+1);
+        if(!rem){ return hasLocal?putRemote(tok,R+1,R):null }
+        var RR=parseInt(rem.rev,10)||R;
+        if(!dirty){ applyRemote(rem,!hasLocal); return syBaseSet(rem).then(function(){return 'pull'}); }
+        /* cambios en los dos aparatos: se juntan; si los dos cambiaron lo mismo, se queda lo que ya estaba en la nube y lo de este aparato se aparta */
+        return syBaseGet().then(function(bs){
+          var b; try{b=bs?JSON.parse(bs.d):undefined}catch(e){b=undefined}
+          var c={n:0}, rc=syDoc(rem), m=merge3(b,JSON.parse(JSON.stringify(syDoc(S))),rc,c);
+          return (c.n?aptAdd(S):Promise.resolve()).then(function(){
+            applyMerged(rem,m);
+            return syBaseSet(rem).then(function(){
+              if(jeq(m,rc)){ S.dirty=false; lsSet(KEY,JSON.stringify(S)); updateDot(); toast(syMsg(c.n)); return 'pull'; }
+              toast(syMsg(c.n)); return putRemote(tok,RR+1,RR);
+            });
+          });
+        });
       });
     }
-    if(dirty)return putRemote(tok,Math.max(R,base)+1);
-    SY.act='Todo al día'; return null;
+    if(dirty)return putRemote(tok,Math.max(R,base)+1,R);
+    SY.act='Todo al día';
+    /* primera vez tras la Entrega 87: se guarda la versión de la nube como punto de partida para juntar cambios */
+    return syBaseGet().then(function(bs){ if(bs&&bs.rev===R)return null; return getRemote(tok).then(function(rem){ if(rem&&(parseInt(rem.rev,10)||0)===R&&!S.dirty)return syBaseSet(rem); return null }) });
   }).then(function(){
     SY.last=Date.now(); saveSY();
   },function(e){
-    if(e&&e.code==='expired'&&!retry){SY.exp=0;return syncRound(true)}
+    if(e&&e.code==='expired'&&!retry){SY.exp=0;return syncRound(true,tries)}
+    if(e&&e.code==='race'&&tries<3){return syncRound(retry,tries+1)}
     throw e;
   });
 }
+/* ═════════ ENTREGA 87 · sincronización sin pisar: guardar solo si nadie ha subido antes, juntar cambios y apartar lo que choca ═════════ */
+var SYNC_APT=3, APT={list:null};
+function syDoc(d){return {fincas:d.fincas||[],recintos:d.recintos||{},lastCrop:d.lastCrop||{},x:d.x||{}}}
+function jeq(a,b){if(a===b)return true;if(a===undefined||b===undefined||a===null||b===null)return false;if(typeof a!=='object'||typeof b!=='object')return false;return JSON.stringify(a)===JSON.stringify(b)}
+function isObj(v){return !!v&&typeof v==='object'&&!Array.isArray(v)}
+function idArr(a){if(!Array.isArray(a))return false;var s={};for(var i=0;i<a.length;i++){var e=a[i];if(!isObj(e)||e.id==null||s[e.id])return false;s[e.id]=1}return true}
+/* b = lo último que se sincronizó, l = este aparato, r = la nube. Se queda lo que cambió cada uno; si los dos cambiaron lo mismo, gana la nube (c.n cuenta los choques) */
+function merge3(b,l,r,c){
+  if(jeq(l,r))return l;
+  if(jeq(l,b))return r;
+  if(jeq(r,b))return l;
+  if(isObj(l)&&isObj(r)&&(b===undefined||isObj(b))){
+    var bb=b||{}, o={}, ks={}; Object.keys(r).concat(Object.keys(l)).forEach(function(k){ks[k]=1});
+    Object.keys(ks).forEach(function(k){var v=k==='pt'?(l[k]!==undefined?l[k]:r[k]):merge3(bb[k],l[k],r[k],c);if(v!==undefined)o[k]=v});
+    return o;
+  }
+  if(idArr(l)&&idArr(r)&&(b===undefined||idArr(b))){
+    var mb={}, ml={}, mr={}, out=[], seen={};
+    (b||[]).forEach(function(e){mb[e.id]=e}); l.forEach(function(e){ml[e.id]=e}); r.forEach(function(e){mr[e.id]=e});
+    r.concat(l).forEach(function(e){var id=e.id;if(seen[id])return;seen[id]=1;var v=merge3(mb[id],ml[id],mr[id],c);if(v!==undefined)out.push(v)});
+    return out;
+  }
+  c.n++; return r;
+}
+function syMsg(n){return n?'Había cambios en otro aparato y los he juntado. En '+n+(n===1?' dato':' datos')+' cambiado'+(n===1?'':'s')+' en los dos sitios se ha quedado lo de la nube; lo de este aparato queda en Datos → «Versiones apartadas».':'Había cambios en otro aparato y los he juntado con los de este.'}
+function syBaseGet(){return idbGet('sync','base').then(function(v){return v&&v.uid===SY.uid?v:null},function(){return null})}
+function syBaseSet(doc){return idbPut('sync','base',{uid:SY.uid,rev:parseInt(doc.rev,10)||0,d:JSON.stringify(syDoc(doc))}).then(null,function(){})}
+function aptLoad(){return idbGet('sync','apt').then(function(a){a=Array.isArray(a)?a:[];APT.list=a.map(function(x){return {t:x.t}});return a},function(){APT.list=[];return []})}
+function aptAdd(st){return aptLoad().then(function(a){a.unshift({t:Date.now(),d:asPrev(st)});a=a.slice(0,SYNC_APT);return idbPut('sync','apt',a).then(function(){APT.list=a.map(function(x){return {t:x.t}});if(typeof tab!=='undefined'&&tab==='datos')renderDatos()})}).then(null,function(){})}
+function aptOpen(i){
+  aptLoad().then(function(a){
+    var x=a[i], d; try{d=x&&JSON.parse(x.d)}catch(e){d=null}
+    if(!d||!Array.isArray(d.fincas)){toast('No he podido abrir esa versión.');return}
+    var rs=Object.keys(d.recintos||{}).map(function(k){return d.recintos[k]});
+    pendingImport={data:{fincas:d.fincas,recintos:d.recintos||{},lastCrop:d.lastCrop||{},x:d.x},nf:d.fincas.length,nr:rs.length,ha:rs.reduce(function(s,r){return s+(r.ha||0)},0)};
+    renderDatos(); var n=$('[data-act=import-apply]'); if(n&&n.scrollIntoView)n.scrollIntoView({block:'center'});
+  });
+}
+function aptHTML(){
+  if(GTOK||!APT.list||!APT.list.length)return '';
+  var h='<h3>Versiones apartadas</h3><p class="small" style="margin-top:0">Cuando este aparato y otro cambiaron lo mismo a la vez, se quedó lo de la nube y lo de aquí se guardó en esta lista (las '+SYNC_APT+' últimas). Ábrela solo si echas algo en falta: al cargarla sustituye los datos actuales.</p><div class="acts">';
+  APT.list.forEach(function(x,i){var d=new Date(x.t);h+='<button class="btn sm" data-act="apt-load" data-id="'+i+'">'+esc(d.toLocaleDateString('es-ES')+' · '+d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}))+'</button>'});
+  return h+'</div>';
+}
+function applyMerged(rem,m){
+  var af=activeFinca, di=detailId;
+  S=Object.assign(blank(),{fincas:m.fincas||[],recintos:m.recintos||{},lastCrop:m.lastCrop||{},x:normX(m.x),base:S.base,lastExport:S.lastExport,mod:Date.now(),dirty:true});
+  lastData=dataStr(); bkAdopt(); lsSet(KEY,JSON.stringify(S));
+  sel=null; UNDO=null; activeFinca=(af&&finca(af))?af:null; detailId=(di&&finca(di))?di:null;
+  SY.baseRev=parseInt(rem.rev,10)||0; SY.act='Juntados los cambios de los dos aparatos';
+  afterDataChange(false);
+}
+setTimeout(function(){if(!GTOK)aptLoad()},800);
 function syncNow(manual){
   if(!SY.rt)return;
   if(syncing){syncAgain=true;return}
@@ -13471,6 +13548,7 @@ document.addEventListener('click',function(ev){
     case 'hist-restore':histRestore(id);break;
     case 'import-cancel':pendingImport=null;renderDatos();break;
     case 'import-undo':undoImport();break;
+    case 'apt-load':aptOpen(parseInt(id,10)||0);break;
     case 'ndv-chart':ndvChart();break;
     case 'ndv-chart-close':ndvChartClose();break;
     case 'ndv-scale':NDC.full=b.dataset.v==='full';ndcRender();break;
