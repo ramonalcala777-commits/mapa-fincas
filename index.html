@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-YOQOhNcwoLdK2DXXw6cuFUvyCLGJTv95vS1DWYZPrTk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-4UUS4NKf36c+xdRwqp2Hctv47yxj6TL4Scsrd9Cs5Rw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -1651,7 +1651,7 @@ var $$=function(s,e){return Array.prototype.slice.call((e||document).querySelect
 var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
 var nf=function(n,d){var t=Number(n).toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d}); return t.replace(/^(-?)(\d)(\d{3})(?=,|$)/,'$1$2.$3')};
 var ha2=function(n){return nf(n,2)}, ha4=function(n){return nf(n,4)};
-var uid=function(){return Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-4)};
+var uid=function(){var s='';try{var a=new Uint8Array(8);(window.crypto||window.msCrypto).getRandomValues(a);for(var i=0;i<8;i++)s+=(a[i]%36).toString(36)}catch(e){s=(Math.random().toString(36)+'00000000').slice(2,10)}return s+Date.now().toString(36).slice(-4)};
 var R=6378137, TZ=15, NZ=Math.pow(2,TZ);
 
 var COLORS=['#ffc233','#2fd5a0','#4cc9f0','#ff7a9c','#b69cff','#ff9f43','#9be564','#ff5d5d','#5ea8ff','#f5f5f5'];
@@ -1720,12 +1720,21 @@ function fetchJsonS(u,ms){
 
 /* ───────── datos y almacenamiento ───────── */
 var VC=(function(){
-  var h=String(location.hash||'').replace(/^#/,''); if(h.indexOf('vc=')<0)return null;
+  var h=String(location.hash||'').replace(/^#/,''), st=null; try{st=history.state}catch(e){}
+  if(h.indexOf('vc=')<0)return st&&st.mfvc&&/^[0-9a-f-]{36}$/.test(st.mfvc.uid||'')?{uid:st.mfvc.uid,name:st.mfvc.name||''}:null;
   var p={}; h.split('&').forEach(function(kv){var i=kv.indexOf('=');if(i>0){try{p[kv.slice(0,i)]=decodeURIComponent(kv.slice(i+1))}catch(e){}}});
-  if(/^[0-9a-f-]{36}$/.test(p.vc||'')&&p.t){try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}return {uid:p.vc,tok:p.t,name:p.n||''}}
+  try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
+  if(/^[0-9a-f-]{36}$/.test(p.vc||'')){var o={uid:p.vc,name:p.n||''};try{history.replaceState({mfvc:o},'',location.pathname+location.search)}catch(e){}return o}
   return null;
 })();
-var GTOK=(function(){var m=/[#&]ver=([A-Za-z0-9_-]{32,})/.exec(location.hash||'');return m?m[1]:(VC?'vc':null)})();
+/* «Ver como»: la clave no viaja en la dirección; se usa la sesión de Ramon ya guardada en este navegador, sin renovarla */
+function vcTok(){try{var j=JSON.parse(localStorage.getItem('mapa-fincas:sesion')||'null');if(j&&j.at&&Date.now()<j.exp-60000)return j.at}catch(e){}return null}
+var GTOK=(function(){
+  var m=/[#&]ver=([A-Za-z0-9_-]{32,})/.exec(location.hash||''), st=null; try{st=history.state}catch(e){}
+  if(m){try{history.replaceState({mfver:m[1]},'',location.pathname+location.search)}catch(e){}return m[1]}
+  if(st&&typeof st.mfver==='string'&&/^[A-Za-z0-9_-]{32,}$/.test(st.mfver))return st.mfver;
+  return VC?'vc':null;
+})();
 var KEY='mapa-fincas:datos', KEYP='mapa-fincas:previo', KEYV='mapa-fincas:vista', KEYI='mapa-fincas:intro';
 var blankX=function(){return {tags:[],meds:[],favs:{},trash:[],cs:{},fo:null,cl:[],grupos:[],pf:[]}};
 var normX=function(x){x=x||{};var o=Object.assign({},x);o.tags=x.tags||[];o.meds=x.meds||[];o.favs=x.favs||{};o.trash=x.trash||[];o.cs=x.cs||{};o.fo=(typeof x.fo==='number'?x.fo:null);o.cl=x.cl||[];o.grupos=x.grupos||[];o.gg=x.gg||[];o.pf=x.pf||[];o.af=x.af||{};return o};
@@ -2296,7 +2305,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-20T08:46:09Z',n:'Entrega 85 · 20 oct · 10:46'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-20T12:46:29Z',n:'Entrega 86 · 20 oct · 14:46'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -4709,7 +4718,7 @@ function phInit(){
   idbKeys('q').then(function(ks){ks.forEach(function(k){if(k.indexOf('up:')===0)PH.pend[k.slice(3)]=1;if(k.indexOf('dup:')===0)DOC.pend[k.slice(4)]=1}); if(ks.length)setTimeout(phFlush,3000)});
 }
 function phFetch(id){
-  if(VC)return fnCall('foto',{id:VC.uid,foto:id},VC.tok).then(function(r){if(!r||!r.contenido)throw new Error('x');return r.contenido});
+  if(VC)return (vcTok()?fnCall('foto',{id:VC.uid,foto:id},vcTok()):Promise.reject(new Error('nologin'))).then(function(r){if(!r||!r.contenido)throw new Error('x');return r.contenido});
   return authToken().then(function(tok){
     return sbFetch('/rest/v1/fotos?select=contenido&id=eq.'+encodeURIComponent(id),{headers:{Accept:'application/json'}},tok).then(function(r){if(!r.ok)throw new Error('x');return r.json()});
   }).then(function(a){
@@ -9707,8 +9716,8 @@ function vcMsgFor(e){
 }
 function guPoll(force){
   if(VC){
-    if(GU.loaded||GU.busy)return; GU.busy=true;
-    fnCall('ver',{id:VC.uid},VC.tok).then(function(r){
+    if(GU.loaded||GU.busy)return; var vt=vcTok(); if(!vt){guMsg(vcMsgFor('nologin'));return} GU.busy=true;
+    fnCall('ver',{id:VC.uid},vt).then(function(r){
       GU.busy=false;
       if(!r||r.error||!r.ok){guMsg(vcMsgFor(r&&r.error));return}
       guMsg(null); GU.opt={descargar:true,comentar:false}; GU.coms=[]; GU.loaded=true; if(r.nombre&&!VC.name)VC.name=r.nombre;
@@ -9751,7 +9760,7 @@ if(GTOK){
 
 /* ═════════ ENTREGA DE SERVIDOR · usuarios y radar de lluvia ═════════ */
 var US={open:false,list:null,err:'',msg:'',busy:false,view:'list',sel:null,info:''};
-var US_ERR={nologin:'La sesión ha caducado. Sal y vuelve a entrar en Datos → Sincronización.',prohibido:'Solo el usuario Ramon puede hacer esto.',nofn:'Falta instalar la función de servidor en Supabase (mira la guía, apartado «Usuarios y radar»).',red:'Sin conexión con el servidor. Inténtalo de nuevo.',nombre:'El nombre debe tener de 2 a 30 letras minúsculas, números, punto, guion o guion bajo, sin espacios ni acentos.',pass:'La contraseña debe tener al menos 8 caracteres.',existe:'Ya existe un usuario con ese nombre.',propio:'Tu propia cuenta no se puede bloquear ni borrar.',noexiste:'Ese usuario ya no existe.',fallo:'El servidor no ha podido hacerlo. Inténtalo de nuevo.',sinclave:'Falta poner la clave de la AEMET en el servidor (mira la guía).',clave:'La AEMET no acepta la clave. Revisa que esté bien copiada.',limite:'La AEMET dice que hay demasiadas peticiones. Prueba dentro de unos minutos.',aemet:'La AEMET no responde ahora mismo.'};
+var US_ERR={nologin:'La sesión ha caducado. Sal y vuelve a entrar en Datos → Sincronización.',prohibido:'Solo el usuario Ramon puede hacer esto.',nofn:'Falta instalar la función de servidor en Supabase (mira la guía, apartado «Usuarios y radar»).',red:'Sin conexión con el servidor. Inténtalo de nuevo.',nombre:'El nombre debe tener de 2 a 30 letras minúsculas, números, punto, guion o guion bajo, sin espacios ni acentos.',pass:'La contraseña debe tener al menos 12 caracteres.',existe:'Ya existe un usuario con ese nombre.',propio:'Tu propia cuenta no se puede bloquear ni borrar.',noexiste:'Ese usuario ya no existe.',fallo:'El servidor no ha podido hacerlo. Inténtalo de nuevo.',sinclave:'Falta poner la clave de la AEMET en el servidor (mira la guía).',clave:'La AEMET no acepta la clave. Revisa que esté bien copiada.',limite:'La AEMET dice que hay demasiadas peticiones. Prueba dentro de unos minutos.',aemet:'La AEMET no responde ahora mismo.'};
 function usErr(e){return US_ERR[e]||('Error inesperado ('+e+').')}
 function usRender(){
   var m=$('#usmodal'); if(!m)return;
@@ -9807,8 +9816,8 @@ function usAct(accion,args,okMsg){
 }
 function usView(id,name){
   var w=null; try{w=window.open('about:blank','_blank')}catch(e){}
-  authToken(true).then(function(tok){
-    var u=location.origin+location.pathname+'#vc='+id+'&t='+encodeURIComponent(tok)+'&n='+encodeURIComponent(name||'');
+  authToken(true).then(function(){
+    var u=location.origin+location.pathname+'#vc='+id+'&n='+encodeURIComponent(name||'');
     if(w&&!w.closed)w.location.href=u; else location.href=u;
   },function(){if(w)try{w.close()}catch(e){};US.err=usErr('nologin');usRender()});
 }
