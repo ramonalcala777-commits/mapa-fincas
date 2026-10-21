@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-F+fS+omyrLvE4M6XwVhzuF8z0cEBz95QdGjMpHhmOCY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-yfM39Ql7Impt4aCu0/+7DzHj0wdDokMHI8zad1NabU8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -2318,7 +2318,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-20T20:27:21Z',n:'Entrega 94 · 20 oct · 22:27'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-21T18:47:31Z',n:'Entrega 95 · 21 oct · 20:47'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -3865,7 +3865,7 @@ function renderResumen(){
   });
   el.innerHTML=h;
 }
-var staleBackup=function(){return backupDue()};
+var staleBackup=function(){return backupDue()&&bkOwn()};
 function updateDot(){$('#navdot').hidden=!staleBackup()}
 /* ---- Entrega 56: paletas de colores por usuario (se guardan en la cuenta: S.x.pal) ---- */
 var PALS=[
@@ -3969,6 +3969,7 @@ function renderDatos(){
   T.copias+='<div class="acts"><button class="btn" data-act="import-pick">Cargar copia</button></div><input type="file" id="impfile" accept=".json,.zip,application/json,application/zip" hidden>';
   if(pendingImport){
     var p=pendingImport;
+    if(p.u&&p.u!==myUser())T.copias+='<div class="note" style="background:var(--warn-bg);color:var(--warn-ink)">Ojo: esta copia es de <b>'+esc(ubkCap(p.u))+'</b>, no de este usuario. Si la cargas, los datos de aquí se sustituyen por los suyos.</div>';
     T.copias+='<div class="note">La copia tiene <b>'+p.nf+'</b> '+(p.nf===1?'finca':'fincas')+' y <b>'+p.nr+'</b> '+(p.nr===1?'recinto':'recintos')+' ('+ha2(p.ha)+' ha)'+(p.full?(p.full.docs.length||p.full.fotos.length?', <b>'+p.full.docs.length+'</b> '+(p.full.docs.length===1?'documento':'documentos')+' y <b>'+p.full.fotos.length+'</b> '+(p.full.fotos.length===1?'foto':'fotos'):''):'')+'. Al cargarla se sustituyen los datos de este aparato'+(p.full&&(p.full.docs.length||p.full.fotos.length)?' y los documentos y fotos se vuelven a subir a la nube (los que ya estén, no se duplican)':'')+'.<div class="acts"><button class="btn primary sm" data-act="import-apply">Cargar y sustituir</button><button class="btn sm" data-act="import-cancel">Cancelar</button></div></div>';
   }
   T.copias+=spaceHTML();
@@ -4561,7 +4562,7 @@ function readImport(file){
     try{
       var j=JSON.parse(rd.result), d=j&&j.datos; if(!j||j.app!=='mapa-fincas'||!d||!Array.isArray(d.fincas)||typeof d.recintos!=='object')throw new Error('x');
       var rs=Object.keys(d.recintos).map(function(k){return d.recintos[k]});
-      pendingImport={data:d,nf:d.fincas.length,nr:rs.length,ha:rs.reduce(function(s,r){return s+(r.ha||0)},0)}; renderDatos();
+      pendingImport={data:d,u:j.usuario||'',nf:d.fincas.length,nr:rs.length,ha:rs.reduce(function(s,r){return s+(r.ha||0)},0)}; renderDatos();
     }catch(e){pendingImport=null;toast('Ese archivo no es una copia de Mapa de Fincas.');renderDatos()}
   };
   rd.readAsText(file);
@@ -9388,7 +9389,7 @@ function syncNow(manual){
     else syncErr='Sin conexión. Los cambios se subirán solos cuando vuelva.';
   }).then(function(){
     clearTimeout(wd); if(my!==syncGen)return;
-    syncing=false; renderSync(); setTimeout(phFlush,0); setTimeout(lkTick,0);
+    syncing=false; renderSync(); setTimeout(phFlush,0); setTimeout(lkTick,0); setTimeout(ubkCheck,2500);
     if(syncAgain){syncAgain=false;syncNow()}
   });
 }
@@ -9985,8 +9986,9 @@ function usRender(){
     if(US.busy&&!US.list)h+='<p class="small">Cargando…</p>';
     (US.list||[]).forEach(function(u){
       h+='<div class="usr"><div><span class="nm">'+esc(u.nombre)+'</span>'+(u.admin?' <span class="small">(tú)</span>':'')+(u.bloqueado?'<span class="bq">Bloqueado</span>':'')+'</div>';
-      h+='<div class="small">'+u.fincas+' fincas · '+u.recintos+' recintos · '+(u.ultimo?'última entrada '+agoTxt(Date.parse(u.ultimo)):'aún no ha entrado')+'</div>';
+      h+='<div class="small">'+u.fincas+' fincas · '+u.recintos+' recintos · '+(u.ultimo?'última entrada '+agoTxt(Date.parse(u.ultimo)):'aún no ha entrado')+(u.admin?'':' · '+(ubkLast(u.id)?'última copia el '+new Date(ubkLast(u.id)).toLocaleDateString('es-ES',{day:'numeric',month:'long'}):'sin copia'))+'</div>';
       h+='<div class="acts" style="margin-top:6px"><button class="btn sm" data-act="us-pass" data-id="'+esc(u.id)+'">Contraseña</button>';
+      if(!u.admin)h+='<button class="btn sm" data-act="ubk-now" data-id="'+esc(u.id)+'"'+(UBK.busy?' disabled':'')+'>'+(UBK.busy===u.id?'Preparando copia…':'Copia completa')+'</button>';
       if(!u.admin)h+='<button class="btn sm" data-act="us-view" data-id="'+esc(u.id)+'" data-n="'+esc(u.nombre)+'">Ver como…</button><button class="btn sm" data-act="us-ban" data-id="'+esc(u.id)+'">'+(u.bloqueado?'Desbloquear':'Bloquear')+'</button><button class="btn sm danger" data-act="us-del" data-id="'+esc(u.id)+'">Borrar</button>';
       h+='</div></div>';
     });
@@ -12507,36 +12509,36 @@ var FB={busy:false,msg:''};
 var u8b64=function(u8){var s='',i,CH=0x8000;for(i=0;i<u8.length;i+=CH)s+=String.fromCharCode.apply(null,u8.subarray(i,i+CH));return btoa(s)};
 function fbDate(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
 function fbSafe(s,max){return String(s||'sin nombre').replace(/[\\/:*?"<>|\u0000-\u001f]+/g,' ').replace(/\s+/g,' ').trim().slice(0,max||60)||'sin nombre'}
-function fbItems(){
-  var docs=[], fotos=[];
-  S.fincas.forEach(function(f){
+function fbItems(D){
+  D=D||S; var docs=[], fotos=[];
+  D.fincas.forEach(function(f){
     (f.docs||[]).forEach(function(d){docs.push({fid:f.id,fn:f.nombre,d:d})});
     (f.dia||[]).forEach(function(n){(n.ph||[]).forEach(function(id,i){fotos.push({id:id,k:'nota',tag:n.id,fid:f.id,fn:f.nombre,f:n.f||'',i:i})})});
   });
-  ((S.x&&S.x.tags)||[]).forEach(function(t){(t.ph||[]).forEach(function(id,i){fotos.push({id:id,k:'etiqueta',tag:t.id,tn:t.name,i:i})})});
+  ((D.x&&D.x.tags)||[]).forEach(function(t){(t.ph||[]).forEach(function(id,i){fotos.push({id:id,k:'etiqueta',tag:t.id,tn:t.name,i:i})})});
   return {docs:docs,fotos:fotos};
 }
 function fbProg(m){FB.msg=m; var el=$('#fbprog'); if(el)el.textContent=m; else toast(m)}
 /* monta la copia completa; devuelve una promesa con {blob,name,nd,nf,miss:[…]} */
-function fbBuild(){
-  var it=fbItems(), files=[], miss=[], man={app:'mapa-fincas',tipo:'copia-completa',v:2,fecha:new Date().toISOString(),documentos:[],fotos:[]}, tot=it.docs.length+it.fotos.length, done=0, used={};
+function fbBuild(U){
+  var it=fbItems(U&&U.D), files=[], miss=[], man={app:'mapa-fincas',tipo:'copia-completa',v:2,fecha:new Date().toISOString(),documentos:[],fotos:[]}, tot=it.docs.length+it.fotos.length, done=0, used={};
   var uniq=function(p){var q=p,k=1;while(used[q]){k++;q=p.replace(/(\.[A-Za-z0-9]{1,5})?$/,function(e){return ' ('+k+')'+(e||'')})}used[q]=1;return q};
   var chain=Promise.resolve();
   it.docs.forEach(function(x){
-    chain=chain.then(function(){return docGet(x.d)}).then(function(bl){return bl.arrayBuffer()}).then(function(buf){
+    chain=chain.then(function(){return (U?U.docGet:docGet)(x.d)}).then(function(bl){return bl.arrayBuffer()}).then(function(buf){
       var ext=x.d.e||'pdf', path=uniq('documentos/'+fbSafe(x.fn,50)+'/'+fbSafe(x.d.n,70)+'.'+ext);
       files.push({n:path,d:new Uint8Array(buf)}); man.documentos.push({id:x.d.id,fid:x.fid,finca:x.fn,nombre:x.d.n||'',ext:ext,mt:x.d.mt||'',archivo:path});
     },function(){miss.push('documento «'+(x.d.n||x.d.id)+'» ('+x.fn+')')}).then(function(){done++;fbProg('Preparando la copia… '+done+' de '+tot)});
   });
   it.fotos.forEach(function(x){
-    chain=chain.then(function(){return phFull(x.id)}).then(function(d){
+    chain=chain.then(function(){return (U?U.phGet:phFull)(x.id)}).then(function(d){
       var path=uniq(x.k==='etiqueta'?'fotos/etiquetas/'+fbSafe(x.tn,50)+'/'+fbSafe(x.tn,50)+'-'+(x.i+1)+'.jpg':'fotos/notas/'+fbSafe(x.fn,50)+'/'+(x.f||'sin-fecha')+'-'+(x.i+1)+'-'+String(x.id).slice(0,6)+'.jpg');
       files.push({n:path,d:d2u8(d)}); man.fotos.push({id:x.id,k:x.k,tag:x.tag,fid:x.fid||'',archivo:path});
     },function(){miss.push('foto de '+(x.k==='etiqueta'?'la etiqueta «'+(x.tn||'')+'»':'una nota de '+(x.fn||''))+' (no está en este aparato ni en la nube)')}).then(function(){done++;fbProg('Preparando la copia… '+done+' de '+tot)});
   });
   return chain.then(function(){
-    man.faltan=miss;
-    var leeme='COPIA COMPLETA DE MAPA DE FINCAS\r\nFecha: '+new Date().toLocaleString('es-ES')+'\r\n\r\n'+
+    man.faltan=miss; if(U)man.usuario=U.who;
+    var leeme='COPIA COMPLETA DE MAPA DE FINCAS'+(U?' · USUARIO '+String(U.who).toUpperCase():'')+'\r\nFecha: '+new Date().toLocaleString('es-ES')+'\r\n\r\n'+
       'datos.json ........ tus fincas, recintos, tratamientos, notas, etiquetas y ajustes (se carga en Datos > Copias > Cargar copia)\r\n'+
       'manifiesto.json ... qué archivo es cada documento y cada foto\r\n'+
       'documentos/ ....... los PDF y fotos de cada finca\r\n'+
@@ -12545,8 +12547,8 @@ function fbBuild(){
       (miss.length?'\r\nNO SE HAN PODIDO INCLUIR ('+miss.length+'):\r\n- '+miss.join('\r\n- ')+'\r\n':'');
     files.unshift({n:'LEEME.txt',d:u8s(leeme)});
     files.unshift({n:'manifiesto.json',d:u8s(JSON.stringify(man))});
-    files.unshift({n:'datos.json',d:u8s(buildBackup())});
-    var nm='Copia-completa-'+fbDate()+'.zip';
+    files.unshift({n:'datos.json',d:u8s(U?JSON.stringify({app:'mapa-fincas',v:1,exportado:new Date().toISOString(),usuario:U.who,datos:U.D}):buildBackup())});
+    var nm=U?fbSafe(ubkCap(U.who),30)+'-copia-completa-'+fbDate()+'.zip':'Copia-completa-'+fbDate()+'.zip';
     return {blob:zipStore(files),name:nm,nd:man.documentos.length,nf:man.fotos.length,miss:miss};
   });
 }
@@ -12577,7 +12579,7 @@ function fbRead(file){
       return (L[mk]?rj(mk):Promise.resolve({documentos:[],fotos:[]})).then(function(man){
         var rs=Object.keys(d.recintos).map(function(k){return d.recintos[k]});
         var docs=(man.documentos||[]).filter(function(x){return x&&x.id&&L[base+x.archivo]}), fotos=(man.fotos||[]).filter(function(x){return x&&x.id&&L[base+x.archivo]});
-        pendingImport={data:d,nf:d.fincas.length,nr:rs.length,ha:rs.reduce(function(s,r){return s+(r.ha||0)},0),full:{b:b,L:L,base:base,docs:docs,fotos:fotos}};
+        pendingImport={data:d,nf:d.fincas.length,nr:rs.length,ha:rs.reduce(function(s,r){return s+(r.ha||0)},0),full:{b:b,L:L,base:base,docs:docs,fotos:fotos},u:j.usuario||''};
         renderDatos(); var n=$('[data-act=import-apply]'); if(n&&n.scrollIntoView)n.scrollIntoView({block:'center'});
         return pendingImport;
       });
@@ -12612,7 +12614,7 @@ function backupDue(){return allRecsAll().length>0&&(!S.lastExport||BK.chg>=BK_MA
 var bkT=null;
 function bkSoon(){if(GTOK)return;if(BK.mute){BK.mute=false;return}BK.chg++;saveBK();clearTimeout(bkT);bkT=setTimeout(bkShow,1800)}
 function bkShow(){
-  var el=$('#bkmodal'); if(!el||!backupDue()||Date.now()<BK.snooze||!el.hidden)return;
+  var el=$('#bkmodal'); if(!el||!bkOwn()||!backupDue()||Date.now()<BK.snooze||!el.hidden)return;
   if(med.on&&!med.view)return;
   var last=S.lastExport?new Date(S.lastExport).toLocaleDateString('es-ES',{day:'numeric',month:'long'}):null, phone=!isDesk();
   var h='<div class="dlbox bk"><div class="bkic">⚠️</div><h2>Haz una copia de seguridad</h2>'+
@@ -12623,6 +12625,57 @@ function bkShow(){
   el.innerHTML=h; el.hidden=false;
 }
 function bkHide(){var el=$('#bkmodal');if(el){el.hidden=true;el.innerHTML=''}}
+/* ───────── Entrega 95: copias de los demás usuarios, solo para Ramon ─────────
+   · A los usuarios que no son Ramon no les salen avisos de copia (pueden hacerla igual si quieren).
+   · A Ramon le salen los avisos de cada usuario (cambios desde su última copia y más de 3 días, o ninguna copia),
+     y puede descargar su copia completa: «Emilio-copia-completa-aaaa-mm-dd.zip». */
+var UBK={list:null,t:0,busy:'',snooze:0};
+try{UBK.snooze=+(localStorage.getItem('mapa-fincas:copiau')||0)||0}catch(e){}
+function bkOwn(){return !(SY.rt&&!isAdmin())}
+function myUser(){return String(SY.email||SY.name||'').toLowerCase().replace(/@.*/,'')}
+function ubkCap(n){n=String(n||'');return n.charAt(0).toUpperCase()+n.slice(1)}
+function ubkLast(id){var m=S.x&&S.x.bku;return (m&&m[id])||null}
+function ubkDue(u){
+  if(!u||u.admin||u.bloqueado||!(u.fincas||u.recintos))return false;
+  var last=ubkLast(u.id); if(!last)return true;
+  if(!u.actualizado||Date.parse(u.actualizado)<=Date.parse(last))return false;
+  return (Date.now()-Date.parse(last))/864e5>BK_DAYS;
+}
+function ubkCheck(force){
+  if(GTOK||!isAdmin())return; if(!force&&Date.now()-UBK.t<10*6e4)return; UBK.t=Date.now();
+  fnCall('listar').then(function(r){if(!r||!r.ok)return; UBK.list=(r.usuarios||[]).filter(function(u){return !u.admin}); ubkShow()});
+}
+function ubkShow(){
+  var el=$('#bkmodal'); if(!el||!el.hidden||!UBK.list||Date.now()<UBK.snooze||UBK.busy)return;
+  if(med.on&&!med.view)return;
+  var u=UBK.list.filter(ubkDue)[0]; if(!u)return;
+  var nm=esc(ubkCap(u.nombre)), last=ubkLast(u.id), lt=last?new Date(last).toLocaleDateString('es-ES',{day:'numeric',month:'long'}):null, phone=!isDesk();
+  el.innerHTML='<div class="dlbox bk"><div class="bkic">⚠️</div><h2>Copia de seguridad de '+nm+'</h2>'+
+    '<p class="bkbig">'+(lt?nm+' ha hecho cambios desde su última copia ('+esc(lt)+').':'Todavía no has guardado ninguna copia de '+nm+'.')+'</p>'+
+    '<p>La copia completa incluye sus fincas, documentos y fotos. A '+nm+' no le salen estos avisos: sus copias las haces tú.</p>'+
+    '<p class="small">'+(phone?'Guárdala en Google Drive (desde «Guardar en Archivos»).':'Guárdala en tu Google Drive, en «Herramienta gestión fincas», dentro de «Copia seguridad».')+'</p>'+
+    '<div class="dlacts"><button class="btn primary xl green" data-act="ubk-now" data-id="'+esc(u.id)+'">Guardar copia completa de '+nm+'</button><button class="btn" data-act="ubk-later">Recordármelo más tarde</button></div></div>';
+  el.hidden=false;
+}
+function b64u8(s){var b=atob(s),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}
+function ufbStart(id){
+  if(UBK.busy||!isAdmin())return;
+  var u=(UBK.list||[]).concat(US.list||[]).filter(function(x){return x.id===id})[0]; if(!u)return;
+  var nm=ubkCap(u.nombre); UBK.busy=id; bkHide(); toast('Preparando la copia completa de '+nm+'…'); if(US.open)usRender();
+  fnCall('ver',{id:id}).then(function(r){
+    if(!r||!r.ok)throw new Error((r&&r.error)||'x');
+    var c=r.doc||{}, D={fincas:c.fincas||[],recintos:c.recintos||{},lastCrop:c.lastCrop||{},x:normX(c.x)};
+    return fbBuild({D:D,who:u.nombre,
+      docGet:function(d){return fnCall('doc',{id:id,doc:d.id}).then(function(q){if(!q||!q.b64)throw new Error('x');return new Blob([b64u8(q.b64)],{type:q.mime||d.mt||''})})},
+      phGet:function(pid){return fnCall('foto',{id:id,foto:pid}).then(function(q){if(!q||!q.contenido)throw new Error('x');return q.contenido})}
+    }).then(function(res){res.nfin=D.fincas.length;return res});
+  }).then(function(res){
+    UBK.busy=''; S.x.bku=Object.assign({},S.x.bku||{}); S.x.bku[id]=new Date().toISOString(); save();
+    var sub=res.nfin+' fincas'+(res.nd?', '+res.nd+(res.nd===1?' documento':' documentos'):'')+(res.nf?' y '+res.nf+(res.nf===1?' foto':' fotos'):'')+'.'+(res.miss.length?' Ojo: '+res.miss.length+' no se han podido incluir; están listados en el LEEME dentro del ZIP.':'')+' Guárdala en Drive.';
+    showDl(res.blob,res.name,'Copia completa de '+nm+' lista',sub); if(US.open)usRender();
+  },function(){UBK.busy='';if(US.open)usRender();toast('No he podido preparar la copia de '+nm+'. Prueba otra vez.')});
+}
+
 
 /* ---- mediciones guardadas sobre el mapa (interruptor de Capas) ---- */
 var medAll=L.layerGroup().addTo(map);
@@ -13772,6 +13825,8 @@ document.addEventListener('click',function(ev){
     case 'dl-close':dlClose();break;
     case 'informe':reportPdf();break;
     case 'bk-now':if(!isDesk()&&canShareFiles())doExportShare();else{doExport()}break;
+    case 'ubk-now':ufbStart(b.dataset.id);break;
+    case 'ubk-later':UBK.snooze=Date.now()+4*36e5;try{localStorage.setItem('mapa-fincas:copiau',String(UBK.snooze))}catch(e){}bkHide();toast('Te lo recordaré dentro de 4 horas');break;
     case 'bk-later':BK.snooze=Date.now()+4*36e5;saveBK();bkHide();toast('Te lo recordaré dentro de 4 horas');break;
     case 'ov-fin':OV.fin=!OV.fin;lsSet(KEYO,JSON.stringify(OV));redrawTiles();drawSaved();drawSel();renderLayers();break;
     case 'ov-marks':{var onM=!(OV.fav||OV.tag);OV.fav=onM;OV.tag=onM;lsSet(KEYO,JSON.stringify(OV));drawMarks();renderLayers();if(tab==='guardados')renderGuardados();break}
@@ -14054,7 +14109,7 @@ setTimeout(function(){map.invalidateSize();refreshSigpac();if(OV.ndvi){ndviPill(
 
 window.__mf={loadPdfLib:loadPdfLib,pvState:function(){return PV},boxPad:boxPad,pdfFont:pdfFont,pdfFontC:pdfFontC,expMapHTML:expMapHTML,buildFichaPdf:buildFichaPdf,afCompute:afCompute,afCompare:afCompare,hatchOf:hatchOf,swBg:swBg,OV:OV,polyC:polyC,mmHTML:mmHTML,expClose:expClose,temaGet:temaGet,temaSet:temaSet,pvOpen:pvOpen,pvClose:pvClose,cvMatch:cvMatch,cvLabel:cvLabel,trVarList:trVarList,varReal:varReal,GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
-Object.assign(window.__mf,{plFileBase:plFileBase,getVersions:getVersions,prevGet:prevGet,spaceHTML:spaceHTML,snapVersion:snapVersion,datReady:function(){return DATP},datState:function(){return {ok:IDBOK,r:DATR,nv:VERS?VERS.length:-1,prev:!!PREV}},plPortrait:plPortrait,plCropTxt:plCropTxt,xlPlanBook:xlPlanBook,idbReset:function(w){idbP=null;if(w)IDB_WAIT=w},syncWait:function(w){SYNC_WAIT=w},syncBusy:function(){return syncing},uCvTxt:uCvTxt,feUcvForm:feUcvForm,feUnitConvert:feUnitConvert,rfEdit:rfEdit,rfSave:rfSave,infTotRows:infTotRows,abTotData:abTotData,cvLabel:cvLabel,feProds:feProds,pabShares:pabShares,pabHaR:pabHaR,pabSplits:pabSplits,pabSplitWarn:pabSplitWarn,pabXCands:pabXCands,pabAddX:pabAddX,pabMove:pabMove,buildPabPdf:buildPabPdf,buildPabXlsx:buildPabXlsx,pabBlocks:pabBlocks,pabCheck:pabCheck,pabReal:pabReal,pabCalc:pabCalc,pabAuto:pabAuto,pabHTML:pabHTML,pabCur:pabCur,pabTipo:pabTipo,pabLim:pabLim,PAB:PAB,haC:haC,haPair:haPair,plTrPlaces:plTrPlaces,daOpen:daOpen,daSave:daSave,PL:PL,plWeeks:plWeeks,plCalc:plCalc,plTrOrder:plTrOrder,plPending:plPending,plMarkGo:plMarkGo,buildTratPdf:buildTratPdf,xlPlanBook:xlPlanBook,xlBuild:xlBuild,plFromRecs:plFromRecs,plSecArgs:plSecArgs,plSecHTML:plSecHTML,plSecOut:plSecOut,plTrPRows:plTrPRows,buildPlanPdf:buildPlanPdf,buildPlanXlsx:buildPlanXlsx,planHTML:planHTML,plTrSources:plTrSources,fbBuild:fbBuild,fbRead:fbRead,fbItems:fbItems,fbRestoreFiles:fbRestoreFiles,idbPut:idbPut,idbGet:idbGet,idbKeys:idbKeys,applyImport:applyImport,pending:function(){return pendingImport},docPend:function(){return DOC.pend},phPend:function(){return PH.pend},phProcess:phProcess,phMax:function(n){PH_MAXB=n},trVarParts:trVarParts,numEs:numEs,nf:nf,trList:trList,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
+Object.assign(window.__mf,{plFileBase:plFileBase,ufbStart:ufbStart,ubkCheck:ubkCheck,ubkDue:ubkDue,bkOwn:bkOwn,fbBuild:fbBuild,UBK:UBK,getVersions:getVersions,prevGet:prevGet,spaceHTML:spaceHTML,snapVersion:snapVersion,datReady:function(){return DATP},datState:function(){return {ok:IDBOK,r:DATR,nv:VERS?VERS.length:-1,prev:!!PREV}},plPortrait:plPortrait,plCropTxt:plCropTxt,xlPlanBook:xlPlanBook,idbReset:function(w){idbP=null;if(w)IDB_WAIT=w},syncWait:function(w){SYNC_WAIT=w},syncBusy:function(){return syncing},uCvTxt:uCvTxt,feUcvForm:feUcvForm,feUnitConvert:feUnitConvert,rfEdit:rfEdit,rfSave:rfSave,infTotRows:infTotRows,abTotData:abTotData,cvLabel:cvLabel,feProds:feProds,pabShares:pabShares,pabHaR:pabHaR,pabSplits:pabSplits,pabSplitWarn:pabSplitWarn,pabXCands:pabXCands,pabAddX:pabAddX,pabMove:pabMove,buildPabPdf:buildPabPdf,buildPabXlsx:buildPabXlsx,pabBlocks:pabBlocks,pabCheck:pabCheck,pabReal:pabReal,pabCalc:pabCalc,pabAuto:pabAuto,pabHTML:pabHTML,pabCur:pabCur,pabTipo:pabTipo,pabLim:pabLim,PAB:PAB,haC:haC,haPair:haPair,plTrPlaces:plTrPlaces,daOpen:daOpen,daSave:daSave,PL:PL,plWeeks:plWeeks,plCalc:plCalc,plTrOrder:plTrOrder,plPending:plPending,plMarkGo:plMarkGo,buildTratPdf:buildTratPdf,xlPlanBook:xlPlanBook,xlBuild:xlBuild,plFromRecs:plFromRecs,plSecArgs:plSecArgs,plSecHTML:plSecHTML,plSecOut:plSecOut,plTrPRows:plTrPRows,buildPlanPdf:buildPlanPdf,buildPlanXlsx:buildPlanXlsx,planHTML:planHTML,plTrSources:plTrSources,fbBuild:fbBuild,fbRead:fbRead,fbItems:fbItems,fbRestoreFiles:fbRestoreFiles,idbPut:idbPut,idbGet:idbGet,idbKeys:idbKeys,applyImport:applyImport,pending:function(){return pendingImport},docPend:function(){return DOC.pend},phPend:function(){return PH.pend},phProcess:phProcess,phMax:function(n){PH_MAXB=n},trVarParts:trVarParts,numEs:numEs,nf:nf,trList:trList,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
 })();
 </script>
 <script type="text/plain" id="pdflib">/** @license
