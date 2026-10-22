@@ -1,0 +1,611 @@
+// Mapa de Fincas · función de servidor «servidor»
+// Hace dos cosas: gestionar usuarios (solo Ramon) y traer el radar de la AEMET (entrega 99: animado, guardado en el almacén «radar»).
+// Versión endurecida (entrega 21): versión fija de la librería, solo responde a la web de la app,
+// contraseñas de 12+, no enseña errores internos y solo sigue enlaces de aemet.es.
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
+
+const ADMIN = "ramon@mapafincas.app";
+const DOMINIO = "@mapafincas.app";
+const PASS_MIN = 12;
+const WEB = "https://ramonalcala777-commits.github.io"; // la única web que puede usar esta función
+let CORS = {
+  "Access-Control-Allow-Origin": WEB,
+  "Vary": "Origin",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+const out = (obj, status = 200) =>
+  new Response(JSON.stringify(obj), { status, headers: { ...CORS, "Content-Type": "application/json" } });
+
+// solo seguimos enlaces https de aemet.es (si no, un enlace raro podría usar la función para visitar otras páginas)
+function okAemet(u) {
+  try { const x = new URL(String(u)); return x.protocol === "https:" && /(^|\.)aemet\.es$/i.test(x.hostname); } catch (_e) { return false; }
+}
+
+// ── Radar de lluvia de la AEMET (entrega 99) ──
+// La AEMET da la última imagen de su radar georreferenciado (GeoTIFF en grados, EPSG:4326, con su escala
+// de colores en el campo «ESCALA»). Aquí se lee, se pasa cada punto a mm/h, se pinta con la escala de
+// Rain Alarm, se reproyecta a la del mapa y se guarda como PNG en el almacén «radar» (últimas 2 horas).
+// La app lee «indice.json» de ese almacén y anima las imágenes.
+const RAD_BUCKET = "radar";
+const RAD_MIN = 130; // minutos que se guardan (2 h y un margen)
+const RAD_ANCHO = 1400; // ancho máximo de la imagen guardada
+const RAD_RUTAS = ["red/radar/raster/nacional", "red/radar/nacional"];
+// escala de Rain Alarm: desde cuántos mm/h se usa cada color
+const RAD_ESC = [
+  [0, 0x89, 0xdd, 0xde], [0.3, 0x01, 0x01, 0xd6], [0.6, 0x96, 0xf5, 0x65], [1.3, 0x4e, 0x86, 0x33],
+  [3, 0xf6, 0xf0, 0x6e], [6, 0xe2, 0x9d, 0x48], [12, 0xcd, 0x41, 0x2f], [24, 0x99, 0x2e, 0x1c],
+  [50, 0xd5, 0x43, 0xe7], [100, 0xa0, 0x30, 0xb1], [205, 0x6e, 0x1b, 0x7d], [420, 0x4f, 0x11, 0x5b],
+];
+let radarIntento = 0; // última vez que esta copia de la función pidió el radar a la AEMET
+
+function b64(buf) {
+  const u = new Uint8Array(buf);
+  let s = "";
+  for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode(...u.subarray(i, i + 0x8000));
+  return btoa(s);
+}
+
+// dBZ → mm/h (Marshall-Palmer, Z = 200·R^1,6)
+const dbzMmh = (dbz) => Math.pow(Math.pow(10, dbz / 10) / 200, 1 / 1.6);
+// mm/h → número de color (1…12; 0 = sin lluvia)
+function mmhCol(mm) {
+  if (!(mm > 0)) return 0;
+  let k = 0;
+  for (let i = 0; i < RAD_ESC.length; i++) if (mm >= RAD_ESC[i][0]) k = i;
+  return k + 1;
+}
+
+async function inflar(u8, formato) {
+  const ds = new DecompressionStream(formato);
+  const w = ds.writable.getWriter();
+  w.write(u8); w.close();
+  return new Uint8Array(await new Response(ds.readable).arrayBuffer());
+}
+async function desinflar(u8) {
+  const cs = new CompressionStream("deflate");
+  const w = cs.writable.getWriter();
+  w.write(u8); w.close();
+  return new Uint8Array(await new Response(cs.readable).arrayBuffer());
+}
+function lzw(src, tam) {
+  const out = new Uint8Array(tam);
+  let o = 0, pos = 0, ancho = 9;
+  let dic = [];
+  const reset = () => { dic = []; for (let i = 0; i < 256; i++) dic[i] = [i]; dic[256] = null; dic[257] = null; ancho = 9; };
+  const leer = () => {
+    let v = 0;
+    for (let i = 0; i < ancho; i++) { const b = pos >> 3; v = (v << 1) | (b < src.length ? (src[b] >> (7 - (pos & 7))) & 1 : 0); pos++; }
+    return v;
+  };
+  reset();
+  let prev = null;
+  while (o < tam && pos < src.length * 8) {
+    const c = leer();
+    if (c === 257) break;
+    if (c === 256) { reset(); prev = null; continue; }
+    let e;
+    if (c < dic.length && dic[c]) e = dic[c];
+    else if (prev) e = prev.concat([prev[0]]);
+    else break;
+    for (let i = 0; i < e.length && o < tam; i++) out[o++] = e[i];
+    if (prev) dic.push(prev.concat([e[0]]));
+    prev = e;
+    if (dic.length + 1 >= 1 << ancho && ancho < 12) ancho++;
+  }
+  return out;
+}
+function packbits(src, tam) {
+  const out = new Uint8Array(tam);
+  let i = 0, o = 0;
+  while (i < src.length && o < tam) {
+    const n = (src[i] << 24) >> 24; i++;
+    if (n >= 0) { for (let k = 0; k <= n && o < tam; k++) out[o++] = src[i++]; }
+    else if (n !== -128) { const v = src[i++]; for (let k = 0; k < 1 - n && o < tam; k++) out[o++] = v; }
+  }
+  return out;
+}
+
+// lee un GeoTIFF de 8 bits (RGB, RGBA, paleta o un valor por punto) → { ancho, alto, mps, px, paleta, caja, gdal }
+async function leerTiff(u8) {
+  const le = u8[0] === 0x49;
+  if (!(le || u8[0] === 0x4d) || u8[1] !== u8[0]) throw new Error("no es TIFF");
+  const dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+  const g16 = (o) => dv.getUint16(o, le), g32 = (o) => dv.getUint32(o, le), gd = (o) => dv.getFloat64(o, le);
+  if (g16(2) !== 42) throw new Error("TIFF grande no admitido");
+  const sz = { 1: 1, 2: 1, 3: 2, 4: 4, 5: 8, 6: 1, 7: 1, 8: 2, 9: 4, 10: 8, 11: 4, 12: 8 };
+  const ifd = g32(4), n = g16(ifd), T = {};
+  for (let i = 0; i < n; i++) {
+    const e = ifd + 2 + i * 12, tag = g16(e), tp = g16(e + 2), cnt = g32(e + 4), bytes = (sz[tp] || 1) * cnt;
+    const off = bytes <= 4 ? e + 8 : g32(e + 8);
+    const vals = [];
+    if (tp === 2 || tp === 1 || tp === 7) T[tag] = { txt: new TextDecoder().decode(u8.subarray(off, off + cnt)).replace(/\0+$/, ""), raw: u8.subarray(off, off + cnt) };
+    else {
+      for (let k = 0; k < cnt; k++) vals.push(tp === 3 ? g16(off + 2 * k) : tp === 4 ? g32(off + 4 * k) : tp === 12 ? gd(off + 8 * k) : tp === 11 ? dv.getFloat32(off + 4 * k, le) : g16(off + 2 * k));
+      T[tag] = vals;
+    }
+  }
+  const v = (t, d) => (T[t] && T[t].length ? T[t][0] : d);
+  const ancho = v(256), alto = v(257), mps = v(277, 1), bits = v(258, 8), comp = v(259, 1), pred = v(317, 1), plan = v(284, 1);
+  if (bits !== 8) throw new Error("bits " + bits);
+  if (plan !== 1 && mps > 1) throw new Error("planos separados");
+  const fila = ancho * mps, px = new Uint8Array(fila * alto);
+  const descomp = async (src, tam) =>
+    comp === 1 ? src.subarray(0, tam) : comp === 5 ? lzw(src, tam) : comp === 8 || comp === 32946 ? await inflar(src, "deflate") : comp === 32773 ? packbits(src, tam) : (() => { throw new Error("compresión " + comp); })();
+  const deshacerPred = (b, w, h) => { if (pred !== 2) return; for (let y = 0; y < h; y++) for (let x = mps; x < w * mps; x++) b[y * w * mps + x] = (b[y * w * mps + x] + b[y * w * mps + x - mps]) & 255; };
+  if (T[324]) {
+    const tw = v(322), th = v(323), por = Math.ceil(ancho / tw), offs = T[324], lens = T[325];
+    for (let i = 0; i < offs.length; i++) {
+      const b = await descomp(u8.subarray(offs[i], offs[i] + lens[i]), tw * th * mps);
+      deshacerPred(b, tw, th);
+      const x0 = (i % por) * tw, y0 = Math.floor(i / por) * th;
+      for (let y = 0; y < th && y0 + y < alto; y++) {
+        const w = Math.min(tw, ancho - x0) * mps;
+        px.set(b.subarray(y * tw * mps, y * tw * mps + w), (y0 + y) * fila + x0 * mps);
+      }
+    }
+  } else {
+    const rps = v(278, alto), offs = T[273], lens = T[279];
+    for (let i = 0; i < offs.length; i++) {
+      const filas = Math.min(rps, alto - i * rps);
+      const b = await descomp(u8.subarray(offs[i], offs[i] + lens[i]), filas * fila);
+      deshacerPred(b, ancho, filas);
+      px.set(b.subarray(0, filas * fila), i * rps * fila);
+    }
+  }
+  let paleta = null;
+  if (T[320]) { const c = T[320], k = c.length / 3; paleta = []; for (let i = 0; i < k; i++) paleta.push([c[i] >> 8, c[k + i] >> 8, c[2 * k + i] >> 8]); }
+  // caja en grados: punto de anclaje (33922) y tamaño de píxel (33550), o la matriz 34264
+  let caja = null;
+  if (T[33922] && T[33550]) {
+    const tp = T[33922], es = T[33550], oe = tp[3] - tp[0] * es[0], on = tp[4] + tp[1] * es[1];
+    caja = { o: oe, n: on, e: oe + ancho * es[0], s: on - alto * es[1] };
+  } else if (T[34264]) {
+    const m = T[34264];
+    caja = { o: m[3], n: m[7], e: m[3] + ancho * m[0], s: m[7] + alto * m[5] };
+  }
+  const area = T[34735] && T[34735][3 * 4 + 3] === 2; // GTRasterTypeGeoKey: 1 área, 2 punto (casi siempre área)
+  return { ancho, alto, mps, px, paleta, caja, area, gdal: (T[42112] && T[42112].txt) || "", nodata: (T[42113] && T[42113].txt) || "", desc: (T[270] && T[270].txt) || "" };
+}
+
+// «ESCALA»: lista de colores con su valor en dBZ. Admite «r,g,b[,a]: valor», «valor r g b a» y JSON.
+function leerEscala(texto) {
+  const m = /ESCALA[^>]*>([\s\S]*?)<\/Item>/i.exec(texto || "") || /ESCALA\s*[=:]\s*([\s\S]*)/i.exec(texto || "");
+  if (!m) return [];
+  const s = m[1].replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+  const res = [];
+  try {
+    const j = JSON.parse(s);
+    const arr = Array.isArray(j) ? j : Object.entries(j).map(([k, x]) => [k, x]);
+    for (const it of arr) {
+      const nums = JSON.stringify(it).match(/-?\d+(?:\.\d+)?/g);
+      if (nums && nums.length >= 4) res.push({ c: nums.slice(0, 3).map(Number), v: Number(nums[nums.length - 1]) });
+    }
+    if (res.length) return res;
+  } catch (_e) { /* no es JSON */ }
+  for (const parte of s.split(/[;\n|]+/)) {
+    const nums = parte.match(/-?\d+(?:\.\d+)?/g);
+    if (!nums || nums.length < 4) continue;
+    const n = nums.map(Number);
+    // «r,g,b,a valor» o «r,g,b valor» (colores 0-255 delante) — o «valor r g b a»
+    if (n.slice(0, 3).every((x) => x >= 0 && x <= 255 && Number.isInteger(x))) res.push({ c: n.slice(0, 3), v: n[n.length - 1] });
+    else res.push({ c: n.slice(1, 4), v: n[0] });
+  }
+  return res;
+}
+
+// imagen AEMET → índices de color de Rain Alarm, reproyectada a la del mapa (Mercator)
+function recolorear(t, escala) {
+  const { ancho, alto, mps, px, paleta, caja } = t;
+  const cache = new Map();
+  const deColor = (r, g, b) => {
+    const k = (r << 16) | (g << 8) | b;
+    if (cache.has(k)) return cache.get(k);
+    let mejor = 0, d = 1e9;
+    for (const e of escala) { const dd = (e.c[0] - r) ** 2 + (e.c[1] - g) ** 2 + (e.c[2] - b) ** 2; if (dd < d) { d = dd; mejor = e.v; } }
+    const col = d <= 3 * 40 * 40 ? mmhCol(dbzMmh(mejor)) : 0;
+    cache.set(k, col);
+    return col;
+  };
+  const valor = (i) => {
+    if (mps >= 4 && px[i + 3] < 128) return 0;
+    if (mps >= 3) return deColor(px[i], px[i + 1], px[i + 2]);
+    const x = px[i];
+    if (paleta) { const c = paleta[x] || [0, 0, 0]; return escala.length ? deColor(c[0], c[1], c[2]) : 0; }
+    if (x === 0 || x === 255) return 0;
+    return mmhCol(dbzMmh(x * 0.5 - 32)); // byte sin paleta: dBZ = valor/2 − 32 (lo habitual en radar)
+  };
+  const fx = Math.max(1, ancho / RAD_ANCHO), w = Math.round(ancho / fx);
+  const merc = (lat) => Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360));
+  const yN = merc(caja.n), yS = merc(caja.s);
+  const h = Math.max(1, Math.round((w * (yN - yS)) / (((caja.e - caja.o) * Math.PI) / 180)));
+  const idx = new Uint8Array(w * h);
+  let lluvia = 0;
+  for (let r = 0; r < h; r++) {
+    const y = yN - ((r + 0.5) / h) * (yN - yS);
+    const lat = (Math.atan(Math.sinh(y)) * 180) / Math.PI;
+    const sr = Math.min(alto - 1, Math.max(0, Math.floor(((caja.n - lat) / (caja.n - caja.s)) * alto)));
+    for (let c = 0; c < w; c++) {
+      const sc = Math.min(ancho - 1, Math.floor((c + 0.5) * fx));
+      const v = valor((sr * ancho + sc) * mps);
+      idx[r * w + c] = v;
+      if (v) lluvia++;
+    }
+  }
+  return { w, h, idx, lluvia };
+}
+
+// PNG de paleta (0 = transparente, 1…12 = escala de Rain Alarm)
+const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function trozo(tipo, datos) {
+  const out = new Uint8Array(12 + datos.length), dv = new DataView(out.buffer);
+  dv.setUint32(0, datos.length);
+  for (let i = 0; i < 4; i++) out[4 + i] = tipo.charCodeAt(i);
+  out.set(datos, 8);
+  let c = 0xffffffff;
+  for (let i = 4; i < 8 + datos.length; i++) c = CRC[(c ^ out[i]) & 255] ^ (c >>> 8);
+  dv.setUint32(8 + datos.length, (c ^ 0xffffffff) >>> 0);
+  return out;
+}
+async function pngPaleta(w, h, idx) {
+  const ih = new Uint8Array(13), dv = new DataView(ih.buffer);
+  dv.setUint32(0, w); dv.setUint32(4, h); ih[8] = 8; ih[9] = 3;
+  const pal = new Uint8Array(3 * (RAD_ESC.length + 1)), trn = new Uint8Array(RAD_ESC.length + 1);
+  RAD_ESC.forEach((e, i) => { pal.set([e[1], e[2], e[3]], 3 * (i + 1)); trn[i + 1] = 255; });
+  const crudo = new Uint8Array((w + 1) * h);
+  for (let y = 0; y < h; y++) crudo.set(idx.subarray(y * w, (y + 1) * w), y * (w + 1) + 1);
+  const partes = [new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]), trozo("IHDR", ih), trozo("PLTE", pal), trozo("tRNS", trn), trozo("IDAT", await desinflar(crudo)), trozo("IEND", new Uint8Array(0))];
+  const out = new Uint8Array(partes.reduce((a, p) => a + p.length, 0));
+  let o = 0;
+  for (const p of partes) { out.set(p, o); o += p.length; }
+  return out;
+}
+
+// hora de la imagen: la de sus datos si la trae; si no, la de la AEMET; redondeada a 10 min
+function horaImagen(t, lm) {
+  const txt = t.gdal + " " + t.desc;
+  let d = null;
+  const m = /(20\d\d)[-/]?(\d\d)[-/]?(\d\d)[T _]?(\d\d):?(\d\d)/.exec(txt);
+  if (m) d = Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]);
+  if (!d && lm) { const x = Date.parse(lm); if (x) d = x; }
+  if (!d) d = Date.now();
+  return Math.floor(d / 600000) * 600000;
+}
+const nombreHora = (ms) => new Date(ms).toISOString().replace(/[-:T]/g, "").slice(0, 12);
+
+async function leerIndice(sb) {
+  try {
+    const { data } = await sb.storage.from(RAD_BUCKET).download("indice.json");
+    if (!data) return null;
+    return JSON.parse(await data.text());
+  } catch (_e) { return null; }
+}
+
+// la AEMET entrega un .tar.gz con las últimas imágenes GeoTIFF (o, a veces, un .tif suelto): [{nombre, datos}]
+async function abrirPaquete(u8) {
+  if (u8[0] === 0x1f && u8[1] === 0x8b) u8 = await inflar(u8, "gzip");
+  if (u8[0] === 0x49 || u8[0] === 0x4d) return [{ nombre: "", datos: u8 }];
+  const res = [];
+  let o = 0, largo = null;
+  while (o + 512 <= u8.length) {
+    const cab = u8.subarray(o, o + 512);
+    if (cab.every((x) => x === 0)) break;
+    let nombre = new TextDecoder().decode(cab.subarray(0, 100)).replace(/\0.*$/s, "");
+    const pre = new TextDecoder().decode(cab.subarray(345, 500)).replace(/\0.*$/s, "");
+    if (pre) nombre = pre + "/" + nombre;
+    const tam = parseInt(new TextDecoder().decode(cab.subarray(124, 136)).replace(/\0.*$/s, "").trim() || "0", 8) || 0;
+    const tipo = String.fromCharCode(cab[156] || 48);
+    const datos = u8.subarray(o + 512, o + 512 + tam);
+    if (tipo === "L") largo = new TextDecoder().decode(datos).replace(/\0.*$/s, "");
+    else {
+      if ((tipo === "0" || tipo === "\0") && /\.tiff?$/i.test(largo || nombre)) res.push({ nombre: largo || nombre, datos: datos.slice() });
+      largo = null;
+    }
+    o += 512 + Math.ceil(tam / 512) * 512;
+  }
+  return res;
+}
+// hora que viene en el nombre del archivo (p. ej. …_202610222000….tif), en UTC
+function horaNombre(n) {
+  const m = /(20\d\d)(\d\d)(\d\d)[T_-]?(\d\d)(\d\d)/.exec(n || "");
+  return m ? Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]) : 0;
+}
+
+// pide a la AEMET las últimas imágenes y guarda las nuevas. Devuelve el índice (o {error}).
+// Con calma: la AEMET corta si se le pide mucho en un minuto (429).
+async function radarGuardar(sb) {
+  const key = Deno.env.get("AEMET_API_KEY");
+  if (!key) return { error: "sinclave" };
+  radarIntento = Date.now();
+  const pausa = (ms) => new Promise((r) => setTimeout(r, ms));
+  const ind = (await leerIndice(sb)) || { frames: [] };
+  const anotar = async (error) => {
+    ind.intento = Date.now(); ind.ultimoError = error || "";
+    await sb.storage.from(RAD_BUCKET).upload("indice.json", new TextEncoder().encode(JSON.stringify(ind)), { contentType: "application/json", upsert: true, cacheControl: "60" });
+  };
+  let j = null, fallo = "", ruta = "";
+  for (const r of RAD_RUTAS) {
+    try {
+      const r1 = await fetch("https://opendata.aemet.es/opendata/api/" + r, { headers: { api_key: key, Accept: "application/json" } });
+      const txt = await r1.text();
+      if (r1.status === 401 || r1.status === 403) { console.error("AEMET clave: http" + r1.status); await anotar("clave"); return { error: "clave" }; }
+      if (r1.status === 429) { await anotar("limite"); return { error: "limite" }; }
+      try { j = JSON.parse(txt); } catch (_e) { j = null; }
+      if (j && j.estado === 429) { await anotar("limite"); return { error: "limite" }; }
+      if (!j || !j.datos) fallo = r + " http " + r1.status + " · " + txt.slice(0, 200);
+    } catch (e) { fallo = r + " sin respuesta: " + String((e && e.message) || e); }
+    if (j && j.datos) { ruta = r; break; }
+  }
+  if (!j || !j.datos || !okAemet(j.datos)) { console.error("AEMET sin datos: " + fallo); await anotar("aemet"); return { error: "aemet" }; }
+  // la descarga: si la AEMET dice «demasiadas peticiones», se espera y se prueba una sola vez más
+  let u8 = null;
+  for (let i = 0; i < 2 && !u8; i++) {
+    if (i) await pausa(20000);
+    try {
+      const r2 = await fetch(j.datos);
+      const b = new Uint8Array(await r2.arrayBuffer());
+      const tipo = r2.headers.get("content-type") || "";
+      if (r2.ok && !/html|json|text/.test(tipo)) u8 = b;
+      else fallo = "imagen http " + r2.status + " · " + new TextDecoder().decode(b.subarray(0, 200)).replace(/\s+/g, " ");
+    } catch (e) { fallo = "imagen sin respuesta: " + String((e && e.message) || e); }
+  }
+  if (!u8) { console.error("AEMET imagen: " + fallo); await anotar(/429|l[ií]mite/i.test(fallo) ? "limite" : "aemet"); return { error: /429/.test(fallo) ? "limite" : "aemet" }; }
+  let tifs;
+  try { tifs = await abrirPaquete(u8); } catch (e) { tifs = []; fallo = String((e && e.message) || e); }
+  if (!tifs.length) { console.error("AEMET formato (" + ruta + "): sin GeoTIFF " + fallo); await anotar("formato"); return { error: "formato" }; }
+  let nuevas = 0, escalaN = 0;
+  for (const tf of tifs) {
+    let t;
+    try { t = await leerTiff(tf.datos); } catch (e) { console.error("AEMET formato " + tf.nombre + ": " + String((e && e.message) || e)); continue; }
+    if (!t.caja) { console.error("AEMET sin coordenadas: " + tf.nombre); continue; }
+    const escala = leerEscala(t.gdal);
+    escalaN = escala.length;
+    const hora = Math.floor((horaNombre(tf.nombre) || horaImagen(t, "")) / 600000) * 600000;
+    const nombre = nombreHora(hora) + ".png";
+    ind.caja = [[t.caja.s, t.caja.o], [t.caja.n, t.caja.e]];
+    if (ind.frames.some((f) => f.f === nombre)) continue;
+    const rc = recolorear(t, escala);
+    const png = await pngPaleta(rc.w, rc.h, rc.idx);
+    const up = await sb.storage.from(RAD_BUCKET).upload(nombre, png, { contentType: "image/png", upsert: true, cacheControl: "31536000" });
+    if (up && up.error) { console.error("radar guardar: " + up.error.message); continue; }
+    ind.frames.push({ t: hora, f: nombre, lluvia: rc.lluvia });
+    nuevas++;
+  }
+  if (!ind.frames.length) { await anotar("formato"); return { error: "formato" }; }
+  ind.frames.sort((a, b) => a.t - b.t);
+  const limite = ind.frames[ind.frames.length - 1].t - RAD_MIN * 60000;
+  const viejos = ind.frames.filter((f) => f.t < limite).map((f) => f.f);
+  ind.frames = ind.frames.filter((f) => f.t >= limite);
+  if (viejos.length) await sb.storage.from(RAD_BUCKET).remove(viejos);
+  ind.hecho = Date.now();
+  ind.escala = escalaN;
+  ind.nuevas = nuevas;
+  await anotar("");
+  return ind;
+}
+
+// la app pide el radar: normalmente lo trae la tarea programada; si lleva más de 25 min sin intentarlo, lo pide la app
+async function radar(sb) {
+  let ind = await leerIndice(sb);
+  const ult = Math.max((ind && ind.intento) || 0, (ind && ind.hecho) || 0);
+  if (Date.now() - ult > 25 * 60000 && Date.now() - radarIntento > 10 * 60000) {
+    const r = await radarGuardar(sb);
+    if (!r.error) ind = r;
+  }
+  if (!ind || !ind.frames || !ind.frames.length) return out({ error: (ind && ind.ultimoError) || "aemet" });
+  return out({ ok: true, caja: ind.caja, frames: ind.frames.map((f) => ({ t: f.t, f: f.f })) });
+}
+
+async function contar(sb) {
+  const { data } = await sb.from("datos").select("user_id,actualizado,contenido");
+  const m = {};
+  (data || []).forEach((d) => {
+    const c = d.contenido || {};
+    m[d.user_id] = {
+      fincas: Array.isArray(c.fincas) ? c.fincas.length : 0,
+      recintos: c.recintos ? Object.keys(c.recintos).length : 0,
+      actualizado: d.actualizado || null,
+    };
+  });
+  return m;
+}
+
+// lee la cabecera de un TIFF/GeoTIFF y cuenta qué lleva (tamaño, compresión, coordenadas)
+function infoTiff(u) {
+  const m = u[0] === 0x49 && u[1] === 0x49 ? "II" : u[0] === 0x4d && u[1] === 0x4d ? "MM" : "";
+  if (!m) return ["no parece un TIFF"];
+  const le = m === "II", dv = new DataView(u.buffer, u.byteOffset, u.byteLength);
+  const g16 = (o) => dv.getUint16(o, le), g32 = (o) => dv.getUint32(o, le), gd = (o) => dv.getFloat64(o, le);
+  const sz = { 1: 1, 2: 1, 3: 2, 4: 4, 5: 8, 6: 1, 7: 1, 8: 2, 9: 4, 10: 8, 11: 4, 12: 8, 16: 8 };
+  const res = [];
+  try {
+    const magic = g16(2);
+    res.push("TIFF " + (magic === 43 ? "grande" : "clásico") + ", " + (le ? "little" : "big") + "-endian");
+    if (magic !== 42) return res;
+    const ifd = g32(4), n = g16(ifd);
+    for (let i = 0; i < n; i++) {
+      const e = ifd + 2 + i * 12, tag = g16(e), tp = g16(e + 2), cnt = g32(e + 4), bytes = (sz[tp] || 1) * cnt;
+      const off = bytes <= 4 ? e + 8 : g32(e + 8);
+      const val = (k) => (tp === 3 ? g16(off + 2 * k) : tp === 4 ? g32(off + 4 * k) : tp === 12 ? gd(off + 8 * k) : tp === 5 ? gd(off) : g16(off + 2 * k));
+      if (tag === 256) res.push("ancho " + val(0));
+      else if (tag === 257) res.push("alto " + val(0));
+      else if (tag === 258) res.push("bits por muestra " + val(0));
+      else if (tag === 259) res.push("compresión " + val(0));
+      else if (tag === 262) res.push("fotométrico " + val(0));
+      else if (tag === 277) res.push("muestras por píxel " + val(0));
+      else if (tag === 320) res.push("lleva paleta de colores");
+      else if (tag === 33550) res.push("escala de píxel " + [0, 1, 2].map((k) => gd(off + 8 * k)).join(", "));
+      else if (tag === 33922) res.push("punto de anclaje " + Array.from({ length: Math.min(cnt, 6) }, (_x, k) => gd(off + 8 * k)).join(", "));
+      else if (tag === 34735) res.push("claves geográficas: " + Array.from({ length: Math.min(cnt, 16) }, (_x, k) => g16(off + 2 * k)).join(" "));
+      else if (tag === 34737) res.push("texto geográfico: " + new TextDecoder().decode(u.slice(off, off + Math.min(cnt, 150))));
+      else if (tag === 42113) res.push("valor sin dato " + new TextDecoder().decode(u.slice(off, off + Math.min(cnt, 20))));
+    }
+  } catch (e) {
+    res.push("no he podido leerlo del todo: " + String((e && e.message) || e));
+  }
+  return res;
+}
+
+Deno.serve(async (req) => {
+  const origen = req.headers.get("Origin") || "";
+  CORS = { ...CORS, "Access-Control-Allow-Origin": WEB };
+  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+  if (origen && origen !== WEB) return out({ error: "origen" }, 403);
+  try {
+    const sb = createClient(Deno.env.get("SUPABASE_URL"), Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"), {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    // tarea programada de Supabase (cada 10 min): guarda la imagen nueva del radar. Su clave está en la tabla radar_cron.
+    const clCron = req.headers.get("x-radar-cron") || "";
+    if (clCron) {
+      const { data: rc } = await sb.from("radar_cron").select("clave").eq("id", 1).maybeSingle();
+      if (!rc || !rc.clave || rc.clave !== clCron) return out({ error: "prohibido" }, 403);
+      const r = await radarGuardar(sb);
+      return out(r.error ? { error: r.error } : { ok: true, imagenes: r.frames.length });
+    }
+    const jwt = (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
+    const { data: ud } = await sb.auth.getUser(jwt);
+    const user = ud && ud.user;
+    if (!user) return out({ error: "nologin" }, 401);
+    let b = {};
+    try { b = await req.json(); } catch (_e) { /* vacío */ }
+    const a = String(b.accion || "");
+
+    if (a === "radar") return await radar(sb);
+
+    // a partir de aquí, solo Ramon
+    if (String(user.email || "").toLowerCase() !== ADMIN) return out({ error: "prohibido" }, 403);
+
+    if (a === "radar-info") {
+      // una sola petición al radar georreferenciado y un informe de lo que llega
+      const key = Deno.env.get("AEMET_API_KEY");
+      if (!key) return out({ error: "sinclave" });
+      const ruta = /^radar\/[a-z/]{3,40}$/.test(String(b.ruta || "")) ? String(b.ruta) : "radar/raster/nacional";
+      const lineas = [];
+      try {
+        const r = await fetch("https://opendata.aemet.es/opendata/api/red/" + ruta, { headers: { api_key: key, Accept: "application/json" } });
+        const t = await r.text();
+        let j = null;
+        try { j = JSON.parse(t); } catch (_e) { /* nada */ }
+        lineas.push(ruta + " → http " + r.status + " · estado " + (j && j.estado) + " · " + (j && j.descripcion));
+        if (j && j.datos && !okAemet(j.datos)) {
+          lineas.push("enlace rechazado (no es de aemet.es)");
+        } else if (j && j.datos) {
+          lineas.push("enlace: " + j.datos);
+          const r2 = await fetch(j.datos);
+          const buf = new Uint8Array(await r2.arrayBuffer());
+          lineas.push("datos: " + (r2.headers.get("content-type") || "?") + ", " + buf.length + " bytes");
+          let paquete = [];
+          try { paquete = await abrirPaquete(buf); } catch (e) { lineas.push("paquete: " + String((e && e.message) || e)); }
+          if (paquete.length) lineas.push("paquete con " + paquete.length + " GeoTIFF: " + paquete.map((p) => p.nombre + " (" + p.datos.length + " bytes)").join(", "));
+          lineas.push("primeros bytes: " + Array.from(buf.slice(0, 12)).map((x) => x.toString(16).padStart(2, "0")).join(" "));
+          if (/html|text|json/.test(r2.headers.get("content-type") || "")) {
+            lineas.push("texto: " + new TextDecoder().decode(buf).replace(/\s+/g, " ").slice(0, 300));
+          } else {
+            const tif0 = paquete.length ? paquete[paquete.length - 1].datos : buf;
+            lineas.push(...infoTiff(tif0));
+            try {
+              const t = await leerTiff(tif0), esc = leerEscala(t.gdal);
+              lineas.push("leído: " + t.ancho + "×" + t.alto + ", " + t.mps + " por punto" + (t.paleta ? ", con paleta" : "") + ", caja " + JSON.stringify(t.caja) + ", sin dato «" + t.nodata + "»");
+              lineas.push("metadatos GDAL: " + t.gdal.replace(/\s+/g, " ").slice(0, 2500));
+              lineas.push("descripción: " + t.desc.slice(0, 300));
+              lineas.push("escala leída: " + esc.length + " colores " + JSON.stringify(esc.slice(0, 20)));
+              if (t.caja) { const rc = recolorear(t, esc); lineas.push("recoloreado: " + rc.w + "×" + rc.h + ", puntos con lluvia " + rc.lluvia); }
+              lineas.push("hora: " + new Date(horaNombre(paquete.length ? paquete[paquete.length - 1].nombre : "") || horaImagen(t, "")).toISOString());
+            } catch (e) { lineas.push("no se pudo leer: " + String((e && e.message) || e)); }
+          }
+        }
+        if (j && j.metadatos && okAemet(j.metadatos)) {
+          try { lineas.push("metadatos: " + (await (await fetch(j.metadatos)).text()).replace(/\s+/g, " ").slice(0, 2000)); } catch (_e) { /* nada */ }
+        }
+      } catch (e) {
+        lineas.push("fallo: " + String((e && e.message) || e));
+      }
+      return out({ ok: true, mime: "prueba", bytes: 0, lm: "", meta: lineas.join("\n") });
+    }
+
+    if (a === "listar") {
+      const { data, error } = await sb.auth.admin.listUsers({ page: 1, perPage: 200 });
+      if (error) return out({ error: "fallo" });
+      const cuentas = await contar(sb);
+      const lista = data.users.map((u) => {
+        const c = cuentas[u.id] || {};
+        const bloq = u.banned_until && new Date(u.banned_until).getTime() > Date.now();
+        return {
+          id: u.id,
+          nombre: String(u.email || "").replace(DOMINIO, ""),
+          admin: String(u.email || "").toLowerCase() === ADMIN,
+          creado: u.created_at,
+          ultimo: u.last_sign_in_at || null,
+          bloqueado: !!bloq,
+          fincas: c.fincas || 0,
+          recintos: c.recintos || 0,
+          actualizado: c.actualizado || null,
+        };
+      });
+      return out({ ok: true, usuarios: lista });
+    }
+
+    if (a === "crear") {
+      const nombre = String(b.nombre || "").trim().toLowerCase();
+      const pass = String(b.pass || "");
+      if (!/^[a-z0-9][a-z0-9._-]{1,29}$/.test(nombre)) return out({ error: "nombre" });
+      if (pass.length < PASS_MIN) return out({ error: "pass" });
+      const { data, error } = await sb.auth.admin.createUser({ email: nombre + DOMINIO, password: pass, email_confirm: true });
+      if (error) {
+        return out({ error: /already|registered|exists/i.test(error.message || "") ? "existe" : "fallo" });
+      }
+      return out({ ok: true, id: data.user.id });
+    }
+
+    const id = String(b.id || "");
+    if (!/^[0-9a-f-]{36}$/.test(id)) return out({ error: "id" });
+    const { data: tgt } = await sb.auth.admin.getUserById(id);
+    if (!tgt || !tgt.user) return out({ error: "noexiste" });
+    const esAdmin = String(tgt.user.email || "").toLowerCase() === ADMIN;
+
+    if (a === "clave") {
+      const pass = String(b.pass || "");
+      if (pass.length < PASS_MIN) return out({ error: "pass" });
+      const { error } = await sb.auth.admin.updateUserById(id, { password: pass });
+      return error ? out({ error: "fallo" }) : out({ ok: true });
+    }
+    if (a === "bloquear") {
+      if (esAdmin) return out({ error: "propio" });
+      const { error } = await sb.auth.admin.updateUserById(id, { ban_duration: b.bloquear ? "876000h" : "none" });
+      return error ? out({ error: "fallo" }) : out({ ok: true });
+    }
+    if (a === "borrar") {
+      if (esAdmin) return out({ error: "propio" });
+      for (const t of ["enlace_comentarios", "enlaces", "fotos", "datos_hist", "datos"]) {
+        await sb.from(t).delete().eq("user_id", id);
+      }
+      const { error } = await sb.auth.admin.deleteUser(id);
+      return error ? out({ error: "fallo" }) : out({ ok: true });
+    }
+    if (a === "ver") {
+      const { data } = await sb.from("datos").select("contenido").eq("user_id", id).maybeSingle();
+      return out({ ok: true, nombre: String(tgt.user.email || "").replace(DOMINIO, ""), doc: (data && data.contenido) || null });
+    }
+    if (a === "foto") {
+      const fid = String(b.foto || "");
+      const { data } = await sb.from("fotos").select("contenido").eq("id", fid).eq("user_id", id).maybeSingle();
+      return out({ ok: true, contenido: (data && data.contenido) || null });
+    }
+    if (a === "doc") {
+      // Entrega 95: un documento de otro usuario, para su copia completa (solo Ramon)
+      const did = String(b.doc || "");
+      if (!/^[A-Za-z0-9._-]{1,100}$/.test(did)) return out({ error: "doc" });
+      const { data, error } = await sb.storage.from("documentos").download(id + "/" + did);
+      if (error || !data) return out({ ok: true, b64: null });
+      const u8 = new Uint8Array(await data.arrayBuffer());
+      let s = "";
+      for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, Array.from(u8.subarray(i, i + 0x8000)));
+      return out({ ok: true, mime: data.type || "", b64: btoa(s) });
+    }
+    return out({ error: "accion" }, 400);
+  } catch (e) {
+    console.error("servidor: " + String((e && e.message) || e));
+    return out({ error: "fallo" }, 500);
+  }
+});
