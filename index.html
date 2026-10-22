@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-5bpy5v95trwOhC6f5aW/WYyswN+fazqfvs/1N35NF0M='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-5mhQ5ZWB0RruwkUoEQopilEjbCaXVby4NrxoKRpwopc='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -1017,6 +1017,9 @@ h3{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2
 .expnav.ml{-webkit-mask-image:linear-gradient(90deg,transparent,#000 44px);mask-image:linear-gradient(90deg,transparent,#000 44px)}
 .expnav.ml.mr{-webkit-mask-image:linear-gradient(90deg,transparent,#000 44px,#000 calc(100% - 44px),transparent);mask-image:linear-gradient(90deg,transparent,#000 44px,#000 calc(100% - 44px),transparent)}
 .expnav .chip.soon:not(.on){opacity:.6}
+.expg{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0 2px}.expg .trsel{max-width:220px}.expg.on{background:rgba(245,196,0,.16);border:1px solid rgba(245,196,0,.6);border-radius:12px;padding:6px 10px}.expgv{font-size:13px}
+.grpick{background:none;border:0;padding:0;color:inherit;font:inherit;cursor:pointer;text-align:left}.grpick:hover b{text-decoration:underline}
+.grb{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin:8px 0}.grb .in{width:100%;margin-top:3px}.grbnow{margin-top:3px;opacity:.85}
 .docb{display:inline-block;margin-top:4px;padding:2px 10px;border-radius:999px;font-size:13px;font-weight:700;background:var(--warn-bg);color:var(--warn-ink)}
 .docb.red{background:#fde8e6;color:#b42318}
 .pht.pend::after{content:"↑";position:absolute;right:3px;bottom:3px;background:rgba(0,0,0,.65);color:#fff;border-radius:8px;font-size:11px;line-height:1;padding:2px 5px}
@@ -2322,7 +2325,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-22T12:39:05Z',n:'Entrega 96 · 22 oct · 14:39'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-22T13:45:15Z',n:'Entrega 97 · 22 oct · 15:45'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -4894,7 +4897,7 @@ function expSecSet(fid,sec){try{var o=JSON.parse(lsGet(KEYEXP)||'{}');o[fid]=sec
 function expOpen(fid,sec){
   if(!finca(fid)||!expOK())return;
   EXP.fid=fid; EXP.sec=sec||expSecGet(fid); if(!EXP_S.some(function(x){return x[0]===EXP.sec}))EXP.sec='resumen';
-  expSecSet(fid,EXP.sec); renderFincas();
+  expSecSet(fid,EXP.sec); expGApply(finca(fid)); renderFincas();
   var el=$('#p-fincas'); if(el&&el.parentNode&&el.parentNode.scrollTo)try{el.parentNode.scrollTo(0,0)}catch(e){} if(el)try{el.scrollTop=0}catch(e){}
 }
 function expClose(){
@@ -4904,7 +4907,7 @@ function expClose(){
   if(was)renderFincas();
 }
 function expAforosHTML(f){
-  var id=f.id, recs=fincaRecs(id), af0=S.x.af||{};
+  var id=f.id, recs=expGRecs(f), af0=S.x.af||{};
   var ys=Object.keys(af0).filter(function(y){return recs.some(function(r){return af0[y][r.ref]!==undefined})}).sort(function(a,b){return b-a});
   var h='<div class="acts"><button class="btn primary" data-act="af-open" data-fid="'+esc(id)+'"'+(recs.length&&!isOc(f)?'':' disabled')+'>Nuevo aforo de cosecha</button></div>';
   if(!ys.length)return h+'<div class="note">Esta finca todavía no tiene aforos de cosecha. Pulsa «Nuevo aforo de cosecha» para empezar uno (se hace sobre el mapa).</div>';
@@ -5036,8 +5039,8 @@ function expCultTblHTML(recs){
   return h+'</tbody><tfoot><tr><td>Total</td><td></td><td class="r">'+ha2(tot)+'</td><td></td></tr></tfoot></table>';
 }
 function expResumenHTML(f){
-  var id=f.id, recs=fincaRecs(id).sort(function(a,b){return a.ref.localeCompare(b.ref,'es',{numeric:true})});
-  var s=stats([id],true).per[id]||{ha:0,n:0,crops:{}}, farb=fincaArboles(id), h='', og=grupo(f.grupo);
+  var id=f.id, eg=expGGet(f), recs=expGRecs(f).sort(function(a,b){return a.ref.localeCompare(b.ref,'es',{numeric:true})});
+  var s=eg?expGStats(recs):(stats([id],true).per[id]||{ha:0,n:0,crops:{}}), farb=eg?recs.reduce(function(a,r){var x=arbolesRec(r);return a+(x?x.n:0)},0):fincaArboles(id), h='', og=grupo(f.grupo);
   if(s.n&&pdfOut&&pdfOut.id===id)h+='<div class="note" style="margin:0 0 12px">La ficha está lista ('+Math.round(pdfOut.blob.size/1024)+' KB).<div class="acts"><button class="btn sm" data-act="pdf-view">Ver</button><button class="btn primary sm" data-act="pdf-save">Guardar PDF</button>'+(canShareFiles()?'<button class="btn sm" data-act="pdf-share">Enviar PDF…</button>':'')+'</div></div>';
   if(!s.n)return h+'<div class="empty-t">Esta finca todavía no tiene recintos. Añádelos desde el mapa.</div>';
   h+='<div class="kgrid"><section class="kbox"><h4>Cultivos y variedades</h4>'+expCultTblHTML(recs);
@@ -5080,6 +5083,7 @@ function expHTML(id){
   var f=finca(id), s=stats([id],true).per[id]||{ha:0,n:0};
   var h=expMapHTML(f)+'<div class="exphead"><div class="expin"><div class="exptop"><div><div class="lbl" style="margin:0">Ficha de la explotación</div><div class="exptt">'+esc(f.nombre)+'</div><div class="small">'+haTxt(fincaRecs(f.id))+' · '+s.n+(s.n===1?' recinto':' recintos')+(isOc(f)?' · oculta':'')+'</div></div><button class="btn" data-act="exp-back">✕ Cerrar</button></div>';
   var cnt={fertirrigacion:GTOK?0:(f.fert||[]).length,abonado:GTOK?0:(f.abon||[]).length,tratamientos:GTOK?0:(f.trat||[]).length,cuaderno:(f.dia||[]).length,documentos:GTOK?0:(f.docs||[]).length,plan:GTOK?0:(f.plan||[]).length};
+  h+=expGBarHTML(f);
   h+='<div class="expnav" role="tablist">'+EXP_S.filter(function(x){return !(GTOK&&(x[0]==='documentos'||x[0]==='aforos'||x[0]==='tratamientos'||x[0]==='abonado'||x[0]==='fertirrigacion'||x[0]==='plan'||x[0]==='pabono'||x[0]==='datos'||x[0]==='historico'||x[0]==='informes'))}).map(function(x){var soon=!!EXP_SOON[x[0]];return '<button type="button" role="tab" class="chip'+(EXP.sec===x[0]?' on':'')+(soon?' soon':'')+'" aria-selected="'+(EXP.sec===x[0])+'" data-act="exp-sec" data-s="'+x[0]+'">'+x[1]+(cnt[x[0]]?' ('+cnt[x[0]]+')':'')+'</button>'}).join('')+'</div></div></div><div class="expin">';
   if(EXP.sec==='resumen')h+=expResumenHTML(f);
   else if(EXP.sec==='cuaderno')h+=diaHTML(f);
@@ -5092,6 +5096,7 @@ function expHTML(id){
   else if(EXP.sec==='historico')h+=hisHTML(f);
   else if(EXP.sec==='informes')h+=infHTML(f);
   else if(EXP.sec==='aforos')h+=GTOK?'<div class="small">Los aforos no están disponibles en esta vista.</div>':expAforosHTML(f);
+  else if(EXP.sec==='documentos'&&expGGet(f)&&!GTOK)h+='<div class="small" style="margin:0 0 8px">Los documentos son de toda la finca (no van por grupos).</div>'+docHTML(f);
   else if(EXP.sec==='documentos')h+=GTOK?'<div class="small">Los documentos no están disponibles en esta vista.</div>':docHTML(f);
   else if(EXP_SOON[EXP.sec])h+='<div class="note"><b>'+EXP_SOON[EXP.sec][0]+'</b> · próximamente<div class="small" style="margin-top:6px">'+EXP_SOON[EXP.sec][1]+'</div></div>';
   return h+'</div>';
@@ -5262,7 +5267,74 @@ function trRecSum(f,refs){
 }
 function trRecLbl(r){var gn=grNameOf(r),vn=varReal(r)?varName(varStrip(trCultOf(r),r.variedad)):''; return refShort(r.ref)+(r.nombre?' · '+r.nombre:'')+' · '+(r.cultivo||'Sin cultivo')+(vn?' · '+vn:'')+(gn?' · Grupo '+gn:'')+' · '+ha2(haC(r))+' ha'}
 /* ---- Entrega 55: grupos de recintos dentro de cada finca. f.gr=[{id,n}], recinto.gr=id (un recinto, un solo grupo) ---- */
-var GRS={ed:null,name:'',sel:[]};
+var GRS={ed:null,name:'',sel:[],b:{}};
+/* ───────── Entrega 97: ficha de la explotación por grupo ─────────
+   Se elige un grupo arriba y todas las pestañas (Tratamientos, Abonado, Fertirrigación, Aforos, Plan de campaña, Histórico, Informes, General)
+   se ponen en ese grupo. Se recuerda por finca en este aparato. */
+var KEYEXPG='mapa-fincas:expg';
+function expGGet(f){if(!f)return '';try{var o=JSON.parse(lsGet(KEYEXPG)||'{}'),g=o[f.id]||'';return (g&&grOf(f,g)&&grRecs(f,g).length)?g:''}catch(e){return ''}}
+function expGSet(f,g){try{var o=JSON.parse(lsGet(KEYEXPG)||'{}');if(g)o[f.id]=g;else delete o[f.id];lsSet(KEYEXPG,JSON.stringify(o))}catch(e){}}
+function expGRecs(f){var g=expGGet(f);return g?grRecs(f,g):fincaRecs(f.id)}
+function expGApply(f){if(!f)return;var g=expGGet(f),v=g?'gr§'+g:'';TR.cult=AB.cult=FE.cult=HI.cult=INF.cult=v;
+  if(g){var l=plList(f).filter(function(p){return p.g===g});if(l.length)PL.pid=l[0].id}}
+function expGStats(recs){var s={ha:0,n:0,crops:{},rg:{regadio:0,secano:0,'':0},pd:{eco:0,cv:0,cn:0,'':0}};
+  recs.forEach(function(r){var h=haC(r),c=r.cultivo||NOCROP;s.ha+=h;s.n++;s.crops[c]=(s.crops[c]||0)+h;s.rg[r.riego||'']=(s.rg[r.riego||'']||0)+h;s.pd[prodKind(r.prod)||'']+=h});return s}
+function expGBarHTML(f){
+  if(GTOK)return ''; var gl=grList(f).filter(function(g){return grRecs(f,g.id).length}); if(!gl.length)return '';
+  var g=expGGet(f), h='<div class="expg'+(g?' on':'')+'"><label class="small" for="exp-g">Grupo</label><select id="exp-g" class="trsel'+(g?' on':'')+'" aria-label="Ver la ficha de un grupo"><option value="">Toda la finca</option>'+gl.map(function(x){return '<option value="'+esc(x.id)+'"'+(x.id===g?' selected':'')+'>'+esc(x.n)+'</option>'}).join('')+'</select>';
+  if(g){var rs=grRecs(f,g),ha=rs.reduce(function(a,r){return a+haC(r)},0);h+='<span class="expgv">Viendo: <b>'+esc(grOf(f,g).n)+'</b> · '+rs.length+(rs.length===1?' recinto':' recintos')+' · '+ha2(ha)+' ha</span><button type="button" class="chip" data-act="exp-g" data-g="" aria-label="Volver a toda la finca">✕ Toda la finca</button>'}
+  return h+'</div>';
+}
+function expGPick(g){var f=finca(EXP.fid);if(!f)return;expGSet(f,g);TR.view='';AB.view='';FE.view='';HI.n=40;expGApply(f);renderFincas()}
+document.addEventListener('change',function(ev){var t=ev.target;if(t&&t.id==='exp-g')expGPick(t.value)});
+
+/* ───────── Entrega 97: editar el grupo cambia los datos de todos sus recintos a la vez ───────── */
+function grbNow(rs,get,nm){
+  if(!rs.length)return '';
+  var m={},o=[];rs.forEach(function(r){var v=get(r)||'';m[v]=(m[v]||0)+1});
+  var ks=Object.keys(m).sort(function(a,b){return m[b]-m[a]});
+  if(ks.length===1)return ks[0]?esc(nm(ks[0]))+(rs.length>1?' en los '+rs.length:''):'sin anotar';
+  ks.forEach(function(k){o.push((k?esc(nm(k)):'sin anotar')+' '+m[k])});return o.join(' · ');
+}
+function grBulkHTML(f){
+  var rs=GRS.sel.map(function(k){return S.recintos[k]}).filter(Boolean), B=GRS.b||(GRS.b={}), id=function(x){return x};
+  var sel=function(k,opts){return '<select id="grb-'+k+'" class="in"><option value="">— Sin cambiar —</option>'+opts.map(function(o){return '<option value="'+esc(o[0])+'"'+(B[k]===o[0]?' selected':'')+'>'+esc(o[1])+'</option>'}).join('')+'</select>'};
+  var inp=function(k,ph,mode){return '<input id="grb-'+k+'" class="in"'+(mode?' inputmode="'+mode+'"':'')+' placeholder="'+ph+'" value="'+esc(B[k]||'')+'" autocomplete="off">'};
+  var now=function(t){return '<div class="small grbnow">Ahora: '+t+'</div>'};
+  var arb=0,est=false;rs.forEach(function(r){var a=arbolesRec(r);if(a){arb+=a.n;if(a.est)est=true}});
+  var h='<div class="lbl" style="margin-top:14px">Datos de todos los recintos del grupo</div><div class="small">Solo se cambia lo que rellenes, en los recintos marcados arriba. Lo que dejes vacío se queda como está.</div><div class="grb">';
+  h+='<div><div class="small">Cultivo</div>'+sel('c',cropNames().map(function(n){return [n,n]}))+now(grbNow(rs,function(r){return r.cultivo},id))+'</div>';
+  h+='<div><div class="small">Variedad</div>'+inp('v','Ej. Sirora')+now(grbNow(rs,function(r){return varReal(r)},id))+'</div>';
+  h+='<div><div class="small">Riego</div>'+sel('rg',RIEGOS.map(function(x){return [x.v,x.n]}))+now(grbNow(rs,function(r){return r.riego},riegoName))+'</div>';
+  h+='<div><div class="small">Producción</div>'+sel('pd',PRODS.map(function(x){return [x.v,x.n]}))+now(grbNow(rs,function(r){return r.prod},prodName))+'</div>';
+  h+='<div><div class="small">Año de plantación</div>'+inp('an','Ej. 2019','numeric')+now(grbNow(rs,function(r){return r.anio},id))+'</div>';
+  h+='<div><div class="small">Marco</div>'+inp('mc','Ej. 6x5')+now(grbNow(rs,function(r){return r.marco},id))+'</div>';
+  h+='<div><div class="small">Patrón</div>'+inp('pt','Ej. UCB-1')+now(grbNow(rs,function(r){return r.patron},id))+'</div>';
+  h+='<div><div class="small">Árboles de todo el grupo</div>'+inp('ar','Ej. 9.000','numeric')+now(arb?(est?'unos ':'')+nf(arb,0)+' árboles'+(est?' (calculado con el marco)':''):'sin anotar')+'</div>';
+  return h+'</div><div class="small">Los árboles se reparten entre los recintos según la superficie cultivada de cada uno (la suma da justo el total).</div>';
+}
+document.addEventListener('input',function(ev){var t=ev.target;if(t&&t.id&&t.id.slice(0,4)==='grb-'){GRS.b=GRS.b||{};GRS.b[t.id.slice(4)]=t.value}});
+document.addEventListener('change',function(ev){var t=ev.target;if(t&&t.id&&t.id.slice(0,4)==='grb-'){GRS.b=GRS.b||{};GRS.b[t.id.slice(4)]=t.value}});
+/* reparte N árboles por superficie: enteros que suman N */
+function grbSplit(rs,N){
+  var H=rs.reduce(function(a,r){return a+haC(r)},0); if(!(H>0))return rs.map(function(){return 0});
+  var raw=rs.map(function(r){return N*haC(r)/H}), out=raw.map(Math.floor), rest=N-out.reduce(function(a,b){return a+b},0);
+  raw.map(function(x,i){return [x-Math.floor(x),i]}).sort(function(a,b){return b[0]-a[0]}).slice(0,rest).forEach(function(p){out[p[1]]++});
+  return out;
+}
+function grbApply(refs){
+  var B=GRS.b||{}, rs=refs.map(function(k){return S.recintos[k]}).filter(Boolean), n={};
+  var tr=function(v){return String(v||'').trim()};
+  if(tr(B.c))rs.forEach(function(r){if(r.cultivo!==B.c){r.cultivo=B.c;n[r.ref]=1}});
+  if(tr(B.v))rs.forEach(function(r){var v=tr(B.v);if(r.variedad!==v){r.variedad=v;n[r.ref]=1}});
+  if(tr(B.rg))rs.forEach(function(r){if(r.riego!==B.rg){r.riego=B.rg;n[r.ref]=1}});
+  if(tr(B.pd))rs.forEach(function(r){if(r.prod!==B.pd){r.prod=B.pd;n[r.ref]=1}});
+  [['an','anio'],['mc','marco'],['pt','patron']].forEach(function(p){var v=tr(B[p[0]]);if(v)rs.forEach(function(r){if(r[p[1]]!==v){r[p[1]]=v;n[r.ref]=1}})});
+  if(tr(B.ar)){var N=Math.round(numEs(B.ar)||0);if(N>0){var sp=grbSplit(rs,N);rs.forEach(function(r,i){var v=String(sp[i]);if(r.arb!==v){r.arb=v;n[r.ref]=1}})}}
+  return Object.keys(n).length;
+}
+function grbCheck(){var B=GRS.b||{};if(String(B.ar||'').trim()){var N=numEs(B.ar);if(!(N>0)||Math.round(N)!==N){toast('Pon el número de árboles como un número entero (ej. 9.000)');return false}}return true}
+
 function grList(f){return (f&&f.gr)||[]}
 function grOf(f,id){return id?(grList(f).filter(function(g){return g.id===id})[0]||null):null}
 function grRecs(f,id){return fincaRecs(f.id).filter(function(r){return r.gr===id})}
@@ -5285,7 +5357,7 @@ function grHTML(f,refs){var p=grParts(f,refs); return p.length?'<div class="smal
 function grOpts(f,cur){var gl=grList(f).filter(function(g){return grRecs(f,g.id).length}); if(!gl.length)return ''; return '<optgroup label="Grupos">'+gl.map(function(g){var v='gr§'+g.id;return '<option value="'+esc(v)+'"'+(cur===v?' selected':'')+'>Grupo: '+esc(g.n)+' · '+ha2(grRecs(f,g.id).reduce(function(a,r){return a+r.ha},0))+' ha</option>'}).join('')+'</optgroup>'}
 function grStart(id){
   var f=finca(detailId); if(!f)return;
-  GRS.ed=id; GRS.name=id==='new'?'':(grOf(f,id)||{n:''}).n; GRS.sel=id==='new'?[]:grRefs(f,id);
+  GRS.ed=id; GRS.name=id==='new'?'':(grOf(f,id)||{n:''}).n; GRS.sel=id==='new'?[]:grRefs(f,id); GRS.b={};
   renderFincas(); setTimeout(function(){var i=$('#gr-in');if(i)i.focus()},60);
 }
 function grSelSum(){var e=$('#gr-sum');if(e)e.textContent=trRecSum(finca(detailId),GRS.sel)}
@@ -5294,11 +5366,14 @@ function grSave(){
   if(!n){toast('Escribe un nombre para el grupo');return}
   var dup=grList(f).filter(function(g){return g.id!==GRS.ed&&norm(g.n)===norm(n)})[0];
   if(dup){toast('Ya existe un grupo llamado «'+dup.n+'». Pon otro nombre.');return}
+  if(!grbCheck())return;
   undoPush(); var id=GRS.ed;
   if(id==='new'){id=uid(); f.gr=grList(f).concat([{id:id,n:n}])}
   else f.gr=grList(f).map(function(g){return g.id===id?{id:id,n:n}:g});
   Object.keys(S.recintos).forEach(function(k){var r=S.recintos[k]; if(r.fincaId!==f.id)return; if(GRS.sel.indexOf(k)>=0)r.gr=id; else if(r.gr===id)delete r.gr});
-  GRS.ed=null; save(); renderFincas(); undoToast('Grupo «'+n+'» guardado');
+  var nb=grbApply(GRS.sel.slice()); GRS.b={};
+  if(nb)drawSaved();
+  GRS.ed=null; save(); renderFincas(); undoToast('Grupo «'+n+'» guardado'+(nb?' · datos cambiados en '+nb+(nb===1?' recinto':' recintos'):''));
 }
 function grDel(id){
   var f=finca(detailId), g=f&&grOf(f,id); if(!g)return; undoPush();
@@ -5337,6 +5412,7 @@ function grSecHTML(f){
     h+='<div class="acts" style="margin:0 0 8px"><button type="button" class="btn sm" data-act="gr-all">Marcar todos</button><button type="button" class="btn sm" data-act="gr-none">Quitar todos</button></div>';
     h+='<div class="trrl" id="gr-recs">'+recs.map(function(r){var o=grOf(f,r.gr);return '<button type="button" class="chip'+(GRS.sel.indexOf(r.ref)>=0?' on':'')+'" data-act="gr-rec" data-r="'+esc(r.ref)+'">'+esc(trRecLbl(r).replace(/ · Grupo .*? · (?=[\d.,]+ ha$)/,' · '))+(o&&o.id!==GRS.ed?' · (ahora en «'+esc(o.n)+'»)':'')+'</button>'}).join('')+'</div>';
     h+='<div class="small" style="margin-top:6px">Un recinto solo puede estar en un grupo: si marcas uno que ya está en otro, pasa a este.</div>';
+    h+=grBulkHTML(f);
     h+='<div class="acts"><button class="btn primary" data-act="gr-save">Guardar grupo</button><button class="btn" data-act="gr-cancel">Cancelar</button>'+(GRS.ed!=='new'?'<button class="btn danger" data-act="gr-del" data-id="'+esc(GRS.ed)+'">Eliminar grupo</button>':'')+'</div></div>';
     return h;
   }
@@ -5347,7 +5423,7 @@ function grSecHTML(f){
   }
   gl.forEach(function(g){
     var rs=grRecs(f,g.id), ha=rs.reduce(function(a,r){return a+haC(r)},0);
-    h+='<div class="kline" style="display:block;padding:8px 0;border-top:1px solid var(--line)"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap"><b>'+esc(g.n)+'</b><span class="small">'+rs.length+(rs.length===1?' recinto':' recintos')+' · '+ha2(ha)+' ha</span></div><div class="small">'+esc(grApplied(f,g.id))+'</div><div class="acts" style="margin:6px 0 0">'+(rs.length&&!isOc(f)?'<button type="button" class="btn sm" data-act="gr-map" data-id="'+esc(g.id)+'">Ver en el mapa</button>':'')+'<button type="button" class="btn sm" data-act="gr-edit" data-id="'+esc(g.id)+'">Editar</button></div></div>';
+    h+='<div class="kline" style="display:block;padding:8px 0;border-top:1px solid var(--line)"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap"><button type="button" class="lnk grpick" data-act="exp-g" data-g="'+esc(g.id)+'" title="Ver toda la ficha de este grupo"><b>'+esc(g.n)+'</b> ›</button><span class="small">'+rs.length+(rs.length===1?' recinto':' recintos')+' · '+ha2(ha)+' ha</span></div><div class="small">'+esc(grApplied(f,g.id))+'</div><div class="acts" style="margin:6px 0 0">'+(rs.length&&!isOc(f)?'<button type="button" class="btn sm" data-act="gr-map" data-id="'+esc(g.id)+'">Ver en el mapa</button>':'')+'<button type="button" class="btn sm" data-act="gr-edit" data-id="'+esc(g.id)+'">Editar</button></div></div>';
   });
   var ng=recs.filter(function(r){return !grOf(f,r.gr)});
   if(ng.length)h+='<div class="kline" style="display:block;padding:8px 0;border-top:1px solid var(--line)"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><b>Sin grupo</b><span class="small">'+ng.length+(ng.length===1?' recinto':' recintos')+' · '+ha2(ng.reduce(function(a,r){return a+r.ha},0))+' ha</span></div></div>';
@@ -7118,6 +7194,7 @@ function plMarkHTML(f,p){
 function planHTML(f){
   if(GTOK)return '<div class="small">El plan de campaña no está disponible en esta vista.</div>';
   var l=plList(f), p=plCur(f), h='';
+  var egp=expGGet(f); if(egp&&!PL.nw&&!l.some(function(x){return x.g===egp}))h+='<div class="note" style="margin-top:0">«'+esc(grOf(f,egp).n)+'» todavía no tiene plan de campaña propio.<div class="acts"><button class="btn sm primary" data-act="exp-gplan">Crear plan para «'+esc(grOf(f,egp).n)+'»</button></div></div>';
   h+='<div class="acts" style="margin-top:0">'+l.map(function(x){return '<button type="button" class="chip'+(p&&x.id===p.id?' on':'')+'" data-act="pl-pick" data-id="'+esc(x.id)+'">'+esc(x.y)+' · '+esc(plScopeName(f,x))+'</button>'}).join('')+'<button class="btn'+(l.length?'':' primary')+'" data-act="pl-new">+ Nuevo plan</button></div>';
   if(PL.nw&&PL.nw.fid===f.id){
     var gl=grList(f).filter(function(g){return grRecs(f,g.id).length}), src=[];
@@ -8030,6 +8107,7 @@ function pabHTML(f){
   pabSync(f); var l=pabList(f), p=pabCur(f), h='';
   h+='<div class="acts" style="margin-top:0">'+l.map(function(x){return '<button type="button" class="chip'+(p&&x.id===p.id?' on':'')+'" data-act="pa-pick" data-id="'+esc(x.id)+'">Campaña '+esc(pabCamp(x.y))+'</button>'}).join('')+'<button class="btn'+(l.length?'':' primary')+'" data-act="pa-new">+ Nuevo plan de abonado</button></div>';
   if(!p)return h+'<div class="small">El plan de abonado (Real Decreto 1051/2022) es obligatorio desde el 1 de septiembre de 2026 para cada unidad de producción, salvo las de secano de 10 ha o menos. Al crearlo, los recintos se agrupan por cultivo y riego; luego puedes moverlos de una unidad a otra.</div>';
+  var egb=expGGet(f); if(egb){var gr0={};grRecs(f,egb).forEach(function(r){gr0[r.ref]=1});var us=(p.ud||[]).filter(function(u){return (u.refs||[]).some(function(x){return gr0[x]})}).map(function(u){return u.n});h+='<div class="note" style="margin-top:0">El plan de abonado va por unidades de producción (cultivo y riego), no por grupos. Los recintos de «'+esc(grOf(f,egb).n)+'» están en: <b>'+(us.length?esc(us.join(', ')):'ninguna unidad todavía')+'</b>.</div>'}
   var cl=p.cl||PAB_CL, sum=(+cl.o||0)+(+cl.i||0)+(+cl.p||0)+(+cl.v||0);
   var Cs=(p.ud||[]).map(function(u){return pabCalc(f,u,p)});
   h+='<div class="plhead"><div><div class="exptt" style="font-size:20px">Plan de abonado · campaña '+esc(pabCamp(p.y))+'</div><div class="small">'+(p.ud||[]).length+((p.ud||[]).length===1?' unidad de producción':' unidades de producción')+' · '+haTxt(fincaRecs(f.id))+'</div></div><div class="acts" style="margin:6px 0 0"><button class="btn primary sm" data-act="pa-pdf">PDF</button><button class="btn sm" data-act="pa-xlsx">Excel</button><button class="btn sm" data-act="pa-ud-new">+ Unidad</button><button class="btn sm lk danger" data-act="pa-del">Borrar plan</button></div></div>';
@@ -13528,7 +13606,9 @@ document.addEventListener('click',function(ev){
     case 'tag-here':tagHere();break;
     case 'exp-open':expOpen(detailId);break;
     case 'exp-go':expOpen(detailId,b.dataset.s);break;
-    case 'exp-sec':if(EXP.fid){if(pdfOut&&/^tr:/.test(pdfOut.id))pdfOut=null;TR.view='';TR.pe=null;AB.view='';AB.pe=null;FE.view='';FE.pe=null;DA.ed=null;TR.yr=AB.yr=FE.yr=EXP.afyr='';HI.yr='';HI.tipo='todos';HI.cult='';INF.cult='';HI.n=40;EXP.sec=b.dataset.s;expSecSet(EXP.fid,EXP.sec);renderFincas()}break;
+    case 'exp-sec':if(EXP.fid){if(pdfOut&&/^tr:/.test(pdfOut.id))pdfOut=null;TR.view='';TR.pe=null;AB.view='';AB.pe=null;FE.view='';FE.pe=null;DA.ed=null;TR.yr=AB.yr=FE.yr=EXP.afyr='';HI.yr='';HI.tipo='todos';HI.cult='';INF.cult='';HI.n=40;EXP.sec=b.dataset.s;expSecSet(EXP.fid,EXP.sec);expGApply(finca(EXP.fid));renderFincas()}break;
+    case 'exp-g':expGPick(b.dataset.g||'');break;
+    case 'exp-gplan':{var fpg=finca(EXP.fid),egp=expGGet(fpg);if(fpg&&egp){plNew(fpg);PL.nw.g=egp;renderFincas()}break}
     case 'hi-more':HI.n+=40;renderFincas();break;
     case 'inf-fmt':INF.fmt[b.dataset.v]=INF.fmt[b.dataset.v]?0:1;renderFincas();break;
     case 'inf-go':infGo();break;
@@ -14166,7 +14246,7 @@ setTimeout(function(){map.invalidateSize();refreshSigpac();if(OV.ndvi){ndviPill(
 
 window.__mf={loadPdfLib:loadPdfLib,pvState:function(){return PV},boxPad:boxPad,pdfFont:pdfFont,pdfFontC:pdfFontC,expMapHTML:expMapHTML,buildFichaPdf:buildFichaPdf,afCompute:afCompute,afCompare:afCompare,hatchOf:hatchOf,swBg:swBg,OV:OV,polyC:polyC,mmHTML:mmHTML,expClose:expClose,temaGet:temaGet,temaSet:temaSet,pvOpen:pvOpen,pvClose:pvClose,cvMatch:cvMatch,cvLabel:cvLabel,trVarList:trVarList,varReal:varReal,GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
-Object.assign(window.__mf,{plFileBase:plFileBase,vfState:function(){return VFL},vfOn:vfOn,muniTxtSync:muniTxtSync,polyCount:function(){return polyC.size},ufbStart:ufbStart,ubkCheck:ubkCheck,ubkDue:ubkDue,bkOwn:bkOwn,fbBuild:fbBuild,UBK:UBK,getVersions:getVersions,prevGet:prevGet,spaceHTML:spaceHTML,snapVersion:snapVersion,datReady:function(){return DATP},datState:function(){return {ok:IDBOK,r:DATR,nv:VERS?VERS.length:-1,prev:!!PREV}},plPortrait:plPortrait,plCropTxt:plCropTxt,xlPlanBook:xlPlanBook,idbReset:function(w){idbP=null;if(w)IDB_WAIT=w},syncWait:function(w){SYNC_WAIT=w},syncBusy:function(){return syncing},uCvTxt:uCvTxt,feUcvForm:feUcvForm,feUnitConvert:feUnitConvert,rfEdit:rfEdit,rfSave:rfSave,infTotRows:infTotRows,abTotData:abTotData,cvLabel:cvLabel,feProds:feProds,pabShares:pabShares,pabHaR:pabHaR,pabSplits:pabSplits,pabSplitWarn:pabSplitWarn,pabXCands:pabXCands,pabAddX:pabAddX,pabMove:pabMove,buildPabPdf:buildPabPdf,buildPabXlsx:buildPabXlsx,pabBlocks:pabBlocks,pabCheck:pabCheck,pabReal:pabReal,pabCalc:pabCalc,pabAuto:pabAuto,pabHTML:pabHTML,pabCur:pabCur,pabTipo:pabTipo,pabLim:pabLim,PAB:PAB,haC:haC,haPair:haPair,plTrPlaces:plTrPlaces,daOpen:daOpen,daSave:daSave,PL:PL,plWeeks:plWeeks,plCalc:plCalc,plTrOrder:plTrOrder,plPending:plPending,plMarkGo:plMarkGo,buildTratPdf:buildTratPdf,xlPlanBook:xlPlanBook,xlBuild:xlBuild,plFromRecs:plFromRecs,plSecArgs:plSecArgs,plSecHTML:plSecHTML,plSecOut:plSecOut,plTrPRows:plTrPRows,buildPlanPdf:buildPlanPdf,buildPlanXlsx:buildPlanXlsx,planHTML:planHTML,plTrSources:plTrSources,fbBuild:fbBuild,fbRead:fbRead,fbItems:fbItems,fbRestoreFiles:fbRestoreFiles,idbPut:idbPut,idbGet:idbGet,idbKeys:idbKeys,applyImport:applyImport,pending:function(){return pendingImport},docPend:function(){return DOC.pend},phPend:function(){return PH.pend},phProcess:phProcess,phMax:function(n){PH_MAXB=n},trVarParts:trVarParts,numEs:numEs,nf:nf,trList:trList,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
+Object.assign(window.__mf,{plFileBase:plFileBase,expGGet:expGGet,expGPick:expGPick,grbSplit:grbSplit,grStart:grStart,grSave:grSave,GRS:function(){return GRS},expHTML:expHTML,TRs:function(){return {tr:TR.cult,ab:AB.cult,fe:FE.cult,hi:HI.cult,inf:INF.cult,pl:PL.pid}},vfState:function(){return VFL},vfOn:vfOn,muniTxtSync:muniTxtSync,polyCount:function(){return polyC.size},ufbStart:ufbStart,ubkCheck:ubkCheck,ubkDue:ubkDue,bkOwn:bkOwn,fbBuild:fbBuild,UBK:UBK,getVersions:getVersions,prevGet:prevGet,spaceHTML:spaceHTML,snapVersion:snapVersion,datReady:function(){return DATP},datState:function(){return {ok:IDBOK,r:DATR,nv:VERS?VERS.length:-1,prev:!!PREV}},plPortrait:plPortrait,plCropTxt:plCropTxt,xlPlanBook:xlPlanBook,idbReset:function(w){idbP=null;if(w)IDB_WAIT=w},syncWait:function(w){SYNC_WAIT=w},syncBusy:function(){return syncing},uCvTxt:uCvTxt,feUcvForm:feUcvForm,feUnitConvert:feUnitConvert,rfEdit:rfEdit,rfSave:rfSave,infTotRows:infTotRows,abTotData:abTotData,cvLabel:cvLabel,feProds:feProds,pabShares:pabShares,pabHaR:pabHaR,pabSplits:pabSplits,pabSplitWarn:pabSplitWarn,pabXCands:pabXCands,pabAddX:pabAddX,pabMove:pabMove,buildPabPdf:buildPabPdf,buildPabXlsx:buildPabXlsx,pabBlocks:pabBlocks,pabCheck:pabCheck,pabReal:pabReal,pabCalc:pabCalc,pabAuto:pabAuto,pabHTML:pabHTML,pabCur:pabCur,pabTipo:pabTipo,pabLim:pabLim,PAB:PAB,haC:haC,haPair:haPair,plTrPlaces:plTrPlaces,daOpen:daOpen,daSave:daSave,PL:PL,plWeeks:plWeeks,plCalc:plCalc,plTrOrder:plTrOrder,plPending:plPending,plMarkGo:plMarkGo,buildTratPdf:buildTratPdf,xlPlanBook:xlPlanBook,xlBuild:xlBuild,plFromRecs:plFromRecs,plSecArgs:plSecArgs,plSecHTML:plSecHTML,plSecOut:plSecOut,plTrPRows:plTrPRows,buildPlanPdf:buildPlanPdf,buildPlanXlsx:buildPlanXlsx,planHTML:planHTML,plTrSources:plTrSources,fbBuild:fbBuild,fbRead:fbRead,fbItems:fbItems,fbRestoreFiles:fbRestoreFiles,idbPut:idbPut,idbGet:idbGet,idbKeys:idbKeys,applyImport:applyImport,pending:function(){return pendingImport},docPend:function(){return DOC.pend},phPend:function(){return PH.pend},phProcess:phProcess,phMax:function(n){PH_MAXB=n},trVarParts:trVarParts,numEs:numEs,nf:nf,trList:trList,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
 })();
 </script>
 <script type="text/plain" id="pdflib">/** @license
