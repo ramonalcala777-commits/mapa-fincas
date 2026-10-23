@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-wsgXQcQ2Fzxe5eQfCji55KZAJXMEMJxaQGkqYmRSslE='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-Fjq3r4sKLqqtTVcbvevFZVryuGN51wP6oiQnrfPLclA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -948,6 +948,7 @@ input,textarea,select,[contenteditable]{-webkit-user-select:text;user-select:tex
 .in{width:100%;min-width:0;min-height:46px;border-radius:12px;border:1px solid var(--line);background:var(--surface);padding:10px 12px;font-size:16px}
 .in.big{font-size:20px;font-weight:700}
 textarea.in{resize:vertical}
+.llms{margin:10px 0 4px}.llm{display:grid;grid-template-columns:70px 1fr 84px;gap:8px;align-items:center;font-size:14px;min-height:24px}.llm i{display:block;height:10px;border-radius:6px;background:var(--surface2);overflow:hidden}.llm b{display:block;height:100%;background:#3d84c6;border-radius:6px}.llm em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums}
 details.more{margin-top:12px}
 details.more summary{cursor:pointer;font-weight:700;color:var(--accent);min-height:36px;display:flex;align-items:center}
 details.more .in{margin-top:8px}
@@ -2389,7 +2390,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-23T17:51:00Z',n:'Entrega 103 · 23 oct · 19:51'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-23T20:14:58Z',n:'Entrega 104 · 23 oct · 22:14'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -3810,6 +3811,105 @@ function renderFincas0(){
   h+='<div id="flist">'+fincasListHTML()+'</div>';
     el.innerHTML=h; if(nfpOpen){var i=$('#nfp-name');if(i)i.focus()} if(grpOpen){var i2=$('#grp-name');if(i2)i2.focus()}
 }
+/* ───────── lluvia acumulada por finca (Entrega 104) ─────────
+   Lluvia diaria de Open-Meteo en el punto central de la finca: el archivo histórico (ERA5 y ECMWF IFS) y, para los
+   últimos días que el archivo aún no tiene, el modelo de previsión. Se guarda en el aparato para verla sin conexión.
+   Campañas de noviembre a octubre; también el año natural. Se guardan las 4 últimas campañas. */
+var LLK='mapa-fincas:lluvia', LLN=4, LLU={}, LLSEL={};
+var LLMES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+function llN(s){var p=String(s).split('-');return Math.round(Date.UTC(+p[0],+p[1]-1,+p[2])/864e5)}
+function llS(n){return new Date(n*864e5).toISOString().slice(0,10)}
+function llHoy(){var d=new Date();return Math.round(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5)}
+function llCampY(n){var d=new Date(n*864e5);return d.getUTCMonth()>=10?d.getUTCFullYear():d.getUTCFullYear()-1}
+function llFecha(n){var d=new Date(n*864e5);return d.getUTCDate()+' '+LLMES[d.getUTCMonth()]+' '+d.getUTCFullYear()}
+function llAll(){try{var o=JSON.parse(localStorage.getItem(LLK)||'{}');return o&&typeof o==='object'?o:{}}catch(e){return {}}}
+function llGet(id){var c=llAll()[id];return c&&c.d0&&c.h&&typeof c.p==='string'?c:null}
+function llPut(id,c){
+  var o=llAll(); o[id]=c;
+  Object.keys(o).sort(function(a,b){return (o[b].t||0)-(o[a].t||0)}).slice(40).forEach(function(k){delete o[k]});
+  try{localStorage.setItem(LLK,JSON.stringify(o))}catch(e){}
+}
+function llArr(c){return c.p.split(',').map(function(v){return v===''?null:+v})}
+function llSum(c,a,de,ha){
+  var b=llN(c.d0), s=0, n=0, k=0;
+  for(var i=Math.max(de,b);i<=Math.min(ha,llN(c.h));i++){var v=a[i-b];if(v!=null){s+=v;n++;if(v>=1)k++}}
+  return {mm:s,n:n,dias:k};
+}
+function llUrl(arch,pt,q){return 'https://'+(arch?'archive-api':'api')+'.open-meteo.com/v1/'+(arch?'archive':'forecast')+'?latitude='+pt[1].toFixed(4)+'&longitude='+pt[0].toFixed(4)+'&daily=precipitation_sum&timezone=Europe%2FMadrid'+q}
+function llRe(id){if(detailId===id)renderFincas()}
+function llLoad(id,force){
+  var pt=fincaPoint(id), st=LLU[id]||(LLU[id]={});
+  if(!finca(id)||!pt||st.busy)return;
+  var c=llGet(id), hoy=llHoy(), ayer=hoy-1, ini=llN((llCampY(hoy)-LLN+1)+'-11-01');
+  var mov=!!c&&(Math.abs(c.lat-pt[1])>0.005||Math.abs(c.lng-pt[0])>0.005);
+  if(!force&&c&&!mov&&Date.now()-c.t<3*36e5&&llN(c.h)>=ayer-1)return;
+  if(!force&&st.errT&&Date.now()-st.errT<3e5)return;
+  if(navigator.onLine===false){st.err='No hay conexión.';st.errT=Date.now();llRe(id);return}
+  var util=c&&!mov&&llN(c.d0)<=ini;
+  var desde=util?Math.max(ini,Math.min(llN(c.h),ayer)-45):ini;
+  st.busy=true; st.err=''; llRe(id);
+  var arc=function(fin){return fetchJsonS(llUrl(true,pt,'&start_date='+llS(desde)+'&end_date='+llS(fin)),25000)};
+  var pA=arc(ayer).catch(function(e){if(e&&e.st===400&&ayer-8>=desde)return arc(ayer-8);throw e});
+  var pF=fetchJsonS(llUrl(false,pt,'&past_days=10&forecast_days=1'),15000).catch(function(){return null});
+  Promise.all([pA,pF]).then(function(r){
+    var m={};
+    if(util){var a0=llArr(c),b0=llN(c.d0);a0.forEach(function(v,i){if(v!=null&&b0+i>=ini)m[b0+i]=v})}
+    [r[1],r[0]].forEach(function(j){      // primero la previsión; el archivo histórico manda donde tiene dato
+      var d=j&&j.daily; if(!d||!d.time||!d.precipitation_sum)return;
+      d.time.forEach(function(s,i){var v=d.precipitation_sum[i],n=llN(s);if(n<ini||n>ayer||v==null||!isFinite(v))return;m[n]=Math.round(Math.max(0,v)*10)/10});
+    });
+    var ks=Object.keys(m).map(Number); if(!ks.length)throw new Error('sin datos');
+    var h=Math.max.apply(null,ks), p=[];
+    for(var i=ini;i<=h;i++)p.push(m[i]==null?'':String(m[i]));
+    llPut(id,{t:Date.now(),lat:pt[1],lng:pt[0],d0:llS(ini),h:llS(h),p:p.join(',')});
+    st.busy=false; st.err=''; st.errT=0; llRe(id);
+  }).catch(function(e){
+    st.busy=false; st.errT=Date.now();
+    st.err=navigator.onLine===false?'No hay conexión.':'Open-Meteo no ha contestado ('+whyErr(e)+').';
+    llRe(id);
+  });
+}
+function llHTML(id){
+  var c=llGet(id), st=LLU[id]||{}, hoy=llHoy(), cyHoy=llCampY(hoy), a=c?llArr(c):null, h=c?llN(c.h):0;
+  var cy=c?(LLSEL[id]||cyHoy):cyHoy, cs=llN(cy+'-11-01'), ce=llN((cy+1)+'-10-31'), act=cy===cyHoy;
+  var tot=c?llSum(c,a,cs,ce):null, tAct=c?llSum(c,a,llN(cyHoy+'-11-01'),hoy):null;
+  var o='<details class="more" data-sec="ll"'+(secOpen.ll?' open':'')+'><summary>Lluvia'+(tAct&&tAct.n?' · '+nf(tAct.mm,1)+' mm esta campaña':'')+'</summary>';
+  if(!c){
+    if(st.busy)o+='<p class="small" style="margin-top:8px">Trayendo la lluvia de Open-Meteo…</p>';
+    else if(st.err)o+='<div class="note">'+esc(st.err)+' La lluvia se trae al abrir este apartado con conexión.<div class="acts"><button class="btn sm" data-act="ll-upd" data-id="'+id+'">Reintentar</button></div></div>';
+    else o+='<p class="small" style="margin-top:8px">Abriendo…</p>';
+    return o+'</details>';
+  }
+  var y0=llCampY(llN(c.d0)), camps=[]; for(var y=cyHoy;y>=y0;y--)camps.push(y);
+  o+='<div class="row" style="margin:8px 0 2px"><label for="ll-camp" class="small" style="flex:1"><b>Campaña</b></label><select id="ll-camp" class="in" style="max-width:170px" aria-label="Campaña de la lluvia">'+camps.map(function(y){return '<option value="'+y+'"'+(y===cy?' selected':'')+'>'+y+'/'+(y+1)+'</option>'}).join('')+'</select></div>';
+  var yy=new Date(hoy*864e5).getUTCFullYear();
+  o+='<div class="big3"><div><span>Campaña '+cy+'/'+(cy+1)+'</span><b>'+nf(tot.mm,1)+' mm</b><small class="small" style="display:block">'+(act?'desde el 1 nov':'1 nov – 31 oct')+'</small></div>';
+  if(act){
+    var ya=llSum(c,a,llN(yy+'-01-01'),hoy);
+    o+='<div><span>Año '+yy+'</span><b>'+nf(ya.mm,1)+' mm</b><small class="small" style="display:block">desde el 1 ene</small></div>';
+    o+='<div><span>Últimos 30 días</span><b>'+nf(llSum(c,a,h-29,h).mm,1)+' mm</b><small class="small" style="display:block">7 días: '+nf(llSum(c,a,h-6,h).mm,1)+' mm</small></div>';
+  }
+  o+='</div>';
+  var lin=['Días de lluvia (1 mm o más): <b>'+nf(tot.dias,0)+'</b>'];
+  var ps=llN((cy-1)+'-11-01');
+  if(ps>=llN(c.d0)){
+    var pe=act?llN((+c.h.slice(0,4)-1)+c.h.slice(4)):llN(cy+'-10-31'), pv=llSum(c,a,ps,pe), df=tot.mm-pv.mm;
+    lin.push((act?'A la misma fecha de la campaña ':'Campaña ')+(cy-1)+'/'+cy+': <b>'+nf(pv.mm,1)+' mm</b>'+(Math.abs(df)>=0.05?' ('+nf(Math.abs(df),1)+' mm '+(df>0?'más':'menos')+' ahora)':''));
+  }
+  if(act&&llN((yy-1)+'-01-01')>=llN(c.d0))lin.push('Año '+(yy-1)+' completo: <b>'+nf(llSum(c,a,llN((yy-1)+'-01-01'),llN((yy-1)+'-12-31')).mm,1)+' mm</b>');
+  o+='<p class="small">'+lin.join('<br>')+'</p>';
+  var ms=[], mx=0;
+  for(var k=0;k<12;k++){
+    var mY=k<2?cy:cy+1, mM=(k+10)%12, d1=Date.UTC(mY,mM,1)/864e5, d2=Date.UTC(mY,mM+1,0)/864e5;
+    var r=d1>h?null:llSum(c,a,d1,d2); ms.push({t:LLMES[mM]+' '+mY,r:r,p:r&&d2>h}); if(r&&r.mm>mx)mx=r.mm;
+  }
+  o+='<div class="llms">'+ms.map(function(x){
+    return '<div class="llm"><span>'+x.t+'</span><i><b style="width:'+(x.r&&mx>0?Math.max(1,Math.round(x.r.mm/mx*100)):0)+'%"></b></i><em>'+(x.r?nf(x.r.mm,1)+' mm'+(x.p?'*':''):'—')+'</em></div>'}).join('')+'</div>';
+  if(ms.some(function(x){return x.p}))o+='<p class="small">* mes en curso, hasta el '+llFecha(h)+'.</p>';
+  o+='<p class="small" style="margin-top:8px">Datos hasta el '+llFecha(h)+(st.busy?' · actualizando…':'')+(st.err&&!st.busy?' · '+esc(st.err)+' Se ven los datos guardados el '+llFecha(llN(new Date(c.t).toISOString().slice(0,10)))+'.':'')+'<br>Fuente: Open-Meteo.com (CC BY 4.0). Estimación por modelo en el punto central de la finca, no es un pluviómetro.</p>';
+  o+='<div class="acts"><button class="btn sm" data-act="ll-upd" data-id="'+id+'"'+(st.busy?' disabled':'')+'>Actualizar</button></div>';
+  return o+'</details>';
+}
 function fincaDetailHTML(id){
   var f=finca(id), recs=fincaRecs(id).sort(function(a,b){return a.ref.localeCompare(b.ref,'es',{numeric:true})});
   var s=stats([id],true).per[id]||{ha:0,n:0,crops:{}};
@@ -3859,6 +3959,7 @@ function fincaDetailHTML(id){
   }
   var pt=fincaPoint(id);
   if(pt)h+='<details class="more" data-sec="ub"'+op('ub')+'><summary>Punto central de la finca</summary>'+coordHTML(pt,'Coordenadas (formato Google Maps)',f.nombre)+'</details>';
+  if(pt)h+=llHTML(id);
   if(recs.length){
     h+='<h3>Recintos</h3>';
     recs.forEach(function(r){
@@ -14091,6 +14192,7 @@ document.addEventListener('click',function(ev){
     case 'pf-bring':{var fb=finca(id);if(fb){pfAdd(fb,PF);save();afterDataChange(false);toast('Finca «'+fb.nombre+'» traída a esta pestaña')}break}
     case 'nfp-create':{var nf2=createFinca($('#nfp-name').value);if(nf2){nfpOpen=false;drawSaved();openFinca(nf2.id)}break}
     case 'finca-open':openFinca(id);break;
+    case 'll-upd':llLoad(id,true);break;
     case 'finca-view':if(finca(id)&&isOc(finca(id))){openFinca(id);break}finOn();viewId=id;viewG=null;viewCrop=null;viewRG=null;detailId=null;toMap();syncFocus();setTimeout(function(){map.invalidateSize();fitFinca(id)},90);break;
     case 'move-open':fdOpen=!fdOpen;fdQ='';newFincaOpen=false;renderCard();break;
     case 'finca-back':colOpen=false;grpPick=false;bulkAll=false;viewId=null;viewG=null;viewCrop=null;viewRG=null;detailId=null;bulk=null;bulkR=null;bulkP=null;disarm();renderFincas();syncFocus();break;
@@ -14319,6 +14421,8 @@ document.addEventListener('click',function(ev){
   }
 });
 document.addEventListener('toggle',function(ev){var d=ev.target;if(d&&d.dataset&&d.dataset.sec)secOpen[d.dataset.sec]=d.open},true);
+document.addEventListener('toggle',function(ev){var d=ev.target;if(d&&d.dataset&&d.dataset.sec==='ll'&&d.open&&detailId)llLoad(detailId)},true);
+document.addEventListener('change',function(ev){var t=ev.target;if(t&&t.id==='ll-camp'&&detailId){LLSEL[detailId]=+t.value;renderFincas()}});
 (function(){
   var y0=null;
   document.addEventListener('pointerdown',function(e){var g=e.target&&e.target.closest&&e.target.closest('.grab');y0=g?e.clientY:null},true);
@@ -14904,6 +15008,7 @@ setTimeout(function(){map.invalidateSize();refreshSigpac();if(OV.ndvi){ndviPill(
 window.__mf={loadPdfLib:loadPdfLib,pdfPiezas:pdfPiezas,pdfHay:pdfHay,pvState:function(){return PV},boxPad:boxPad,pdfFont:pdfFont,pdfFontC:pdfFontC,expMapHTML:expMapHTML,buildFichaPdf:buildFichaPdf,afCompute:afCompute,afCompare:afCompare,hatchOf:hatchOf,swBg:swBg,OV:OV,polyC:polyC,mmHTML:mmHTML,expClose:expClose,temaGet:temaGet,temaSet:temaSet,pvOpen:pvOpen,pvClose:pvClose,cvMatch:cvMatch,cvLabel:cvLabel,trVarList:trVarList,varReal:varReal,GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
 Object.assign(window.__mf,{plFileBase:plFileBase,expGGet:expGGet,expGPick:expGPick,grbSplit:grbSplit,grStart:grStart,grSave:grSave,GRS:function(){return GRS},expHTML:expHTML,TRs:function(){return {tr:TR.cult,ab:AB.cult,fe:FE.cult,hi:HI.cult,inf:INF.cult,pl:PL.pid}},vfState:function(){return VFL},vfOn:vfOn,muniTxtSync:muniTxtSync,polyCount:function(){return polyC.size},ufbStart:ufbStart,ubkCheck:ubkCheck,ubkDue:ubkDue,bkOwn:bkOwn,fbBuild:fbBuild,UBK:UBK,getVersions:getVersions,prevGet:prevGet,spaceHTML:spaceHTML,snapVersion:snapVersion,datReady:function(){return DATP},datState:function(){return {ok:IDBOK,r:DATR,nv:VERS?VERS.length:-1,prev:!!PREV}},plPortrait:plPortrait,plCropTxt:plCropTxt,xlPlanBook:xlPlanBook,idbReset:function(w){idbP=null;if(w)IDB_WAIT=w},syncWait:function(w){SYNC_WAIT=w},syncBusy:function(){return syncing},uCvTxt:uCvTxt,feUcvForm:feUcvForm,feUnitConvert:feUnitConvert,rfEdit:rfEdit,rfSave:rfSave,infTotRows:infTotRows,abTotData:abTotData,cvLabel:cvLabel,feProds:feProds,pabShares:pabShares,pabHaR:pabHaR,pabSplits:pabSplits,pabSplitWarn:pabSplitWarn,pabXCands:pabXCands,pabAddX:pabAddX,pabMove:pabMove,buildPabPdf:buildPabPdf,buildPabXlsx:buildPabXlsx,pabBlocks:pabBlocks,pabCheck:pabCheck,pabReal:pabReal,pabCalc:pabCalc,pabAuto:pabAuto,pabHTML:pabHTML,pabCur:pabCur,pabTipo:pabTipo,pabLim:pabLim,PAB:PAB,haC:haC,haPair:haPair,plTrPlaces:plTrPlaces,daOpen:daOpen,daSave:daSave,PL:PL,plWeeks:plWeeks,plCalc:plCalc,plTrOrder:plTrOrder,plPending:plPending,plMarkGo:plMarkGo,buildTratPdf:buildTratPdf,xlPlanBook:xlPlanBook,xlBuild:xlBuild,plFromRecs:plFromRecs,plSecArgs:plSecArgs,plSecHTML:plSecHTML,plSecOut:plSecOut,plTrPRows:plTrPRows,buildPlanPdf:buildPlanPdf,buildPlanXlsx:buildPlanXlsx,planHTML:planHTML,plTrSources:plTrSources,fbBuild:fbBuild,fbRead:fbRead,fbItems:fbItems,fbRestoreFiles:fbRestoreFiles,idbPut:idbPut,idbGet:idbGet,idbKeys:idbKeys,applyImport:applyImport,pending:function(){return pendingImport},docPend:function(){return DOC.pend},phPend:function(){return PH.pend},phProcess:phProcess,phMax:function(n){PH_MAXB=n},trVarParts:trVarParts,numEs:numEs,nf:nf,trList:trList,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
+Object.assign(window.__mf,{llHTML:llHTML,llLoad:llLoad,llGet:llGet,llSum:llSum,llArr:llArr,llN:llN,LLU:function(){return LLU},LLSEL:LLSEL});
 Object.assign(window.__mf,{offMigra:offMigra,OFFMG:function(){return OFFMG},offTCount:offTCount,offTGet:offTGet,arqList:arqList,arqHTML:arqHTML,offKeys:offKeys,offState:offState,offDownload:offDownload,offRemove:offRemove,offPend:offPend,offSet:offSet,offAskCheck:offAskCheck,offUrl:offUrl,offTotal:offTotal,offLoad:offLoad,offDiff:offDiff,offMark:offMark,offSig:offSig,OFFM:function(){return OFFM},OFF:function(){return OFF},offBusy:function(){return !!OFFD},save:function(){save()},renderDatos:renderDatos,offAskShown:function(){return OFFASK}});
 })();
 </script>
