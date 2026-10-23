@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-lyKeV9UgInJPXwfuIM+7IZPqIdZZtuyTK5N3LwHanZw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-VquPQFgpvgCc/qvDwTSLo8TrFIDejcJwih9LRvlglNc='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -1598,6 +1598,14 @@ body.offline [data-act=ov][data-k=sig],body.offline [data-act=ov][data-k=cat],bo
 .radleg span.u{flex:1.4}
 body.radon #mapwrap .leaflet-bottom{bottom:var(--radh,0px)}
 body.radon #verbtn{transform:translateY(calc(-1 * var(--radh,0px)))}
+/* entrega 100: en el ordenador el panel flota sobre el mapa; la franja empieza a su derecha y el botón ⏸/▶ va encima del zoom */
+@media (min-width:900px){
+  #radbar{left:calc(var(--side) + 24px);right:12px;bottom:12px}
+  #radbar .radtime{border-radius:10px 10px 0 0}
+  #radbar .radleg{border-radius:0 0 10px 10px;overflow:hidden}
+  #radbar .radplay{right:0;bottom:calc(100% + 148px)}
+  body.radon #mapwrap .leaflet-bottom{bottom:calc(var(--radh,0px) + 12px)}
+}
 </style>
 </head>
 <body>
@@ -2355,7 +2363,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-22T22:50:31Z',n:'Entrega 99 · 23 oct · 00:50'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-23T05:02:52Z',n:'Entrega 100 · 23 oct · 07:02'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
