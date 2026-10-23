@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-A//FYJZBfPgBlQTOnAxPqI1FO9+ZM7F7kulXWBiL0VE='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-lyKeV9UgInJPXwfuIM+7IZPqIdZZtuyTK5N3LwHanZw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -1019,6 +1019,7 @@ h3{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2
 .expnav .chip.soon:not(.on){opacity:.6}
 .expg{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0 2px}.expg .trsel{max-width:220px}.expg.on{background:rgba(245,196,0,.16);border:1px solid rgba(245,196,0,.6);border-radius:12px;padding:6px 10px}.expgv{font-size:13px}
 .grpick{background:none;border:0;padding:0;color:inherit;font:inherit;cursor:pointer;text-align:left}.grpick:hover b{text-decoration:underline}
+.sbk .lbl{margin-top:8px}.sbk .note{margin:6px 0}.sbkp{margin-top:10px}
 .grb{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin:8px 0}.grb .in{width:100%;margin-top:3px}.grbnow{margin-top:3px;opacity:.85}
 .docb{display:inline-block;margin-top:4px;padding:2px 10px;border-radius:999px;font-size:13px;font-weight:700;background:var(--warn-bg);color:var(--warn-ink)}
 .docb.red{background:#fde8e6;color:#b42318}
@@ -1584,6 +1585,19 @@ h3{color:var(--ink);font-size:16.5px;font-weight:700;line-height:1.25;padding-le
 .upend{box-shadow:inset 4px 0 0 #e8930c !important}
 .upend::after{content:'⤴ pendiente de subir';display:block;width:max-content;margin:6px 0 2px;font-size:11px;font-weight:700;color:#7a4600;background:#ffe2a8;border-radius:999px;padding:2px 8px}
 body.offline [data-act=ov][data-k=sig],body.offline [data-act=ov][data-k=cat],body.offline [data-act=ov][data-k=ndvi],body.offline [data-act=rad-tg],body.offline [data-act=sigpac-open],body.offline [data-act=cat-load],body.offline [data-act=ndv-chart]{opacity:.45}
+/* entrega 99: radar de la AEMET con la franja de Rain Alarm */
+#radbar{position:absolute;z-index:520;left:0;right:0;bottom:0;pointer-events:none}
+#radbar>*{pointer-events:auto}
+.radplay{position:absolute;right:12px;bottom:calc(100% + 108px);width:54px;height:54px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(16,30,48,.82);display:grid;place-items:center;box-shadow:0 2px 10px rgba(0,0,0,.35);cursor:pointer}
+.radplay svg{width:24px;height:24px;fill:#fff}
+.radtime{position:relative;text-align:center;font:500 15px/1.2 var(--cond);padding:5px 74px;background:rgba(16,30,48,.82);color:#fff;font-variant-numeric:tabular-nums}
+.radtime span{font-size:12px;opacity:.85}
+.radtime .radsrc{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;opacity:.75}
+.radleg{display:flex;background:#fff}
+.radleg span{flex:1;min-width:0;text-align:center;font:600 11px/20px var(--cond);color:#111;font-variant-numeric:tabular-nums}
+.radleg span.u{flex:1.4}
+body.radon #mapwrap .leaflet-bottom{bottom:var(--radh,0px)}
+body.radon #verbtn{transform:translateY(calc(-1 * var(--radh,0px)))}
 </style>
 </head>
 <body>
@@ -1617,6 +1631,7 @@ body.offline [data-act=ov][data-k=sig],body.offline [data-act=ov][data-k=cat],bo
       <button class="pill ok" id="finish" type="button" data-act="finish-add" hidden>✓ Finalizar</button>
       <div class="pill leg" id="cleg" hidden></div>
     </div>
+    <div id="radbar" hidden></div>
     <section id="empty" hidden>
       <div class="chd"><h3 style="margin:0">Para empezar</h3></div>
       <ol class="steps">
@@ -2340,7 +2355,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-22T16:31:31Z',n:'Entrega 98 · 22 oct · 18:31'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-22T22:50:31Z',n:'Entrega 99 · 23 oct · 00:50'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -10170,41 +10185,109 @@ function usView(id,name){
     if(w&&!w.closed)w.location.href=u; else location.href=u;
   },function(){if(w)try{w.close()}catch(e){};US.err=usErr('nologin');usRender()});
 }
-/* radar de lluvia (RainViewer) */
-var RAD={on:false,lay:null,frames:[],i:-1,err:'',busy:false,op:.7,host:'',t:null,at:0};
-function radClear(){if(RAD.lay){try{map.removeLayer(RAD.lay)}catch(e){}RAD.lay=null}clearInterval(RAD.t);RAD.t=null}
+/* radar de lluvia (entrega 99): el de la AEMET, animado y con la escala de colores de Rain Alarm.
+   Las imágenes las prepara la función de servidor cada 10 min y quedan en el almacén «radar» de Supabase.
+   Si no hay sesión o la AEMET no responde, se usa RainViewer de reserva. */
+var RAD_ESC=[['mm/h','#89ddde'],['0,2','#89ddde'],['0,3','#0101d6'],['0,6','#96f565'],['1,3','#4e8633'],['3','#f6f06e'],['6','#e29d48'],['12','#cd412f'],['24','#992e1c'],['50','#d543e7'],['100','#a030b1'],['205','#6e1b7d'],['420','#4f115b']];
+var RAD={on:false,src:'',lay:null,lays:[],frames:[],i:-1,err:'',aviso:'',busy:false,op:.75,play:true,host:'',caja:null,t:null,anim:null,at:0};
+function radPane(){if(!map.getPane('radar')){var p=map.createPane('radar');p.style.zIndex=350;p.style.pointerEvents='none'}return 'radar'}
+function radClear(){
+  if(RAD.lay){try{map.removeLayer(RAD.lay)}catch(e){}RAD.lay=null}
+  RAD.lays.forEach(function(l){try{map.removeLayer(l)}catch(e){}});RAD.lays=[];
+  clearInterval(RAD.t);RAD.t=null;clearTimeout(RAD.anim);RAD.anim=null;
+}
+function radUrl(f){return SB_URL+'/storage/v1/object/public/radar/'+encodeURIComponent(f.f)}
 function radShow(){
   var f=RAD.frames[RAD.i]; if(!f)return;
-  var url=RAD.host+f.path+'/256/{z}/{x}/{y}/2/1_1.png';
-  if(RAD.lay)RAD.lay.setUrl(url);
-  else RAD.lay=L.tileLayer(url,{opacity:RAD.op,maxNativeZoom:7,maxZoom:19,tileSize:256,zIndex:5,className:'radimg',attribution:'Radar © RainViewer'}).addTo(map);
+  if(RAD.src==='aemet'){
+    if(RAD.lays.length!==RAD.frames.length||RAD.lays.some(function(l,k){return l._mfF!==RAD.frames[k].f})){
+      RAD.lays.forEach(function(l){try{map.removeLayer(l)}catch(e){}});
+      RAD.lays=RAD.frames.map(function(x){var l=L.imageOverlay(radUrl(x),RAD.caja,{opacity:0,pane:radPane(),className:'radimg',interactive:false,attribution:'Radar © AEMET'}).addTo(map);l._mfF=x.f;return l});
+    }
+    RAD.lays.forEach(function(l,k){l.setOpacity(k===RAD.i?RAD.op:0)});
+  }else{
+    var url=RAD.host+f.path+'/256/{z}/{x}/{y}/2/1_1.png';
+    if(RAD.lay)RAD.lay.setUrl(url);
+    else RAD.lay=L.tileLayer(url,{opacity:RAD.op,maxNativeZoom:7,maxZoom:19,tileSize:256,zIndex:5,className:'radimg',attribution:'Radar © RainViewer'}).addTo(map);
+  }
+  radBar();
+}
+/* animación como un gif: una imagen tras otra cada 10 min de radar; en la última se para un poco y vuelve al principio */
+function radAnim(){
+  clearTimeout(RAD.anim);RAD.anim=null;
+  if(!RAD.on||!RAD.play||RAD.frames.length<2)return;
+  RAD.anim=setTimeout(function(){
+    if(!RAD.on||!RAD.play)return;
+    if(!document.hidden){RAD.i=(RAD.i+1)%RAD.frames.length;radShow()}
+    radAnim();
+  },RAD.i===RAD.frames.length-1?1600:650);
+}
+function isLayersOpen(){var l=$('#layers');return !!(l&&!l.hidden)}
+function radRV(){
+  var ctl=(typeof AbortController!=='undefined')?new AbortController():null, to=setTimeout(function(){ctl&&ctl.abort()},12000);
+  return fetch('https://api.rainviewer.com/public/weather-maps.json',ctl?{signal:ctl.signal}:{}).then(function(r){clearTimeout(to);if(!r.ok)throw new Error('http');return r.json()}).then(function(j){
+    var past=(j&&j.radar&&j.radar.past)||[]; if(!past.length)throw new Error('vacio');
+    return {host:(j.host&&/^https:\/\//.test(j.host))?j.host:'https://tilecache.rainviewer.com',frames:past.map(function(x){return {t:x.time*1000,path:x.path}})};
+  },function(e){clearTimeout(to);throw e});
 }
 function radLoad(){
   if(!RAD.on||RAD.busy)return Promise.resolve();
-  RAD.busy=true;RAD.err='';renderLayers();
-  var ctl=(typeof AbortController!=='undefined')?new AbortController():null, to=setTimeout(function(){ctl&&ctl.abort()},12000);
-  return fetch('https://api.rainviewer.com/public/weather-maps.json',ctl?{signal:ctl.signal}:{}).then(function(r){clearTimeout(to);if(!r.ok)throw new Error('http');return r.json()}).then(function(j){
-    RAD.busy=false; if(!RAD.on)return;
-    var past=(j&&j.radar&&j.radar.past)||[]; if(!past.length)throw new Error('vacio');
-    RAD.host=(j.host&&/^https:\/\//.test(j.host))?j.host:'https://tilecache.rainviewer.com'; RAD.frames=past; RAD.i=past.length-1; RAD.at=Date.now();
-    radShow(); renderLayers();
-  }).catch(function(){clearTimeout(to);RAD.busy=false;RAD.err='No llega el radar ahora mismo. Comprueba la conexión e inténtalo de nuevo.';renderLayers()});
+  RAD.busy=true;RAD.err='';renderLayers();radBar();
+  var conSesion=!!(SY&&SY.rt);
+  return (conSesion?fnCall('radar'):Promise.resolve({error:'nologin'})).then(function(j){
+    if(!RAD.on){RAD.busy=false;return}
+    var fr=(j&&j.ok&&Array.isArray(j.frames))?j.frames.filter(function(x){return x&&/^\d{12}\.png$/.test(String(x.f||''))&&x.t>0}):[];
+    var cj=j&&j.caja;
+    if(fr.length&&Array.isArray(cj)&&cj.length===2&&cj.every(function(p){return Array.isArray(p)&&p.length===2&&p.every(isFinite)})){
+      var era=RAD.src==='aemet'&&RAD.frames.length?RAD.frames[RAD.frames.length-1].t:0, enUlt=RAD.i===RAD.frames.length-1;
+      if(RAD.lay){try{map.removeLayer(RAD.lay)}catch(e){}RAD.lay=null}
+      RAD.src='aemet';RAD.caja=cj;RAD.frames=fr;RAD.aviso='';RAD.busy=false;RAD.at=Date.now();
+      if(!RAD.play&&!enUlt&&era)RAD.i=Math.min(RAD.i,fr.length-1);else RAD.i=fr.length-1;
+      radShow();renderLayers();radAnim();return;
+    }
+    /* reserva: RainViewer */
+    var por=!conSesion?'Para ver el radar de la AEMET entra con tu usuario en Datos → Sincronización.':(j&&j.error==='nofn')?'Falta poner al día la función de servidor.':'La AEMET no responde ahora.';
+    return radRV().then(function(r){
+      RAD.busy=false; if(!RAD.on)return;
+      RAD.lays.forEach(function(l){try{map.removeLayer(l)}catch(e){}});RAD.lays=[];
+      RAD.src='rv';RAD.host=r.host;RAD.frames=r.frames;RAD.i=r.frames.length-1;RAD.at=Date.now();RAD.aviso=por+' Se ve el radar de reserva (RainViewer), con menos detalle.';
+      radShow();renderLayers();radAnim();
+    });
+  }).catch(function(){RAD.busy=false;RAD.err='No llega el radar ahora mismo. Comprueba la conexión e inténtalo de nuevo.';renderLayers();radBar()});
 }
 function radToggle(){
   RAD.on=!RAD.on;
-  if(!RAD.on){radClear();RAD.err='';renderLayers();return}
+  if(!RAD.on){radClear();RAD.err='';RAD.aviso='';renderLayers();radBar();return}
+  RAD.play=true;
   radLoad(); clearInterval(RAD.t); RAD.t=setInterval(function(){if(!document.hidden)radLoad()},10*60*1000);
 }
-function radStep(d){var n=RAD.i+d; if(n<0||n>=RAD.frames.length)return; RAD.i=n; radShow(); renderLayers()}
+function radStep(d){var n=RAD.i+d; if(n<0||n>=RAD.frames.length)return; RAD.play=false;clearTimeout(RAD.anim); RAD.i=n; radShow(); renderLayers()}
+function radPlay(){RAD.play=!RAD.play;if(RAD.play){if(RAD.i===RAD.frames.length-1)RAD.i=0;radShow();radAnim()}else{clearTimeout(RAD.anim);radBar()}if(isLayersOpen())renderLayers()}
+function radHora(f){return f?new Date(f.t).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}):''}
+function radHace(f){if(!f)return '';var m=Math.max(0,Math.round((Date.now()-f.t)/60000));return m<1?'ahora':m<60?'hace '+m+' min':'hace '+Math.floor(m/60)+' h'+(m%60?' '+(m%60)+' min':'')}
+/* franja de abajo, como en Rain Alarm: botón ⏸/▶, hora de la imagen y escala en mm/h */
+function radBar(){
+  var b=$('#radbar'); if(!b)return;
+  var on=RAD.on&&!GTOK; document.body.classList.toggle('radon',on);
+  if(!on){b.hidden=true;b.innerHTML='';return}
+  var f=RAD.frames[RAD.i], h='';
+  if(RAD.frames.length>1)h+='<button class="radplay" type="button" data-act="rad-play" aria-label="'+(RAD.play?'Parar la animación':'Ver la animación')+'">'+(RAD.play?'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>')+'</button>';
+  h+='<div class="radtime">'+(RAD.busy&&!f?'Cargando el radar…':f?'<b>'+esc(radHora(f))+'</b> <span>'+esc(radHace(f))+(RAD.i===RAD.frames.length-1?' · la más reciente':'')+'</span>':esc(RAD.err||''))+'<span class="radsrc">'+(RAD.src==='rv'?'RainViewer':'AEMET')+'</span></div>';
+  if(RAD.src==='aemet')h+='<div class="radleg" aria-label="Lluvia en milímetros por hora">'+RAD_ESC.map(function(x,k){return '<span style="background:'+x[1]+([2,4,7,8,9,10,11,12].indexOf(k)>=0?';color:#fff':'')+'"'+(k===0?' class="u"':'')+'>'+x[0]+'</span>'}).join('')+'</div>';
+  b.innerHTML=h; b.hidden=false;
+  document.body.style.setProperty('--radh',b.offsetHeight+'px');
+}
 function radHTML(){
   if(GTOK)return '';
   var h='<button class="lopt'+(RAD.on?' on':'')+'" data-act="rad-tg"><i class="sq"></i>Radar de lluvia</button>';
   if(RAD.on){
-    var f=RAD.frames[RAD.i], hh=f?new Date(f.time*1000).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}):'';
-    var st=RAD.busy?'Cargando el radar…':RAD.err?RAD.err:f?('Imagen de las '+hh+(RAD.i===RAD.frames.length-1?' (la más reciente)':'')+'. Se ven las últimas 2 horas.'):'';
-    h+='<div style="padding:2px 8px 6px"><div class="small"'+(RAD.err?' style="color:var(--warn-ink)"':'')+'>'+esc(st)+'</div><div class="acts">';
+    var f=RAD.frames[RAD.i];
+    var st=RAD.busy&&!f?'Cargando el radar…':RAD.err?RAD.err:f?((RAD.src==='aemet'?'Radar de la AEMET':'Radar de reserva')+'. Imagen de las '+radHora(f)+(RAD.i===RAD.frames.length-1?' (la más reciente)':'')+'. Se ven las últimas 2 horas, de 10 en 10 minutos.'):'';
+    h+='<div style="padding:2px 8px 6px"><div class="small"'+(RAD.err?' style="color:var(--warn-ink)"':'')+'>'+esc(st)+'</div>';
+    if(RAD.aviso)h+='<div class="small" style="color:var(--warn-ink);margin-top:2px">'+esc(RAD.aviso)+'</div>';
+    h+='<div class="acts">';
     if(RAD.frames.length)h+='<button class="btn sm" data-act="rad-step" data-d="-1"'+(RAD.i<=0?' disabled':'')+' aria-label="Imagen anterior">◀</button><button class="btn sm" data-act="rad-step" data-d="1"'+(RAD.i>=RAD.frames.length-1?' disabled':'')+' aria-label="Imagen siguiente">▶</button>';
-    h+='<button class="btn sm" data-act="rad-up">Actualizar</button><button class="btn sm" data-act="rad-op" data-v="-.15">Menos visible</button><button class="btn sm" data-act="rad-op" data-v=".15">Más visible</button></div><div class="small" style="margin-top:4px">Radar © RainViewer. Con mucho zoom se ve menos detalle.</div></div>';
+    h+='<button class="btn sm" data-act="rad-up">Actualizar</button><button class="btn sm" data-act="rad-op" data-v="-.15">Menos visible</button><button class="btn sm" data-act="rad-op" data-v=".15">Más visible</button></div><div class="small" style="margin-top:4px">'+(RAD.src==='rv'?'Radar © RainViewer. Con mucho zoom se ve menos detalle.':'Radar © AEMET (radares de Murcia y Valencia: unos 240 km alrededor de cada uno). Cada punto es aproximadamente 1 km; la lluvia en mm/h se calcula a partir de la señal del radar.')+'</div></div>';
   }
   return h;
 }
@@ -10921,14 +11004,14 @@ function renderTools(){
     (GTOK?'':'<button class="lopt" data-act="af-open"><i class="sq"></i><span>Aforos de cosecha<small>Apunta los kg/ha de cada recinto y saca el informe en PDF y Excel</small></span></button>')+'<button class="lopt" data-act="sel-start"><i class="sq"></i><span>Seleccionar recintos<small>Suma hectáreas y descarga lo elegido</small></span></button>';
 }
 function selStart(pre){
-  endModes(); msel.on=true; msel.items={}; selDrop=false; selQ=''; selNew=false; selConf=null; if(pre)msel.items[pre.ref]={ref:pre.ref,ha:pre.ha,uso:pre.uso,geom:pre.geom}; sel=null; catCard=null; tagCard=null; activeFinca=null; goMark.clearLayers(); drawSel(); renderCard(); renderChip(); closePops(); toMap(); drawSelMulti(); renderSel();
+  endModes(); msel.on=true; msel.items={}; selDrop=false; selQ=''; selNew=false; selConf=null; sbkReset(); if(pre)msel.items[pre.ref]={ref:pre.ref,ha:pre.ha,uso:pre.uso,geom:pre.geom}; sel=null; catCard=null; tagCard=null; activeFinca=null; goMark.clearLayers(); drawSel(); renderCard(); renderChip(); closePops(); toMap(); drawSelMulti(); renderSel();
   toast(pre?'Recinto marcado. Toca más recintos para sumarlos':'Toca los recintos que quieras sumar');
 }
-function selOff(){if(!msel.on)return;dwPick=false;selDrop=false;selQ='';selNew=false;selConf=null;msel.on=false;msel.items={};drawSelMulti();renderSel()}
+function selOff(){if(!msel.on)return;dwPick=false;selDrop=false;selQ='';selNew=false;selConf=null;sbkReset();msel.on=false;msel.items={};drawSelMulti();renderSel()}
 function selClick(ll){
   var h=hitAt([ll.lng,ll.lat]); if(!h)return; var o=h.saved||h.free;
   if(msel.items[o.ref])delete msel.items[o.ref]; else msel.items[o.ref]={ref:o.ref,ha:o.ha,uso:o.uso,geom:o.geom};
-  drawSelMulti(); renderSel();
+  SBK.conf=false; drawSelMulti(); renderSel();
 }
 function drawSelMulti(){
   selMulti.clearLayers(); if(!msel.on)return;
@@ -10961,7 +11044,7 @@ function selDoAdd(fid){
 function renderSel(){
   var el=$('#selbar'); if(!msel.on){el.hidden=true;el.innerHTML='';return}
   var it=selItems(), ha=it.reduce(function(s,o){return s+(o.ha||0)},0), n=it.length;
-  el.classList.toggle('tall',!!(n&&(selDrop||selConf)));
+  el.classList.toggle('tall',!!(n&&(selDrop||selConf||SBK.open)));
   var h='<div class="chd"><div><div class="ref" style="font-family:var(--sans)">Selección de recintos</div><div class="sub">Toca recintos en el mapa para sumarlos o quitarlos</div></div><button class="x" data-act="sel-close" aria-label="Cerrar">×</button></div>';
   h+='<div class="mbig">'+ha4(ha)+' ha</div><div class="small">'+n+(n===1?' recinto seleccionado':' recintos seleccionados')+'</div>';
   if(dwPick)h+='<div class="acts"><button class="btn primary" data-act="dw-from-sel"'+(n?'':' disabled')+'>Usar estos recintos en el asistente →</button></div>';
@@ -10978,12 +11061,86 @@ function renderSel(){
         else h+='<button class="fdnew" data-act="sel-new">+ Crear una finca nueva con estos recintos</button>';
         h+='</div>';
       }
+      h+='<button class="btn fdbtn" data-act="sbk-tg" style="margin-top:8px">✎ Cambiar datos de estos recintos '+(SBK.open?'▴':'▾')+'</button>';
+      if(SBK.open)h+='<div class="fdrop sbk" id="sbk">'+sbkHTML()+'</div>';
     }
   }
   h+='<div class="acts" style="margin-top:10px"><button class="btn sm" data-act="dw-from-sel"'+(n?'':' disabled')+'>Descargar la selección…</button></div>';
   h+='<div class="acts"><button class="btn sm" data-act="sel-clear"'+(n?'':' disabled')+'>Vaciar</button></div>';
   el.innerHTML=h; el.hidden=false;
 }
+
+/* ───────── Entrega 99: cambiar datos de varios recintos seleccionados a la vez ───────── */
+var SBK={open:false,v:{},conf:false};
+var SBK_T=[['var','variedad','Variedad','Ej. Sirora'],['an','anio','Año de plantación','Ej. 2019'],['mc','marco','Marco','Ej. 6x5'],['pt','patron','Patrón','Ej. UCB-1']];
+function sbkReset(){SBK.open=false;SBK.v={};SBK.conf=false}
+function sbkRecs(){return selItems().map(function(o){return S.recintos[o.ref]}).filter(function(r){return r&&finca(r.fincaId)})}
+/* fincas que la selección coge solo en parte: [{f, n, tot, faltan:[recintos]}] */
+function sbkFaltan(){
+  var m={},o=[];
+  sbkRecs().forEach(function(r){var e=m[r.fincaId];if(!e){e=m[r.fincaId]={f:finca(r.fincaId),n:0};o.push(e)}e.n++});
+  return o.map(function(e){var all=fincaRecs(e.f.id);e.tot=all.length;e.faltan=all.filter(function(r){return !msel.items[r.ref]});return e}).filter(function(e){return e.faltan.length});
+}
+function sbkComun(rs,get){var v=null,ok=true;rs.forEach(function(r){var x=String(get(r)||'');if(v===null)v=x;else if(x!==v)ok=false});return ok?v:null}
+/* lo que cambiaría de verdad: [[campo, nombre, valor, texto]] */
+function sbkCambios(){
+  var rs=sbkRecs(), V=SBK.v, out=[], tr=function(x){return String(x==null?'':x).trim()};
+  var dif=function(k,v){return rs.some(function(r){return String(r[k]||'')!==v})};
+  if(V.c&&dif('cultivo',V.c))out.push(['cultivo','cultivo',V.c,V.c]);
+  if(V.rg&&dif('riego',V.rg))out.push(['riego','riego',V.rg,riegoName(V.rg)]);
+  if(V.pd&&dif('prod',V.pd))out.push(['prod','producción',V.pd,prodName(V.pd)]);
+  SBK_T.forEach(function(t){var v=tr(V[t[0]]);if(v&&dif(t[1],v))out.push([t[1],t[2].toLowerCase(),v,v])});
+  return out;
+}
+function sbkResumen(){
+  var c=sbkCambios(), fl=sbkFaltan();
+  return c.map(function(x){return x[1]+' → '+x[3]}).join(', ')+(fl.length?' · '+fl.map(function(e){return 'de '+e.f.nombre+' faltan '+e.faltan.length}).join(', '):'');
+}
+function sbkListaRefs(rs){var l=rs.slice(0,6).map(function(r){return refLabel(r.ref)});return l.join(', ')+(rs.length>6?' y '+(rs.length-6)+' más':'')}
+function sbkHTML(){
+  var rs=sbkRecs(), n=selItems().length, sinF=n-rs.length, h='';
+  sbkFaltan().forEach(function(e){
+    h+='<div class="note sbkw">De <b>'+esc(e.f.nombre)+'</b> has cogido '+e.n+' de '+e.tot+' recintos. Faltan: '+esc(sbkListaRefs(e.faltan))+'.<div class="acts"><button class="btn sm" data-act="sbk-fill" data-id="'+esc(e.f.id)+'">Añadir los que faltan</button></div></div>';
+  });
+  if(sinF)h+='<div class="note">'+(sinF===1?'1 recinto no está':sinF+' recintos no están')+' en ninguna finca: no se '+(sinF===1?'cambiará':'cambiarán')+' hasta que '+(sinF===1?'lo añadas':'los añadas')+' a una.</div>';
+  if(!rs.length)return h;
+  var V=SBK.v, varios=function(get,nm){var c=sbkComun(rs,get);return c===null?'<div class="small grbnow">Ahora: varios ('+grbNow(rs,get,nm)+')</div>':''};
+  var cur=function(k,get){return V[k]!==undefined?V[k]:(sbkComun(rs,get)||'')};
+  h+='<div class="lbl">Cultivo</div><div class="chips">'+cropChips(cur('c',function(r){return r.cultivo}),'sbk-c')+'</div>'+varios(function(r){return r.cultivo},function(x){return x});
+  h+='<div class="lbl">Riego</div><div class="chips">'+riegoChips(cur('rg',function(r){return r.riego}),'sbk-rg')+'</div>'+varios(function(r){return r.riego},riegoName);
+  h+='<div class="lbl">Producción</div><div class="chips">'+prodChips(cur('pd',function(r){return r.prod}),'sbk-pd')+'</div>'+varios(function(r){return r.prod},prodName);
+  h+='<details class="more sbkp"'+(SBK_T.some(function(t){return V[t[0]]})?' open':'')+'><summary><b>Plantación</b> <span class="small">variedad, año, marco y patrón</span></summary><div class="grb">';
+  SBK_T.forEach(function(t){
+    var get=function(r){return t[1]==='variedad'?varReal(r):r[t[1]]}, c=sbkComun(rs,get);
+    h+='<div><div class="small">'+t[2]+'</div><input id="sbk-'+t[0]+'" class="in"'+(t[0]==='an'?' inputmode="numeric"':'')+' placeholder="'+esc(c===null?'varios':(c||t[3]))+'" value="'+esc(V[t[0]]||'')+'" autocomplete="off">'+(c===null?'<div class="small grbnow">Ahora: '+grbNow(rs,get,function(x){return x})+'</div>':'')+'</div>';
+  });
+  h+='</div><div class="small">Solo se cambia lo que escribas; lo que dejes vacío se queda como está.</div></details>';
+  if(SBK.conf){
+    h+='<div class="note"><b>¿Aplicar a '+rs.length+(rs.length===1?' recinto':' recintos')+'?</b> '+esc(sbkResumen())+'<div class="acts"><button class="btn primary sm" data-act="sbk-ok">Aplicar</button><button class="btn sm" data-act="sbk-no">Cancelar</button></div></div>';
+  }else{
+    var nc=sbkCambios().length;
+    h+='<div class="acts"><button class="btn primary" id="sbk-go" data-act="sbk-go"'+(nc?'':' disabled')+'>Aplicar a '+rs.length+(rs.length===1?' recinto':' recintos')+'</button></div>';
+  }
+  return h;
+}
+function sbkPick(k,v){SBK.v[k]=(SBK.v[k]===v)?undefined:v;if(SBK.v[k]===undefined)delete SBK.v[k];SBK.conf=false;renderSel()}
+function sbkFill(fid){
+  fincaRecs(fid).forEach(function(r){if(!msel.items[r.ref])msel.items[r.ref]={ref:r.ref,ha:r.ha,uso:r.uso,geom:r.geom}});
+  SBK.conf=false; drawSelMulti(); renderSel();
+}
+function sbkApply(){
+  var rs=sbkRecs(), c=sbkCambios(); if(!rs.length||!c.length){SBK.conf=false;renderSel();return}
+  undoPush();
+  rs.forEach(function(r){c.forEach(function(x){r[x[0]]=x[2]})});
+  var n=rs.length; SBK.v={}; SBK.conf=false;
+  save(); drawSaved(); renderAll(); renderSel();
+  undoToast('Datos cambiados en '+n+(n===1?' recinto':' recintos'));
+}
+document.addEventListener('input',function(ev){
+  var t=ev.target; if(!t||!t.id||t.id.slice(0,4)!=='sbk-'||t.id==='sbk-go')return;
+  SBK.v[t.id.slice(4)]=t.value; SBK.conf=false;
+  var b=$('#sbk-go'); if(b)b.disabled=!sbkCambios().length;
+});
 
 /* ---- zona para foto georreferenciada y plano ---- */
 var rec={on:false,step:0,a:null,b:null,paper:'a4',orient:'auto',scale:-1,dxf:true,dxfAll:false,fsrc:0,busy:'',name:'',only:null,prog:''}, recGrp=L.layerGroup().addTo(map);
@@ -13521,7 +13678,8 @@ document.addEventListener('click',function(ev){
     case 'ov':setOv(b.dataset.k,!OV[b.dataset.k]);break;
     case 'rad-tg':radToggle();break;
     case 'rad-up':radLoad();break;
-    case 'rad-op':{RAD.op=Math.max(.2,Math.min(1,Math.round((RAD.op+parseFloat(b.dataset.v))*100)/100));if(RAD.lay)RAD.lay.setOpacity(RAD.op);break}
+    case 'rad-op':{RAD.op=Math.max(.2,Math.min(1,Math.round((RAD.op+parseFloat(b.dataset.v))*100)/100));if(RAD.lay)RAD.lay.setOpacity(RAD.op);else radShow();break}
+    case 'rad-play':radPlay();break;
     case 'rad-step':radStep(parseInt(b.dataset.d,10));break;
     case 'us-open':usOpen();break;
     case 'us-close':US.open=false;usRender();break;
@@ -13959,10 +14117,18 @@ document.addEventListener('click',function(ev){
       break}
     case 'sel-add-ok':{var sc=selConf; if(!sc)break; if(sc.id)selDoAdd(sc.id); else{var nf3=createFinca(sc.name); if(nf3)selDoAdd(nf3.id)} break}
     case 'sel-add-no':selConf=null;renderSel();break;
-    case 'sel-rm':delete msel.items[b.dataset.ref];drawSelMulti();renderSel();break;
+    case 'sel-rm':delete msel.items[b.dataset.ref];SBK.conf=false;drawSelMulti();renderSel();break;
     case 'sel-go':{var so=msel.items[b.dataset.ref]; if(so){map.fitBounds(geomBounds(so.geom),{padding:[40,40],maxZoom:18})}break}
     case 'sel-close':selOff();break;
-    case 'sel-clear':msel.items={};drawSelMulti();renderSel();break;
+    case 'sel-clear':msel.items={};SBK.conf=false;drawSelMulti();renderSel();break;
+    case 'sbk-tg':SBK.open=!SBK.open;SBK.conf=false;renderSel();break;
+    case 'sbk-c':sbkPick('c',b.dataset.c);break;
+    case 'sbk-rg':sbkPick('rg',b.dataset.v);break;
+    case 'sbk-pd':sbkPick('pd',b.dataset.v);break;
+    case 'sbk-fill':sbkFill(id);break;
+    case 'sbk-go':if(sbkCambios().length){SBK.conf=true;renderSel()}break;
+    case 'sbk-ok':sbkApply();break;
+    case 'sbk-no':SBK.conf=false;renderSel();break;
     case 'rec-start':recStart();break;
     case 'rec-close':recOff();break;
     case 'rec-redo':rec.a=rec.b=null;rec.step=1;drawRec();renderRec();break;
