@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-3Uey7sLh/NChc1cqZtWO+neCU6wEsHSlKE4g/pyEfs4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-pEvQ1T2iV6kGQ4le9ZONPdhGwFlVRJatYCpi8FlaMhs='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -2389,7 +2389,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-23T08:59:09Z',n:'Entrega 101 · 23 oct · 10:59'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-23T09:39:51Z',n:'Entrega 102 · 23 oct · 11:39'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -14496,7 +14496,112 @@ window.addEventListener('resize',function(){setTimeout(xsAll,60)});
    La lista de qué está guardado (por finca) va en el almacén grande del aparato (IndexedDB, «sync/offmap»); no se sincroniza. */
 var OFFC='mf-mapas', OFFA='mf-app-1', OFF_MAR=300, OFF_ALR=10000, OFF_Z1=[15,19], OFF_Z2=[10,13], OFF_PAR=6, OFF_ANO=365*864e5, OFF_KB={p:18,o:5};
 var OFFM={f:{},sz:{},no:{},sn:0,ld:false}, OFFD=null, OFFASK=null;
-function offCan(){return !GTOK&&!VC&&typeof caches!=='undefined'&&!!window.isSecureContext}
+/* Entrega 102: los trozos de mapa se guardan en una base de datos propia (IndexedDB «mf-mapas») y no en el almacén de la app
+   (Cache Storage): en el iPhone ese almacén se revisa entero al abrir la app y, con miles de trozos guardados, tardaba más de 10 s
+   en arrancar. Los que ya estaban en el almacén viejo se pasan solos al nuevo (poco a poco, sin internet) y luego se borra el viejo. */
+var OFFT='mf-mapas', OFFTP=null, OFFMG={on:false,n:0,tot:0,fin:false,rt:0};
+function offTdb(){
+  if(OFFTP)return OFFTP;
+  OFFTP=new Promise(function(ok){
+    try{
+      if(typeof indexedDB==='undefined'||!indexedDB){ok(null);return}
+      var done=false, fin=function(v){if(done)return;done=true;clearTimeout(tm);if(!v)OFFTP=null;ok(v)};
+      var tm=setTimeout(function(){fin(null)},IDB_WAIT);
+      var op=function(ver){
+        var r=ver?indexedDB.open(OFFT,ver):indexedDB.open(OFFT);
+        r.onupgradeneeded=function(){var d=r.result;if(!d.objectStoreNames.contains('t'))d.createObjectStore('t')};
+        r.onsuccess=function(){var db=r.result;if(done){try{db.close()}catch(e){}return}
+          /* si la base existe sin su almacén (no debería), se sube de versión para crearlo */
+          if(!db.objectStoreNames.contains('t')){var v=db.version+1;try{db.close()}catch(e){}op(v);return}
+          db.onversionchange=function(){try{db.close()}catch(e){}OFFTP=null};fin(db)};
+        r.onerror=function(){fin(null)}; r.onblocked=function(){fin(null)};
+      };
+      op(0);
+    }catch(e){ok(null)}
+  });
+  return OFFTP;
+}
+function offTdo(mode,fn){
+  return offTdb().then(function(d){
+    if(!d)throw new Error('Este navegador no deja guardar mapas');
+    return new Promise(function(ok,ko){
+      try{
+        var tx=d.transaction('t',mode), rq=fn(tx.objectStore('t'));
+        tx.oncomplete=function(){ok(rq&&rq.readyState==='done'?rq.result:undefined)};
+        tx.onerror=function(){ko(tx.error||new Error('mapas'))}; tx.onabort=function(){ko(tx.error||new Error('mapas'))};
+      }catch(e){OFFTP=null;ko(e)}
+    });
+  });
+}
+function offTGet(u){return offTdo('readonly',function(st){return st.get(u)})}
+function offTPut(u,v){return offTdo('readwrite',function(st){st.put(v,u)})}
+function offTDel(us){if(!us.length)return Promise.resolve();return offTdo('readwrite',function(st){us.forEach(function(u){st.delete(u)})})}
+function offTKeys(){return offTdo('readonly',function(st){return st.getAllKeys()}).then(function(a){return a||[]})}
+function offTCount(){return offTdo('readonly',function(st){return st.count()})}
+function offWant(){var w={};Object.keys(OFFM.f).forEach(function(id){(OFFM.f[id].k||[]).forEach(function(k){w[offUrl(k)]=1})});return w}
+function offMgRender(){var n=Date.now();if(n-OFFMG.rt<800)return;OFFMG.rt=n;offRender()}
+function offMigra(){
+  if(OFFMG.on||OFFMG.fin||!offCan())return Promise.resolve();
+  return caches.has(OFFC).then(function(h){
+    if(!h){OFFMG.fin=true;return}
+    OFFMG.on=true; OFFMG.n=0; OFFMG.tot=0;
+    return offLoad().then(function(){return offTdb()}).then(function(d){
+      if(!d)throw new Error('sin almacén');
+      return Promise.all([caches.open(OFFC),offTKeys()]);
+    }).then(function(a){
+      var c=a[0], ya={}; a[1].forEach(function(k){ya[k]=1});
+      return c.keys().then(function(rq){
+        OFFMG.tot=rq.length; offMgRender();
+        var i=0, step=function(){
+          var part=rq.slice(i,i+40); i+=40; if(!part.length)return;
+          var want=offWant();
+          return Promise.all(part.map(function(q){
+            if(!want[q.url]||ya[q.url])return null;
+            return c.match(q).then(function(m){return m?m.arrayBuffer().then(function(b){return {u:q.url,v:{d:b,t:m.headers.get('content-type')||''}}}):null},function(){return null});
+          })).then(function(xs){
+            xs=xs.filter(Boolean); if(!xs.length)return;
+            return offTdo('readwrite',function(st){xs.forEach(function(x){st.put(x.v,x.u)})}).then(function(){xs.forEach(function(x){ya[x.u]=1})});
+          }).then(function(){
+            /* lo ya pasado se quita del almacén viejo sobre la marcha (así no ocupa el doble) */
+            return Promise.all(part.map(function(q){return c.delete(q).then(null,function(){})}));
+          }).then(function(){OFFMG.n+=part.length;offMgRender();return step()});
+        };
+        return step();
+      });
+    }).then(function(){return caches.delete(OFFC)}).then(function(){OFFMG.on=false;OFFMG.fin=true;OFFMG.rt=0;offRender();offQuota()},
+      function(){OFFMG.on=false;OFFMG.rt=0;offRender()});
+  }).then(null,function(){OFFMG.on=false});
+}
+function offMgHTML(){
+  if(!OFFMG.on)return '';
+  var p=OFFMG.tot?Math.min(100,Math.floor(OFFMG.n/OFFMG.tot*100)):0;
+  return '<div class="fcard" id="offmg"><div class="t"><b>Pasando los mapas guardados al almacén nuevo · '+p+' %</b></div><div class="small">'+OFFMG.n.toLocaleString('es-ES')+' de '+OFFMG.tot.toLocaleString('es-ES')+' trozos. Es solo esta vez y no usa internet: así la app abre más rápido. Mientras tanto los mapas siguen funcionando.</div><div class="offbar"><i style="width:'+p+'%"></i></div></div>';
+}
+/* Entrega 102: medidor de arranque (las últimas 6 veces que se abre la app) */
+var KEYARQ='mapa-fincas:arranques';
+function arqList(){try{var a=JSON.parse(localStorage.getItem(KEYARQ)||'[]');return Array.isArray(a)?a:[]}catch(e){return []}}
+function arqNav(){try{return performance.getEntriesByType('navigation')[0]||null}catch(e){return null}}
+function arqStart(){
+  if(GTOK||VC||typeof performance==='undefined'||typeof requestAnimationFrame==='undefined')return;
+  var s=Math.round(performance.now()), t=performance.timing||{}, b=t.navigationStart||0;
+  var g=function(n,k){var v=n?n[k]:0;if(v>0)return Math.round(v);return t[k]&&b?Math.max(0,t[k]-b):0};
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    var n=arqNav(), o={t:Date.now(),w:g(n,'workerStart'),r:g(n,'responseStart'),e:g(n,'responseEnd'),s:s,p:Math.round(performance.now()),l:0,sw:!!(navigator.serviceWorker&&navigator.serviceWorker.controller)};
+    var dn=false, fin=function(){if(dn)return;dn=true;var n2=arqNav();o.l=g(n2,'loadEventStart')||Math.round(performance.now());var a=arqList();a.unshift(o);try{localStorage.setItem(KEYARQ,JSON.stringify(a.slice(0,6)))}catch(e){}if(tab==='datos'&&datTab()==='sincon')renderDatos()};
+    if(document.readyState==='complete')setTimeout(fin,0); else {window.addEventListener('load',function(){setTimeout(fin,0)});setTimeout(fin,30000)}
+  })});
+}
+function arqHTML(){
+  var a=arqList(); if(!a.length)return '';
+  var sg=function(ms){return ((ms||0)/1000).toLocaleString('es-ES',{minimumFractionDigits:1,maximumFractionDigits:1})+' s'};
+  var h='<h3>Arranque</h3><p class="small">Lo que tardó la app las últimas veces que la abriste, contado desde que el aparato empieza a abrirla.</p><div class="small arq">';
+  a.forEach(function(o){
+    var d=new Date(o.t);
+    h+='<div>'+esc(offDate(o.t)+' '+d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}))+' · <b>se ve en '+sg(o.p)+'</b> (copia guardada de la app '+sg(o.r)+(o.w?', trabajador sin conexión '+sg(o.w):'')+'; preparar la página '+sg(Math.max(0,o.s-o.r))+') · mapa cargado en '+sg(o.l)+(o.sw?'':' · sin trabajador sin conexión')+'</div>';
+  });
+  return h+'</div><p class="small">El rato en negro antes de que el iPhone empiece a abrir la app no se puede medir desde dentro de la app.</p>';
+}
+function offCan(){return !GTOK&&!VC&&typeof caches!=='undefined'&&typeof indexedDB!=='undefined'&&!!indexedDB&&!!window.isSecureContext}
 function offLoad(){
   if(OFFM.ld)return Promise.resolve(OFFM);
   return idbGet('sync','offmap').then(function(v){if(v&&typeof v==='object'){OFFM.f=v.f||{};OFFM.sz=v.sz||{};OFFM.no=v.no||{};OFFM.sn=v.sn||0}OFFM.ld=true;return OFFM},function(){OFFM.ld=true;return OFFM});
@@ -14536,11 +14641,12 @@ function offFetch(u,upd,n){
 }
 function offTile(c,k,upd){
   var u=offUrl(k);
-  return (upd?Promise.resolve(null):c.match(u)).then(function(m){
-    if(m)return OFFM.sz[k]!=null?OFFM.sz[k]:m.blob().then(function(b){return b.size});
+  return (upd?Promise.resolve(null):offTGet(u)).then(function(m){
+    if(m&&m.d)return OFFM.sz[k]!=null?OFFM.sz[k]:m.d.byteLength;
     return offFetch(u,upd).then(function(r){
       if(!r.ok){if(r.status===404||r.status===400||r.status===204)return 0;throw new Error('http '+r.status)}
-      return r.clone().blob().then(function(b){return c.put(u,r).then(function(){return b.size})});
+      var ct=r.headers.get('content-type')||'';
+      return r.arrayBuffer().then(function(b){return offTPut(u,{d:b,t:ct}).then(function(){return b.byteLength})});
     });
   });
 }
@@ -14571,7 +14677,8 @@ function offDownload(ids,upd){
   if(!ids.length){toast('No hay fincas con recintos que descargar.');return}
   var D=OFFD={ids:ids,i:0,fid:ids[0],done:0,tot:0,stop:false,err:null,upd:!!upd};
   offAskHide(); offRender(); offPill();
-  offLoad().then(function(){return caches.open(OFFC)}).then(function(c){
+  offLoad().then(function(){return offTdb()}).then(function(c){
+    if(!c)throw new Error('Este navegador no deja guardar mapas');
     var p=Promise.resolve();
     ids.forEach(function(id,ix){p=p.then(function(){if(D.stop||D.err)return;D.i=ix;return offOne(c,id,upd)})});
     return p;
@@ -14588,7 +14695,7 @@ function offRemove(ids){
     var keep={}, del=[], free=0;
     Object.keys(OFFM.f).forEach(function(id){if(ids.indexOf(id)<0)(OFFM.f[id].k||[]).forEach(function(k){keep[k]=1})});
     ids.forEach(function(id){var r=OFFM.f[id];if(!r)return;(r.k||[]).forEach(function(k){if(!keep[k]&&OFFM.sz[k]!==undefined){del.push(k);free+=OFFM.sz[k]||0;delete OFFM.sz[k]}});delete OFFM.f[id];delete OFFM.no[id]});
-    var go=(typeof caches!=='undefined')?caches.open(OFFC).then(function(c){var i=0,step=function(){var part=del.slice(i,i+200);i+=200;if(!part.length)return;return Promise.all(part.map(function(k){return c.delete(offUrl(k))})).then(step)};return step()}):Promise.resolve();
+    var go=offTDel(del.map(offUrl)).then(null,function(){});
     return go.then(function(){return offSave()}).then(function(){offQuota();return free});
   });
 }
@@ -14609,9 +14716,9 @@ function offHTML(){
   h+='<div class="small" style="margin-top:6px"><b>'+(OFF.app?'✓ La app está guardada en este aparato.':OFF.sw?'La app se está guardando en este aparato…':'La app se guardará en este aparato la próxima vez que la abras con conexión.')+'</b></div>';
   h+='<div class="small">En el iPhone ábrela siempre desde el icono de la pantalla de inicio: lo guardado es de esa forma de abrirla (desde Safari no está).</div></div>';
   if(!OFFM.ld){setTimeout(function(){offLoad().then(function(){if(tab==='datos')renderDatos()})},0);return h+'<p class="small">Cargando…</p>'}
-  h+=offProgHTML();
+  h+=offMgHTML()+offProgHTML();
   var sel=offSel(), all=abc(S.fincas).filter(function(f){return offRecs(f.id).length});
-  if(!all.length)return h+emptyT('Todavía no tienes fincas con recintos.');
+  if(!all.length)return h+emptyT('Todavía no tienes fincas con recintos.')+arqHTML();
   var non=all.filter(function(f){return sel[f.id]!==false&&offState(f.id)!=='ok'});
   h+='<h3>Fincas</h3><div class="acts" style="margin-top:0"><button class="btn sm" data-act="off-all" data-v="1">Todas</button><button class="btn sm" data-act="off-all" data-v="0">Ninguna</button></div><div class="offlist">';
   all.forEach(function(f){
@@ -14631,7 +14738,7 @@ function offHTML(){
   else if(!non.length&&!OFFD)h+='<p class="small">Todas las fincas marcadas tienen su mapa guardado.</p>';
   h+='<p class="small">Mapas guardados en este aparato: <b>'+mbTxt(offTotal())+'</b>'+(OFF.q?' · espacio libre para la app: unos '+mbTxt(OFF.q):'')+'. Conviene descargar con WiFi.</p>';
   h+='<p class="small">Si creas una finca nueva o le añades recintos, te preguntaré antes de descargar su mapa. Cuando un mapa guardado cumpla un año, te avisaré para actualizarlo. Sin conexión no funcionan: satélite Esri, recintos SIGPAC de alrededor, Catastro, radar de lluvia, índices de vegetación ni la búsqueda de sitios.</p>';
-  return h;
+  return h+arqHTML();
 }
 function offRender(){if(tab==='datos'&&datTab()==='sincon')renderDatos()}
 /* aviso de arriba: «Sin conexión · mapa guardado · N cambios por subir» */
@@ -14768,7 +14875,7 @@ function offInit(){
   window.addEventListener('offline',function(){offSet(true)});
   document.addEventListener('visibilitychange',function(){if(!document.hidden&&OFF.init&&navigator.onLine!==!OFF.on)offSet(!navigator.onLine)});
   if(!offCan())return;
-  offLoad().then(function(){offPill();offRender();offQuota();setTimeout(offAskCheck,8000)});
+  offLoad().then(function(){offPill();offRender();offQuota();setTimeout(offAskCheck,8000);setTimeout(offMigra,4000)});
   setInterval(function(){if(OFF.on&&lastData!==OFF.lpd){OFF.lpd=lastData;offPendSoon()}},2000);
   setInterval(offAskCheck,60000);
 }
@@ -14783,13 +14890,14 @@ setBase(S.base,true); applyOv(true);
 })();
 drawMarks(); drawSaved(); renderChip(); setTab(isDesk()?'fincas':'mapa'); $('#warn').hidden=storageOK; updateDot();
 offInit();
+arqStart();
 setTimeout(function(){pdfPiezas()},3500);
 setTimeout(function(){map.invalidateSize();refreshSigpac();if(OV.ndvi){ndviPill();ndviLoad(true)}},120);
 
 window.__mf={loadPdfLib:loadPdfLib,pdfPiezas:pdfPiezas,pdfHay:pdfHay,pvState:function(){return PV},boxPad:boxPad,pdfFont:pdfFont,pdfFontC:pdfFontC,expMapHTML:expMapHTML,buildFichaPdf:buildFichaPdf,afCompute:afCompute,afCompare:afCompare,hatchOf:hatchOf,swBg:swBg,OV:OV,polyC:polyC,mmHTML:mmHTML,expClose:expClose,temaGet:temaGet,temaSet:temaSet,pvOpen:pvOpen,pvClose:pvClose,cvMatch:cvMatch,cvLabel:cvLabel,trVarList:trVarList,varReal:varReal,GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
 Object.assign(window.__mf,{plFileBase:plFileBase,expGGet:expGGet,expGPick:expGPick,grbSplit:grbSplit,grStart:grStart,grSave:grSave,GRS:function(){return GRS},expHTML:expHTML,TRs:function(){return {tr:TR.cult,ab:AB.cult,fe:FE.cult,hi:HI.cult,inf:INF.cult,pl:PL.pid}},vfState:function(){return VFL},vfOn:vfOn,muniTxtSync:muniTxtSync,polyCount:function(){return polyC.size},ufbStart:ufbStart,ubkCheck:ubkCheck,ubkDue:ubkDue,bkOwn:bkOwn,fbBuild:fbBuild,UBK:UBK,getVersions:getVersions,prevGet:prevGet,spaceHTML:spaceHTML,snapVersion:snapVersion,datReady:function(){return DATP},datState:function(){return {ok:IDBOK,r:DATR,nv:VERS?VERS.length:-1,prev:!!PREV}},plPortrait:plPortrait,plCropTxt:plCropTxt,xlPlanBook:xlPlanBook,idbReset:function(w){idbP=null;if(w)IDB_WAIT=w},syncWait:function(w){SYNC_WAIT=w},syncBusy:function(){return syncing},uCvTxt:uCvTxt,feUcvForm:feUcvForm,feUnitConvert:feUnitConvert,rfEdit:rfEdit,rfSave:rfSave,infTotRows:infTotRows,abTotData:abTotData,cvLabel:cvLabel,feProds:feProds,pabShares:pabShares,pabHaR:pabHaR,pabSplits:pabSplits,pabSplitWarn:pabSplitWarn,pabXCands:pabXCands,pabAddX:pabAddX,pabMove:pabMove,buildPabPdf:buildPabPdf,buildPabXlsx:buildPabXlsx,pabBlocks:pabBlocks,pabCheck:pabCheck,pabReal:pabReal,pabCalc:pabCalc,pabAuto:pabAuto,pabHTML:pabHTML,pabCur:pabCur,pabTipo:pabTipo,pabLim:pabLim,PAB:PAB,haC:haC,haPair:haPair,plTrPlaces:plTrPlaces,daOpen:daOpen,daSave:daSave,PL:PL,plWeeks:plWeeks,plCalc:plCalc,plTrOrder:plTrOrder,plPending:plPending,plMarkGo:plMarkGo,buildTratPdf:buildTratPdf,xlPlanBook:xlPlanBook,xlBuild:xlBuild,plFromRecs:plFromRecs,plSecArgs:plSecArgs,plSecHTML:plSecHTML,plSecOut:plSecOut,plTrPRows:plTrPRows,buildPlanPdf:buildPlanPdf,buildPlanXlsx:buildPlanXlsx,planHTML:planHTML,plTrSources:plTrSources,fbBuild:fbBuild,fbRead:fbRead,fbItems:fbItems,fbRestoreFiles:fbRestoreFiles,idbPut:idbPut,idbGet:idbGet,idbKeys:idbKeys,applyImport:applyImport,pending:function(){return pendingImport},docPend:function(){return DOC.pend},phPend:function(){return PH.pend},phProcess:phProcess,phMax:function(n){PH_MAXB=n},trVarParts:trVarParts,numEs:numEs,nf:nf,trList:trList,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
-Object.assign(window.__mf,{offKeys:offKeys,offState:offState,offDownload:offDownload,offRemove:offRemove,offPend:offPend,offSet:offSet,offAskCheck:offAskCheck,offUrl:offUrl,offTotal:offTotal,offLoad:offLoad,offDiff:offDiff,offMark:offMark,offSig:offSig,OFFM:function(){return OFFM},OFF:function(){return OFF},offBusy:function(){return !!OFFD},save:function(){save()},renderDatos:renderDatos,offAskShown:function(){return OFFASK}});
+Object.assign(window.__mf,{offMigra:offMigra,OFFMG:function(){return OFFMG},offTCount:offTCount,offTGet:offTGet,arqList:arqList,arqHTML:arqHTML,offKeys:offKeys,offState:offState,offDownload:offDownload,offRemove:offRemove,offPend:offPend,offSet:offSet,offAskCheck:offAskCheck,offUrl:offUrl,offTotal:offTotal,offLoad:offLoad,offDiff:offDiff,offMark:offMark,offSig:offSig,OFFM:function(){return OFFM},OFF:function(){return OFF},offBusy:function(){return !!OFFD},save:function(){save()},renderDatos:renderDatos,offAskShown:function(){return OFFASK}});
 })();
 </script>
 <script type="text/plain" id="pdflib"></script>
