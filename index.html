@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-pEvQ1T2iV6kGQ4le9ZONPdhGwFlVRJatYCpi8FlaMhs='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-wsgXQcQ2Fzxe5eQfCji55KZAJXMEMJxaQGkqYmRSslE='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -2389,7 +2389,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-23T09:39:51Z',n:'Entrega 102 · 23 oct · 11:39'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-23T17:51:00Z',n:'Entrega 103 · 23 oct · 19:51'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -8461,7 +8461,7 @@ function pabPlanMore(f,p){
   var A=pabAs(), t=((f.datos||{}).tit||{}), h='';
   h+='<details class="more pa-box"'+(PAB.open.fi?' open':'')+' data-pa-o="fi"><summary><b>Elaboración, asesor y firmas</b> <span class="small">(art. 5.1 a, 6.6 y 21)</span></summary><div class="pa-g">';
   h+='<div>'+pabF('Fecha de elaboración del plan','<input type="date" class="in pa-in" data-p="fe" value="'+esc(pabIso(p.fe))+'">')+'</div><div>'+pabF('Fecha del asesoramiento','<input type="date" class="in pa-in" data-p="fa" value="'+esc(pabIso(p.fa))+'">')+'</div>';
-  h+='<div>'+pabF('Titular que firma',pabTx('ft',p.ft,t.n||'Nombre del titular o representante'))+'</div></div>';
+  h+='<div>'+pabF('Titular que firma',pabTx('ft',p.ft,t.rn||t.n||'Nombre del titular o representante'))+(t.rn?'<div class="small">Si lo dejas en blanco firma '+esc(t.rn)+' como representante (se cambia en Datos → Titular y contacto).</div>':'')+'</div></div>';
   h+='<div class="lbl" style="margin-top:10px">Asesor en fertilización <span class="small">(se guarda una vez para todas las fincas)</span></div><div class="pa-g">'+[['n','Nombre y apellidos'],['nif','NIF'],['tit','Titulación'],['regfer','Nº de inscripción en el REGFER (sección asesores)'],['acr','Acreditación ante la comunidad autónoma']].map(function(x){return '<div>'+pabF(x[1],pabTx('AS.'+x[0],A[x[0]]))+'</div>'}).join('')+'</div>';
   h+='<div class="small" style="margin-top:6px">El asesoramiento es obligatorio desde el 1 de septiembre de 2027 en zona vulnerable y desde el 1 de septiembre de 2028 en el resto (art. 6.6). Las unidades exentas de plan no lo necesitan.</div></details>';
   h+='<details class="more pa-box"'+(PAB.open.md?' open':'')+' data-pa-o="md"><summary><b>Modificaciones durante la campaña</b> <span class="small">('+(p.mods||[]).length+')</span></summary>';
@@ -8475,7 +8475,7 @@ function pabBlocks(f,p){
   var B=[], A=pabAs(), t=((f.datos||{}).tit||{}), cl=p.cl||PAB_CL, Cs=(p.ud||[]).map(function(u){return pabCalc(f,u,p)});
   var H=function(x){B.push({t:'h',x:x})}, Pp=function(x,o){B.push({t:'p',x:x,o:o||{}})}, K=function(k,v){if(v!==''&&v!==undefined&&v!==null)B.push({t:'kv',k:k,v:String(v)})}, T=function(cols,rows,tot){B.push({t:'tb',cols:cols,rows:rows,tot:tot})};
   H('Identificación de la explotación');
-  K('Titular',t.n||'');K('NIF/CIF',t.nif||'');K('Dirección fiscal',[t.dir,[t.cp,t.mun].filter(Boolean).join(' '),t.prov].filter(Boolean).join(', '));K('Finca',f.nombre);K('Campaña',pabCamp(p.y));K('Superficie',haTxt(fincaRecs(f.id)));K('Fecha de elaboración del plan',pabIso(p.fe)?diaFmt(pabIso(p.fe)):'');
+  K('Titular',t.n||'');K('NIF/CIF',t.nif||'');K('Representante',daRepTxt(t));K('Dirección fiscal',[t.dir,[t.cp,t.mun].filter(Boolean).join(' '),t.prov].filter(Boolean).join(', '));K('Finca',f.nombre);K('Campaña',pabCamp(p.y));K('Superficie',haTxt(fincaRecs(f.id)));K('Fecha de elaboración del plan',pabIso(p.fe)?diaFmt(pabIso(p.fe)):'');
   H('Resumen por unidad de producción');
   T([{h:'Unidad',w:52},{h:'Régimen',w:20},{h:'ha',w:16,a:'r'},{h:'Producción objetivo',w:28,a:'r'},{h:'N',w:14,a:'r'},{h:'P₂O₅',w:14,a:'r'},{h:'K₂O',w:14,a:'r'},{h:'Estado',w:24}],(p.ud||[]).map(function(u,i){var C=Cs[i],ne=u.ne||{};return [u.n,u.rg==='regadio'?'Regadío':'Secano',pabN(C.ha,2),ne.mo==='edad'?'en formación':(abHas(ne.pr)?nf(+ne.pr,0)+' kg/ha':'—'),pabN(C.pl.n),pabN(C.pl.p),pabN(C.pl.k),pabStTxt(f,u,C)]}));
   Pp('U.F./ha planificadas.',{sz:8,gray:1});
@@ -8532,9 +8532,13 @@ function pabBlocks(f,p){
   if((p.mods||[]).length)T([{h:'Fecha',w:20},{h:'Unidad / recintos',w:50},{h:'Motivo',w:40},{h:'Cambio realizado',w:46},{h:'Responsable',w:26}],p.mods.map(function(m){return [pabIso(m.f)?diaFmt(pabIso(m.f)):'',m.u||'',m.mo||'',m.ch||'',m.re||'']}));else Pp('Sin modificaciones.',{sz:9,gray:1});
   H('Asesoramiento técnico y firmas (art. 6.6 y 21)');
   K('Asesor en fertilización',A.n||'—');K('NIF',A.nif||'');K('Titulación',A.tit||'');K('Nº REGFER (sección asesores)',A.regfer||'');K('Acreditación',A.acr||'');K('Fecha del asesoramiento',pabIso(p.fa)?diaFmt(pabIso(p.fa)):'');
-  B.push({t:'sign',a:A.n||'',b:p.ft||t.n||''});
+  var fT=pabFirmaT(p,t); B.push({t:'sign',a:A.n||'',b:fT.b,l:fT.l});
   return {B:B,title:f.nombre,top:'Plan de abonado · Campaña '+pabCamp(p.y),foot:'Plan de abonado '+pabCamp(p.y)+' · '+f.nombre};
 }
+/* Entrega 103: quién firma a la derecha. El campo «Titular que firma» del plan manda; si no, el representante de la finca; si no, el titular */
+function pabFirmaT(p,t){t=t||{};var ft=String(p.ft||'').trim();
+  if(t.rn&&(!ft||ft.toLowerCase()===String(t.rn).toLowerCase()))return {l:'Firma del representante',b:daRepTxt(t)+(t.n?', en representación de '+t.n:'')};
+  return {l:'Firma del titular',b:ft||t.n||''}}
 function pabCell(v){if(v&&typeof v==='object'&&v.n!==undefined)return trTxt(v.n,v.d);return v==null?'':String(v)}
 /* Entrega 83: que ningún apartado de los PDF empiece al pie de una página y se corte.
    El PDF se construye, se mide dónde empieza y acaba cada apartado y, si uno que cabe en una página ha quedado partido
@@ -8586,7 +8590,7 @@ function buildPabPdf0(f,p){
     if(b.t==='p')return para(b.x,b.o);
     if(b.t==='kv')return kv(b.k,b.v);
     if(b.t==='tb')return tbl(b.cols,b.rows,b.tot);
-    if(b.t==='sign'){room(40);y+=6;doc.setDrawColor.apply(doc,ink);doc.setLineWidth(.3);doc.line(M,y+22,M+80,y+22);doc.line(PW-M-80,y+22,PW-M,y+22);doc.setFont(FN,'normal');doc.setFontSize(9);doc.setTextColor.apply(doc,ink);doc.text('Firma del asesor',M,y);doc.text('Firma del titular',PW-M-80,y);doc.setFontSize(8.5);doc.setTextColor.apply(doc,gray);var la=b.a?doc.splitTextToSize(String(b.a),80):[],lb=b.b?doc.splitTextToSize(String(b.b),80):[];if(la.length)doc.text(la,M,y+27);if(lb.length)doc.text(lb,PW-M-80,y+27);y+=30+Math.max(1,la.length,lb.length)*3.8}
+    if(b.t==='sign'){room(40);y+=6;doc.setDrawColor.apply(doc,ink);doc.setLineWidth(.3);doc.line(M,y+22,M+80,y+22);doc.line(PW-M-80,y+22,PW-M,y+22);doc.setFont(FN,'normal');doc.setFontSize(9);doc.setTextColor.apply(doc,ink);doc.text('Firma del asesor',M,y);doc.text(b.l||'Firma del titular',PW-M-80,y);doc.setFontSize(8.5);doc.setTextColor.apply(doc,gray);var la=b.a?doc.splitTextToSize(String(b.a),80):[],lb=b.b?doc.splitTextToSize(String(b.b),80):[];if(la.length)doc.text(la,M,y+27);if(lb.length)doc.text(lb,PW-M-80,y+27);y+=30+Math.max(1,la.length,lb.length)*3.8}
   });
   kpEnd(doc,y);
   var n=doc.getNumberOfPages();for(var pg=1;pg<=n;pg++){doc.setPage(pg);doc.setFont(FN,'normal');doc.setFontSize(8);doc.setTextColor.apply(doc,gray);doc.text(D.foot,M,PH-8);doc.text(pg+' / '+n,PW-M,PH-8,{align:'right'})}
@@ -8603,7 +8607,7 @@ function buildPabXlsx(f,p){
     if(b.t==='p')return X.para(b.x,{sz:b.o.sz||9.5,b:b.o.b,col:b.o.gray?XC.gray:undefined});
     if(b.t==='kv')return X.kv(b.k,b.v);
     if(b.t==='tb'){var sc=182/b.cols.reduce(function(a,c){return a+c.w},0);return X.tbl(b.cols.map(function(c){return {h:c.h,w:c.w*sc,a:c.a}}),b.rows.map(function(r){return r.map(xc)}),{tot:b.tot?b.tot.map(xc):null})}
-    if(b.t==='sign'){X.gap(2);X.kv('Firma del asesor',b.a||'');X.gap(3);X.kv('Firma del titular',b.b||'');}
+    if(b.t==='sign'){X.gap(2);X.kv('Firma del asesor',b.a||'');X.gap(3);X.kv(b.l||'Firma del titular',b.b||'');}
   });
   return xlBuild([X.sh]);
 }
@@ -8619,6 +8623,8 @@ function pabOut(f,p,kind){
 var DA_TP=[['fisica','Persona física'],['sociedad','Sociedad'],['otro','Otro']];
 var DA={ed:null}, DA_ORI=[['pozo','Pozo'],['com','Comunidad de regantes'],['balsa','Balsa'],['otro','Otro']], DA_INF=[['balsa','Balsa'],['nave','Nave'],['caseta','Caseta'],['deposito','Depósito'],['cabezal','Cabezal de riego'],['bomba','Bomba'],['otro','Otro']];
 function daLbl(L,k){var x=L.filter(function(y){return y[0]===k})[0];return x?x[1]:''}
+/* Entrega 103: representante de la finca (firma el plan de abonado en nombre del titular) */
+function daRepTxt(t){t=t||{};return t.rn?t.rn+(t.rnif?' (NIF '+t.rnif+')':''):''}
 function daLine(l,v){return v?'<div class="small" style="margin-top:2px"><b>'+esc(l)+':</b> '+esc(v)+'</div>':''}
 function daBox(f,k,title,body,form){
   var ed=DA.ed&&DA.ed.fid===f.id&&DA.ed.k===k&&k!=='inf';
@@ -8632,8 +8638,8 @@ function datHTML(f){
   if(GTOK)return '<div class="small">Los datos de la explotación no están disponibles en esta vista.</div>';
   var d=f.datos||{}, t=d.tit||{}, a=d.agua||{}, v=(DA.ed&&DA.ed.fid===f.id)?DA.ed.v:{}, h='';
   var dirT=[t.dir,[t.cp,t.mun].filter(Boolean).join(' '),t.prov].filter(Boolean).join(', ');
-  var bt=daLine('Titular',t.n)+daLine('Tipo',daLbl(DA_TP,t.tp))+daLine('NIF/CIF',t.nif)+daLine('Dirección fiscal',dirT)+daLine('Teléfono',t.tel)+daLine('Correo',t.em)+daLine('Notas',t.nt);
-  h+=daBox(f,'tit','Titular y contacto',bt,'<div class="lbl" style="margin-top:8px">Tipo</div><div class="chips" id="da-tp">'+DA_TP.map(function(x){return '<button type="button" class="chip'+(v.tp===x[0]?' on':'')+'" data-act="da-ttipo" data-v="'+x[0]+'">'+x[1]+'</button>'}).join('')+'</div>'+daInp('da-n','Nombre o razón social',v.n||'','Nombre y apellidos, o razón social')+daInp('da-nif','NIF/CIF',v.nif||'','Ej. 12345678Z')+daInp('da-dir','Dirección fiscal (calle y número)',v.dir||'')+daInp('da-cp','Código postal',v.cp||'','','numeric')+daInp('da-mun','Municipio',v.mun||'')+daInp('da-prov','Provincia',v.prov||'')+daInp('da-tel','Teléfono',v.tel||'','','tel')+daInp('da-em','Correo electrónico',v.em||'','','email')+daInp('da-nt','Notas',v.nt||'')+daBtns());
+  var bt=daLine('Titular',t.n)+daLine('Tipo',daLbl(DA_TP,t.tp))+daLine('NIF/CIF',t.nif)+daLine('Representante',daRepTxt(t))+daLine('Dirección fiscal',dirT)+daLine('Teléfono',t.tel)+daLine('Correo',t.em)+daLine('Notas',t.nt);
+  h+=daBox(f,'tit','Titular y contacto',bt,'<div class="lbl" style="margin-top:8px">Tipo</div><div class="chips" id="da-tp">'+DA_TP.map(function(x){return '<button type="button" class="chip'+(v.tp===x[0]?' on':'')+'" data-act="da-ttipo" data-v="'+x[0]+'">'+x[1]+'</button>'}).join('')+'</div>'+daInp('da-n','Nombre o razón social',v.n||'','Nombre y apellidos, o razón social')+daInp('da-nif','NIF/CIF',v.nif||'','Ej. 12345678Z')+daInp('da-rn','Representante (si firma otra persona)',v.rn||'','Nombre y apellidos')+daInp('da-rnif','NIF del representante',v.rnif||'','Ej. 12345678Z')+daInp('da-dir','Dirección fiscal (calle y número)',v.dir||'')+daInp('da-cp','Código postal',v.cp||'','','numeric')+daInp('da-mun','Municipio',v.mun||'')+daInp('da-prov','Provincia',v.prov||'')+daInp('da-tel','Teléfono',v.tel||'','','tel')+daInp('da-em','Correo electrónico',v.em||'','','email')+daInp('da-nt','Notas',v.nt||'')+daBtns());
   var ba=daLine('Origen',daLbl(DA_ORI,a.o))+daLine('Caudal',abHas(a.cau)?trTxt(a.cau,2,1)+' L/s':'')+daLine('Volumen autorizado',abHas(a.vol)?trTxt(a.vol,0)+' m³/año':'')+daLine('Referencia o nº de pozo',a.ref)+daLine('Notas',a.nt);
   h+=daBox(f,'agua','Agua',ba,'<div class="lbl" style="margin-top:8px">Origen</div><div class="chips" id="da-ori">'+DA_ORI.map(function(x){return '<button type="button" class="chip'+(v.o===x[0]?' on':'')+'" data-act="da-origen" data-v="'+x[0]+'">'+x[1]+'</button>'}).join('')+'</div>'+daInp('da-cau','Caudal (L/s)',v.cau||'','Ej. 12','decimal')+daInp('da-vol','Volumen autorizado (m³ al año)',v.vol||'','','decimal')+daInp('da-ref','Referencia o nº de pozo',v.ref||'')+daInp('da-nt','Notas',v.nt||'')+daBtns());
   var mq=d.maq||{};
@@ -8673,7 +8679,8 @@ function daSave(){
     DA.ed=null; save(); renderFincas(); undoToast(off?'Se vuelve a usar la superficie del SIGPAC':'Repartidas '+ha2(hv)+' ha cultivadas entre '+rs.length+(rs.length===1?' recinto':' recintos')); return;
   }
   if(e.k==='tit'){
-    ['n','nif','dir','cp','mun','prov','tel','em','nt'].forEach(function(k){if(s(v[k]))o[k]=s(v[k])});
+    ['n','nif','rn','rnif','dir','cp','mun','prov','tel','em','nt'].forEach(function(k){if(s(v[k]))o[k]=s(v[k])});
+    if(o.rnif){o.rnif=o.rnif.toUpperCase().replace(/[\s.\-]/g,'');if(!/^[0-9XYZKLM]\d{7}[A-Z]$/.test(o.rnif))setTimeout(function(){toast('Aviso: el NIF del representante no parece tener un formato correcto (se ha guardado igualmente)')},400)}
     if(v.tp)o.tp=v.tp; if(o.nif){o.nif=o.nif.toUpperCase().replace(/[\s.\-]/g,'');if(!/^([0-9XYZKLM]\d{7}[A-Z]|[ABCDEFGHJNPQRSUVW]\d{7}[0-9A-J])$/.test(o.nif))setTimeout(function(){toast('Aviso: el NIF/CIF no parece tener un formato correcto (se ha guardado igualmente)')},400)}
     if(o.em&&!/^\S+@\S+\.\S+$/.test(o.em)){toast('El correo no parece correcto');return}
     if(Object.keys(o).length)d.tit=o;else delete d.tit;
@@ -8833,7 +8840,7 @@ function infData(f,yr,o,cult){
 function infDatosLines(f){
   var d=f.datos||{}, t=d.tit||{}, a=d.agua||{}, L=[];
   var dirT=[t.dir,[t.cp,t.mun].filter(Boolean).join(' '),t.prov].filter(Boolean).join(', ');
-  [['Titular',t.n],['Tipo',daLbl(DA_TP,t.tp)],['NIF/CIF',t.nif],['Dirección fiscal',dirT],['Teléfono',t.tel],['Correo',t.em],['Notas del titular',t.nt]].forEach(function(x){if(x[1])L.push(x)});
+  [['Titular',t.n],['Tipo',daLbl(DA_TP,t.tp)],['NIF/CIF',t.nif],['Representante',daRepTxt(t)],['Dirección fiscal',dirT],['Teléfono',t.tel],['Correo',t.em],['Notas del titular',t.nt]].forEach(function(x){if(x[1])L.push(x)});
   [['Origen del agua',daLbl(DA_ORI,a.o)],['Caudal',abHas(a.cau)?trTxt(a.cau,2,1)+' L/s':''],['Volumen autorizado',abHas(a.vol)?trTxt(a.vol,0)+' m³/año':''],['Referencia o nº de pozo',a.ref],['Notas del agua',a.nt]].forEach(function(x){if(x[1])L.push(x)});
   var hpI=haPair(fincaRecs(f.id)); if(hpI.d)L.push(['Superficie cultivada',ha2(hpI.c)+' ha (SIGPAC '+ha2(hpI.s)+' ha)']);
   var mq=d.maq||{}; if(abHas(mq.atom)||mq.nt)L.push(['Atomizador',[abHas(mq.atom)?trTxt(mq.atom,0,1)+' L':'',mq.nt].filter(Boolean).join(' · ')]);
@@ -14366,7 +14373,7 @@ document.addEventListener('keydown',function(ev){
 });
 document.addEventListener('input',function(ev){var t=ev.target;if(DOC.ed&&t){if(t.id==='doc-n')DOC.ed.n=t.value;if(t.id==='doc-f')DOC.ed.f=t.value;if(t.id==='doc-v')DOC.ed.v=t.value}});
 document.addEventListener('change',function(ev){var t=ev.target;if(t&&t.id==='docfile'&&t.files&&t.files[0])docPicked(t.files[0]);if(t&&t.id==='trpdffile'&&t.files&&t.files[0])trpPicked(t.files[0])});
-document.addEventListener('input',function(ev){var t=ev.target,m;if(!t||!t.id)return;if(TR.ed){if(/^tr-(f|f2|z|cl|o|fe|num)$/.test(t.id))TR.ed[t.id.slice(3)]=t.value;else if((m=/^trp-(\d)-(n|a|d|pr|s)$/.exec(t.id))&&TR.ed.ps[+m[1]])TR.ed.ps[+m[1]][m[2]]=t.value}if(TR.pe&&(m=/^rp-(n|a|pr|s)$/.exec(t.id)))TR.pe[m[1]]=t.value;if(AB.ed){if(/^ab-(f|f2|z|o)$/.test(t.id))AB.ed[t.id.slice(3)]=t.value;else if((m=/^abp-(\d)-(n|d|qn|qp|qk|de|pr)$/.exec(t.id))&&AB.ed.ps[+m[1]])AB.ed.ps[+m[1]][m[2]]=t.value}if(AB.pe&&(m=/^ra-(n|qn|qp|qk|de|pr)$/.exec(t.id)))AB.pe[m[1]]=t.value;if(FE.ed){if(/^fe-(f|f2|z|o|w)$/.test(t.id))FE.ed[t.id.slice(3)]=t.value;else if((m=/^fep-(\d)-(n|d|qn|qp|qk|de|pr)$/.exec(t.id))&&FE.ed.ps[+m[1]])FE.ed.ps[+m[1]][m[2]]=t.value;else if((m=/^fed-(\d)-(n|d|pr)$/.exec(t.id))&&FE.ed.pd[+m[1]])FE.ed.pd[+m[1]][m[2]]=t.value}if(FE.pe&&(m=/^rf-(n|qn|qp|qk|de|pr)$/.exec(t.id)))FE.pe[m[1]]=t.value;if(DA.ed&&(m=/^da-(n|nif|dir|cp|mun|prov|tel|em|nt|cau|vol|ref|cap|atom|mnt|hc)$/.exec(t.id)))DA.ed.v[m[1]]=t.value;if(/^(tr-cl|(trp|abp|fep)-\d-(d|qn|qp|qk|de)|fed-\d-(d|pr))$/.test(t.id))liveCalc()});
+document.addEventListener('input',function(ev){var t=ev.target,m;if(!t||!t.id)return;if(TR.ed){if(/^tr-(f|f2|z|cl|o|fe|num)$/.test(t.id))TR.ed[t.id.slice(3)]=t.value;else if((m=/^trp-(\d)-(n|a|d|pr|s)$/.exec(t.id))&&TR.ed.ps[+m[1]])TR.ed.ps[+m[1]][m[2]]=t.value}if(TR.pe&&(m=/^rp-(n|a|pr|s)$/.exec(t.id)))TR.pe[m[1]]=t.value;if(AB.ed){if(/^ab-(f|f2|z|o)$/.test(t.id))AB.ed[t.id.slice(3)]=t.value;else if((m=/^abp-(\d)-(n|d|qn|qp|qk|de|pr)$/.exec(t.id))&&AB.ed.ps[+m[1]])AB.ed.ps[+m[1]][m[2]]=t.value}if(AB.pe&&(m=/^ra-(n|qn|qp|qk|de|pr)$/.exec(t.id)))AB.pe[m[1]]=t.value;if(FE.ed){if(/^fe-(f|f2|z|o|w)$/.test(t.id))FE.ed[t.id.slice(3)]=t.value;else if((m=/^fep-(\d)-(n|d|qn|qp|qk|de|pr)$/.exec(t.id))&&FE.ed.ps[+m[1]])FE.ed.ps[+m[1]][m[2]]=t.value;else if((m=/^fed-(\d)-(n|d|pr)$/.exec(t.id))&&FE.ed.pd[+m[1]])FE.ed.pd[+m[1]][m[2]]=t.value}if(FE.pe&&(m=/^rf-(n|qn|qp|qk|de|pr)$/.exec(t.id)))FE.pe[m[1]]=t.value;if(DA.ed&&(m=/^da-(n|nif|rn|rnif|dir|cp|mun|prov|tel|em|nt|cau|vol|ref|cap|atom|mnt|hc)$/.exec(t.id)))DA.ed.v[m[1]]=t.value;if(/^(tr-cl|(trp|abp|fep)-\d-(d|qn|qp|qk|de)|fed-\d-(d|pr))$/.test(t.id))liveCalc()});
 document.addEventListener('change',function(ev){var t0=ev.target;if(t0&&t0.id==='doc-tflt'){var f8=finca(EXP.fid);DOC.flt=(t0.value&&f8)?{fid:f8.id,t:t0.value}:null;renderFincas();return}if(t0&&t0.id&&/^(tr|ab|fe)-yflt$/.test(t0.id)){({tr:TR,ab:AB,fe:FE})[t0.id.slice(0,2)].yr=t0.value;renderFincas();return}if(t0&&t0.id==='hi-yflt'){HI.yr=t0.value;HI.n=40;renderFincas();return}if(t0&&(t0.id==='hi-cflt'||t0.id==='hi-vflt')){HI.cult=t0.value;HI.n=40;renderFincas();return}if(t0&&(t0.id==='inf-cult'||t0.id==='inf-vflt')){INF.cult=t0.value;renderFincas();return}if(t0&&t0.id==='hi-tflt'){HI.tipo=t0.value;HI.n=40;renderFincas();return}if(t0&&t0.id==='inf-yr'){INF.yr=t0.value;renderFincas();return}if(t0&&t0.dataset&&t0.dataset.inf&&t0.type==='checkbox'){INF.p[t0.dataset.inf]=t0.checked?1:0;return}if(t0&&t0.id==='af-yflt'){EXP.afyr=t0.value;renderFincas();return}if(t0&&t0.id==='ab-flt'){AB.flt=t0.value;renderFincas();return}if(t0&&(t0.id==='ab-cflt'||t0.id==='ab-vflt')){AB.cult=t0.value;renderFincas();return}var am=t0&&t0.id&&/^abp-(\d)-n$/.exec(t0.id);if(am&&AB.ed){abFill(+am[1]);return}var fm=t0&&t0.id&&/^fep-(\d)-n$/.exec(t0.id);if(fm&&FE.ed){feFill(+fm[1]);return}var fd=t0&&t0.id&&/^fed-(\d)-n$/.exec(t0.id);if(fd&&FE.ed){feFillD(+fd[1]);return}if(t0&&t0.id==='fe-flt'){FE.flt=t0.value;renderFincas();return}if(t0&&(t0.id==='fe-cflt'||t0.id==='fe-vflt')){FE.cult=t0.value;renderFincas();return}if(t0&&t0.id==='tr-flt'){TR.flt=t0.value;renderFincas();return}if(t0&&(t0.id==='tr-cflt'||t0.id==='tr-vflt')){TR.cult=t0.value;renderFincas();return}var t=ev.target,m=t&&t.id&&/^trp-(\d)-n$/.exec(t.id);if(m&&TR.ed)trFill(+m[1])});
 document.addEventListener('input',function(ev){var t=ev.target;if(DIA.ed&&t&&t.id==='dia-x')DIA.ed.x=t.value;if(DIA.ed&&t&&t.id==='dia-f')DIA.ed.f=t.value});
 document.addEventListener('change',function(ev){var t=ev.target;if(DIA.ed&&t){if(t.id==='dia-r')DIA.ed.r=t.value;if(t.id==='dia-f')DIA.ed.f=t.value}});
