@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-Fjq3r4sKLqqtTVcbvevFZVryuGN51wP6oiQnrfPLclA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-tMLXQUmsKX9AXivA+QAU60lMHcnRrY3sBKv0Aifn7AI='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -2390,7 +2390,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-23T20:14:58Z',n:'Entrega 104 · 23 oct · 22:14'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-24T07:59:55Z',n:'Entrega 105 · 24 oct · 09:59'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -3910,6 +3910,124 @@ function llHTML(id){
   o+='<div class="acts"><button class="btn sm" data-act="ll-upd" data-id="'+id+'"'+(st.busy?' disabled':'')+'>Actualizar</button></div>';
   return o+'</details>';
 }
+/* ───────── previsión de lluvia por finca (Entrega 105) ─────────
+   Previsión de MET Norway (la fuente de la app YR; en España, el modelo ECMWF de 9 km) en el punto central de la finca:
+   lluvia hora a hora unas 60 horas y después en tramos de 6 horas, hasta unos 10 días. Se suma por días en la hora de España.
+   Se guarda en el aparato para verla sin conexión y no se vuelve a pedir antes de la hora que marca MET (cabecera Expires); al pedirla, el navegador pregunta si ha cambiado. */
+var PVK='mapa-fincas:prevision', PVU={}, PVTZ=null;
+var PVSEM=['dom','lun','mar','mié','jue','vie','sáb'];
+function pvParts(ms){            // día (aaaa-mm-dd), hora y minuto en Madrid
+  try{
+    if(!PVTZ)PVTZ=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Madrid',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
+    var o={}; PVTZ.formatToParts(new Date(ms)).forEach(function(p){o[p.type]=p.value});
+    return {d:o.year+'-'+o.month+'-'+o.day,h:(+o.hour)%24,m:+o.minute};
+  }catch(e){var d=new Date(ms),z=function(n){return ('0'+n).slice(-2)};return {d:d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate()),h:d.getHours(),m:d.getMinutes()}}
+}
+function pvHM(ms){var p=pvParts(ms);return ('0'+p.h).slice(-2)+':'+('0'+p.m).slice(-2)}
+function pvDia(d,hoy,largo){    // «hoy», «mañana», «lun 27»
+  var k=llN(d)-llN(hoy), w=PVSEM[new Date(llN(d)*864e5).getUTCDay()]+' '+(+d.slice(8));
+  if(k===0)return largo?'Hoy, '+w:'hoy';
+  if(k===1)return largo?'Mañana, '+w:'mañana';
+  return largo?w.charAt(0).toUpperCase()+w.slice(1):w;
+}
+function pvAll(){try{var o=JSON.parse(localStorage.getItem(PVK)||'{}');return o&&typeof o==='object'?o:{}}catch(e){return {}}}
+function pvGet(id){var c=pvAll()[id];return c&&Array.isArray(c.s)&&c.s.length&&c.exp&&c.up?c:null}
+function pvPut(id,c){
+  var o=pvAll(); o[id]=c;
+  Object.keys(o).sort(function(a,b){return (o[b].t||0)-(o[a].t||0)}).slice(40).forEach(function(k){delete o[k]});
+  try{localStorage.setItem(PVK,JSON.stringify(o))}catch(e){}
+}
+function pvParse(j){             // tramos [hora de inicio (horas desde 1970, UTC), horas que dura (1 o 6), mm]
+  var ts=j&&j.properties&&j.properties.timeseries, out=[], cu=-Infinity;
+  if(!Array.isArray(ts))throw new Error('sin datos');
+  ts.forEach(function(e){
+    var h=Math.round(Date.parse(e&&e.time)/36e5), d=e&&e.data||{}, a=d.next_1_hours, b=d.next_6_hours, n=0, v=null;
+    if(!isFinite(h)||h<cu)return;           // ya cubierto por un tramo anterior
+    if(a&&a.details&&typeof a.details.precipitation_amount==='number'){n=1;v=a.details.precipitation_amount}
+    else if(b&&b.details&&typeof b.details.precipitation_amount==='number'){n=6;v=b.details.precipitation_amount}
+    if(!n||!isFinite(v))return;
+    out.push([h,n,Math.round(Math.max(0,v)*10)/10]); cu=h+n;
+  });
+  if(!out.length)throw new Error('sin datos');
+  return out;
+}
+function pvDias(c,now){          // lluvia por días desde ahora; un tramo de 6 h que pasa la medianoche se reparte por horas
+  var m={}, ks=[], hoy=pvParts(now).d;
+  c.s.forEach(function(x){
+    for(var k=0;k<x[1];k++){
+      var hs=(x[0]+k)*36e5; if(hs+36e5<=now)continue;
+      var d=pvParts(hs).d; if(!m[d]){m[d]={d:d,mm:0,h:0};ks.push(d)}
+      m[d].mm+=x[2]/x[1]; m[d].h++;
+    }
+  });
+  ks.sort();
+  return ks.map(function(d,i){var o=m[d];o.t=pvDia(d,hoy);o.p=i===ks.length-1&&d!==hoy&&o.h<23;return o});   // * el último día, si la previsión no llega a su final
+}
+function pvLoad(id,force){
+  var pt=fincaPoint(id), st=PVU[id]||(PVU[id]={});
+  if(!finca(id)||!pt||st.busy)return;
+  var c=pvGet(id), lat=+pt[1].toFixed(4), lng=+pt[0].toFixed(4), now=Date.now();
+  var mov=!!c&&(Math.abs(c.lat-lat)>0.005||Math.abs(c.lng-lng)>0.005);
+  if(c&&!mov&&now<c.exp){if(force){st.msg='Ya es la última previsión: MET Norway saca la siguiente hacia las '+pvHM(c.exp)+'.';llRe(id)}return}
+  if(!force&&st.errT&&now-st.errT<3e5)return;
+  if(navigator.onLine===false){st.err='No hay conexión.';st.errT=now;llRe(id);return}
+  st.busy=true; st.err=''; st.msg=''; llRe(id);
+  var ac=typeof AbortController!=='undefined'?new AbortController():null, tm=ac?setTimeout(function(){ac.abort()},20000):0, exp=0;
+  fetch('https://api.met.no/weatherapi/locationforecast/2.0/compact?lat='+lat+'&lon='+lng,ac?{cache:'no-cache',signal:ac.signal}:{cache:'no-cache'}).then(function(r){
+    if(!r.ok){var e=new Error(r.status);e.st=r.status;throw e}
+    exp=Date.parse(r.headers.get('Expires')||'')||0; return r.json();
+  }).then(function(j){
+    if(tm)clearTimeout(tm);
+    var s=pvParse(j), t=Date.now(), up=Date.parse(j.properties.meta&&j.properties.meta.updated_at||'')||t;
+    exp=exp>t?Math.min(Math.max(exp,t+5*6e4),t+3*36e5):t+30*6e4;
+    pvPut(id,{t:t,exp:exp,lat:lat,lng:lng,up:up,s:s});
+    st.busy=false; st.err=''; st.errT=0; llRe(id);
+  }).catch(function(e){
+    if(tm)clearTimeout(tm);
+    st.busy=false; st.errT=Date.now();
+    st.err=navigator.onLine===false?'No hay conexión.':(e&&e.message==='sin datos'?'MET Norway no ha dado la previsión.':'MET Norway no ha contestado ('+whyErr(e)+').');
+    llRe(id);
+  });
+}
+function pvBars(rows){
+  var mx=0; rows.forEach(function(x){if(x.mm>mx)mx=x.mm});
+  return '<div class="llms">'+rows.map(function(x){
+    return '<div class="llm"><span>'+x.t+'</span><i><b style="width:'+(x.mm>=0.05&&mx>0?Math.max(2,Math.round(x.mm/mx*100)):0)+'%"></b></i><em'+(x.mm>=1?' style="font-weight:700"':'')+'>'+(x.mm>=0.05?nf(x.mm,1)+' mm':'0 mm')+(x.p?'*':'')+'</em></div>'}).join('')+'</div>';
+}
+function pvHTML(id){
+  var c=pvGet(id), st=PVU[id]||{}, now=Date.now(), ds=c?pvDias(c,now):[], s3=0;
+  ds.slice(0,3).forEach(function(x){s3+=x.mm});
+  var o='<details class="more" data-sec="pv"'+(secOpen.pv?' open':'')+'><summary>Previsión de lluvia'+(ds.length&&now-c.up<12*36e5?' · '+(s3>=0.05?nf(s3,1)+' mm en 3 días':'sin lluvia en 3 días'):'')+'</summary>';
+  if(!ds.length){
+    if(st.busy)o+='<p class="small" style="margin-top:8px">Trayendo la previsión de MET Norway…</p>';
+    else if(st.err)o+='<div class="note">'+esc(st.err)+' La previsión se trae al abrir este apartado con conexión.<div class="acts"><button class="btn sm" data-act="pv-upd" data-id="'+id+'">Reintentar</button></div></div>';
+    else o+='<p class="small" style="margin-top:8px">Abriendo…</p>';
+    return o+'</details>';
+  }
+  var hoy=pvParts(now).d, upd=pvParts(c.up).d;
+  o+=pvBars(ds);
+  o+='<p class="small">«Hoy» cuenta desde ahora.'+(ds.some(function(x){return x.p})?' * La previsión acaba antes del final de ese día.':'')+'</p>';
+  var tr=[], dAnt='';
+  c.s.forEach(function(x){
+    var hs=x[0]*36e5; if(hs+x[1]*36e5<=now||x[2]<0.1)return;
+    var d=pvParts(hs).d, h1=pvParts(hs).h;
+    if(d!==dAnt){tr.push({g:pvDia(d,hoy,true)});dAnt=d}
+    tr.push({t:x[1]===1?('0'+h1).slice(-2)+':00':('0'+h1).slice(-2)+'–'+('0'+pvParts(hs+x[1]*36e5).h).slice(-2)+' h',mm:x[2]});
+  });
+  o+='<details class="more" data-sec="pvh"'+(secOpen.pvh?' open':'')+'><summary>Por horas</summary>';
+  if(!tr.length)o+='<p class="small" style="margin-top:8px">No se espera lluvia en los próximos días.</p>';
+  else{
+    var bl=[], cur=null;
+    tr.forEach(function(x){if(x.g){cur={g:x.g,r:[]};bl.push(cur)}else cur.r.push(x)});
+    o+=bl.map(function(b){return '<div class="small" style="margin:10px 0 0"><b>'+b.g+'</b></div>'+pvBars(b.r)}).join('');
+    o+='<p class="small">Solo las horas con lluvia. Hasta unas 60 horas va hora a hora y después en tramos de 6 horas.</p>';
+  }
+  o+='</details>';
+  o+='<p class="small" style="margin-top:8px">Previsión '+(upd===hoy?'de hoy':'del '+llFecha(llN(upd)))+' a las '+pvHM(c.up)+(st.busy?' · actualizando…':'')+(st.err&&!st.busy?' · '+esc(st.err)+' Se ve la previsión guardada.':'')+(st.msg&&!st.busy?' · '+esc(st.msg):'')+
+    '<br>Fuente: <a href="https://www.met.no/en" target="_blank" rel="noopener">MET Norway</a> (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>), modelo ECMWF, sumada por días en la hora de España. Es la previsión en el punto central de la finca, no un pluviómetro.</p>';
+  o+='<div class="acts"><button class="btn sm" data-act="pv-upd" data-id="'+id+'"'+(st.busy?' disabled':'')+'>Actualizar</button></div>';
+  return o+'</details>';
+}
 function fincaDetailHTML(id){
   var f=finca(id), recs=fincaRecs(id).sort(function(a,b){return a.ref.localeCompare(b.ref,'es',{numeric:true})});
   var s=stats([id],true).per[id]||{ha:0,n:0,crops:{}};
@@ -3960,6 +4078,7 @@ function fincaDetailHTML(id){
   var pt=fincaPoint(id);
   if(pt)h+='<details class="more" data-sec="ub"'+op('ub')+'><summary>Punto central de la finca</summary>'+coordHTML(pt,'Coordenadas (formato Google Maps)',f.nombre)+'</details>';
   if(pt)h+=llHTML(id);
+  if(pt)h+=pvHTML(id);
   if(recs.length){
     h+='<h3>Recintos</h3>';
     recs.forEach(function(r){
@@ -14193,6 +14312,7 @@ document.addEventListener('click',function(ev){
     case 'nfp-create':{var nf2=createFinca($('#nfp-name').value);if(nf2){nfpOpen=false;drawSaved();openFinca(nf2.id)}break}
     case 'finca-open':openFinca(id);break;
     case 'll-upd':llLoad(id,true);break;
+    case 'pv-upd':pvLoad(id,true);break;
     case 'finca-view':if(finca(id)&&isOc(finca(id))){openFinca(id);break}finOn();viewId=id;viewG=null;viewCrop=null;viewRG=null;detailId=null;toMap();syncFocus();setTimeout(function(){map.invalidateSize();fitFinca(id)},90);break;
     case 'move-open':fdOpen=!fdOpen;fdQ='';newFincaOpen=false;renderCard();break;
     case 'finca-back':colOpen=false;grpPick=false;bulkAll=false;viewId=null;viewG=null;viewCrop=null;viewRG=null;detailId=null;bulk=null;bulkR=null;bulkP=null;disarm();renderFincas();syncFocus();break;
@@ -14422,6 +14542,7 @@ document.addEventListener('click',function(ev){
 });
 document.addEventListener('toggle',function(ev){var d=ev.target;if(d&&d.dataset&&d.dataset.sec)secOpen[d.dataset.sec]=d.open},true);
 document.addEventListener('toggle',function(ev){var d=ev.target;if(d&&d.dataset&&d.dataset.sec==='ll'&&d.open&&detailId)llLoad(detailId)},true);
+document.addEventListener('toggle',function(ev){var d=ev.target;if(d&&d.dataset&&d.dataset.sec==='pv'&&d.open&&detailId)pvLoad(detailId)},true);
 document.addEventListener('change',function(ev){var t=ev.target;if(t&&t.id==='ll-camp'&&detailId){LLSEL[detailId]=+t.value;renderFincas()}});
 (function(){
   var y0=null;
@@ -15008,7 +15129,7 @@ setTimeout(function(){map.invalidateSize();refreshSigpac();if(OV.ndvi){ndviPill(
 window.__mf={loadPdfLib:loadPdfLib,pdfPiezas:pdfPiezas,pdfHay:pdfHay,pvState:function(){return PV},boxPad:boxPad,pdfFont:pdfFont,pdfFontC:pdfFontC,expMapHTML:expMapHTML,buildFichaPdf:buildFichaPdf,afCompute:afCompute,afCompare:afCompare,hatchOf:hatchOf,swBg:swBg,OV:OV,polyC:polyC,mmHTML:mmHTML,expClose:expClose,temaGet:temaGet,temaSet:temaSet,pvOpen:pvOpen,pvClose:pvClose,cvMatch:cvMatch,cvLabel:cvLabel,trVarList:trVarList,varReal:varReal,GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
 Object.assign(window.__mf,{plFileBase:plFileBase,expGGet:expGGet,expGPick:expGPick,grbSplit:grbSplit,grStart:grStart,grSave:grSave,GRS:function(){return GRS},expHTML:expHTML,TRs:function(){return {tr:TR.cult,ab:AB.cult,fe:FE.cult,hi:HI.cult,inf:INF.cult,pl:PL.pid}},vfState:function(){return VFL},vfOn:vfOn,muniTxtSync:muniTxtSync,polyCount:function(){return polyC.size},ufbStart:ufbStart,ubkCheck:ubkCheck,ubkDue:ubkDue,bkOwn:bkOwn,fbBuild:fbBuild,UBK:UBK,getVersions:getVersions,prevGet:prevGet,spaceHTML:spaceHTML,snapVersion:snapVersion,datReady:function(){return DATP},datState:function(){return {ok:IDBOK,r:DATR,nv:VERS?VERS.length:-1,prev:!!PREV}},plPortrait:plPortrait,plCropTxt:plCropTxt,xlPlanBook:xlPlanBook,idbReset:function(w){idbP=null;if(w)IDB_WAIT=w},syncWait:function(w){SYNC_WAIT=w},syncBusy:function(){return syncing},uCvTxt:uCvTxt,feUcvForm:feUcvForm,feUnitConvert:feUnitConvert,rfEdit:rfEdit,rfSave:rfSave,infTotRows:infTotRows,abTotData:abTotData,cvLabel:cvLabel,feProds:feProds,pabShares:pabShares,pabHaR:pabHaR,pabSplits:pabSplits,pabSplitWarn:pabSplitWarn,pabXCands:pabXCands,pabAddX:pabAddX,pabMove:pabMove,buildPabPdf:buildPabPdf,buildPabXlsx:buildPabXlsx,pabBlocks:pabBlocks,pabCheck:pabCheck,pabReal:pabReal,pabCalc:pabCalc,pabAuto:pabAuto,pabHTML:pabHTML,pabCur:pabCur,pabTipo:pabTipo,pabLim:pabLim,PAB:PAB,haC:haC,haPair:haPair,plTrPlaces:plTrPlaces,daOpen:daOpen,daSave:daSave,PL:PL,plWeeks:plWeeks,plCalc:plCalc,plTrOrder:plTrOrder,plPending:plPending,plMarkGo:plMarkGo,buildTratPdf:buildTratPdf,xlPlanBook:xlPlanBook,xlBuild:xlBuild,plFromRecs:plFromRecs,plSecArgs:plSecArgs,plSecHTML:plSecHTML,plSecOut:plSecOut,plTrPRows:plTrPRows,buildPlanPdf:buildPlanPdf,buildPlanXlsx:buildPlanXlsx,planHTML:planHTML,plTrSources:plTrSources,fbBuild:fbBuild,fbRead:fbRead,fbItems:fbItems,fbRestoreFiles:fbRestoreFiles,idbPut:idbPut,idbGet:idbGet,idbKeys:idbKeys,applyImport:applyImport,pending:function(){return pendingImport},docPend:function(){return DOC.pend},phPend:function(){return PH.pend},phProcess:phProcess,phMax:function(n){PH_MAXB=n},trVarParts:trVarParts,numEs:numEs,nf:nf,trList:trList,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
-Object.assign(window.__mf,{llHTML:llHTML,llLoad:llLoad,llGet:llGet,llSum:llSum,llArr:llArr,llN:llN,LLU:function(){return LLU},LLSEL:LLSEL});
+Object.assign(window.__mf,{llHTML:llHTML,llLoad:llLoad,llGet:llGet,llSum:llSum,llArr:llArr,llN:llN,LLU:function(){return LLU},LLSEL:LLSEL,pvHTML:pvHTML,pvLoad:pvLoad,pvGet:pvGet,pvParse:pvParse,pvDias:pvDias,PVU:function(){return PVU}});
 Object.assign(window.__mf,{offMigra:offMigra,OFFMG:function(){return OFFMG},offTCount:offTCount,offTGet:offTGet,arqList:arqList,arqHTML:arqHTML,offKeys:offKeys,offState:offState,offDownload:offDownload,offRemove:offRemove,offPend:offPend,offSet:offSet,offAskCheck:offAskCheck,offUrl:offUrl,offTotal:offTotal,offLoad:offLoad,offDiff:offDiff,offMark:offMark,offSig:offSig,OFFM:function(){return OFFM},OFF:function(){return OFF},offBusy:function(){return !!OFFD},save:function(){save()},renderDatos:renderDatos,offAskShown:function(){return OFFASK}});
 })();
 </script>
