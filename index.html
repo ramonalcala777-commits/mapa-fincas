@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-ahWgmlJKUcd3eFi5RRGOYTdQALrZw9J8gbaMC02SJJE='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-RNmSg/YcNZukQ5ekZGATDMjBTB670SC6WKPZM2bVa7g='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -2403,7 +2403,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-27T20:12:00Z',n:'Entrega 107 · 27 oct · 21:12'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-27T21:54:26Z',n:'Entrega 108 · 27 oct · 22:54'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -4055,15 +4055,29 @@ var ACL_RANK={ok:0,warn:1,bad:2};
 /* ── Entrega 107: el detalle es el propio simulador. «Abrir simulador» enseña dentro de la app, a pantalla completa, la página del
    simulador (test-claude/aptitud, mismo dominio) con el recinto ya cargado: todo lo que tiene esa página y lo que se le añada después.
    - El resumen guardado en el recinto (r.apt) se sigue calculando aquí con aptitud-core.js y con los mismos parámetros que el
-     simulador (los que se cambian en su apartado «Parámetros», que guarda en este mismo aparato). */
-var ACL_SIM='/test-claude/aptitud/', ACL_PAR='aptitud-params-v8';
+     simulador (los que se cambian en su apartado «Parámetros», que guarda en este mismo aparato).
+   Entrega 108: el simulador guarda sus parámetros con la clave v9; cada resultado lleva la huella de todos los parámetros
+   (los de fábrica y los cambiados), así que si el simulador cambia su cálculo, los recintos ya calculados avisan y se recalculan. */
+var ACL_SIM='/test-claude/aptitud/', ACL_PAR='aptitud-params-v9';
 function aclPar(){try{return localStorage.getItem(ACL_PAR)||''}catch(e){return ''}}
 /* los parámetros del simulador, como los monta él: los de fábrica y encima los cambiados */
 function aclCfg(){
   var s=aclPar(); if(!s||!window.CONFIG)return undefined;
   try{return Object.assign(JSON.parse(JSON.stringify(window.CONFIG)),JSON.parse(s))}catch(e){return undefined}
 }
-function aclPk(){var s=aclPar(),h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return s?String(h>>>0):''}
+/* huella de los parámetros con los que calcula el simulador; null si aún no está cargado (no se sabe) */
+function aclPk(){
+  if(!window.CONFIG)return null;
+  var s; try{s=JSON.stringify(aclCfg()||window.CONFIG)}catch(e){return null}
+  var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return 'p'+(h>>>0).toString(36);
+}
+/* el resultado guardado es de otros datos o de otro cálculo del simulador */
+function aclViejo(a){var k=aclPk();return !!a&&((ACL.dv&&a.dv&&ACL.dv!==a.dv)||(k!==null&&(a.pk||'')!==k))}
+/* con un resultado guardado a la vista, carga el núcleo (sin calcular) para saber si está al día */
+function aclMira(ref){
+  if(window.CONFIG||ACL.ld||ACL.mira||navigator.onLine===false)return; ACL.mira=1;
+  aclReady().then(function(C){return C.ready?C.ready():null}).then(function(){aclRe(ref)},function(){});
+}
 try{indexedDB.deleteDatabase('mf-aptitud')}catch(e){}      // el detalle que guardaba la entrega 106 ya no hace falta
 function aclScript(src){return new Promise(function(ok,ko){var s=document.createElement('script');s.src=src;s.async=true;s.onload=function(){ok()};s.onerror=function(){ko(new Error('carga'))};document.head.appendChild(s)})}
 /* carga el simulador (y geotiff) la primera vez que hace falta; si falla, se puede volver a intentar */
@@ -4089,7 +4103,7 @@ function aclSum(R){
   var rl=R.relieve, ca=R.campañas||{};
   return {f:Date.now(),dv:(window.AptitudCore&&window.AptitudCore.DATA_V)||'',d:[ca.desde,ca.hasta],u:ca.ultimos10||[],
     rel:rl&&rl.delta!=null?{c:rl.clase||'',d:Math.round(rl.delta*10)/10,dl:rl.deltaLow!=null?Math.round(rl.deltaLow*10)/10:null}:null,
-    p:fem(R.pistacho),a:fem(R.almendro),pk:aclPk()};
+    p:fem(R.pistacho),a:fem(R.almendro),pk:aclPk()||''};
 }
 /* ---- textos ---- */
 function aclSign(v){return (v>=0?'+':'−')+nf(Math.abs(v),1)}
@@ -4124,8 +4138,9 @@ function aclHTML(ref){
     var sp=aclSpOf(r), m=sp?aclMine(r,a[sp]):null;
     o+='<div class="aclres">'+(m?aclChip(m.c)+'<b>'+esc(m.n)+': '+ACL_LBL2[m.c]+'</b>':'<b>'+esc(aclShort(r,a))+'</b>')+'</div>';
     o+='<p class="small" style="margin-top:6px">Calculado el '+aclFecha(a.f)+' · campañas '+esc(a.d[0])+'–'+esc(a.d[1])+' · '+aclRelTxt(a.rel)+'.'+(r?'':' No se guarda: el recinto no está en ninguna finca.')+'</p>';
-    if(ACL.dv&&a.dv&&ACL.dv!==a.dv&&!busy)o+='<div class="note">Hay datos nuevos del simulador.<div class="acts"><button class="btn sm primary" data-act="acl-calc" data-ref="'+esc(ref)+'">Recalcular</button></div></div>';
+    if(aclViejo(a)&&!busy)o+='<div class="note">Hay datos nuevos del simulador.<div class="acts"><button class="btn sm primary" data-act="acl-calc" data-ref="'+esc(ref)+'">Recalcular</button></div></div>';
   }else o+='<p class="small" style="margin-top:8px">Abre el simulador de aptitud climática con este recinto: veredicto de cada variedad de pistacho y de almendro, heladas, criterios, año a año y machos, con 31 campañas y el relieve de la parcela. El resultado se guarda en el recinto. Necesita conexión.</p>';
+  if(a&&secOpen.acl&&!busy)aclMira(ref);
   if(busy)o+='<p class="small" style="margin-top:6px" id="acl-st">'+esc(ACL.st[ref]||'Cargando el simulador…')+'</p>';
   if(err&&!busy)o+='<div class="note">'+esc(err)+'<div class="acts"><button class="btn sm" data-act="acl-calc" data-ref="'+esc(ref)+'">Reintentar</button></div></div>';
   o+='<div class="acts"><button class="btn sm primary" data-act="acl-sim" data-ref="'+esc(ref)+'">Abrir simulador</button>'+(a?'<button class="btn sm" data-act="acl-calc" data-ref="'+esc(ref)+'"'+(busy?' disabled':'')+'>Recalcular</button>':'')+'</div>';
@@ -4194,13 +4209,18 @@ function aclSimOpen(ref){
   el.className='aclsimw'; el.innerHTML='<div class="aclsim" role="dialog" aria-label="Simulador de aptitud climática"><div class="aclsimh"><div class="aclsimt"><b>Simulador de aptitud climática</b><span class="small">'+esc((fi?fi.nombre+' · ':'')+refLabel(ref))+'</span></div>'+
     '<button class="btn sm" data-act="acl-sim-close">✕ Cerrar</button></div><iframe class="aclsimf" title="Simulador de aptitud climática" src="'+ACL_SIM+'?r='+encodeURIComponent(ref)+'"></iframe></div>';
   el.hidden=false;
-  if(!a||(a.pk||'')!==ACL.sim.pk)aclCalc(ref,true);       // sin resultado guardado (o con otros parámetros): se guarda a la vez
+  if(!a||(ACL.sim.pk!==null&&(a.pk||'')!==ACL.sim.pk))aclCalc(ref,true);       // sin resultado guardado (o con otros parámetros): se guarda a la vez
+  else if(ACL.sim.pk===null)aclReady().then(function(C){return C.ready?C.ready():null}).then(function(){      // aún no se sabe: se mira al cargar
+    var k=aclPk(), b=aclData(ref); if(ACL.sim&&ACL.sim.ref===ref)ACL.sim.pk=k;
+    if(b&&k!==null&&(b.pk||'')!==k&&!ACL.busy[ref])aclCalc(ref,true);
+  },function(){});
 }
 function aclSimClose(){
   var el=$('#aclmodal'), s=ACL.sim; ACL.sim=null;
   if(el){el.hidden=true;el.innerHTML=''}
   if(!s)return; var a=aclData(s.ref);
-  if(a&&(a.pk||'')!==aclPk()&&!ACL.busy[s.ref])aclCalc(s.ref,true);   // se han cambiado los parámetros en el simulador
+  var k=aclPk();
+  if(a&&k!==null&&(a.pk||'')!==k&&!ACL.busy[s.ref])aclCalc(s.ref,true);   // se han cambiado los parámetros en el simulador
   else aclRe(s.ref);
 }
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&ACL.sim)aclSimClose()});
