@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-6yal2lj7vxwPPsMYpnHyNfW9D9+f1qD0ECPTnpvGMlA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-of60bOMslQwVby5WUVGtkssYJoPKogAhGi9Vu7pLYvQ='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -2403,7 +2403,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-29T18:42:58Z',n:'Entrega 110 · 29 oct · 19:42'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-29T19:53:15Z',n:'Entrega 111 · 29 oct · 20:53'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -2505,7 +2505,15 @@ function sigPx(f){
   })});
   o={r:r,b:b}; SPX.set(f,o); return o;
 }
+/* Entrega 111: un recinto que cae en dos trozos se pinta una sola vez, y se saltan los puntos que quedan a menos de un píxel del anterior */
+function sigRing(ctx,a,ox,oy,k){
+  var L=a.length, lx=0, ly=0;
+  for(var q=0;q<L;q+=2){var X=(a[q]-ox)*k,Y=(a[q+1]-oy)*k;
+    if(!q){ctx.moveTo(X,Y);lx=X;ly=Y}else if(q>=L-2||Math.abs(X-lx)+Math.abs(Y-ly)>=0.7){ctx.lineTo(X,Y);lx=X;ly=Y}}
+  ctx.closePath();
+}
 function sigPaint(el,co){
+  if(el._ctx&&el._ctx.transferFromImageBitmap){var tmp=document.createElement('canvas'),nn=sigPaint(tmp,co);if(window.createImageBitmap)createImageBitmap(tmp).then(function(b){el._ctx.transferFromImageBitmap(b)},function(){});return nn}
   var d=Math.min(2,window.devicePixelRatio||1), sz=256, w=Math.round(sz*d);
   if(el.width!==w){el.width=w;el.height=w}
   var ctx=el.getContext&&el.getContext('2d'); if(!ctx)return 0;
@@ -2514,13 +2522,13 @@ function sigPaint(el,co){
   var k=Math.pow(2,co.z-TZ), ox=co.x*sz/k, oy=co.y*sz/k, ex=ox+sz/k, ey=oy+sz/k, m=4/k, px=Math.floor(co.x/k), py=Math.floor(co.y/k), n=0;
   ctx.setTransform(d,0,0,d,0,0);
   ctx.lineWidth=STY_FREE.weight; ctx.strokeStyle=STY_FREE.color; ctx.fillStyle=STY_FREE.fillColor; ctx.lineCap='round'; ctx.lineJoin='round';
+  var seen={};
   for(var i=-1;i<=1;i++)for(var j=-1;j<=1;j++){
     var rec=tiles.get((px+i)+','+(py+j)); if(!rec||!rec.feats)continue;
     rec.feats.forEach(function(f){
-      if(OV.fin&&S.recintos[f.ref]&&recIn(S.recintos[f.ref])&&!isHid(S.recintos[f.ref].fincaId))return;
+      if(seen[f.ref]||OV.fin&&S.recintos[f.ref]&&recIn(S.recintos[f.ref])&&!isHid(S.recintos[f.ref].fincaId))return;
       var g=sigPx(f), b=g.b; if(b[2]<ox-m||b[0]>ex+m||b[3]<oy-m||b[1]>ey+m)return;
-      ctx.beginPath();
-      g.r.forEach(function(a){for(var q=0;q<a.length;q+=2){var X=(a[q]-ox)*k,Y=(a[q+1]-oy)*k;if(q)ctx.lineTo(X,Y);else ctx.moveTo(X,Y)}ctx.closePath()});
+      seen[f.ref]=1; ctx.beginPath(); g.r.forEach(function(a){sigRing(ctx,a,ox,oy,k)});
       ctx.globalAlpha=STY_FREE.fillOpacity; ctx.fill('evenodd');
       ctx.globalAlpha=STY_FREE.opacity; ctx.stroke(); n++;
     });
@@ -2545,7 +2553,7 @@ function sigRepaint(keys){
     if(keys){var k=Math.pow(2,co.z-TZ),px=Math.floor(co.x/k),py=Math.floor(co.y/k),hit=false;
       for(var i=-1;i<=1&&!hit;i++)for(var j=-1;j<=1&&!hit;j++)if(keys[(px+i)+','+(py+j)])hit=true;
       if(!hit)return}
-    sigPaint(t.el,co);
+    sigReq(t.el,co,null);
   });
 }
 var SigGrid=L.GridLayer.extend({
@@ -2555,10 +2563,136 @@ var SigGrid=L.GridLayer.extend({
     var c=this._container, t=canvasTop._container;
     if(c&&t&&t.parentNode===c.parentNode)c.parentNode.insertBefore(c,t);
   },
-  createTile:function(co,done){var el=document.createElement('canvas');sigQueue(el,co,done);return el}
+  createTile:function(co,done){var el=document.createElement('canvas');sigReq(el,co,done);return el}
 });
+/* ───────── Entrega 111: hilo aparte para los recintos SIGPAC sin finca ─────────
+   Leer cada trozo del SIGPAC (hasta 1 MB), pasar sus coordenadas y pintar los cuadros se hace en un Worker con OffscreenCanvas,
+   y el mapa solo recibe la imagen hecha: así no se queda parado mientras se arrastra. Si el aparato no lo permite, se hace como en la 110
+   (en el hilo del mapa, por turnos). Lo que se necesita para tocar un recinto (tiles/feats con su geometría) sigue igual. */
+function SIGW(){
+  var R=6378137, TZ=15, D=Math.PI/180, MX=85.0511287798, T={}, SK={}, ST=null, Q=[], CV=null, CX=null, busy=0, mc=new MessageChannel();
+  var rnd=function(v){return Math.round(v*1e6)/1e6};
+  function m2ll(p){return [p[0]/R*180/Math.PI,(2*Math.atan(Math.exp(p[1]/R))-Math.PI/2)*180/Math.PI]}
+  var SC=256*Math.pow(2,TZ), KK=0.5/(Math.PI*R);
+  function add(m){
+    var j=JSON.parse(new TextDecoder().decode(m.b)), fs=[], cs=[], L=[];
+    (j.features||[]).forEach(function(f){
+      var g=f.geometry, p=f.properties||{}; if(!g||(g.type!=='Polygon'&&g.type!=='MultiPolygon'))return;
+      var P=g.type==='Polygon'?[g.coordinates]:g.coordinates, r=[], rp=[], b=[Infinity,Infinity,-Infinity,-Infinity];
+      P.forEach(function(pl){var rl=[];pl.forEach(function(ring){
+        var a=new Float64Array(ring.length*2);
+        ring.forEach(function(c,n){var q=m2ll(c),lng=rnd(q[0]),lat=rnd(q[1]);cs.push(lng,lat);
+          var la=Math.max(Math.min(MX,lat),-MX),s=Math.sin(la*D),x=SC*(KK*R*lng*D+0.5),y=SC*(-KK*R*Math.log((1+s)/(1-s))/2+0.5);
+          a[2*n]=x;a[2*n+1]=y;if(x<b[0])b[0]=x;if(y<b[1])b[1]=y;if(x>b[2])b[2]=x;if(y>b[3])b[3]=y});
+        rl.push(ring.length); rp.push(a)});r.push(rl)});
+      var ref=[p.provincia,p.municipio,p.agregado,p.zona,p.poligono,p.parcela,p.recinto].join(':');
+      fs.push({ref:ref,ha:(p.dn_surface||0)/10000,uso:p.uso_sigpac||'',m:g.type==='MultiPolygon'?1:0,r:r}); L.push({ref:ref,b:b,r:rp});
+    });
+    T[m.k]=L; var c=new Float64Array(cs);
+    postMessage({t:'f',q:m.q,fs:fs,c:c},[c.buffer]);
+  }
+  function ring(ctx,a,ox,oy,k){
+    var n=a.length, lx=0, ly=0;
+    for(var q=0;q<n;q+=2){var X=(a[q]-ox)*k,Y=(a[q+1]-oy)*k;
+      if(!q){ctx.moveTo(X,Y);lx=X;ly=Y}else if(q>=n-2||Math.abs(X-lx)+Math.abs(Y-ly)>=0.7){ctx.lineTo(X,Y);lx=X;ly=Y}}
+    ctx.closePath();
+  }
+  function paint(m){
+    var d=m.d, w=Math.round(256*d); if(!CV||CV.width!==w){CV=new OffscreenCanvas(w,w);CX=CV.getContext('2d')}
+    var ctx=CX, k=Math.pow(2,m.z-TZ), sz=256, ox=m.x*sz/k, oy=m.y*sz/k, ex=ox+sz/k, ey=oy+sz/k, mg=4/k, px=Math.floor(m.x/k), py=Math.floor(m.y/k), n=0, seen={};
+    ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,w,w); ctx.setTransform(d,0,0,d,0,0);
+    ctx.lineWidth=ST.w; ctx.strokeStyle=ST.c; ctx.fillStyle=ST.fc; ctx.lineCap='round'; ctx.lineJoin='round';
+    for(var i=-1;i<=1;i++)for(var j=-1;j<=1;j++){
+      var L=T[(px+i)+','+(py+j)]; if(!L)continue;
+      for(var e=0;e<L.length;e++){var f=L[e], b=f.b;
+        if(SK[f.ref]||seen[f.ref]||b[2]<ox-mg||b[0]>ex+mg||b[3]<oy-mg||b[1]>ey+mg)continue;
+        seen[f.ref]=1; ctx.beginPath(); for(var h=0;h<f.r.length;h++)ring(ctx,f.r[h],ox,oy,k);
+        ctx.globalAlpha=ST.fo; ctx.fill('evenodd'); ctx.globalAlpha=ST.o; ctx.stroke(); n++;
+      }
+    }
+    if(!n)return {t:'p',id:m.id,n:0,bmp:null};
+    return {t:'p',id:m.id,n:n,bmp:CV.transferToImageBitmap()};
+  }
+  function run(){
+    busy=0; var t0=Date.now();
+    while(Q.length&&Date.now()-t0<12){var m=Q.shift();
+      try{var r=paint(m);postMessage(r,r.bmp?[r.bmp]:[])}catch(e){postMessage({t:'p',id:m.id,err:1})}}
+    if(Q.length)kick();
+  }
+  function kick(){if(!busy){busy=1;mc.port2.postMessage(0)}}
+  mc.port1.onmessage=run;
+  onmessage=function(e){var m=e.data;
+    if(m.t==='a'){try{add(m)}catch(err){postMessage({t:'f',q:m.q,err:1})}}
+    else if(m.t==='p'){Q.push(m);kick()}
+    else if(m.t==='x'){for(var i=0;i<Q.length;i++)if(Q[i].id===m.id){Q.splice(i,1);break}}
+    else if(m.t==='d')m.ks.forEach(function(k){delete T[k]});
+    else if(m.t==='s')SK=m.s;
+    else if(m.t==='st')ST=m.st;
+  };
+  var ok=false; try{var oc=new OffscreenCanvas(4,4),x=oc.getContext('2d');x.fillRect(0,0,1,1);ok=!!(x&&oc.transferToImageBitmap())}catch(e){}
+  postMessage({t:'ok',ok:ok});
+}
+var SW=null, SWok=false, SWn=0, SWq=0, SWel={}, SWcb={}, SWsk=null, SWp;
+SWp=new Promise(function(res){
+  var fin=function(ok){if(!ok&&SW){try{SW.terminate()}catch(e){}SW=null}SWok=!!ok;res()};
+  try{
+    /* solo en ordenador: la pantalla grande pide unas cuatro veces más recintos a la vez; en el móvil ya va bien y se deja como estaba */
+    if(L.Browser.mobile||typeof Worker==='undefined'||typeof OffscreenCanvas==='undefined'||!window.URL||!URL.createObjectURL){fin(false);return}
+    SW=new Worker(URL.createObjectURL(new Blob(['('+SIGW.toString()+')()'],{type:'text/javascript'})));
+    var to=setTimeout(function(){fin(false)},3000);
+    SW.onmessage=function(e){var m=e.data;
+      if(m.t==='ok'){clearTimeout(to);if(m.ok){SW.postMessage({t:'st',st:{w:STY_FREE.weight,c:STY_FREE.color,o:STY_FREE.opacity,fc:STY_FREE.fillColor,fo:STY_FREE.fillOpacity}})}fin(m.ok);SW&&(SW.onmessage=sigWMsg);return}
+    };
+    SW.onerror=function(){clearTimeout(to);fin(false)};
+  }catch(e){fin(false)}
+});
+/* si el hilo aparte falla, se sigue en el hilo del mapa: los cuadros pendientes se pintan aquí y los trozos a medias se vuelven a pedir */
+function sigWOff(){
+  if(!SWok)return; SWok=false; try{SW.terminate()}catch(e){} SW=null;
+  Object.keys(SWcb).forEach(function(q){var f=SWcb[q];delete SWcb[q];f({err:1})});
+  Object.keys(SWel).forEach(function(id){var el=SWel[id];delete SWel[id];el._id=0;var d=el._done;el._done=null;sigQueue(el,el._co,d)});
+  setTimeout(function(){if(sigGroup._map)sigGroup.redraw();refreshSigpac()},0);
+}
+function sigWMsg(e){
+  var m=e.data;
+  if(m.t==='f'){var f=SWcb[m.q];delete SWcb[m.q];if(f)f(m);return}
+  if(m.t!=='p')return;
+  var el=SWel[m.id]; delete SWel[m.id];
+  if(!el||el._id!==m.id){if(m.bmp&&m.bmp.close)m.bmp.close();return}
+  el._id=0; var done=el._done; el._done=null;
+  if(m.err){sigQueue(el,el._co,done);return}
+  var d=Math.min(2,window.devicePixelRatio||1), w=Math.round(256*d);
+  try{
+    if(el.width!==w){el.width=w;el.height=w}
+    /* la imagen se entrega al cuadro sin copiarla (bitmaprenderer); si no se puede, se dibuja encima */
+    var ctx=el._ctx||(el._ctx=el.getContext('bitmaprenderer')||el.getContext('2d'));
+    if(ctx.transferFromImageBitmap)ctx.transferFromImageBitmap(m.bmp||null);
+    else{ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,w,w);if(m.bmp){ctx.drawImage(m.bmp,0,0);m.bmp.close()}}
+  }catch(er){if(m.bmp&&m.bmp.close)m.bmp.close()}
+  el._n=m.n; if(done)done(null,el);
+}
+function sigWFeats(m){
+  var c=m.c, o=0;
+  return m.fs.map(function(f){
+    var P=f.r.map(function(pl){return pl.map(function(n){var ring=new Array(n);for(var i=0;i<n;i++,o+=2)ring[i]=[c[o],c[o+1]];return ring})});
+    return {ref:f.ref,ha:f.ha,uso:f.uso,geom:f.m?{type:'MultiPolygon',coordinates:P}:{type:'Polygon',coordinates:P[0]}};
+  });
+}
+function sigWAdd(k,b){return new Promise(function(res,rej){var q=++SWq;SWcb[q]=function(m){if(m.err)rej(new Error('hilo'));else res(sigWFeats(m))};SW.postMessage({t:'a',q:q,k:k,b:b},[b])})}
+/* qué recintos no se pintan como libres (los de tus fincas que se ven); se manda al hilo aparte solo cuando cambia */
+function sigSkipSync(){
+  var o={}; if(OV.fin)Object.keys(S.recintos).forEach(function(r){var x=S.recintos[r];if(x&&recIn(x)&&!isHid(x.fincaId))o[r]=1});
+  var s=Object.keys(o).sort().join('|'); if(s!==SWsk){SWsk=s;SW.postMessage({t:'s',s:o})}
+}
+function sigReq(el,co,done){
+  if(!SWok){sigQueue(el,co,done);return}
+  if(el._id){delete SWel[el._id];SW.postMessage({t:'x',id:el._id})}
+  var id=++SWn; el._id=id; el._co=co; if(done)el._done=done; SWel[id]=el;
+  sigSkipSync();
+  SW.postMessage({t:'p',id:id,z:co.z,x:co.x,y:co.y,d:Math.min(2,window.devicePixelRatio||1)});
+}
 var dimGroup=L.layerGroup().addTo(map);
-var sigGroup=new SigGrid(), savedGroup=L.layerGroup().addTo(map), ecoGroup=L.layerGroup().addTo(map), selGroup=L.layerGroup().addTo(map), labels=L.layerGroup().addTo(map), meGroup=L.layerGroup().addTo(map);
+var sigGroup=new SigGrid().on('tileunload',function(e){var el=e.tile;if(el&&el._id){delete SWel[el._id];if(SW)SW.postMessage({t:'x',id:el._id});el._id=0;el._done=null}}), savedGroup=L.layerGroup().addTo(map), ecoGroup=L.layerGroup().addTo(map), selGroup=L.layerGroup().addTo(map), labels=L.layerGroup().addTo(map), meGroup=L.layerGroup().addTo(map);
 var STY_FREE={renderer:canvasSig,color:'#ffffff',weight:1.3,opacity:.9,fill:true,fillColor:'#ffffff',fillOpacity:.03,bubblingMouseEvents:false,interactive:false};
 var tiles=new Map(), inflight=0, netErr=false, visT={};
 
@@ -2566,16 +2700,21 @@ function loadTile(x,y){
   var k=x+','+y, have=tiles.get(k);
   if(have){have.t=Date.now();return}
   var rec={t:Date.now(),layer:null,feats:null}; tiles.set(k,rec); inflight++; updateHint();
-  fetch('https://sigpac.mapa.gob.es/vectorsdg/vector/recinto@3857/'+TZ+'.'+x+'.'+(NZ-1-y)+'.geojson')
-    .then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})
+  var hilo=false;
+  SWp.then(function(){return fetch('https://sigpac.mapa.gob.es/vectorsdg/vector/recinto@3857/'+TZ+'.'+x+'.'+(NZ-1-y)+'.geojson')})
+    .then(function(r){if(!r.ok)throw new Error(r.status);hilo=SWok;return hilo?r.arrayBuffer():r.json()})
     .then(function(j){
-      rec.feats=(j.features||[]).map(function(f){
+      if(hilo)return sigWAdd(k,j);
+      return (j.features||[]).map(function(f){
         var p=f.properties||{}, g=projGeom(f.geometry);
         return g?{ref:refKey(p),ha:(p.dn_surface||0)/10000,uso:p.uso_sigpac||'',geom:g}:null;
       }).filter(Boolean);
-      netErr=false; var o={}; o[k]=1; sigRepaint(o);
     })
-    .catch(function(){tiles.delete(k);netErr=true})
+    .then(function(fs){
+      if(tiles.get(k)!==rec){if(hilo&&SW&&!tiles.has(k))SW.postMessage({t:'d',ks:[k]});return}
+      rec.feats=fs; netErr=false; var o={}; o[k]=1; sigRepaint(o);
+    })
+    .catch(function(e){if(tiles.get(k)===rec)tiles.delete(k);if(!(e&&e.message==='hilo'))netErr=true})
     .then(function(){inflight--;updateHint()});
 }
 function redrawTiles(ref){
@@ -2597,6 +2736,7 @@ function refreshSigpac(){
     var olds=[], fu={}, hay=false;tiles.forEach(function(rec,k){if(!keep[k])olds.push([k,rec.t])});
     olds.sort(function(p,q){return p[1]-q[1]});
     while(tiles.size>40&&olds.length){var o=olds.shift();tiles.delete(o[0]);fu[o[0]]=1;hay=true}
+    if(hay&&SW)SW.postMessage({t:'d',ks:Object.keys(fu)});
     if(hay)sigRepaint(fu);
   }
   updateHint();
@@ -15381,7 +15521,7 @@ arqStart();
 setTimeout(function(){pdfPiezas()},3500);
 setTimeout(function(){map.invalidateSize();refreshSigpac();if(OV.ndvi){ndviPill();ndviLoad(true)}},120);
 
-window.__mf={aclState:function(){return ACL},aclCalc:aclCalc,aclSum:aclSum,aclShort:aclShort,aclMine:aclMine,aclSimOpen:aclSimOpen,aclSimClose:aclSimClose,aclPk:aclPk,loadPdfLib:loadPdfLib,pdfPiezas:pdfPiezas,pdfHay:pdfHay,pvState:function(){return PV},sigGroup:function(){return sigGroup},sigTiles:function(){return tiles},sigPaint:sigPaint,boxPad:boxPad,pdfFont:pdfFont,pdfFontC:pdfFontC,expMapHTML:expMapHTML,buildFichaPdf:buildFichaPdf,afCompute:afCompute,afCompare:afCompare,hatchOf:hatchOf,swBg:swBg,OV:OV,polyC:polyC,mmHTML:mmHTML,expClose:expClose,temaGet:temaGet,temaSet:temaSet,pvOpen:pvOpen,pvClose:pvClose,cvMatch:cvMatch,cvLabel:cvLabel,trVarList:trVarList,varReal:varReal,GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
+window.__mf={aclState:function(){return ACL},aclCalc:aclCalc,aclSum:aclSum,aclShort:aclShort,aclMine:aclMine,aclSimOpen:aclSimOpen,aclSimClose:aclSimClose,aclPk:aclPk,loadPdfLib:loadPdfLib,pdfPiezas:pdfPiezas,pdfHay:pdfHay,pvState:function(){return PV},sigGroup:function(){return sigGroup},sigTiles:function(){return tiles},sigPaint:sigPaint,sigW:function(){return {ok:SWok,pend:Object.keys(SWel).length,carga:Object.keys(SWcb).length}},sigWOff:sigWOff,boxPad:boxPad,pdfFont:pdfFont,pdfFontC:pdfFontC,expMapHTML:expMapHTML,buildFichaPdf:buildFichaPdf,afCompute:afCompute,afCompare:afCompare,hatchOf:hatchOf,swBg:swBg,OV:OV,polyC:polyC,mmHTML:mmHTML,expClose:expClose,temaGet:temaGet,temaSet:temaSet,pvOpen:pvOpen,pvClose:pvClose,cvMatch:cvMatch,cvLabel:cvLabel,trVarList:trVarList,varReal:varReal,GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
 Object.assign(window.__mf,{plFileBase:plFileBase,expGGet:expGGet,expGPick:expGPick,grbSplit:grbSplit,grStart:grStart,grSave:grSave,GRS:function(){return GRS},expHTML:expHTML,TRs:function(){return {tr:TR.cult,ab:AB.cult,fe:FE.cult,hi:HI.cult,inf:INF.cult,pl:PL.pid}},vfState:function(){return VFL},vfOn:vfOn,muniTxtSync:muniTxtSync,polyCount:function(){return polyC.size},ufbStart:ufbStart,ubkCheck:ubkCheck,ubkDue:ubkDue,bkOwn:bkOwn,fbBuild:fbBuild,UBK:UBK,getVersions:getVersions,prevGet:prevGet,spaceHTML:spaceHTML,snapVersion:snapVersion,datReady:function(){return DATP},datState:function(){return {ok:IDBOK,r:DATR,nv:VERS?VERS.length:-1,prev:!!PREV}},plPortrait:plPortrait,plCropTxt:plCropTxt,xlPlanBook:xlPlanBook,idbReset:function(w){idbP=null;if(w)IDB_WAIT=w},syncWait:function(w){SYNC_WAIT=w},syncBusy:function(){return syncing},uCvTxt:uCvTxt,feUcvForm:feUcvForm,feUnitConvert:feUnitConvert,rfEdit:rfEdit,rfSave:rfSave,infTotRows:infTotRows,abTotData:abTotData,cvLabel:cvLabel,feProds:feProds,pabShares:pabShares,pabHaR:pabHaR,pabSplits:pabSplits,pabSplitWarn:pabSplitWarn,pabXCands:pabXCands,pabAddX:pabAddX,pabMove:pabMove,buildPabPdf:buildPabPdf,buildPabXlsx:buildPabXlsx,pabBlocks:pabBlocks,pabCheck:pabCheck,pabReal:pabReal,pabCalc:pabCalc,pabAuto:pabAuto,pabHTML:pabHTML,pabCur:pabCur,pabTipo:pabTipo,pabLim:pabLim,PAB:PAB,haC:haC,haPair:haPair,plTrPlaces:plTrPlaces,daOpen:daOpen,daSave:daSave,PL:PL,plWeeks:plWeeks,plCalc:plCalc,plTrOrder:plTrOrder,plPending:plPending,plMarkGo:plMarkGo,buildTratPdf:buildTratPdf,xlPlanBook:xlPlanBook,xlBuild:xlBuild,plFromRecs:plFromRecs,plSecArgs:plSecArgs,plSecHTML:plSecHTML,plSecOut:plSecOut,plTrPRows:plTrPRows,buildPlanPdf:buildPlanPdf,buildPlanXlsx:buildPlanXlsx,planHTML:planHTML,plTrSources:plTrSources,fbBuild:fbBuild,fbRead:fbRead,fbItems:fbItems,fbRestoreFiles:fbRestoreFiles,idbPut:idbPut,idbGet:idbGet,idbKeys:idbKeys,applyImport:applyImport,pending:function(){return pendingImport},docPend:function(){return DOC.pend},phPend:function(){return PH.pend},phProcess:phProcess,phMax:function(n){PH_MAXB=n},trVarParts:trVarParts,numEs:numEs,nf:nf,trList:trList,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
 Object.assign(window.__mf,{llHTML:llHTML,llLoad:llLoad,llGet:llGet,llSum:llSum,llArr:llArr,llN:llN,LLU:function(){return LLU},LLSEL:LLSEL,pvHTML:pvHTML,pvLoad:pvLoad,pvGet:pvGet,pvParse:pvParse,pvDias:pvDias,PVU:function(){return PVU}});
