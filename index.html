@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-of60bOMslQwVby5WUVGtkssYJoPKogAhGi9Vu7pLYvQ='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-lE2FJIEq1kFjPa5yqlTWS6fLugD3B4ItO42gk7awxL0='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -2403,7 +2403,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-29T19:53:15Z',n:'Entrega 111 · 29 oct · 20:53'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-29T21:26:58Z',n:'Entrega 112 · 29 oct · 22:26'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -2681,8 +2681,11 @@ function sigWFeats(m){
 function sigWAdd(k,b){return new Promise(function(res,rej){var q=++SWq;SWcb[q]=function(m){if(m.err)rej(new Error('hilo'));else res(sigWFeats(m))};SW.postMessage({t:'a',q:q,k:k,b:b},[b])})}
 /* qué recintos no se pintan como libres (los de tus fincas que se ven); se manda al hilo aparte solo cuando cambia */
 function sigSkipSync(){
-  var o={}; if(OV.fin)Object.keys(S.recintos).forEach(function(r){var x=S.recintos[r];if(x&&recIn(x)&&!isHid(x.fincaId))o[r]=1});
-  var s=Object.keys(o).sort().join('|'); if(s!==SWsk){SWsk=s;SW.postMessage({t:'s',s:o})}
+  /* Entrega 112: se llama por cada cuadro pedido (decenas por zoom); las fincas ocultas se miran una vez y no por cada recinto */
+  var o={}, s='', hid={}, r, x;
+  if(OV.fin){S.fincas.forEach(function(f){if(isOc(f)||!inPf(f))hid[f.id]=1});
+    for(r in S.recintos){x=S.recintos[r];if(x&&recIn(x)&&!hid[x.fincaId]){o[r]=1;s+=r+'|'}}}
+  if(s!==SWsk){SWsk=s;SW.postMessage({t:'s',s:o})}
 }
 function sigReq(el,co,done){
   if(!SWok){sigQueue(el,co,done);return}
@@ -2731,11 +2734,15 @@ function refreshSigpac(){
   if(want.length>60){updateHint();return}
   visT={}; want.forEach(function(w){visT[w[0]+','+w[1]]=1});
   want.forEach(function(w){loadTile(w[0],w[1])});
-  if(tiles.size>40){
+  /* Entrega 112: se guardaban como mucho 40 trozos y en la pantalla de un ordenador caben unos 45: al mover y hacer zoom
+     se volvían a descargar y a leer sin parar (más de 200 descargas en medio minuto) y el mapa daba tirones.
+     Ahora se guardan los de unas tres pantallas (en el iPhone caben unos 15: queda casi igual que antes). */
+  var msz=map.getSize(), tmax=Math.max(40,3*(Math.ceil(msz.x/256)+1)*(Math.ceil(msz.y/256)+1));
+  if(tiles.size>tmax){
     var keep={};want.forEach(function(w){keep[w[0]+','+w[1]]=1});
     var olds=[], fu={}, hay=false;tiles.forEach(function(rec,k){if(!keep[k])olds.push([k,rec.t])});
     olds.sort(function(p,q){return p[1]-q[1]});
-    while(tiles.size>40&&olds.length){var o=olds.shift();tiles.delete(o[0]);fu[o[0]]=1;hay=true}
+    while(tiles.size>tmax&&olds.length){var o=olds.shift();tiles.delete(o[0]);fu[o[0]]=1;hay=true}
     if(hay&&SW)SW.postMessage({t:'d',ks:Object.keys(fu)});
     if(hay)sigRepaint(fu);
   }
