@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-4/sllRqk5JPg8v7znUyeiw6/CTuL6M+H2JNoqZkjlhw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-6yal2lj7vxwPPsMYpnHyNfW9D9+f1qD0ECPTnpvGMlA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -2403,7 +2403,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-28T07:49:18Z',n:'Entrega 109 · 28 oct · 08:49'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-29T18:42:58Z',n:'Entrega 110 · 29 oct · 19:42'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -2490,9 +2490,75 @@ function renderLayers(){
   el.innerHTML=h;
 }
 var canvas=L.canvas({padding:0.4,tolerance:6}), canvasDim=L.canvas({padding:0.5}), canvasSig=L.canvas({padding:0.4,tolerance:6}), canvasTop=L.canvas({padding:0.4,tolerance:6}), canvasEco=L.canvas({padding:0.4,tolerance:6});
-canvas.addTo(map); canvasDim.addTo(map); canvasSig.addTo(map); canvasTop.addTo(map);
+canvas.addTo(map); canvasDim.addTo(map); canvasTop.addTo(map);
+/* Entrega 110: los recintos SIGPAC sin finca se pintan por cuadros, como las fotos del mapa. Cada cuadro se dibuja una vez
+   y se reutiliza al mover el mapa; antes eran miles de polígonos que se recalculaban enteros en cada parada y en cada zoom.
+   Mismo aspecto (STY_FREE) y mismo sitio (encima de lo apagado, debajo de la selección). Tocar un recinto sigue usando tiles/feats. */
+var SPX=new WeakMap();
+function sigPx(f){
+  var o=SPX.get(f); if(o)return o;
+  var r=[], b=[Infinity,Infinity,-Infinity,-Infinity];
+  polys(f.geom).forEach(function(p){p.forEach(function(ring){
+    var a=new Float64Array(ring.length*2);
+    ring.forEach(function(c,n){var q=map.project([c[1],c[0]],TZ);a[2*n]=q.x;a[2*n+1]=q.y;if(q.x<b[0])b[0]=q.x;if(q.y<b[1])b[1]=q.y;if(q.x>b[2])b[2]=q.x;if(q.y>b[3])b[3]=q.y});
+    r.push(a);
+  })});
+  o={r:r,b:b}; SPX.set(f,o); return o;
+}
+function sigPaint(el,co){
+  var d=Math.min(2,window.devicePixelRatio||1), sz=256, w=Math.round(sz*d);
+  if(el.width!==w){el.width=w;el.height=w}
+  var ctx=el.getContext&&el.getContext('2d'); if(!ctx)return 0;
+  ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,w,w);
+  if(co.z<TZ)return 0;
+  var k=Math.pow(2,co.z-TZ), ox=co.x*sz/k, oy=co.y*sz/k, ex=ox+sz/k, ey=oy+sz/k, m=4/k, px=Math.floor(co.x/k), py=Math.floor(co.y/k), n=0;
+  ctx.setTransform(d,0,0,d,0,0);
+  ctx.lineWidth=STY_FREE.weight; ctx.strokeStyle=STY_FREE.color; ctx.fillStyle=STY_FREE.fillColor; ctx.lineCap='round'; ctx.lineJoin='round';
+  for(var i=-1;i<=1;i++)for(var j=-1;j<=1;j++){
+    var rec=tiles.get((px+i)+','+(py+j)); if(!rec||!rec.feats)continue;
+    rec.feats.forEach(function(f){
+      if(OV.fin&&S.recintos[f.ref]&&recIn(S.recintos[f.ref])&&!isHid(S.recintos[f.ref].fincaId))return;
+      var g=sigPx(f), b=g.b; if(b[2]<ox-m||b[0]>ex+m||b[3]<oy-m||b[1]>ey+m)return;
+      ctx.beginPath();
+      g.r.forEach(function(a){for(var q=0;q<a.length;q+=2){var X=(a[q]-ox)*k,Y=(a[q+1]-oy)*k;if(q)ctx.lineTo(X,Y);else ctx.moveTo(X,Y)}ctx.closePath()});
+      ctx.globalAlpha=STY_FREE.fillOpacity; ctx.fill('evenodd');
+      ctx.globalAlpha=STY_FREE.opacity; ctx.stroke(); n++;
+    });
+  }
+  ctx.globalAlpha=1; return n;
+}
+/* los cuadros se pintan por turnos, unos pocos en cada fotograma (como mucho 10 ms seguidos), para que el mapa no se pare
+   al acercar o alejar: mientras tanto se siguen viendo los del nivel anterior */
+var SQ=[], SQt=0;
+function sigQueue(el,co,done){SQ.push([el,co,done]);if(!SQt)SQt=(window.requestAnimationFrame||setTimeout)(sigRun)}
+function sigRun(){
+  SQt=0; var t0=Date.now();
+  while(SQ.length&&Date.now()-t0<10){var q=SQ.shift();if(q[0].parentNode||!q[2]){try{sigPaint(q[0],q[1])}catch(e){}}if(q[2])q[2](null,q[0])}
+  if(SQ.length)SQt=(window.requestAnimationFrame||setTimeout)(sigRun);
+}
+/* vuelve a pintar los cuadros que tocan los trozos SIGPAC de keys ({'x,y':1}); sin keys, todos */
+function sigRepaint(keys){
+  if(!sigGroup._map||!sigGroup._tiles)return;
+  var T=sigGroup._tiles;
+  Object.keys(T).forEach(function(id){
+    var t=T[id], co=t.coords;
+    if(keys){var k=Math.pow(2,co.z-TZ),px=Math.floor(co.x/k),py=Math.floor(co.y/k),hit=false;
+      for(var i=-1;i<=1&&!hit;i++)for(var j=-1;j<=1&&!hit;j++)if(keys[(px+i)+','+(py+j)])hit=true;
+      if(!hit)return}
+    sigPaint(t.el,co);
+  });
+}
+var SigGrid=L.GridLayer.extend({
+  options:{pane:'overlayPane',minZoom:TZ,maxZoom:21,zIndex:null,className:'sigcuad'},
+  onAdd:function(m){
+    L.GridLayer.prototype.onAdd.call(this,m);
+    var c=this._container, t=canvasTop._container;
+    if(c&&t&&t.parentNode===c.parentNode)c.parentNode.insertBefore(c,t);
+  },
+  createTile:function(co,done){var el=document.createElement('canvas');sigQueue(el,co,done);return el}
+});
 var dimGroup=L.layerGroup().addTo(map);
-var sigGroup=L.layerGroup(), savedGroup=L.layerGroup().addTo(map), ecoGroup=L.layerGroup().addTo(map), selGroup=L.layerGroup().addTo(map), labels=L.layerGroup().addTo(map), meGroup=L.layerGroup().addTo(map);
+var sigGroup=new SigGrid(), savedGroup=L.layerGroup().addTo(map), ecoGroup=L.layerGroup().addTo(map), selGroup=L.layerGroup().addTo(map), labels=L.layerGroup().addTo(map), meGroup=L.layerGroup().addTo(map);
 var STY_FREE={renderer:canvasSig,color:'#ffffff',weight:1.3,opacity:.9,fill:true,fillColor:'#ffffff',fillOpacity:.03,bubblingMouseEvents:false,interactive:false};
 var tiles=new Map(), inflight=0, netErr=false, visT={};
 
@@ -2507,27 +2573,14 @@ function loadTile(x,y){
         var p=f.properties||{}, g=projGeom(f.geometry);
         return g?{ref:refKey(p),ha:(p.dn_surface||0)/10000,uso:p.uso_sigpac||'',geom:g}:null;
       }).filter(Boolean);
-      netErr=false; if(visT[k])drawTile(rec);
+      netErr=false; var o={}; o[k]=1; sigRepaint(o);
     })
     .catch(function(){tiles.delete(k);netErr=true})
     .then(function(){inflight--;updateHint()});
 }
-function drawTile(rec){
-  if(rec.layer){sigGroup.removeLayer(rec.layer);rec.layer=null}
-  if(!rec.feats)return;
-  var arr=[];
-  rec.feats.forEach(function(f){
-    if(OV.fin&&S.recintos[f.ref]&&recIn(S.recintos[f.ref])&&!isHid(S.recintos[f.ref].fincaId))return;
-    arr.push(L.polygon(toLL(f.geom),STY_FREE));
-  });
-  rec.layer=L.featureGroup(arr); sigGroup.addLayer(rec.layer);
-}
 function redrawTiles(ref){
-  tiles.forEach(function(rec,tk){
-    if(!visT[tk])return;
-    if(ref&&!(rec.feats&&rec.feats.some(function(f){return f.ref===ref})))return;
-    drawTile(rec);
-  });
+  if(!ref)sigRepaint();
+  else{var o={},hay=false;tiles.forEach(function(rec,tk){if(rec.feats&&rec.feats.some(function(f){return f.ref===ref})){o[tk]=1;hay=true}});if(hay)sigRepaint(o)}
   selGroup.eachLayer(function(l){l.bringToFront&&l.bringToFront()});
 }
 function refreshSigpac(){
@@ -2539,15 +2592,12 @@ function refreshSigpac(){
   if(want.length>60){updateHint();return}
   visT={}; want.forEach(function(w){visT[w[0]+','+w[1]]=1});
   want.forEach(function(w){loadTile(w[0],w[1])});
-  tiles.forEach(function(rec,tk){
-    if(visT[tk]){if(rec.feats&&!rec.layer)drawTile(rec)}
-    else if(rec.layer){sigGroup.removeLayer(rec.layer);rec.layer=null}
-  });
   if(tiles.size>40){
     var keep={};want.forEach(function(w){keep[w[0]+','+w[1]]=1});
-    var olds=[];tiles.forEach(function(rec,k){if(!keep[k])olds.push([k,rec.t])});
+    var olds=[], fu={}, hay=false;tiles.forEach(function(rec,k){if(!keep[k])olds.push([k,rec.t])});
     olds.sort(function(p,q){return p[1]-q[1]});
-    while(tiles.size>40&&olds.length){var o=olds.shift(),r=tiles.get(o[0]);if(r&&r.layer)sigGroup.removeLayer(r.layer);tiles.delete(o[0])}
+    while(tiles.size>40&&olds.length){var o=olds.shift();tiles.delete(o[0]);fu[o[0]]=1;hay=true}
+    if(hay)sigRepaint(fu);
   }
   updateHint();
 }
@@ -15331,7 +15381,7 @@ arqStart();
 setTimeout(function(){pdfPiezas()},3500);
 setTimeout(function(){map.invalidateSize();refreshSigpac();if(OV.ndvi){ndviPill();ndviLoad(true)}},120);
 
-window.__mf={aclState:function(){return ACL},aclCalc:aclCalc,aclSum:aclSum,aclShort:aclShort,aclMine:aclMine,aclSimOpen:aclSimOpen,aclSimClose:aclSimClose,aclPk:aclPk,loadPdfLib:loadPdfLib,pdfPiezas:pdfPiezas,pdfHay:pdfHay,pvState:function(){return PV},boxPad:boxPad,pdfFont:pdfFont,pdfFontC:pdfFontC,expMapHTML:expMapHTML,buildFichaPdf:buildFichaPdf,afCompute:afCompute,afCompare:afCompare,hatchOf:hatchOf,swBg:swBg,OV:OV,polyC:polyC,mmHTML:mmHTML,expClose:expClose,temaGet:temaGet,temaSet:temaSet,pvOpen:pvOpen,pvClose:pvClose,cvMatch:cvMatch,cvLabel:cvLabel,trVarList:trVarList,varReal:varReal,GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
+window.__mf={aclState:function(){return ACL},aclCalc:aclCalc,aclSum:aclSum,aclShort:aclShort,aclMine:aclMine,aclSimOpen:aclSimOpen,aclSimClose:aclSimClose,aclPk:aclPk,loadPdfLib:loadPdfLib,pdfPiezas:pdfPiezas,pdfHay:pdfHay,pvState:function(){return PV},sigGroup:function(){return sigGroup},sigTiles:function(){return tiles},sigPaint:sigPaint,boxPad:boxPad,pdfFont:pdfFont,pdfFontC:pdfFontC,expMapHTML:expMapHTML,buildFichaPdf:buildFichaPdf,afCompute:afCompute,afCompare:afCompare,hatchOf:hatchOf,swBg:swBg,OV:OV,polyC:polyC,mmHTML:mmHTML,expClose:expClose,temaGet:temaGet,temaSet:temaSet,pvOpen:pvOpen,pvClose:pvClose,cvMatch:cvMatch,cvLabel:cvLabel,trVarList:trVarList,varReal:varReal,GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
 Object.assign(window.__mf,{plFileBase:plFileBase,expGGet:expGGet,expGPick:expGPick,grbSplit:grbSplit,grStart:grStart,grSave:grSave,GRS:function(){return GRS},expHTML:expHTML,TRs:function(){return {tr:TR.cult,ab:AB.cult,fe:FE.cult,hi:HI.cult,inf:INF.cult,pl:PL.pid}},vfState:function(){return VFL},vfOn:vfOn,muniTxtSync:muniTxtSync,polyCount:function(){return polyC.size},ufbStart:ufbStart,ubkCheck:ubkCheck,ubkDue:ubkDue,bkOwn:bkOwn,fbBuild:fbBuild,UBK:UBK,getVersions:getVersions,prevGet:prevGet,spaceHTML:spaceHTML,snapVersion:snapVersion,datReady:function(){return DATP},datState:function(){return {ok:IDBOK,r:DATR,nv:VERS?VERS.length:-1,prev:!!PREV}},plPortrait:plPortrait,plCropTxt:plCropTxt,xlPlanBook:xlPlanBook,idbReset:function(w){idbP=null;if(w)IDB_WAIT=w},syncWait:function(w){SYNC_WAIT=w},syncBusy:function(){return syncing},uCvTxt:uCvTxt,feUcvForm:feUcvForm,feUnitConvert:feUnitConvert,rfEdit:rfEdit,rfSave:rfSave,infTotRows:infTotRows,abTotData:abTotData,cvLabel:cvLabel,feProds:feProds,pabShares:pabShares,pabHaR:pabHaR,pabSplits:pabSplits,pabSplitWarn:pabSplitWarn,pabXCands:pabXCands,pabAddX:pabAddX,pabMove:pabMove,buildPabPdf:buildPabPdf,buildPabXlsx:buildPabXlsx,pabBlocks:pabBlocks,pabCheck:pabCheck,pabReal:pabReal,pabCalc:pabCalc,pabAuto:pabAuto,pabHTML:pabHTML,pabCur:pabCur,pabTipo:pabTipo,pabLim:pabLim,PAB:PAB,haC:haC,haPair:haPair,plTrPlaces:plTrPlaces,daOpen:daOpen,daSave:daSave,PL:PL,plWeeks:plWeeks,plCalc:plCalc,plTrOrder:plTrOrder,plPending:plPending,plMarkGo:plMarkGo,buildTratPdf:buildTratPdf,xlPlanBook:xlPlanBook,xlBuild:xlBuild,plFromRecs:plFromRecs,plSecArgs:plSecArgs,plSecHTML:plSecHTML,plSecOut:plSecOut,plTrPRows:plTrPRows,buildPlanPdf:buildPlanPdf,buildPlanXlsx:buildPlanXlsx,planHTML:planHTML,plTrSources:plTrSources,fbBuild:fbBuild,fbRead:fbRead,fbItems:fbItems,fbRestoreFiles:fbRestoreFiles,idbPut:idbPut,idbGet:idbGet,idbKeys:idbKeys,applyImport:applyImport,pending:function(){return pendingImport},docPend:function(){return DOC.pend},phPend:function(){return PH.pend},phProcess:phProcess,phMax:function(n){PH_MAXB=n},trVarParts:trVarParts,numEs:numEs,nf:nf,trList:trList,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
 Object.assign(window.__mf,{llHTML:llHTML,llLoad:llLoad,llGet:llGet,llSum:llSum,llArr:llArr,llN:llN,LLU:function(){return LLU},LLSEL:LLSEL,pvHTML:pvHTML,pvLoad:pvLoad,pvGet:pvGet,pvParse:pvParse,pvDias:pvDias,PVU:function(){return PVU}});
