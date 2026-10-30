@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-8kPhfjJMxyFRVLrqRZi+j3EW6sJBRUQPEgPGwb43mQA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-FAXMbl9zq1E4kb/KdP1TLjuPOVVsdCacjAeGTy3dSho='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -952,6 +952,10 @@ textarea.in{resize:vertical}
 details.more{margin-top:12px}
 details.more summary{cursor:pointer;font-weight:700;color:var(--accent);min-height:36px;display:flex;align-items:center}
 details.more .in{margin-top:8px}
+details.aclb{margin-top:8px}details.aclb>summary.btn{display:inline-flex;list-style:none;color:var(--ink);text-decoration:none;font-weight:700;min-height:46px;text-align:left;max-width:100%}
+details.aclb>summary.btn::-webkit-details-marker{display:none}
+#rcard.enf .pkline,#rcard.enf .cultline{display:flex}
+.recdat .lbl{margin:12px 0 4px}.recdat .rdg{margin-top:0}.recdat .rdg .in{margin-top:0}
 .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 
 /* paneles */
@@ -2403,7 +2407,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-10-29T22:43:57Z',n:'Entrega 113 · 29 oct · 23:43'}, verNew=null, verAt=0;
+var APPV={v:'2026-10-30T19:18:38Z',n:'Entrega 114 · 30 oct · 20:18'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -3142,7 +3146,7 @@ function cultLine(r){
 }
 function renderCard(){
   var el=$('#rcard');
-  if(!sel){el.classList.remove('peek');if(tp){el.innerHTML=tpHTML();el.hidden=false;phFill('#rcard');return}if(catCard){el.innerHTML=catCardHTML();el.hidden=false;return}if(tagCard&&tagById(tagCard)){el.innerHTML=tagCardHTML();el.hidden=false;phFill('#rcard');return}el.hidden=true;el.innerHTML='';return}
+  if(!sel){el.classList.remove('peek');el.classList.remove('enf');if(tp){el.innerHTML=tpHTML();el.hidden=false;phFill('#rcard');return}if(catCard){el.innerHTML=catCardHTML();el.hidden=false;return}if(tagCard&&tagById(tagCard)){el.innerHTML=tagCardHTML();el.hidden=false;phFill('#rcard');return}el.hidden=true;el.innerHTML='';return}
   var r=S.recintos[sel.ref], exR=null, exF=null;
   if(r&&!recIn(r)){exR=r;exF=finca(r.fincaId);r=null}
   var fi=r?finca(r.fincaId):null, hidF=(fi&&(isOc(fi)||!inPf(fi)))?fi:null;
@@ -3152,9 +3156,10 @@ function renderCard(){
   var h='<button class="grab" data-act="card-size" aria-label="Ampliar o reducir la ficha"></button>';
   var mtx=muniTxtSync(sel.ref), mref=sel.ref; if(!mtx)setTimeout(function(){muniFill(mref)},0);
   h+='<div class="chd"><div><div class="ref">'+esc(refLabel(sel.ref))+'<button class="cpy" data-act="sig-copy" data-v="'+esc(refLabel(sel.ref))+'" aria-label="Copiar el código SIGPAC">Copiar</button></div><div class="sub">'+esc(refShort(sel.ref))+'</div><div class="sub" id="card-muni" data-ref="'+esc(sel.ref)+'"'+(mtx?'':' hidden')+'>'+esc(mtx||'')+'</div></div><button class="x" data-act="close-card" aria-label="Cerrar">×</button></div>';
-  h+='<div class="pkline"><b>'+ha4(haC(sel))+' ha</b><span>'+esc(uso)+'</span></div>';
+  h+='<div class="pkline"><b>'+ha4(haC(r&&fi&&!hidF?r:sel))+' ha</b><span>'+esc(uso)+'</span></div>';
   if(r&&fi&&!hidF)h+=cultLine(r);
-  h+='<div class="stats cfull"><div><span class="k">Superficie</span><b>'+ha4(haC(sel))+' ha</b></div><div><span class="k">Uso SIGPAC</span><b>'+esc(uso)+'</b></div></div>';
+  var enF=!!(r&&fi&&!hidF);
+  if(!enF)h+='<div class="stats cfull"><div><span class="k">Superficie</span><b>'+ha4(haC(sel))+' ha</b></div><div><span class="k">Uso SIGPAC</span><b>'+esc(uso)+'</b></div></div>';
   if(hidF){
     if(!inPf(hidF))h+='<div class="note">Este recinto es de la finca <b>'+esc(hidF.nombre)+'</b>, que está en otra pestaña ('+esc(pfOthersTxt(hidF))+').<div class="acts"><button class="btn primary sm" data-act="pf-bring" data-id="'+hidF.id+'">Traer la finca a «'+esc(pfName(PF))+'»</button></div></div>';
     else h+='<div class="note">Pertenece a la finca oculta <b>'+esc(hidF.nombre)+'</b>.<div class="acts"><button class="btn primary sm" data-act="finca-show" data-id="'+hidF.id+'">Mostrar la finca</button></div></div>';
@@ -3174,6 +3179,8 @@ function renderCard(){
   }
   h+='<div class="pkact"><button class="btn sm" data-act="sel-from-card">Seleccionar recintos</button><button class="btn sm" data-act="card-size">'+(full?'Ver menos ▴':'Ver más ▾')+'</button></div>';
   h+='<div class="cbody">';
+  el.classList.toggle('enf',enF);
+  if(enF){h+=recFichaHTML(r,fi,pt,uso)+'</div>';}else{
   h+='<div class="acts"><a class="btn sm pkdir2" href="'+dirUrl(pt[1],pt[0])+'" target="_blank" rel="noopener">Cómo llegar</a></div>';
   if(fi&&pfOthers(fi).length)h+='<div class="pfnote">Finca compartida con: '+esc(pfOthersTxt(fi))+'. Cambiar el recinto de finca vale para todas.</div>';
   h+='<div id="sigbox">'+sigHTML(sel.ref)+'</div>';
@@ -3199,11 +3206,50 @@ function renderCard(){
     h+='<div class="acts"><button class="btn primary" data-act="keep-adding">Seguir añadiendo a '+esc(fi?fi.nombre:'esta finca')+'</button>'+
        '<button class="btn danger'+(delArm==='rec:'+sel.ref?' armed':'')+'" data-act="unassign">'+(delArm==='rec:'+sel.ref?'Pulsa otra vez para quitarlo':'Quitar de la finca')+'</button></div>';
   }
-  h+='</div>';
+  h+='</div>';}
   el.classList.toggle('peek',!full);
   el.innerHTML=h; el.hidden=false; loadSig(sel.ref); loadCatBox(pt);
   if(newFincaOpen){var i=$('#nf-name');if(i)i.focus()}else if(fdOpen&&isDesk()){var iq=$('#fd-q');if(iq)iq.focus()}
   if(otroOpen){var o=$('#otro');if(o)o.focus()}
+}
+
+/* Entrega 114: ficha de un recinto de una finca. A la vista, los datos del recinto dentro de la finca;
+   cultivo/riego/producción, SIGPAC y Catastro, ubicación y otras opciones, en desplegables */
+function recFichaHTML(r,fi,pt,uso){
+  var so=function(k,x){return (secOpen[k]||x)?' open':''}, lb=function(t){return '<div class="lbl">'+t+'</div>'};
+  var h='';
+  if(pfOthers(fi).length)h+='<div class="pfnote">Finca compartida con: '+esc(pfOthersTxt(fi))+'. Cambiar el recinto de finca vale para todas.</div>';
+  h+='<div class="recdat">';
+  h+=lb('Nombre del recinto')+'<input id="rnm" class="in" placeholder="Nombre (opcional), ej. El Pozo" value="'+esc(r.nombre||'')+'" autocomplete="off" aria-label="Nombre del recinto">';
+  h+=lb('Variedad')+'<input id="rv" class="in" placeholder="Variedad (opcional)" value="'+esc(r.variedad)+'" autocomplete="off" aria-label="Variedad">';
+  h+='<div class="gform rdg"><div>'+lb('Año de plantación')+'<input id="ra" class="in" inputmode="numeric" placeholder="Ej. 2018" value="'+esc(r.anio||'')+'" autocomplete="off" aria-label="Año de plantación"></div>'+
+     '<div>'+lb('Marco')+'<input id="rm" class="in" placeholder="Ej. 6x5" value="'+esc(r.marco||'')+'" autocomplete="off" aria-label="Marco"></div>'+
+     '<div>'+lb('Patrón')+'<input id="rp" class="in" placeholder="Ej. UCB-1" value="'+esc(r.patron||'')+'" autocomplete="off" aria-label="Patrón"></div>'+
+     '<div>'+lb('Nº de árboles')+'<input id="rt" class="in" inputmode="numeric" placeholder="Nº de árboles" value="'+esc(r.arb||'')+'" autocomplete="off" aria-label="Nº de árboles"></div></div>';
+  h+='<div class="small" id="arbest" style="margin-top:6px">'+arbTxt(r)+'</div>';
+  h+=lb('Hectáreas cultivadas <span class="small">(SIGPAC '+ha4(r.ha)+' ha · en blanco si coinciden)</span>')+'<input id="rhc" class="in" inputmode="decimal" placeholder="Ej. '+nf(r.ha*0.9,2)+'" value="'+esc(+r.hc>0?String(r.hc).replace('.',','):'')+'" autocomplete="off" aria-label="Hectáreas cultivadas">';
+  h+=lb('Notas')+'<textarea id="rn" class="in" rows="2" placeholder="Notas (opcional)">'+esc(r.notas)+'</textarea>';
+  h+='</div>';
+  h+='<div class="acts"><button class="btn" data-act="ndv-chart">Evolución NDVI</button></div>';
+  h+=aclHTML(sel.ref);
+  var cs=[r.cultivo||'Sin cultivo']; if(r.riego)cs.push(riegoName(r.riego)); if(prodTag(r.prod))cs.push(prodTag(r.prod));
+  h+='<details class="more" data-sec="rcul"'+so('rcul',otroOpen)+'><summary>Cultivo, riego y producción · '+esc(cs.join(' · '))+'</summary>';
+  h+=lb('Cultivo')+'<div class="chips">'+cropChips(r.cultivo,'crop')+'<button class="chip add" data-act="crop-otro">Otro…</button></div>';
+  if(otroOpen)h+='<input id="otro" class="in" style="margin-top:8px" placeholder="Escribe el cultivo" autocomplete="off">';
+  h+=lb('Riego')+'<div class="chips">'+riegoChips(r.riego,'riego')+'</div>';
+  h+=lb('Producción')+'<div class="chips">'+prodChips(r.prod,'prod')+'</div></details>';
+  h+='<details class="more" data-sec="rsig"'+so('rsig')+'><summary>Datos SIGPAC y Catastro</summary>';
+  h+='<div class="stats"><div><span class="k">Superficie SIGPAC</span><b>'+ha4(r.ha)+' ha</b></div><div><span class="k">Uso SIGPAC</span><b>'+esc(uso)+'</b></div></div>';
+  h+='<div id="sigbox">'+sigHTML(sel.ref)+'</div><div id="catbox">'+catBoxHTML(pt)+'</div></details>';
+  h+='<details class="more" data-sec="rubi"'+so('rubi')+'><summary>Ubicación</summary>';
+  var du='<a class="btn sm" href="'+dirUrl(pt[1],pt[0])+'"';
+  h+=coordHTML(pt,'Coordenadas (formato Google Maps)',fi.nombre+' · '+refShort(sel.ref)).replace(du,'<a class="btn sm pkdir2" href="'+dirUrl(pt[1],pt[0])+'"')+'</details>';
+  h+='<details class="more" data-sec="rmas"'+so('rmas',favOpen)+'><summary>Más opciones'+(S.x.favs[sel.ref]&&inPf(S.x.favs[sel.ref])?' · ★ favorito':'')+'</summary>';
+  h+=favBoxHTML()+'<div class="acts" style="margin-top:8px"><button class="btn sm" data-act="dw-rec">Descargar este recinto…</button></div></details>';
+  h+=cmHTML('rec',sel.ref,r,secOpen.cmrec);
+  h+='<div class="acts"><button class="btn primary" data-act="keep-adding">Seguir añadiendo a '+esc(fi.nombre)+'</button>'+
+     '<button class="btn danger'+(delArm==='rec:'+sel.ref?' armed':'')+'" data-act="unassign">'+(delArm==='rec:'+sel.ref?'Pulsa otra vez para quitarlo':'Quitar de la finca')+'</button></div>';
+  return h;
 }
 
 /* ───────── ficha de finca en PDF ───────── */
@@ -4334,7 +4380,7 @@ function aclChip(c){return '<span class="aclc acl-'+c+'">'+ACL_LBL[c]+'</span>'}
 function aclData(ref){var r=S.recintos[ref];return (r&&r.apt)||ACL.tmp[ref]||null}
 function aclHTML(ref){
   var r=S.recintos[ref], a=aclData(ref), busy=ACL.busy[ref], err=ACL.err[ref];
-  var o='<details class="more" data-sec="acl"'+(secOpen.acl?' open':'')+'><summary>Aptitud climática'+(busy&&!a?' · calculando…':a?' · '+esc(aclShort(r,a)):'')+'</summary>';
+  var o='<details class="more aclb" data-sec="acl"'+(secOpen.acl?' open':'')+'><summary class="btn">Aptitud climática'+(busy&&!a?' · calculando…':a?' · '+esc(aclShort(r,a)):'')+'</summary>';
   if(a){
     var sp=aclSpOf(r), m=sp?aclMine(r,a[sp]):null;
     o+='<div class="aclres">'+(m?aclChip(m.c)+'<b>'+esc(m.n)+': '+ACL_LBL2[m.c]+'</b>':'<b>'+esc(aclShort(r,a))+'</b>')+'</div>';
@@ -5053,7 +5099,10 @@ function goFinca(id,fromMap){
   if(isDesk()){setTab('fincas');renderFincas();setTimeout(function(){fitFinca(id)},90)}
   else if(fromMap){syncFocus();renderFincas();fitFinca(id)}
   else{pendingFit=id;setTab('fincas')}
+  fincaTop();
 }
+/* Entrega 114: al abrir una finca, el panel empieza arriba del todo (en el nombre de la finca) */
+function fincaTop(){var el=$('#p-fincas');if(el)try{el.scrollTop=0}catch(e){}}
 function openFinca(id){goFinca(id,false)}
 function toMap(){if(!isDesk())setTab('mapa')}
 
