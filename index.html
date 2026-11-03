@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-/p3JUsnc4pl7iEyF9vrUlPY1Odm5Kgz9Y2snq7j7dDI='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-3WocgjB+JkCH2+o/+0qpWYqkjX+b5OVbFOTXDLUd4jk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -834,6 +834,10 @@ h2,h3{margin:0;text-wrap:balance}
 button.pill{cursor:pointer}
 .pill b{color:#ffd96a}
 .pill.err{background:#7a1f18}
+#pstpill i,.pstleg i,.pstl i{display:inline-block;width:11px;height:11px;border-radius:3px;margin:0 5px -1px 0;vertical-align:baseline}
+#pstpill span{margin-left:10px;font-weight:600}#pstpill span:first-child{margin-left:0}
+.pstleg{display:flex;flex-wrap:wrap;gap:6px 14px;margin:8px 0 4px;font-size:13px;font-weight:600}
+.pstl{margin:6px 0 2px;font-size:13px;line-height:1.35}.pstl b{font-weight:700}
 #warn{pointer-events:auto;background:var(--warn-bg);color:var(--warn-ink);border-radius:12px;padding:9px 12px;font-size:13px;font-weight:600;max-width:100%}
 #toast{align-self:stretch;display:flex;justify-content:center;pointer-events:none}
 #toast:empty{display:none}
@@ -2274,6 +2278,144 @@ function applyOv(norefresh){
   if(!norefresh){refreshSigpac();drawSaved();drawSel()}
 }
 function setOv(k,v){OV[k]=v;lsSet(KEYO,JSON.stringify(OV));applyOv();renderLayers()}
+function pst(){return pst.s||(pst.s={on:false,flt:'',anio:2025,dir:'pac/pistacho-2025/',ZP:12,idx:null,pts:null,bk:null,prov:{},busy:{},err:'',lay:null,col:{1:'#2f7df6',0:'#e5533d'}})}
+function pstInit(){
+  /* ═════════ ENTREGA 120 · capa «Pistacho en España (PAC)» ═════════
+     Cultivo declarado en la PAC (©FEGA / MAPA, CC-BY 4.0), preparado aparte por pac_capa.py en pac/pistacho-AAAA/.
+     Solo consulta: empieza apagada cada vez que se abre la app y solo descarga con ella encendida (idx.json y las
+     provincias que se ven); no entra en tus datos, ni en las copias, ni en el modo sin conexión. De lejos un punto por
+     declaración; desde el zoom PST.ZP, los polígonos. Va debajo de tus fincas y de los recintos SIGPAC. Se recuerda el filtro. */
+  if(pst().flt)return;
+  pst().flt='todo';
+  try{var g=JSON.parse(lsGet('mapa-fincas:pistacho')||'null');if(g&&/^(todo|R|S)$/.test(g.flt))pst().flt=g.flt}catch(e){}
+  window.__pst={S:function(){return pst()},card:pstCardHTML,hit:pstHit,tog:pstToggle};
+}
+function pstSave(){lsSet('mapa-fincas:pistacho',JSON.stringify({flt:pst().flt}))}
+function pstW(lng,lat){var s=Math.sin(lat*Math.PI/180);s=Math.max(-0.9999,Math.min(0.9999,s));return [(lng+180)/360*256,(0.5-Math.log((1+s)/(1-s))/(4*Math.PI))*256]}
+function pstRing(a,k){var o=[],x=0,y=0;for(var i=0;i+1<a.length;i+=2){x+=a[i];y+=a[i+1];o.push([x/k,y/k])}return o}
+function pstOk(s){return pst().flt!=='R'&&pst().flt!=='S'||(pst().flt==='R')===(s===1)}
+function pstUrl(f){return pst().dir+f}
+function pstGet(f){return fetch(pstUrl(f)).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})}
+function pstLoadIdx(){
+  if(pst().idx||pst().busy.idx)return;
+  pst().busy.idx=true; pst().err='';
+  pstGet('idx.json').then(function(j){
+    var a=j.pts||[], pts=[], bk={}, x=0, y=0;
+    for(var i=0;i+2<a.length;i+=3){x+=a[i];y+=a[i+1];var w=pstW(x/1e4,y/1e4),p={x:w[0],y:w[1],s:a[i+2]},k=(w[0]>>3)+','+(w[1]>>3);pts.push(p);(bk[k]||(bk[k]=[])).push(p)}
+    pst().idx=j; pst().pts=pts; pst().bk=bk; if(j.anio)pst().anio=j.anio;
+  }).catch(function(){pst().err='No he podido descargar la capa de pistacho. Comprueba la conexión y vuelve a encenderla.'})
+    .then(function(){pst().busy.idx=false;pstPill();if(pst().lay)pst().lay.redraw();if($('#layers')&&!$('#layers').hidden)renderLayers()});
+}
+function pstLoadProv(pc){
+  if(pst().prov[pc]||pst().busy[pc])return;
+  pst().busy[pc]=true;
+  pstGet(pc+'.json').then(function(j){
+    var fs=[], by={};
+    (j.f||[]).forEach(function(a){
+      var ll=a[3].map(function(p){return p.map(function(r){return pstRing(r,1e5)})});
+      var w=[], b=[1e9,1e9,-1e9,-1e9];
+      ll.forEach(function(p){w.push(p.map(function(r){return r.map(function(q){var v=pstW(q[0],q[1]);if(v[0]<b[0])b[0]=v[0];if(v[1]<b[1])b[1]=v[1];if(v[0]>b[2])b[2]=v[0];if(v[1]>b[3])b[3]=v[1];return v})}))});
+      var f={r:a[0],s:a[1],m2:a[2],w:w,b:b,geom:ll.length===1?{type:'Polygon',coordinates:ll[0]}:{type:'MultiPolygon',coordinates:ll}};
+      fs.push(f); (by[f.r]||(by[f.r]=[])).push(f);
+    });
+    pst().prov[pc]={fs:fs,by:by};
+  }).catch(function(){}).then(function(){
+    pst().busy[pc]=false; if(pst().lay)pst().lay.redraw();
+    if(sel&&String(sel.ref).split(':')[0]==String(+pc))renderCard();
+  });
+}
+function pstProvIn(x0,y0,x1,y1){
+  var out=[]; if(!pst().idx)return out;
+  Object.keys(pst().idx.prov).forEach(function(pc){var bb=pst().idx.prov[pc].bb,a=pstW(bb[0],bb[3]),c=pstW(bb[2],bb[1]);if(a[0]<=x1&&c[0]>=x0&&a[1]<=y1&&c[1]>=y0)out.push(pc)});
+  return out;
+}
+function pstDraw(cv,c,dpr){
+  var g=cv.getContext('2d'), z=c.z, sc=Math.pow(2,z), ox=c.x*256/sc, oy=c.y*256/sc, ex=ox+256/sc, ey=oy+256/sc;
+  g.setTransform(dpr,0,0,dpr,0,0);
+  if(!pst().pts)return;
+  var px=function(v){return [(v[0]-ox)*sc,(v[1]-oy)*sc]}, pend=false;
+  if(z>=pst().ZP){
+    var pcs=pstProvIn(ox,oy,ex,ey), lw=z>=15?1.6:1;
+    [0,1].forEach(function(s){
+      if(!pstOk(s))return;
+      g.beginPath();
+      pcs.forEach(function(pc){
+        var d=pst().prov[pc]; if(!d){pend=true;pstLoadProv(pc);return}
+        d.fs.forEach(function(f){
+          if(f.s!==s||f.b[0]>ex||f.b[2]<ox||f.b[1]>ey||f.b[3]<oy)return;
+          f.w.forEach(function(p){p.forEach(function(r){r.forEach(function(v,i){var q=px(v);if(i)g.lineTo(q[0],q[1]);else g.moveTo(q[0],q[1])});g.closePath()})});
+        });
+      });
+      g.fillStyle=pst().col[s]; g.globalAlpha=.38; g.fill('evenodd'); g.globalAlpha=.95; g.lineWidth=lw; g.strokeStyle=pst().col[s]; g.stroke(); g.globalAlpha=1;
+    });
+    if(!pend)return;
+  }
+  var r=z<=6?1.3:z<=8?1.8:z<=10?2.4:3, k0=Math.floor(ox)>>3, k1=Math.floor(ex)>>3, j0=Math.floor(oy)>>3, j1=Math.floor(ey)>>3;
+  [0,1].forEach(function(s){
+    if(!pstOk(s))return;
+    g.beginPath();
+    for(var i=k0;i<=k1;i++)for(var j=j0;j<=j1;j++){
+      var l=pst().bk[i+','+j]; if(!l)continue;
+      for(var n=0;n<l.length;n++){var p=l[n];if(p.s!==s||p.x<ox||p.x>ex||p.y<oy||p.y>ey)continue;var q=px([p.x,p.y]);g.moveTo(q[0]+r,q[1]);g.arc(q[0],q[1],r,0,6.2832)}
+    }
+    g.fillStyle=pst().col[s]; g.globalAlpha=.85; g.fill(); g.globalAlpha=1;
+  });
+}
+function pstTile(c){var cv=document.createElement('canvas'),dpr=Math.min(2,window.devicePixelRatio||1);cv.width=256*dpr;cv.height=256*dpr;try{pstDraw(cv,c,dpr)}catch(e){}return cv}
+function pstApply(){
+  if(pst().on&&!pst().lay){pst().lay=new (L.GridLayer.extend({createTile:pstTile}))({zIndex:4,maxZoom:21,updateWhenIdle:true,attribution:'Pistacho PAC: ©FEGA / Ministerio de Agricultura, Pesca y Alimentación'}).addTo(map);pstLoadIdx()}
+  else if(!pst().on&&pst().lay){map.removeLayer(pst().lay);pst().lay=null}
+  pstPill();
+}
+function pstToggle(){pstInit();pst().on=!pst().on;pstSave();pstApply();renderLayers();if(sel)renderCard()}
+function pstPill(){
+  var el=document.getElementById('pstpill');
+  if(!el){var nd=document.getElementById('ndvipill');if(!nd||!pst().on)return;el=document.createElement('div');el.className='pill';el.id='pstpill';el.hidden=true;nd.parentNode.insertBefore(el,nd.nextSibling)}
+  if(!pst().on){el.hidden=true;return}
+  var t='Pistacho PAC '+pst().anio;
+  if(pst().err)el.innerHTML=esc(t)+': sin conexión';
+  else if(!pst().idx)el.innerHTML=esc(t)+': cargando…';
+  else el.innerHTML='<span>'+esc(t)+'</span>'+(pst().flt!=='S'?'<span><i style="background:'+pst().col[1]+'"></i>Regadío</span>':'')+(pst().flt!=='R'?'<span><i style="background:'+pst().col[0]+'"></i>Secano</span>':'');
+  el.hidden=false;
+}
+function pstHTML(){
+  var h='<button class="lopt'+(pst().on?' on':'')+'" data-act="pst-tg"><i class="sq"></i>Pistacho en España (PAC '+pst().anio+')</button>';
+  if(!pst().on)return h;
+  h+='<div style="padding:2px 8px 6px">';
+  h+='<select id="pst-flt" class="in" style="min-height:42px" aria-label="Qué pistacho se ve">'+[['todo','Todo el pistacho'],['R','Solo regadío'],['S','Solo secano']].map(function(o){return '<option value="'+o[0]+'"'+(pst().flt===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>';
+  if(pst().err)h+='<div class="small" style="color:var(--warn-ink);margin-top:6px">'+esc(pst().err)+'</div>';
+  else if(!pst().idx)h+='<div class="small" style="margin-top:6px">Cargando el pistacho de toda España…</div>';
+  else{
+    var T=pst().idx.tot||{R:{n:0,m2:0},S:{n:0,m2:0}};
+    h+='<div class="pstleg"><span><i style="background:'+pst().col[1]+'"></i>Regadío · '+nf(T.R.m2/1e4,0)+' ha</span><span><i style="background:'+pst().col[0]+'"></i>Secano · '+nf(T.S.m2/1e4,0)+' ha</span></div>';
+    h+='<div class="small">'+nf(T.R.n+T.S.n,0)+' declaraciones de pistacho en la PAC '+pst().anio+' en toda España. De lejos, un punto por declaración; al acercarte, los recintos. Toca uno para ver su código SIGPAC y si es de regadío o de secano.</div>';
+  }
+  h+='<div class="small" style="margin-top:4px">Fuente: ©FEGA / Ministerio de Agricultura, Pesca y Alimentación. Solo para consultar: no se guarda en tus datos ni sin conexión.</div></div>';
+  return h;
+}
+function pstCardHTML(ref){
+  /* ficha del recinto: línea con lo declarado de pistacho (suma de sus declaraciones) */
+  if(!pst().on||!ref||!pst().idx)return '';
+  var pc=String(String(ref).split(':')[0]).padStart(2,'0');
+  if(!pst().idx.prov[pc])return '';
+  var d=pst().prov[pc]; if(!d){pstLoadProv(pc);return ''}
+  var l=d.by[ref]; if(!l||!l.length)return '';
+  var m2=0, hayR=false, hayS=false; l.forEach(function(f){m2+=f.m2;if(f.s===1)hayR=true;else hayS=true});
+  var sis=hayR&&hayS?'Regadío y secano':hayR?'Regadío':'Secano', col=pst().col[hayR&&!hayS?1:0];
+  return '<div class="pstl"><i style="background:'+col+'"></i>Pistacho · PAC '+pst().anio+' · <b>'+sis+'</b> · '+ha4(m2/1e4)+' ha declaradas'+(l.length>1?' ('+l.length+' declaraciones)':'')+'</div>';
+}
+function pstHit(ll){
+  /* tocar el mapa sin recinto SIGPAC debajo (p. ej. con los recintos SIGPAC apagados): se abre el de pistacho */
+  if(!pst().on||!pst().idx||map.getZoom()<pst().ZP)return false;
+  var pt=[ll.lng,ll.lat], hit=null;
+  Object.keys(pst().prov).some(function(pc){
+    var bb=(pst().idx.prov[pc]||{}).bb; if(!bb||pt[0]<bb[0]||pt[0]>bb[2]||pt[1]<bb[1]||pt[1]>bb[3])return false;
+    return pst().prov[pc].fs.some(function(f){return pstOk(f.s)&&inBB(pt,f.geom)&&polys(f.geom).some(function(pp){return inPoly(pt,pp)})&&(hit=f)});
+  });
+  if(!hit)return false;
+  select({ref:hit.r,ha:hit.m2/1e4,uso:'',geom:hit.geom});
+  return true;
+}
 /* NDVI: imágenes Sentinel-2 (ESA) servidas por Esri, sin cuenta. 10 m por píxel. */
 var NDVIB='https://sentinel.arcgis.com/arcgis/rest/services/Sentinel2/ImageServer/', ndviLayer=null;
 var IDX={
@@ -2417,7 +2559,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-02T18:00:10Z',n:'Entrega 119 · 2 nov · 19:00'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-03T20:54:57Z',n:'Entrega 120 · 3 nov · 21:54'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -2444,7 +2586,7 @@ function layHead(k,t,sum,first){
   return (first?'':'</div>')+'<button class="lsec'+(open?' on':'')+'" data-act="lay-sec" data-k="'+k+'" aria-expanded="'+open+'"><span class="lt">'+t+'</span><small>'+esc(sum||'')+'</small><i>'+(open?'▴':'▾')+'</i></button><div class="lbody"'+(open?'':' hidden')+'>';
 }
 function renderLayers(){
-  var capsOn=[OV.sig&&'SIGPAC',OV.cat&&'Catastro',(typeof RAD!=='undefined'&&RAD&&RAD.on)&&'Radar',OV.ndvi&&'Índices'].filter(Boolean);
+  var capsOn=[OV.sig&&'SIGPAC',OV.cat&&'Catastro',pst().on&&'Pistacho',(typeof RAD!=='undefined'&&RAD&&RAD.on)&&'Radar',OV.ndvi&&'Índices'].filter(Boolean);
   var el=$('#layers'), h=layHead('fondo','Mapa de fondo',(BASES[S.base]||{}).name,true);
   if(OFF.on)h+='<div class="note" style="margin:0 0 8px">Sin conexión: se ve la foto aérea guardada de tus fincas. El satélite Esri, los recintos SIGPAC de alrededor, Catastro, el radar y los índices necesitan conexión.</div>';
   if(BKUP)h+='<div class="note" style="margin:0 0 8px">El servidor del IGN no responde ahora. Se muestra <b>'+esc(BASES[BKUP].name)+'</b> mientras tanto; volverá solo a tu fondo cuando el IGN responda.</div>';
@@ -2463,6 +2605,7 @@ function renderLayers(){
   h+=layHead('cap','Capas encima',capsOn.join(', ')||'ninguna');
   h+='<button class="lopt'+(OV.sig?' on':'')+'" data-act="ov" data-k="sig"><i class="sq"></i>Recintos SIGPAC</button>';
   h+='<button class="lopt'+(OV.cat?' on':'')+'" data-act="ov" data-k="cat"><i class="sq"></i>Parcelas catastrales</button>';
+  h+=pstHTML();
   h+=radHTML();
   h+='<button class="lopt'+(OV.ndvi?' on':'')+'" data-act="ov" data-k="ndvi"><i class="sq"></i>Índices de vegetación (satélite)</button>';
   if(OV.ndvi){
@@ -3167,6 +3310,7 @@ function renderCard(){
   var mtx=muniTxtSync(sel.ref), mref=sel.ref; if(!mtx)setTimeout(function(){muniFill(mref)},0);
   h+='<div class="chd"><div><div class="ref">'+esc(refLabel(sel.ref))+'<button class="cpy" data-act="sig-copy" data-v="'+esc(refLabel(sel.ref))+'" aria-label="Copiar el código SIGPAC">Copiar</button></div><div class="sub">'+esc(refShort(sel.ref))+'</div><div class="sub" id="card-muni" data-ref="'+esc(sel.ref)+'"'+(mtx?'':' hidden')+'>'+esc(mtx||'')+'</div></div><button class="x" data-act="close-card" aria-label="Cerrar">×</button></div>';
   h+='<div class="pkline"><b>'+ha4(haC(r&&fi&&!hidF?r:sel))+' ha</b><span>'+esc(uso)+'</span></div>';
+  h+=pstCardHTML(sel.ref);
   if(r&&fi&&!hidF)h+=cultLine(r);
   var enF=!!(r&&fi&&!hidF);
   if(!enF)h+='<div class="stats cfull"><div><span class="k">Superficie</span><b>'+ha4(haC(sel))+' ha</b></div><div><span class="k">Uso SIGPAC</span><b>'+esc(uso)+'</b></div></div>';
@@ -14675,6 +14819,7 @@ document.addEventListener('click',function(ev){
     case 'wb-retry':WBK.err='';wbLoad(true).then(function(){if(S.base==='esrih'){mountBase('esrih');esdSoon()}renderLayers()},function(){renderLayers()});renderLayers();break;
     case 'ov':setOv(b.dataset.k,!OV[b.dataset.k]);break;
     case 'rad-tg':radToggle();break;
+    case 'pst-tg':pstToggle();break;
     case 'rad-up':radLoad();break;
     case 'rad-op':{RAD.op=Math.max(.2,Math.min(1,Math.round((RAD.op+parseFloat(b.dataset.v))*100)/100));if(RAD.lay)RAD.lay.setOpacity(RAD.op);else radShow();break}
     case 'rad-play':radPlay();break;
@@ -15305,6 +15450,7 @@ document.addEventListener('change',function(ev){
   if(id==='g-prov'){fillMunis(+t.value);return}
   if(id==='wb-year'){WBK.sel=+t.value;try{localStorage.setItem('mf_wby',String(WBK.sel))}catch(e){}if(S.base==='esrih'&&!BKUP){mountBase('esrih');esdSoon()}renderLayers();return}
   if(id==='ndvi-date'){NDV.sel=+t.value;if(ndviLayer)ndviLayer.redraw();ndviPill();return}
+  if(id==='pst-flt'){pst().flt=/^(R|S)$/.test(t.value)?t.value:'todo';pstSave();if(pst().lay)pst().lay.redraw();pstPill();return}
   if(id==='favname'&&sel&&S.x.favs[sel.ref]){S.x.favs[sel.ref].name=t.value.trim()||refShort(sel.ref);save();return}
   if(id==='tagname'){var tg0=tagById(tagCard);if(tg0){tg0.name=t.value.trim()||tg0.name;save();drawMarks();if(tab==='guardados')renderGuardados()}return}
   if(id==='fname'){
@@ -15400,7 +15546,7 @@ map.on('click',function(e){
     if(msel.on){selClick(e.latlng);return}
     if(rec.on){recClick(e.latlng);return}
     var h=hitAt([e.latlng.lng,e.latlng.lat]);
-    if(!h){if(OV.cat&&map.getZoom()>=15)showCat(e.latlng.lat,e.latlng.lng);return}
+    if(!h){if(pstHit(e.latlng))return;if(OV.cat&&map.getZoom()>=15)showCat(e.latlng.lat,e.latlng.lng);return}
     if(h.saved)selectRec(h.saved);else pick(h.free);
   }catch(err){toast('No he podido seleccionar. Vuelve a tocar el recinto.')}
 });
