@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-SDiSZQ5pg9LoEXOFVUItSQLHiXMla9g1nbPZgd5RoyA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-s4IQKmw74wixWNdwvDhFTmHSgKU2ZOmhVQ4OroMdARE='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -2280,18 +2280,23 @@ function applyOv(norefresh){
   if(!norefresh){refreshSigpac();drawSaved();drawSel()}
 }
 function setOv(k,v){OV[k]=v;lsSet(KEYO,JSON.stringify(OV));applyOv();renderLayers()}
-var PST_CUL={pistacho:{n:'Pistacho',zp:12},almendro:{n:'Almendro',zp:13}};
+var PST_CUL={pistacho:{n:'Pistacho',zp:12},almendro:{n:'Almendro',zp:13},olivar:{n:'Olivar',zp:14,zpc:13,maxpc:60}};
+/* Entrega 124: olivar (PAC 2025, código 101: 2.652.802 declaraciones, 4,4 veces el almendro). Recintos desde el zoom 14 en el
+   móvil y desde el 13 en ordenador (zpc), porque en Jaén o Córdoba un cuadro tiene hasta 20.000 recintos (medido en Martos
+   con iPhone simulado: a zoom 13, 4 s y parones de 0,7 s; a zoom 14, 2 s y de 0,2 s), y como mucho 60 cuadros en
+   memoria en ordenador (maxpc). Los cuadros con muchos recintos vienen partidos en 4 (o en 16) desde pac_capa.py, para que
+   ninguno pase de unos 300 KB comprimido; la app los busca por su caja (idx.cb), así que no cambia nada más. */
 /* Entrega 122: en ordenador (pantalla ancha, ratón) los recintos se ven 3 zooms antes (almendro desde el 10, pistacho desde
    el 9) y se guardan hasta PST_MAXPC cuadros; en el móvil, igual que antes (ZP y PST_MAXC) */
 function pstPC(){try{return !!(window.matchMedia&&window.matchMedia('(min-width:900px) and (hover:hover) and (pointer:fine)').matches)}catch(e){return false}}
-function pstZP(){return pst().ZP-(pstPC()?3:0)}
+function pstZP(){var c=PST_CUL[pst().cul]||{};return pstPC()?(c.zpc!=null?c.zpc:pst().ZP-3):pst().ZP}
 var PST_MAXPC=250;
 function pst(){return pst.s||(pst.s={on:false,cul:'',flt:'',vs:null,vx:false,F:null,anio:2025,ZP:12,idx:null,mun:null,cw:null,cel:{},busy:{},nCel:0,err:'',lay:null,rt:0,col:{1:'#2f7df6',0:'#e5533d'}})}
 function pstN(){return (PST_CUL[pst().cul]||PST_CUL.pistacho).n}
 function pstInit(){
   /* ═════════ ENTREGA 121 · capa «Cultivo en España (PAC)» (antes, Entrega 120: solo pistacho) ═════════
      Cultivo declarado en la PAC (©FEGA / MAPA, CC-BY 4.0), preparado aparte por pac_capa.py en pac/<cultivo>-AAAA/.
-     Una sola capa con selector Pistacho / Almendro. Solo consulta: empieza apagada cada vez que se abre la app y solo
+     Una sola capa con selector Pistacho / Almendro / Olivar (Entrega 124). Solo consulta: empieza apagada cada vez que se abre la app y solo
      descarga con ella encendida (idx.json y los cuadros de recintos que se ven); no entra en tus datos, ni en las copias, ni
      en el modo sin conexión. De lejos, un círculo por municipio (tamaño según hectáreas; azul la parte de regadío y rojizo la
      de secano); desde el zoom ZP (pistacho 12, almendro 13), los recintos, por cuadros de 0,1° (como mucho PST_MAXC en
@@ -2409,7 +2414,7 @@ function pstMove(){
 function pstTrim(){
   /* como mucho PST_MAXC cuadros en memoria (PST_MAXPC en ordenador): se olvidan los que hace más que no se usan (se vuelven
      a bajar si hacen falta); nunca los que se están viendo (con un margen de un trozo de mapa alrededor), para que no se bajen una y otra vez */
-  var cap=pstPC()?PST_MAXPC:PST_MAXC, ks=Object.keys(pst().cel); if(ks.length<=cap)return;
+  var cap=pstPC()?((PST_CUL[pst().cul]||{}).maxpc||PST_MAXPC):PST_MAXC, ks=Object.keys(pst().cel); if(ks.length<=cap)return;
   var n=ks.length-cap, vis=pstVis();
   ks.filter(function(k){return !vis[k]}).sort(function(a,b){return pst().cel[a].t-pst().cel[b].t}).slice(0,n).forEach(function(k){delete pst().cel[k]});
 }
@@ -2861,7 +2866,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-04T14:43:03Z',n:'Entrega 123 · 4 nov · 15:43'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-04T17:49:26Z',n:'Entrega 124 · 4 nov · 18:49'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
