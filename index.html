@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-cfcgyzk581jKCuJJZFckKN6PAU25cqwG7cwJOGRhdIA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-uj2xASaQrh8UkIN+faOYXhnnLgMCnxsU5dezJHRguBw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -838,6 +838,7 @@ button.pill{cursor:pointer}
 #pstpill span{margin-left:10px;font-weight:600}#pstpill span:first-child{margin-left:0}
 .pstleg{display:flex;flex-wrap:wrap;gap:6px 14px;margin:8px 0 4px;font-size:13px;font-weight:600}
 .pstl{margin:6px 0 2px;font-size:13px;line-height:1.35}.pstl b{font-weight:700}
+.psttab{width:100%;border-collapse:collapse;margin:8px 0 2px;font-size:13px;font-variant-numeric:tabular-nums}.psttab th,.psttab td{padding:3px 4px;text-align:right;border-bottom:1px solid var(--line,rgba(127,127,127,.25))}.psttab th:first-child,.psttab td:first-child{text-align:left}.psttab th{font-weight:600;opacity:.75}.psttab tr.on td{font-weight:700}
 #warn{pointer-events:auto;background:var(--warn-bg);color:var(--warn-ink);border-radius:12px;padding:9px 12px;font-size:13px;font-weight:600;max-width:100%}
 #toast{align-self:stretch;display:flex;justify-content:center;pointer-events:none}
 #toast:empty{display:none}
@@ -2279,6 +2280,11 @@ function applyOv(norefresh){
 }
 function setOv(k,v){OV[k]=v;lsSet(KEYO,JSON.stringify(OV));applyOv();renderLayers()}
 var PST_CUL={pistacho:{n:'Pistacho',zp:12},almendro:{n:'Almendro',zp:13}};
+/* Entrega 122: en ordenador (pantalla ancha, ratón) los recintos se ven 3 zooms antes (almendro desde el 10, pistacho desde
+   el 9) y se guardan hasta PST_MAXPC cuadros; en el móvil, igual que antes (ZP y PST_MAXC) */
+function pstPC(){try{return !!(window.matchMedia&&window.matchMedia('(min-width:900px) and (hover:hover) and (pointer:fine)').matches)}catch(e){return false}}
+function pstZP(){return pst().ZP-(pstPC()?3:0)}
+var PST_MAXPC=250;
 function pst(){return pst.s||(pst.s={on:false,cul:'',flt:'',anio:2025,ZP:12,idx:null,mun:null,cw:null,cel:{},busy:{},nCel:0,err:'',lay:null,rt:0,col:{1:'#2f7df6',0:'#e5533d'}})}
 function pstN(){return (PST_CUL[pst().cul]||PST_CUL.pistacho).n}
 function pstInit(){
@@ -2297,7 +2303,7 @@ function pstInit(){
     if(g&&/^(todo|R|S)$/.test(g.flt))pst().flt=g.flt;
   }catch(e){}
   pst().ZP=PST_CUL[pst().cul].zp;
-  window.__pst={S:function(){return pst()},card:pstCardHTML,hit:pstHit,tog:pstToggle,cul:pstSetCul,mun:pstMunAt,draw:pstDraw};
+  window.__pst={S:function(){return pst()},card:pstCardHTML,hit:pstHit,tog:pstToggle,cul:pstSetCul,mun:pstMunAt,draw:pstDraw,zp:pstZP,pc:pstPC,munHTML:pstMunHTML,trim:pstTrim,vis:pstVis};
 }
 function pstSave(){lsSet('mapa-fincas:pac',JSON.stringify({cul:pst().cul,flt:pst().flt}))}
 function pstW(lng,lat){var s=Math.sin(lat*Math.PI/180);s=Math.max(-0.9999,Math.min(0.9999,s));return [(lng+180)/360*256,(0.5-Math.log((1+s)/(1-s))/(4*Math.PI))*256]}
@@ -2347,8 +2353,14 @@ function pstLoadIdx(){
     var cw={}; Object.keys(j.cb||{}).forEach(function(k){var b=j.cb[k],a=pstW(b[0]/1e4,b[3]/1e4),c=pstW(b[2]/1e4,b[1]/1e4);cw[k]={w:[a[0],a[1],c[0],c[1]],g:[b[0]/1e4,b[1]/1e4,b[2]/1e4,b[3]/1e4]}});
     pst().idx=j; pst().mun=mun; pst().mk=10/Math.sqrt(mx/1e4); pst().cw=cw;
     if(j.anio)pst().anio=j.anio; if(j.zp)pst().ZP=j.zp;
+    pstLoadRes();
   }).catch(function(e){if(e&&e.message==='otro cultivo')return;pst().err='No he podido descargar la capa de '+pstN().toLowerCase()+'. Comprueba la conexión y vuelve a encenderla.'})
     .then(function(){pst().busy.idx=false;pstPill();if(pst().lay)pst().lay.redraw();if($('#layers')&&!$('#layers').hidden)renderLayers();if(sel)renderCard()});
+}
+function pstLoadRes(){
+  /* hectáreas de todos los cultivos de la capa (para comparar en Capas sin cambiar el selector) */
+  var a=pst().anio; if(pst().res&&pst().res.anio===a||pst().busy.res)return; pst().busy.res=true;
+  fetch('pac/resumen-'+a+'.json').then(function(r){if(!r.ok)throw new Error(r.status);return r.json()}).then(function(j){pst().res=j;if($('#layers')&&!$('#layers').hidden)renderLayers()}).catch(function(){}).then(function(){pst().busy.res=false});
 }
 function pstLoadCel(k){
   var P=pst(); if(P.cel[k]||P.busy[k])return;
@@ -2368,7 +2380,7 @@ function pstLoadCel(k){
       var f={r:a[0],s:a[1],m2:a[2],w:w,b:b,raw:a[3],g:null};
       fs.push(f); (by[f.r]||(by[f.r]=[])).push(f);
     });
-    P.cel[k]={fs:fs,by:by,t:++P.nCel,ms:Math.round(performance.now()-t0)}; pstTrim();
+    P.cel[k]={fs:fs,by:by,v:j.v||{},t:++P.nCel,ms:Math.round(performance.now()-t0)}; pstTrim();
   }).catch(function(){}).then(function(){
     P.busy[k]=false; pstRedraw(k); if(sel)renderCard();
   });
@@ -2377,10 +2389,26 @@ function pstGeom(f){
   if(!f.g){var ll=f.raw.map(function(p){return p.map(function(r){return pstRing(r,1e5)})});f.g=ll.length===1?{type:'Polygon',coordinates:ll[0]}:{type:'MultiPolygon',coordinates:ll}}
   return f.g;
 }
+function pstVis(){
+  /* cuadros que tocan lo que se ve, con un margen de un trozo de mapa (256 px) alrededor: son los únicos que se bajan */
+  var V={};
+  try{var B=map.getPixelBounds(), z=map.getZoom(), key=z+':'+Math.round(B.min.x)+':'+Math.round(B.min.y)+':'+Math.round(B.max.x)+':'+Math.round(B.max.y);
+    if(pstVis.k===key&&pstVis.c===pst().cw)return pstVis.v;
+    var a=map.unproject([B.min.x-256,B.max.y+256],z), b=map.unproject([B.max.x+256,B.min.y-256],z);
+    pstCelIn(a.lng,a.lat,b.lng,b.lat,true).forEach(function(k){V[k]=1}); pstVis.k=key; pstVis.c=pst().cw; pstVis.v=V}catch(e){}
+  return V;
+}
+function pstMove(){
+  /* al terminar de mover el mapa: se bajan los cuadros que ahora se ven y faltan (los trozos guardados de antes se redibujan al llegar) */
+  if(!pst().on||!pst().cw||map.getZoom()<pstZP())return;
+  var V=pstVis(); for(var k in V)if(!pst().cel[k])pstLoadCel(k);
+}
 function pstTrim(){
-  /* como mucho PST_MAXC cuadros en memoria: se olvidan los que hace más que no se usan (se vuelven a bajar si hacen falta) */
-  var ks=Object.keys(pst().cel); if(ks.length<=PST_MAXC)return;
-  ks.sort(function(a,b){return pst().cel[a].t-pst().cel[b].t}).slice(0,ks.length-PST_MAXC).forEach(function(k){delete pst().cel[k]});
+  /* como mucho PST_MAXC cuadros en memoria (PST_MAXPC en ordenador): se olvidan los que hace más que no se usan (se vuelven
+     a bajar si hacen falta); nunca los que se están viendo (con un margen de un trozo de mapa alrededor), para que no se bajen una y otra vez */
+  var cap=pstPC()?PST_MAXPC:PST_MAXC, ks=Object.keys(pst().cel); if(ks.length<=cap)return;
+  var n=ks.length-cap, vis=pstVis();
+  ks.filter(function(k){return !vis[k]}).sort(function(a,b){return pst().cel[a].t-pst().cel[b].t}).slice(0,n).forEach(function(k){delete pst().cel[k]});
 }
 function pstCelIn(x0,y0,x1,y1,geo){
   var out=[], cw=pst().cw||{};
@@ -2410,9 +2438,9 @@ function pstDraw(cv,c,dpr){
   var g=cv.getContext('2d'), z=c.z, sc=Math.pow(2,z), ox=c.x*256/sc, oy=c.y*256/sc, ex=ox+256/sc, ey=oy+256/sc;
   g.setTransform(dpr,0,0,dpr,0,0);
   if(!pst().mun)return;
-  if(z<pst().ZP){pstDrawMun(g,ox,oy,ex,ey,sc,z);return}
-  var ks=pstCelIn(ox,oy,ex,ey), lw=z>=15?1.6:1;
-  ks.forEach(function(k){var d=pst().cel[k];if(d)d.t=++pst().nCel;else pstLoadCel(k)});
+  if(z<pstZP()){pstDrawMun(g,ox,oy,ex,ey,sc,z);return}
+  var ks=pstCelIn(ox,oy,ex,ey), lw=z>=15?1.6:1, far=z<12;
+  var VV=pstVis(); ks.forEach(function(k){var d=pst().cel[k];if(d)d.t=++pst().nCel;else if(VV[k])pstLoadCel(k)});
   [0,1].forEach(function(s){
     if(!pstOk(s))return;
     g.beginPath();
@@ -2420,16 +2448,18 @@ function pstDraw(cv,c,dpr){
       var d=pst().cel[k]; if(!d)return;
       d.fs.forEach(function(f){
         if(f.s!==s||f.b[0]>ex||f.b[2]<ox||f.b[1]>ey||f.b[3]<oy)return;
+        if(far){var bw=(f.b[2]-f.b[0])*sc, bh=(f.b[3]-f.b[1])*sc;if(bw<3&&bh<3){g.rect((f.b[0]-ox)*sc,(f.b[1]-oy)*sc,Math.max(1.5,bw),Math.max(1.5,bh));return}}
         for(var i=0;i<f.w.length;i++)for(var j=0;j<f.w[i].length;j++){var v=f.w[i][j];g.moveTo((v[0]-ox)*sc,(v[1]-oy)*sc);for(var e=2;e<v.length;e+=2)g.lineTo((v[e]-ox)*sc,(v[e+1]-oy)*sc);g.closePath()}
       });
     });
+    if(far){g.fillStyle=pst().col[s];g.globalAlpha=.85;g.fill();g.globalAlpha=1;return}
     g.fillStyle=pst().col[s]; g.globalAlpha=.38; g.fill('evenodd'); g.globalAlpha=.95; g.lineWidth=lw; g.strokeStyle=pst().col[s]; g.stroke(); g.globalAlpha=1;
   });
 }
 function pstTile(c,done){var cv=document.createElement('canvas'),dpr=Math.min(2,window.devicePixelRatio||1);cv.width=256*dpr;cv.height=256*dpr;pstQAdd({cv:cv,c:c,done:done});return cv}
 function pstApply(){
-  if(pst().on&&!pst().lay){pst().lay=new (L.GridLayer.extend({createTile:pstTile}))({zIndex:4,maxZoom:21,updateWhenIdle:true,attribution:'Cultivo PAC: ©FEGA / Ministerio de Agricultura, Pesca y Alimentación'}).addTo(map);pstLoadIdx()}
-  else if(!pst().on&&pst().lay){map.removeLayer(pst().lay);pst().lay=null}
+  if(pst().on&&!pst().lay){map.on('moveend',pstMove);pst().lay=new (L.GridLayer.extend({createTile:pstTile}))({zIndex:4,maxZoom:21,updateWhenIdle:true,attribution:'Cultivo PAC: ©FEGA / Ministerio de Agricultura, Pesca y Alimentación'}).addTo(map);pstLoadIdx()}
+  else if(!pst().on&&pst().lay){map.off('moveend',pstMove);map.removeLayer(pst().lay);pst().lay=null}
   pstPill();
 }
 function pstToggle(){
@@ -2444,7 +2474,8 @@ function pstPill(){
   var t=pstN()+' PAC '+pst().anio;
   if(pst().err)el.innerHTML=esc(t)+': sin conexión';
   else if(!pst().idx)el.innerHTML=esc(t)+': cargando…';
-  else el.innerHTML='<span>'+esc(t)+'</span>'+(pst().flt!=='S'?'<span><i style="background:'+pst().col[1]+'"></i>Regadío</span>':'')+(pst().flt!=='R'?'<span><i style="background:'+pst().col[0]+'"></i>Secano</span>':'');
+  else{var T=pst().idx.tot||{R:{m2:0},S:{m2:0}};
+    el.innerHTML='<span>'+esc(t)+'</span>'+(pst().flt!=='S'?'<span><i style="background:'+pst().col[1]+'"></i>Regadío '+nf(T.R.m2/1e4,0)+' ha</span>':'')+(pst().flt!=='R'?'<span><i style="background:'+pst().col[0]+'"></i>Secano '+nf(T.S.m2/1e4,0)+' ha</span>':'')}
   el.hidden=false;
 }
 function pstHTML(){
@@ -2459,9 +2490,11 @@ function pstHTML(){
   else{
     var T=pst().idx.tot||{R:{n:0,m2:0},S:{n:0,m2:0}};
     h+='<div class="pstleg"><span><i style="background:'+pst().col[1]+'"></i>Regadío · '+nf(T.R.m2/1e4,0)+' ha</span><span><i style="background:'+pst().col[0]+'"></i>Secano · '+nf(T.S.m2/1e4,0)+' ha</span></div>';
-    h+='<div class="small">'+nf(T.R.n+T.S.n,0)+' declaraciones de '+cn+' en la PAC '+pst().anio+' en toda España. De lejos, un círculo por municipio: más grande cuantas más hectáreas. Al acercarte, los recintos. Toca un círculo o un recinto para ver sus datos.</div>';
+    h+='<div class="small">'+nf(T.R.n+T.S.n,0)+' declaraciones de '+cn+' en la PAC '+pst().anio+' en toda España. De lejos, un círculo por municipio: más grande cuantas más hectáreas. Al acercarte, los recintos. Toca un círculo o un recinto para ver sus datos.'+(pst().idx.var?' La ficha del recinto dice la variedad declarada en 2022 en Castilla-La Mancha (Junta CLM); fuera de Castilla-La Mancha o en plantaciones posteriores sale «sin dato».':'')+'</div>';
+    var C=pst().res&&pst().res.c;
+    if(C)h+='<table class="psttab" aria-label="Hectáreas de cada cultivo"><tr><th>ha en España</th><th>Regadío</th><th>Secano</th><th>Total</th></tr>'+Object.keys(PST_CUL).filter(function(k){return C[k]}).map(function(k){var r=C[k].R.m2/1e4,s=C[k].S.m2/1e4;return '<tr'+(k===pst().cul?' class="on"':'')+'><td>'+esc(PST_CUL[k].n)+'</td><td>'+nf(r,0)+'</td><td>'+nf(s,0)+'</td><td>'+nf(r+s,0)+'</td></tr>'}).join('')+'</table>';
   }
-  h+='<div class="small" style="margin-top:4px">Fuente: ©FEGA / Ministerio de Agricultura, Pesca y Alimentación. Solo para consultar: no se guarda en tus datos ni sin conexión.</div></div>';
+  h+='<div class="small" style="margin-top:4px">Fuente: ©FEGA / Ministerio de Agricultura, Pesca y Alimentación'+(pst().idx&&pst().idx.vf?'; variedades: '+esc(pst().idx.vf.fuente)+' ('+pst().idx.vf.anio+')':'')+'. Solo para consultar: no se guarda en tus datos ni sin conexión.</div></div>';
   return h;
 }
 function pstCelRef(ref,geom){
@@ -2477,7 +2510,16 @@ function pstCardHTML(ref,geom){
   if(!l.length)return '';
   var m2=0, hayR=false, hayS=false; l.forEach(function(f){m2+=f.m2;if(f.s===1)hayR=true;else hayS=true});
   var sis=hayR&&hayS?'Regadío y secano':hayR?'Regadío':'Secano', col=pst().col[hayR&&!hayS?1:0];
-  return '<div class="pstl"><i style="background:'+col+'"></i>'+pstN()+' · PAC '+pst().anio+' · <b>'+sis+'</b> · '+ha4(m2/1e4)+' ha declaradas'+(l.length>1?' ('+l.length+' declaraciones)':'')+'</div>';
+  return '<div class="pstl"><i style="background:'+col+'"></i>'+pstN()+' · PAC '+pst().anio+' · <b>'+sis+'</b> · '+ha4(m2/1e4)+' ha declaradas'+(l.length>1?' ('+l.length+' declaraciones)':'')+'</div>'+pstVarHTML(ref,ks);
+}
+function pstPct(x){return x>0&&x<.01?'<1 %':nf(x*100,0)+' %'}
+function pstVarHTML(ref,ks){
+  /* Entrega 122: variedad del recinto según la tabla de la Junta de Castilla-La Mancha (declarado en 2022) */
+  var V=pst().idx.var; if(!V)return '';
+  var vv=null; ks.forEach(function(k){var d=pst().cel[k];if(d&&d.v&&d.v[ref])vv=d.v[ref]});
+  /* sin dato (fuera de Castilla-La Mancha o plantado después de 2022): se dice tal cual, en gris, para que no parezca un fallo */
+  if(!vv)return '<div class="pstl pstv" style="opacity:.7">Variedad: sin dato</div>';
+  return '<div class="pstl pstv">Variedad: '+(vv.length===1?'<b>'+esc(V[vv[0][0]]||'')+'</b>':vv.map(function(a){return '<b>'+esc(V[a[0]]||'')+'</b> '+nf(a[1]/1e4,2)+' ha'}).join(' · '))+' (Junta CLM 2022)</div>';
 }
 function pstMunAt(ll){
   /* el círculo de municipio bajo el dedo (de los pequeños, que se dibujan encima, a los grandes); margen de 8 px para tocar */
@@ -2494,7 +2536,7 @@ function pstMunAt(ll){
 function pstHit(ll){
   /* tocar el mapa sin recinto debajo: de lejos se abre el municipio del círculo; de cerca, el recinto declarado */
   if(!pst().on||!pst().idx)return false;
-  if(map.getZoom()<pst().ZP){
+  if(map.getZoom()<pstZP()){
     var m=pstMunAt(ll); if(!m)return false;
     sel=null; drawSel(); catCard={lat:m.lat,lng:m.lng,c:null,pst:m}; mark(m.lat,m.lng); renderCard(); renderChip();
     return true;
@@ -2518,10 +2560,18 @@ function pstMunHTML(m){
   h+='<span><i style="background:'+pst().col[1]+'"></i>Regadío · '+nf(m.R/1e4,2)+' ha · '+pstDecl(m.nR)+'</span>';
   h+='<span><i style="background:'+pst().col[0]+'"></i>Secano · '+nf(m.S/1e4,2)+' ha · '+pstDecl(m.nS)+'</span>';
   h+='<span style="font-weight:700">Total · '+nf((m.R+m.S)/1e4,2)+' ha</span></div>';
+  var V=pst().idx&&pst().idx.var, mv=V&&pst().idx.mv&&pst().idx.mv[m.p+'_'+m.m];
+  if(mv&&mv.length){
+    var tv=0, ot=0; mv.forEach(function(a,i){tv+=a[1];if(i>=6)ot+=a[1]});
+    h+='<div class="pstl" style="margin-top:10px"><b>Variedades</b> <span class="small">(Junta CLM 2022, lo declarado ese año)</span></div><div class="pstleg pstvar" style="flex-direction:column;gap:4px;font-weight:500">';
+    mv.slice(0,6).forEach(function(a){h+='<span>'+esc(V[a[0]]||'')+' · '+nf(a[1]/1e4,2)+' ha · '+pstPct(a[1]/tv)+'</span>'});
+    if(mv.length>6)h+='<span>Otras '+(mv.length-6)+' · '+nf(ot/1e4,2)+' ha · '+pstPct(ot/tv)+'</span>';
+    h+='</div>';
+  }
   h+='<div style="margin-top:8px"><button class="btn sm" data-act="pst-zoom">Ver los recintos</button></div>';
   return h;
 }
-function pstZoom(){if(catCard&&catCard.pst){var m=catCard.pst;map.setView([m.lat,m.lng],Math.max(map.getZoom(),pst().ZP))}}
+function pstZoom(){if(catCard&&catCard.pst){var m=catCard.pst;map.setView([m.lat,m.lng],Math.max(map.getZoom(),pstZP()))}}
 /* NDVI: imágenes Sentinel-2 (ESA) servidas por Esri, sin cuenta. 10 m por píxel. */
 var NDVIB='https://sentinel.arcgis.com/arcgis/rest/services/Sentinel2/ImageServer/', ndviLayer=null;
 var IDX={
@@ -2665,7 +2715,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-03T23:12:35Z',n:'Entrega 121 · 4 nov · 00:12'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-04T07:56:54Z',n:'Entrega 122 · 4 nov · 08:56'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
