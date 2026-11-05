@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-yl9oGpjIloc9VSv9LdowblEkCMVmye9vTLGTsabTn+Y='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-aLhCtYJtD5/5B7DCwhL8dwOMJsQrXBOwD6nU3im6Lo8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -2496,6 +2496,16 @@ function pstF(){
     for(var g in sl)gh[g]=(gh[g]||0)+sl[g][0]+sl[g][1];
   });
   F.gs.forEach(function(q){q.ha=(gh[q.k]||0)/1e4});
+  /* Entrega 128: con una parte marcada (algunas variedades, solo regadío o solo secano), el círculo del municipio va al
+     centro de lo marcado (idx.json: mun[9..12] y mvv[5..8] = x, y del regadío y del secano), no al de todo el cultivo */
+  F.parte=!!(F.von&&!F.all)||P.flt==='R'||P.flt==='S';
+  P.mun.forEach(function(m,i){
+    m.wx=m.x; m.wy=m.y; m.wlat=m.lat; m.wlng=m.lng; if(!F.parte)return;
+    var sx=0, sy=0, sw=0, su=function(x,y,w){if(x&&y&&w>0){sx+=x*w;sy+=y*w;sw+=w}};
+    if(F.von)(j.mvv&&j.mvv[i]||[]).forEach(function(a){if(!F.on[a[0]])return;if(F.okR)su(a[5],a[6],a[2]);if(F.okS)su(a[7],a[8],a[4])});
+    else{var a=j.mun[i]||[];if(F.okR)su(a[9],a[10],m.R);if(F.okS)su(a[11],a[12],m.S)}
+    if(sw>0){m.wlng=sx/sw/1e4;m.wlat=sy/sw/1e4;var w=pstW(m.wlng,m.wlat);m.wx=w[0];m.wy=w[1]}
+  });
   /* Entrega 127: con solo algunas variedades marcadas, círculos a escala de lo marcado (si no, una variedad poco
      plantada sale en puntos casi invisibles al compararla con el municipio con más pistacho de toda España) */
   if(F.von&&!F.all){var mx=0;P.mun.forEach(function(m){var h=m.fR+m.fS;if(h>mx)mx=h});if(mx>0){F.esc=true;F.mk=10/Math.sqrt(mx/1e4)}}
@@ -2544,7 +2554,7 @@ function pstDrawMun(g,ox,oy,ex,ey,sc,z){
   var M=pst().mun, F=pstF(); if(!M||!F)return;
   for(var i=0;i<M.length;i++){
     var m=M[i], r=pstR(m,z); if(!r)continue;
-    var x=(m.x-ox)*sc, y=(m.y-oy)*sc, lim=256+r;
+    var x=((m.wx!=null?m.wx:m.x)-ox)*sc, y=((m.wy!=null?m.wy:m.y)-oy)*sc, lim=256+r;
     if(x<-r||y<-r||x>lim||y>lim)continue;
     var R=m.fR, S=m.fS, a=-Math.PI/2, b=a+2*Math.PI*R/(R+S);
     if(F.multi){pstPie(g,x,y,r,m,F)}else{
@@ -2560,15 +2570,19 @@ function pstDraw(cv,c,dpr){
   g.setTransform(dpr,0,0,dpr,0,0);
   if(!pst().mun)return;
   if(z<pstZP()){pstDrawMun(g,ox,oy,ex,ey,sc,z);return}
-  var ks=pstCelIn(ox,oy,ex,ey), lw=z>=15?1.6:1, far=z<12;
+  /* Entrega 128: con una parte marcada, anillo en cada recinto pequeño durante los 2 primeros zooms de recintos (se
+     mira también un margen alrededor, para que el anillo de un recinto de la casilla de al lado no salga cortado) */
+  var F0=pstF(), ani=!!(F0&&F0.parte)&&z<pstZP()+2, mg=ani?80/sc:0, anis=[], aby={};
+  var ks=pstCelIn(ox-mg,oy-mg,ex+mg,ey+mg), lw=z>=15?1.6:1, far=z<12;
   var VV=pstVis(); ks.forEach(function(k){var d=pst().cel[k];if(d)d.t=++pst().nCel;else if(VV[k])pstLoadCel(k)});
   var F=pstF(), multi=!!(F&&F.von&&F.multi), B={}, ord=[], borde=[];
   ks.forEach(function(k){
     var d=pst().cel[k]; if(!d)return;
     d.fs.forEach(function(f){
-      if(!pstOk(f.s)||f.b[0]>ex||f.b[2]<ox||f.b[1]>ey||f.b[3]<oy)return;
+      if(!pstOk(f.s)||f.b[0]>ex+mg||f.b[2]<ox-mg||f.b[1]>ey+mg||f.b[3]<oy-mg)return;
       var gk=pstFV(f,F); if(gk===null)return;
       var col=multi?F.col[gk]:pst().col[f.s], key=f.s+'|'+col;
+      if(ani){var aq=aby[f.r];if(aq){aq[0]=Math.min(aq[0],f.b[0]);aq[1]=Math.min(aq[1],f.b[1]);aq[2]=Math.max(aq[2],f.b[2]);aq[3]=Math.max(aq[3],f.b[3])}else anis.push(aby[f.r]=[f.b[0],f.b[1],f.b[2],f.b[3],col])}
       if(!B[key]){B[key]={s:f.s,col:col,fs:[]};ord.push(key)}
       B[key].fs.push(f); if(F&&F.von&&f.vi&&f.vi.length>1)borde.push(f);
     });
@@ -2590,6 +2604,20 @@ function pstDraw(cv,c,dpr){
   });
   /* recinto con varias variedades: borde negro (la ficha las dice todas) */
   if(borde.length&&!far){camino(borde);g.lineWidth=lw+.8;g.strokeStyle='#111';g.globalAlpha=.9;g.stroke();g.globalAlpha=1}
+  /* anillos (uno por recinto, aunque venga en varios trozos), blanco y del color del recinto, solo en los recintos que se ven
+     pequeños (≤ 30 px) y apartados: con 3 o más recintos marcados a menos de 45 px ya se ven solos. Se cuentan también los
+     del margen (80 px), para que la casilla de al lado decida lo mismo */
+  if(anis.length){var cs=45, H={};
+    anis.forEach(function(q){q.x=((q[0]+q[2])/2-ox)*sc;q.y=((q[1]+q[3])/2-oy)*sc;var k=Math.floor(q.x/cs)+','+Math.floor(q.y/cs);(H[k]||(H[k]=[])).push(q)});
+    anis.forEach(function(q){
+      var w=(q[2]-q[0])*sc, h=(q[3]-q[1])*sc; if(w>30||h>30||q.x<-30||q.y<-30||q.x>286||q.y>286)return;
+      var n=0, cx=Math.floor(q.x/cs), cy=Math.floor(q.y/cs);
+      for(var a=-1;a<=1;a++)for(var b=-1;b<=1;b++)(H[(cx+a)+','+(cy+b)]||[]).forEach(function(o){if(o!==q&&Math.abs(o.x-q.x)<cs&&Math.abs(o.y-q.y)<cs)n++});
+      if(n>=3)return;
+      var r=Math.max(12,Math.sqrt(w*w+h*h)/2+5);
+      g.beginPath(); g.arc(q.x,q.y,r,0,6.2832); g.globalAlpha=1; g.lineWidth=3.5; g.strokeStyle='rgba(255,255,255,.95)'; g.stroke(); g.lineWidth=1.8; g.strokeStyle=q[4]; g.stroke();
+    });
+  }
 }
 function pstTile(c,done){var cv=document.createElement('canvas'),dpr=Math.min(2,window.devicePixelRatio||1);cv.width=256*dpr;cv.height=256*dpr;pstQAdd({cv:cv,c:c,done:done});return cv}
 function pstApply(){
@@ -2711,7 +2739,7 @@ function pstMunAt(ll){
   var z=map.getZoom(), sc=Math.pow(2,z), w=pstW(ll.lng,ll.lat), best=null, bd=1e9;
   for(var i=M.length-1;i>=0;i--){
     var m=M[i], r=pstR(m,z); if(!r)continue;
-    var d=Math.sqrt(Math.pow((m.x-w[0])*sc,2)+Math.pow((m.y-w[1])*sc,2));
+    var d=Math.sqrt(Math.pow(((m.wx!=null?m.wx:m.x)-w[0])*sc,2)+Math.pow(((m.wy!=null?m.wy:m.y)-w[1])*sc,2));
     if(d<=r)return m;
     if(d<=r+8&&d-r<bd){bd=d-r;best=m}
   }
@@ -2722,7 +2750,7 @@ function pstHit(ll){
   if(!pst().on||!pst().idx)return false;
   if(map.getZoom()<pstZP()){
     var m=pstMunAt(ll); if(!m)return false;
-    sel=null; drawSel(); catCard={lat:m.lat,lng:m.lng,c:null,pst:m}; mark(m.lat,m.lng); renderCard(); renderChip();
+    sel=null; drawSel(); var la=m.wlat||m.lat, ln=m.wlng||m.lng; catCard={lat:la,lng:ln,c:null,pst:m}; mark(la,ln); renderCard(); renderChip();
     return true;
   }
   var pt=[ll.lng,ll.lat], wp=pstW(pt[0],pt[1]), hit=null;
@@ -2755,7 +2783,7 @@ function pstMunHTML(m){
   h+='<div style="margin-top:8px"><button class="btn sm" data-act="pst-zoom">Ver los recintos</button></div>';
   return h;
 }
-function pstZoom(){if(catCard&&catCard.pst){var m=catCard.pst;map.setView([m.lat,m.lng],Math.max(map.getZoom(),pstZP()))}}
+function pstZoom(){if(catCard&&catCard.pst){var m=catCard.pst;map.setView([m.wlat||m.lat,m.wlng||m.lng],Math.max(map.getZoom(),pstZP()))}}
 /* NDVI: imágenes Sentinel-2 (ESA) servidas por Esri, sin cuenta. 10 m por píxel. */
 var NDVIB='https://sentinel.arcgis.com/arcgis/rest/services/Sentinel2/ImageServer/', ndviLayer=null;
 var IDX={
@@ -2899,7 +2927,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-05T06:43:56Z',n:'Entrega 127 · 5 nov · 07:43'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-05T07:19:24Z',n:'Entrega 128 · 5 nov · 08:19'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
