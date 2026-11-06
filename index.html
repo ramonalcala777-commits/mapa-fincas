@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-aLhCtYJtD5/5B7DCwhL8dwOMJsQrXBOwD6nU3im6Lo8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-6xaTSz3OqBPg1jwAdQwMFde1LHsy8d+LciTWZ6CcPdk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -1789,12 +1789,90 @@ var BASES={
   esri:{name:'Satélite Esri',url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',att:'Imagen © Esri',nat:19},
   esrin:{name:'Satélite Esri con nombres',url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',over:'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',overNat:18,att:'Imagen © Esri',nat:19},
   esrih:{name:'Satélite Esri histórico',url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',att:'Imagen © Esri',nat:19,wb:true},
+  ignh:{name:'Foto aérea histórica (IGN)',url:'https://www.ign.es/wms/pnoa-historico',att:'Imagen © IGN',nat:19,hist:true},
   hibrido:{name:'Foto aérea con nombres',url:wm('pnoa-ma','OI.OrthoimageCoverage','image/jpeg'),over:wm('ign-base','IGNBaseOrto','image/png'),att:'Imagen © PNOA · IGN',nat:19,ph:true},
   ign:{name:'Mapa base IGN',url:wm('ign-base','IGNBaseTodo','image/jpeg'),att:'Mapa © IGN',nat:19},
   topo:{name:'Topográfico IGN',url:wm('mapa-raster','MTN','image/jpeg'),att:'Mapa © IGN',nat:17},
   osm:{name:'Callejero OpenStreetMap',url:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',att:'© OpenStreetMap',nat:19}
 };
-var BORDER=['pnoa','esri','hibrido','esrin','esrih','ign','topo','osm'];
+var BORDER=['pnoa','esri','hibrido','esrin','esrih','ignh','ign','topo','osm'];
+/* Entrega 129: fotos aéreas históricas del IGN (WMS «pnoa-historico»): vuelo americano 1956–57, Interministerial 1973–86,
+   Nacional 1981–86, OLISTAT 1997–98, SIGPAC 1997–2003 y PNOA 2004–2024 (cada zona se vuela cada 2–3 años).
+   IH.sel = capa elegida (se recuerda en este aparato). IH.ok = {capa:true/false} para el centro del mapa (null = sin comprobar).
+   Sin foto en una zona, el IGN no da error: devuelve una imagen lisa. Por eso se pide un cuadro de 16 × 16 píxeles de cada vuelo
+   y se mira si es liso. Si el navegador no deja leerlo (o falla más de la mitad), se enseñan todos los años. */
+var IHWMS='https://www.ign.es/wms/pnoa-historico';
+var IHL=[{k:'AMS_1956-1957',s:'1956–57 · Americano',n:'Vuelo americano (serie B) 1956–57, blanco y negro'},
+  {k:'Interministerial_1973-1986',s:'1973–86 · Interministerial',n:'Vuelo Interministerial 1973–86'},
+  {k:'Nacional_1981-1986',s:'1981–86 · Nacional',n:'Vuelo Nacional 1981–86'},
+  {k:'OLISTAT',s:'1997–98 · OLISTAT',n:'Vuelo OLISTAT 1997–98'},
+  {k:'SIGPAC',s:'1997–2003 · SIGPAC',n:'Vuelo SIGPAC 1997–2003'}];
+(function(){for(var y=2004;y<=2024;y++)IHL.push({k:'PNOA'+y,s:'PNOA '+y,n:'PNOA '+y})})();
+var IH={sel:'',ok:null,unk:false,key:'',busy:false,seq:0,t:0,warned:''};
+function ihItem(k){for(var i=0;i<IHL.length;i++)if(IHL[i].k===k)return IHL[i];return null}
+function ihIdx(k){for(var i=0;i<IHL.length;i++)if(IHL[i].k===k)return i;return -1}
+try{IH.sel=localStorage.getItem('mf_ihy')||''}catch(e){}
+if(!ihItem(IH.sel))IH.sel=IHL[0].k;
+/* vuelos que se ofrecen en la zona del centro del mapa (todos si no se ha podido comprobar) */
+function ihList(){return IHL.filter(function(x){return !IH.ok||IH.ok[x.k]!==false})}
+function ihUrl(k,bb,srs,w,h,fmt){return IHWMS+'?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS='+encodeURIComponent(k)+'&STYLES=&SRS='+srs+'&BBOX='+bb.join(',')+'&WIDTH='+w+'&HEIGHT='+h+'&FORMAT='+fmt}
+/* ¿imagen lisa (sin foto)? src = dataURL o Blob. Si no se puede leer, se da por buena (false) */
+function ihBlank(src){
+  var isB=typeof src!=='string', u=isB?URL.createObjectURL(src):src;
+  return new Promise(function(res){
+    var im=new Image(), end=function(r){if(isB)URL.revokeObjectURL(u);res(r)};
+    im.onload=function(){var r=false;try{var cv=document.createElement('canvas');cv.width=16;cv.height=16;var cx=cv.getContext('2d');cx.drawImage(im,0,0,16,16);var d=cx.getImageData(0,0,16,16).data,mn=255,mx=0,a=0;for(var i=0;i<d.length;i+=4){var v=(d[i]+d[i+1]+d[i+2])/3;if(v<mn)mn=v;if(v>mx)mx=v;if(d[i+3]>8)a++}r=a===0||mx-mn<3}catch(e){}end(r)};
+    im.onerror=function(){end(false)}; im.src=u;
+  });
+}
+function ihCheck(force){
+  if(S.base!=='ignh'||BKUP||OFF.on||!map._loaded)return;
+  var c=map.getCenter(), key=c.lat.toFixed(2)+','+c.lng.toFixed(2);
+  if(key===IH.key&&!force)return; IH.key=key; var seq=++IH.seq; IH.busy=true;
+  var m=L.CRS.EPSG3857.project(c), r=200, bb=[m.x-r,m.y-r,m.x+r,m.y+r].map(function(v){return v.toFixed(1)}), ok={}, bad=0, i=0;
+  var one=function(){
+    if(seq!==IH.seq||i>=IHL.length)return Promise.resolve();
+    var it=IHL[i++];
+    return fetchBlobT(ihUrl(it.k,bb,'EPSG:3857',16,16,'image/png'),12000,/^image\//).then(ihBlank).then(function(e){ok[it.k]=!e},function(){bad++}).then(one);
+  };
+  Promise.all([one(),one(),one(),one()]).then(function(){
+    if(seq!==IH.seq)return;
+    IH.busy=false; IH.unk=bad>IHL.length/2; IH.ok=IH.unk?null:ok;
+    if(IH.ok&&IH.ok[IH.sel]===false&&ihList().length&&IH.warned!==key&&S.base==='ignh'){IH.warned=key;var hi=ihItem(IH.sel);toast('En esta zona no hay foto de '+hi.s+'. En Capas salen los años que sí hay.')}
+    if($('#layers')&&!$('#layers').hidden)renderLayers();
+  });
+}
+function ihSoon(){if(S.base!=='ignh')return;if(IH.t)clearTimeout(IH.t);IH.t=setTimeout(function(){IH.t=0;ihCheck()},900)}
+function ihSet(k){
+  if(!ihItem(k))return; IH.sel=k; try{localStorage.setItem('mf_ihy',k)}catch(e){}
+  /* se cambia solo la capa pedida al IGN (sin quitar y poner el fondo: más suave y sin parpadeo) */
+  if(S.base==='ignh'&&!BKUP){
+    if(baseLayer&&baseLayer.setParams&&baseLayer.wmsParams){var hi=ihItem(k), na='Imagen © IGN · '+hi.s, ac=map.attributionControl;
+      try{if(ac){ac.removeAttribution(baseLayer.options.attribution);ac.addAttribution(na)}}catch(e){}
+      baseLayer.options.attribution=na; ESD.base=na; baseLayer.setParams({layers:k})}
+    else mountBase('ignh');
+  }
+  if($('#layers')&&!$('#layers').hidden)renderLayers();
+}
+/* ◀ vuelo anterior / ▶ siguiente, entre los que hay en la zona */
+function ihNb(older){
+  var ci=ihIdx(IH.sel), l=ihList(), r=null;
+  l.forEach(function(x){var j=ihIdx(x.k); if(older?(j<ci&&(!r||j>ihIdx(r.k))):(j>ci&&(!r||j<ihIdx(r.k))))r=x});
+  return r;
+}
+function ihStep(older){var n=ihNb(older);if(n)ihSet(n.k)}
+function ihHTML(){
+  var cur=ihItem(IH.sel)||IHL[0], l=ihList(), opts=l.slice();
+  if(opts.indexOf(cur)<0){opts.push(cur);opts.sort(function(a,b){return ihIdx(a.k)-ihIdx(b.k)})}
+  var pv=ihNb(true), nx=ihNb(false), no=IH.ok&&IH.ok[cur.k]===false;
+  var h='<div class="ndrow" style="margin:8px 0 2px"><button class="btn sm" data-act="ih-step" data-d="older" aria-label="Vuelo anterior"'+(pv?'':' disabled')+'>◀</button>';
+  h+='<select id="ih-year" class="in" style="min-height:42px" aria-label="Año de la foto histórica">'+opts.map(function(x){return '<option value="'+x.k+'"'+(x===cur?' selected':'')+'>'+esc(x.s+(IH.ok&&IH.ok[x.k]===false?' (sin foto aquí)':''))+'</option>'}).join('')+'</select>';
+  h+='<button class="btn sm" data-act="ih-step" data-d="newer" aria-label="Vuelo siguiente"'+(nx?'':' disabled')+'>▶</button></div>';
+  var st=no?'<b>En esta zona no hay foto de este vuelo</b>: elige otro año.':IH.busy&&!IH.ok?'Mirando qué años hay en esta zona…':IH.unk?'No he podido comprobar qué años hay en esta zona: salen todos (si uno no tiene foto, el mapa se ve liso).':IH.ok?'En esta zona hay '+l.length+' vuelos.':'';
+  h+='<div class="small" id="ih-note" style="margin-bottom:8px">'+esc(cur.n)+' · © IGN. '+st+'</div>';
+  return h;
+}
+
 /* Entrega 31: Esri Wayback = versiones guardadas del satélite de Esri. WBK.list = [{rel,date,y,url,meta}] (ordenadas por fecha); WBK.years = [{y,it}] (la última versión de cada año) */
 var WBK={list:null,years:null,err:'',busy:false,sel:0,p:null};
 var WBCFG='https://s3-us-west-2.amazonaws.com/config.maptiles.arcgis.com/waybackconfig.json';
@@ -2203,7 +2281,9 @@ function mountBase(k){
   if(overLayer){map.removeLayer(overLayer);overLayer=null}
   var b=BASES[k], bu=b.url, ba=b.att, wi=b.wb&&WBK.list?wbItem(WBK.sel):null;
   if(wi){bu=wi.url;ba='Imagen © Esri · versión del '+wbFmt(wi.date)}
-  ESD.base=ba; baseLayer=L.tileLayer(bu,{maxNativeZoom:b.nat,maxZoom:21,attribution:ba}).addTo(map);
+  if(b.hist){var hi=ihItem(IH.sel)||IHL[0];ba='Imagen © IGN · '+hi.s;baseLayer=L.tileLayer.wms(IHWMS,{layers:hi.k,format:'image/jpeg',version:'1.1.1',styles:'',tileSize:512,maxZoom:21,attribution:ba})}
+  else baseLayer=L.tileLayer(bu,{maxNativeZoom:b.nat,maxZoom:21,attribution:ba});
+  ESD.base=ba; baseLayer.addTo(map);
   if(b.over)overLayer=L.tileLayer(b.over,{maxNativeZoom:b.overNat||19,maxZoom:21,zIndex:2}).addTo(map);
   var me=baseLayer;
   baseLayer.on('loading',function(){BKS.e=0;BKS.ok=0});
@@ -2248,10 +2328,12 @@ function esdFetch(){
 }
 function esdSoon(){if(ESD.t)clearTimeout(ESD.t);ESD.t=setTimeout(function(){ESD.t=0;esdFetch()},700)}
 map.on('moveend',esdSoon);
+map.on('moveend',ihSoon);
 function setBase(k,quiet){
   if(!BASES[k])k='pnoa';
   BKUP=null; OFF.bk=null; if(bkT){clearInterval(bkT);bkT=null}
   mountBase(k); S.base=k; var b=BASES[k]; if(!quiet){save();toast(b.name)} esdSoon();
+  if(b.hist){IH.key='';ihSoon()}
   if(b.wb&&!WBK.list)wbLoad().then(function(){if(S.base==='esrih'&&!BKUP){mountBase('esrih');if($('#layers')&&!$('#layers').hidden)renderLayers()}},function(){if($('#layers')&&!$('#layers').hidden)renderLayers();toast('No he podido leer la lista de años de Esri ('+WBK.err+'). Se ve la foto actual.')});
 }
 /* reserva automática: si el IGN no responde (nada carga y hay errores), se ve Esri/OSM sin cambiar tu elección */
@@ -2927,7 +3009,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-05T07:19:24Z',n:'Entrega 128 · 5 nov · 08:19'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-06T22:31:55Z',n:'Entrega 129 · 6 nov · 23:31'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -2961,6 +3043,7 @@ function renderLayers(){
   h+='<div class="lgrid">';
   BORDER.forEach(function(k){h+='<button class="lopt'+(S.base===k?' on':'')+'" data-act="base-set" data-k="'+k+'"><i class="rd"></i>'+esc(BASES[k].name)+'</button>'});
   h+='</div>';
+  if(S.base==='ignh'&&!BKUP)h+=ihHTML();
   if(S.base==='esrih'&&!BKUP){
     if(WBK.years&&WBK.years.length){
       var wi=wbItem(WBK.sel);
@@ -12799,12 +12882,14 @@ function renderRec(){
   el.innerHTML=h; el.hidden=false;
 }
 /* Entrega 23: petición al IGN con tiempo máximo (ms) y reintentos. Con ms (planos), un error 5xx o un tiempo agotado NO se reintenta: el servidor ya ha esperado */
-function wmsBlobR(bb,w,h,n,ms,i){i=i||0;return wmsBlob(bb,w,h,ms).catch(function(e){var dead=ms&&netDead(e); if(i>=n||dead)throw e;return new Promise(function(r){setTimeout(r,i?500:0)}).then(function(){return wmsBlobR(bb,w,h,n,ms,i+1)})})}
+function wmsBlobR(bb,w,h,n,ms,i,lay){i=i||0;return wmsBlob(bb,w,h,ms,lay).catch(function(e){var dead=ms&&netDead(e); if(i>=n||dead)throw e;return new Promise(function(r){setTimeout(r,i?500:0)}).then(function(){return wmsBlobR(bb,w,h,n,ms,i+1,lay)})})}
 function fetchBlobT(u,ms,okRe){
   var ac=ms&&typeof AbortController!=='undefined'?new AbortController():null, t=ac?setTimeout(function(){ac.abort()},ms):0, done=function(){if(t)clearTimeout(t)};
   return fetch(u,ac?{signal:ac.signal}:undefined).then(function(r){if(!r.ok){var e=new Error(r.status);e.st=r.status;throw e}return r.blob()}).then(function(bl){done();if(!okRe.test(bl.type))throw new Error('tipo');return bl},function(e){done();throw e});
 }
-function wmsBlob(bb,wpx,hpx,ms){
+/* Entrega 129: con lay, foto histórica del IGN (pnoa-historico) de esa capa */
+function wmsBlob(bb,wpx,hpx,ms,lay){
+  if(lay)return fetchBlobT(ihUrl(lay,[bb.minx,bb.miny,bb.maxx,bb.maxy].map(function(v){return v.toFixed(3)}),'EPSG:25830',wpx,hpx,'image/jpeg'),ms,/image\/jpeg/);
   var u='https://www.ign.es/wms-inspire/pnoa-ma?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=OI.OrthoimageCoverage&STYLES=&SRS=EPSG:25830&BBOX='+[bb.minx,bb.miny,bb.maxx,bb.maxy].map(function(v){return v.toFixed(3)}).join(',')+'&WIDTH='+wpx+'&HEIGHT='+hpx+'&FORMAT=image/jpeg';
   return fetchBlobT(u,ms,/image\/jpeg/);
 }
@@ -12822,7 +12907,7 @@ function wmsParts(bb,wpx,hpx,onProg,opt){
   var one=function(){
     if(stop||k>=jobs.length)return Promise.resolve();
     var i=k++, jb=jobs[i];
-    var get=function(){return wmsBlobR(jb.bb,jb.w,jb.h,RT,opt&&opt.ms)};
+    var get=function(){return wmsBlobR(jb.bb,jb.w,jb.h,RT,opt&&opt.ms,0,opt&&opt.lay)};
     return get().then(function(bl){jb.blob=bl;out[i]=jb;done++;if(onProg)onProg(done,jobs.length)},function(e){stop=true;throw e}).then(one);
   };
   return Promise.all([one(),one(),one()]).then(function(){return out});
@@ -12840,7 +12925,7 @@ function wmsStitch(parts,wpx,hpx){
 /* devuelve un blob JPEG (asData=false) o un dataURL (asData=true) de toda la zona */
 function wmsImage(bb,wpx,hpx,asData,onProg,opt){
   var TL=(opt&&opt.tile)||WTILE;
-  if(wpx<=TL&&hpx<=TL)return (opt&&opt.retries?wmsBlobR(bb,wpx,hpx,opt.retries,opt.ms):wmsBlob(bb,wpx,hpx)).then(function(bl){return asData?blobDataURL(bl):bl});
+  if(wpx<=TL&&hpx<=TL)return (opt&&opt.retries?wmsBlobR(bb,wpx,hpx,opt.retries,opt.ms,0,opt.lay):wmsBlob(bb,wpx,hpx,0,opt&&opt.lay)).then(function(bl){return asData?blobDataURL(bl):bl});
   return wmsParts(bb,wpx,hpx,onProg,opt).then(function(parts){return wmsStitch(parts,wpx,hpx)}).then(function(cv){
     if(asData)return cv.toDataURL('image/jpeg',.92);
     return new Promise(function(res,rej){cv.toBlob(function(b){b?res(b):rej(new Error('jpg'))},'image/jpeg',.92)});
@@ -12870,7 +12955,7 @@ function esriImage(ext,wpx,hpx,T,nocap){
 function netDead(e){return !!(e&&(e.st>=500||e.name==='AbortError'||(!e.st&&e.message!=='tipo'&&e.message!=='img'&&e.message!=='canvas'&&e.message!=='jpg')))}
 /* Entrega 31: foto de Esri Wayback para los planos. Wayback solo sirve teselas Web Mercator (EPSG:3857); el plano está en UTM 30N (EPSG:25830).
    Se bajan las teselas que cubren la zona, se unen en un mosaico y se reproyecta aquí mismo: para cada píxel del plano se calcula dónde cae en el mosaico (red de puntos cada 16 px, interpolada) y se toma el color con interpolación bilineal. */
-var PHREL=null, PHESRI=false;
+var PHREL=null, PHESRI=false, PHLAY='';
 function wbMerc(lon,lat,z){var n=256*Math.pow(2,z), r=lat*Math.PI/180; return [(lon+180)/360*n,(1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*n]}
 function wbGrid(ext,W,H,z,mx0,my0,step){
   step=step||16; var nx=Math.ceil(W/step)+1, ny=Math.ceil(H/step)+1, px=new Float64Array(nx*ny), py=new Float64Array(nx*ny), dx=(ext.maxx-ext.minx)/W, dy=(ext.maxy-ext.miny)/H;
@@ -12992,6 +13077,11 @@ function planFoto(ext,wpx,hpx,skip,prog){
     return wbImage(it0,ext,wpx,hpx,function(d,t){prog('foto de Esri '+it0.y+', trozo '+d+' de '+t)}).then(function(u){return wbCapDate(it0,ext).then(function(dt){return {url:u,src:'esri',wb:it0,date:dt,chosen:true}})},function(e){return {url:null,src:null,why:'Esri '+it0.y+': '+whyErr(e)}});
   }
   if(PHESRI){IGNWHY='no se ha usado (elegiste Esri)';return planEsri(ext,wpx,hpx,prog)}
+  /* Entrega 129: foto histórica del IGN elegida: si falla o ese vuelo no tiene foto en la zona, el plano sale sin foto y se avisa */
+  if(PHLAY){var hi=ihItem(PHLAY)||{k:PHLAY,s:PHLAY};
+    var ih=function(tile){prog('foto histórica del IGN ('+hi.s+')');return wmsImage(ext,wpx,hpx,true,function(d,t){prog('foto histórica del IGN, '+d+' de '+t)},{tile:tile,retries:1,ms:20000,lay:hi.k})};
+    return ih(2048).catch(function(e){if(netDead(e)||!(wpx>1536||hpx>1536))throw e;return ih(1024)}).then(function(u){return ihBlank(u).then(function(bl){return bl?{url:null,src:null,why:'el IGN no tiene foto de '+hi.s+' en esta zona'}:{url:u,src:'ign',hist:hi,chosen:true}})},function(e){return {url:null,src:null,why:'IGN '+hi.s+': '+whyErr(e)}});
+  }
   var big=wpx>1536||hpx>1536, isDead=netDead;
   var ign=function(tile){prog('foto del IGN');return wmsImage(ext,wpx,hpx,true,function(d,t){prog('foto del IGN, '+d+' de '+t)},{tile:tile,retries:1,ms:15000}).then(function(u){return {url:u,src:'ign'}})};
   var first=IGNDOWN?Promise.reject(Object.assign(new Error('down'),{st:599,again:1})):ign(2048);
@@ -13122,7 +13212,7 @@ function wmsStitchScaled(tiles,bytes,wpx,hpx,sc){
   return one().then(function(){return new Promise(function(res,rej){cv.toBlob(function(b){b?res({blob:b,w:rw,h:rh}):rej(new Error('jpg'))},'image/jpeg',.9)})});
 }
 /* Entrega 32: origen de la foto ZIP. v: 0 = PNOA (IGN), -1 = Esri actual, año = Esri de esa versión guardada */
-function photoSrc(v){v=+v||0; if(v>0&&WBK.list){var it=wbItem(v); if(it)return {k:'wb',it:it}} if(v===-1)return {k:'esri'}; return {k:'ign'}}
+function photoSrc(v,hl){if(hl&&ihItem(hl))return {k:'ignh',lay:hl,hi:ihItem(hl)}; v=+v||0; if(v>0&&WBK.list){var it=wbItem(v); if(it)return {k:'wb',it:it}} if(v===-1)return {k:'esri'}; return {k:'ign'}}
 function photoFiles(b,name,withDxf,jpg,srcSpec){
   srcSpec=srcSpec||{k:'ign'};
   var mpp=Math.max(srcSpec.k==='ign'?.25:.5,Math.max(b.w,b.h)/(WTILE*6)); mpp=Math.ceil(mpp*1000)/1000;
@@ -13188,6 +13278,7 @@ function photoFiles(b,name,withDxf,jpg,srcSpec){
   P.creditLines=function(){
     var k=P.eff(), f6d=P.date?' · foto de '+P.date:'';
     if(k==='ign')return ['Imagen: ortofoto PNOA © Instituto Geográfico Nacional (CC BY 4.0). Cita: «PNOA © Instituto Geográfico Nacional».'];
+    if(k==='ignh')return ['Imagen: foto aérea histórica del IGN, '+P.src.hi.n+' © Instituto Geográfico Nacional (CC BY 4.0). Cita: «PNOA histórico © Instituto Geográfico Nacional».'];
     var it=P.capIt, l=[];
     if(it)l.push('Imagen: © Esri · versión guardada del '+wbFmt(it.date)+' (año '+it.y+')'+f6d+'.');
     else l.push('Imagen: © Esri (World Imagery), versión actual.');
@@ -13197,7 +13288,7 @@ function photoFiles(b,name,withDxf,jpg,srcSpec){
     return l;
   };
   P.noteTxt=function(){
-    var k=P.eff(); if(k==='ign')return '';
+    var k=P.eff(); if(k==='ign'||k==='ignh')return '';
     return (P.fell?'El IGN no respondía: la foto es de Esri':'La foto es de Esri'+(P.capIt?' (versión del '+wbFmt(P.capIt.date)+')':' (actual)'))+', con menos detalle que el PNOA y condiciones de uso más restrictivas.';
   };
   P.cap=function(){return P.capIt?wbCapDate(P.capIt,bb).then(function(d){P.date=d}):Promise.resolve()};
@@ -13205,6 +13296,7 @@ function photoFiles(b,name,withDxf,jpg,srcSpec){
   P.img=function(bbX,w,h,onp){
     var k=P.eff();
     if(k==='ign')return wmsImage(bbX,w,h,false,onp).then(blobBytes);
+    if(k==='ignh')return wmsImage(bbX,w,h,false,onp,{lay:P.src.lay}).then(function(bl){return ihBlank(bl).then(function(e){if(e)throw Object.assign(new Error('vacia'),{why:'el IGN no tiene foto de '+P.src.hi.s+' en esta zona'});return blobBytes(bl)})});
     if(k==='wb')return wbImage(P.src.it,bbX,w,h,onp,true).then(d2u8);
     return planEsri(bbX,w,h,null,true).then(function(ph){if(!ph.url)throw Object.assign(new Error('esri'),{why:ph.why});if(ph.wb)P.capIt=ph.wb;return d2u8(ph.url)});
   };
@@ -13215,7 +13307,7 @@ function photoFiles(b,name,withDxf,jpg,srcSpec){
     var k=0,done=0,out=new Array(tiles.length);
     var one=function(){
       if(k>=tiles.length)return Promise.resolve();
-      var i=k++, t=tiles[i], get=function(n){return (P.eff()==='ign'?wmsBlob(t.bb,t.w,t.h).then(blobBytes):P.img(t.bb,t.w,t.h)).catch(function(e){if(n<1&&P.eff()==='ign'&&!netDead(e))return get(n+1);throw e})};
+      var i=k++, t=tiles[i], ig=P.eff()==='ign'||P.eff()==='ignh', get=function(n){return (ig?wmsBlob(t.bb,t.w,t.h,0,P.eff()==='ignh'?P.src.lay:'').then(blobBytes):P.img(t.bb,t.w,t.h)).catch(function(e){if(n<1&&ig&&!netDead(e))return get(n+1);throw e})};
       return get(0).then(function(by){out[i]=by;done++;if(onProg)onProg(done,tiles.length,'foto')}).then(one);
     };
     return Promise.all([one(),one(),one()]).then(function(){
@@ -13554,7 +13646,8 @@ function planoBuild(name,G,ext,rowsIn,imgUrl,opt){
   doc.setFillColor(255,255,255); doc.rect(bx-lft,by-4.3,bl+lft+rgt,7.4,'F');
   var seg=4; for(var s=0;s<seg;s++){doc.setFillColor(s%2?255:23,s%2?255:33,s%2?255:38); doc.rect(bx+s*bl/seg,by,bl/seg,2,'F')} doc.setDrawColor(23,33,38); doc.setLineWidth(.2); doc.rect(bx,by,bl,2);
   doc.setFont(pdfFont(doc),'normal'); doc.setFontSize(7); doc.setTextColor(23,33,38); doc.text('0',bx,by-1.2,{align:'center'}); doc.text(lenTxt,bx+bl,by-1.2,{align:'center'});
-  var cr=(op.esri?'Imagen © Esri'+(op.esriNote?' · '+op.esriNote:''):'Imagen © PNOA · Instituto Geográfico Nacional')+' · Recintos © SIGPAC · FEGA / MAPA';
+  var hiC=PHLAY&&imgUrl&&!op.esri?ihItem(PHLAY):null;
+  var cr=(op.esri?'Imagen © Esri'+(op.esriNote?' · '+op.esriNote:''):hiC?'Imagen © Instituto Geográfico Nacional · foto histórica: '+hiC.n:'Imagen © PNOA · Instituto Geográfico Nacional')+' · Recintos © SIGPAC · FEGA / MAPA';
   doc.setFont(pdfFont(doc),'normal'); doc.setFontSize(6*Math.max(G.k||1,.8)); var tc=doc.getTextWidth(cr), cy=(tc+4<=room)?CJ.bot-1.3:CJ.top-1.3;
   dxLy(doc,'CREDITOS'); doc.setFillColor(255,255,255); doc.rect(M,cy-2.6,tc+3,3.6,'F'); doc.setTextColor(90,100,80); doc.text(cr,M+1.5,cy); doc.setTextColor(23,33,38);
   if(DX){op.dxf.out=DX.finish();op.dxf.n=DX.count();op.dxf.layers=DX.layers()}
@@ -13581,7 +13674,7 @@ function recPlano(){
 
 /* ---- asistente de descargas (Herramientas) ---- */
 var dwPick=false;
-var dl={allRecs:false,step:1,src:'fincas',fincas:{},owners:{},recs:null,zone:null,f:{plano:true},split:false,title:'',titleEdited:false,paper:'a4',orient:'auto',zones:false,zkm:1,scale:-1,wbYear:0,busy:'',prog:''};
+var dl={allRecs:false,step:1,src:'fincas',fincas:{},owners:{},recs:null,zone:null,f:{plano:true},split:false,title:'',titleEdited:false,paper:'a4',orient:'auto',zones:false,zkm:1,scale:-1,wbYear:0,hLay:'',busy:'',prog:''};
 var DWF=[
   ['plano','Plano en PDF','Foto aérea con los recintos dibujados, a escala (A4 o A3). Para imprimir.'],
   ['dxfplano','Plano editable en DXF (AutoCAD / ZWCAD)','El plano completo en capas (recintos, textos, cuadrícula, cajetines, leyenda, escala) con la foto aparte. Para editar a mano.'],
@@ -13788,15 +13881,18 @@ function renderDw(){
       h+='<div class="lbl">Foto de fondo</div>';
       if(!WBK.list&&!WBK.busy&&!WBK.err)wbLoad().then(function(){if(dl.step===2)renderDw()},function(){if(dl.step===2)renderDw()});
       var wp=dl.f.plano||dl.f.dxfplano;
-      var opts0='<option value="0"'+(!dl.wbYear?' selected':'')+'>La más reciente (PNOA del IGN)</option><option value="-1"'+(dl.wbYear===-1?' selected':'')+'>Esri actual</option>';
+      /* Entrega 129: vuelos históricos del IGN (valor «h:capa») entre el PNOA y Esri */
+      var opts0='<option value="0"'+(!dl.wbYear&&!dl.hLay?' selected':'')+'>La más reciente (PNOA del IGN)</option><optgroup label="Fotos históricas del IGN">'+IHL.map(function(x){return '<option value="h:'+x.k+'"'+(dl.hLay===x.k?' selected':'')+'>IGN · '+esc(x.s)+'</option>'}).join('')+'</optgroup><optgroup label="Esri"><option value="-1"'+(dl.wbYear===-1?' selected':'')+'>Esri actual</option>';
       if(WBK.years&&WBK.years.length){
-        h+='<div class="row"><select id="dw-wby" class="in" aria-label="Foto de fondo">'+opts0+WBK.years.slice().reverse().map(function(x){return '<option value="'+x.y+'"'+(dl.wbYear===x.y?' selected':'')+'>Esri · año '+x.y+'</option>'}).join('')+'</select></div>';
+        h+='<div class="row"><select id="dw-wby" class="in" aria-label="Foto de fondo">'+opts0+WBK.years.slice().reverse().map(function(x){return '<option value="'+x.y+'"'+(dl.wbYear===x.y?' selected':'')+'>Esri · año '+x.y+'</option>'}).join('')+'</optgroup></select></div>';
       }else{
-        h+='<div class="row"><select id="dw-wby" class="in" aria-label="Foto de fondo">'+opts0+'</select></div>';
+        h+='<div class="row"><select id="dw-wby" class="in" aria-label="Foto de fondo">'+opts0+'</optgroup></select></div>';
         if(WBK.err)h+='<div class="small">No he podido leer la lista de años de Esri ('+esc(WBK.err)+'). <button class="chip" data-act="wb-retry-dw">Reintentar</button></div>';
         else h+='<div class="small">Cargando los años de Esri…</div>';
       }
-      h+='<div class="small">'+(dl.wbYear>0?'Con un año elegido la foto es de Esri (menos detalle que el PNOA). Si esa foto no llega, '+(wp?'el plano sale sin foto':'no se crea la foto')+' y te lo aviso: no se cambia a otro año.':dl.wbYear===-1?'Foto actual de Esri (menos detalle que el PNOA y condiciones de uso más restrictivas). No se usa el IGN.':'Si el IGN no responde, se pasa solo a Esri y, si también falla, a la última versión guardada de Esri. Siempre se avisa.')+(dl.f.foto&&dl.wbYear!==0?' En la foto ZIP, con Esri cada píxel mide como mínimo 50 cm.':'')+'</div>';
+      var dhi=dl.hLay?ihItem(dl.hLay):null;
+      if(dhi)h+='<div class="small">Foto histórica del IGN: '+esc(dhi.n)+'. No todos los años se volaron en todas partes: si ese vuelo no tiene foto en la zona, '+(wp?'el plano sale sin foto':'no se crea la foto')+' y te lo aviso. No se cambia a otro año ni a Esri.'+(dl.f.foto?' En la foto ZIP cada píxel mide como mínimo 50 cm.':'')+'</div>';
+      else h+='<div class="small">'+(dl.wbYear>0?'Con un año elegido la foto es de Esri (menos detalle que el PNOA). Si esa foto no llega, '+(wp?'el plano sale sin foto':'no se crea la foto')+' y te lo aviso: no se cambia a otro año.':dl.wbYear===-1?'Foto actual de Esri (menos detalle que el PNOA y condiciones de uso más restrictivas). No se usa el IGN.':'Si el IGN no responde, se pasa solo a Esri y, si también falla, a la última versión guardada de Esri. Siempre se avisa.')+(dl.f.foto&&dl.wbYear!==0?' En la foto ZIP, con Esri cada píxel mide como mínimo 50 cm.':'')+'</div>';
     }
     var lm=dwLimits(); if(lm.length)h+='<div class="small" style="margin-top:10px">'+lm.map(esc).join('<br>')+'</div>';
   }else{
@@ -13856,7 +13952,7 @@ function dwGo(){
   if(dl.busy||!dwCanNext())return;
   if(!loadPdfLib()&&(dl.f.plano||dl.f.dxfplano||dl.f.informe||dl.f.ficha)){pdfNoListo();return}
   var units=dwUnits(), sp=units.length>1, files=[], notes=[], title=(dl.title||'').trim()||'Plano', base=safeName(title), steps=[], oldPaper=rec.paper, oldScale=rec.scale, oldOnly=rec.only, oldOr=rec.orient;
-  rec.only=null; rec.orient=dl.orient; PHREL=((dl.f.plano||dl.f.dxfplano)&&dl.wbYear>0&&WBK.list)?wbItem(dl.wbYear):null; PHESRI=!!((dl.f.plano||dl.f.dxfplano)&&dl.wbYear===-1); IGNDOWN=false;IGNWHY="";NOPH.asked=false;NOPH.skip=false;NOPH.fails=0;
+  rec.only=null; rec.orient=dl.orient; PHREL=((dl.f.plano||dl.f.dxfplano)&&dl.wbYear>0&&WBK.list)?wbItem(dl.wbYear):null; PHESRI=!!((dl.f.plano||dl.f.dxfplano)&&dl.wbYear===-1); PHLAY=(dl.f.plano||dl.f.dxfplano)&&dl.hLay&&ihItem(dl.hLay)?dl.hLay:''; IGNDOWN=false;IGNWHY="";NOPH.asked=false;NOPH.skip=false;NOPH.fails=0;
   var add=function(pre,n,d){files.push({n:pre+n,d:d})};
   units.forEach(function(u){
     var pre=sp?safeName(u.name)+'/':'', nm=safeName(u.name);
@@ -13937,7 +14033,7 @@ function dwGo(){
     }]);
     if(dl.f.foto)steps.push(['Foto aérea de '+u.name,function(){
       if(!b||big||b.w<20||b.h<20){notes.push('Foto de '+u.name+' no creada: la zona debe medir entre 20 m y 15 km por lado.');return Promise.resolve()}
-      var P=photoFiles(b,u.name,false,null,photoSrc(dl.wbYear));
+      var P=photoFiles(b,u.name,false,null,photoSrc(dl.wbYear,dl.hLay));
       return P.run().then(function(o){o.files.forEach(function(f){add(pre+'foto/',f.n,f.d)});if(P.noteTxt())notes.push('Foto de '+u.name+': '+P.noteTxt())}).catch(function(e){notes.push('No ha llegado la foto de '+u.name+(e&&e.why?' ('+e.why+')':P.src.k==='ign'?' (ni el IGN ni Esri responden)':' ('+whyErr(e)+')')+'.')});
     }]);
   });
@@ -13949,7 +14045,7 @@ function dwGo(){
     return st[1]().catch(function(e){notes.push(st[0]+': no se ha podido crear.')}).then(next);
   };
   next().then(function(){
-    rec.paper=oldPaper; rec.scale=oldScale; rec.only=oldOnly; rec.orient=oldOr; dl.busy=''; PHREL=null; PHESRI=false;
+    rec.paper=oldPaper; rec.scale=oldScale; rec.only=oldOnly; rec.orient=oldOr; dl.busy=''; PHREL=null; PHESRI=false; PHLAY='';
     if(!files.length){renderDw();toast('No se ha creado ningún archivo.'+(notes.length?' '+notes[0]:''));return}
     var pl=dwPlan(), blob, name, extra=notes.join(' ');
     if(files.length===1){
@@ -13961,7 +14057,7 @@ function dwGo(){
     }
     dwClose();
     showDl(blob,name,files.length===1?'Archivo listo':'Descarga lista',(files.length>1?(files.length-1)+' archivos en un ZIP con su LEEME. ':'')+esc(extra));
-  }).catch(function(){rec.paper=oldPaper;rec.scale=oldScale;rec.only=oldOnly;rec.orient=oldOr;dl.busy='';PHREL=null;PHESRI=false;renderDw();toast('No he podido crear los archivos.')});
+  }).catch(function(){rec.paper=oldPaper;rec.scale=oldScale;rec.only=oldOnly;rec.orient=oldOr;dl.busy='';PHREL=null;PHESRI=false;PHLAY='';renderDw();toast('No he podido crear los archivos.')});
 }
 
 /* ---- informe resumen en PDF ---- */
@@ -15184,6 +15280,7 @@ document.addEventListener('click',function(ev){
   switch(act){
     case 'layers':{var ly=$('#layers'),op=ly.hidden;closePops();if(op){renderLayers();ly.hidden=false}popLight();break}
     case 'base-set':setBase(b.dataset.k);renderLayers();break;
+    case 'ih-step':ihStep(b.dataset.d==='older');break;
     case 'wb-retry-dw':WBK.err='';wbLoad(true).then(function(){renderDw()},function(){renderDw()});renderDw();break;
     case 'wb-retry':WBK.err='';wbLoad(true).then(function(){if(S.base==='esrih'){mountBase('esrih');esdSoon()}renderLayers()},function(){renderLayers()});renderLayers();break;
     case 'ov':setOv(b.dataset.k,!OV[b.dataset.k]);break;
@@ -15822,6 +15919,7 @@ document.addEventListener('change',function(ev){
     save();return;
   }
   if(id==='g-prov'){fillMunis(+t.value);return}
+  if(id==='ih-year'){ihSet(t.value);return}
   if(id==='wb-year'){WBK.sel=+t.value;try{localStorage.setItem('mf_wby',String(WBK.sel))}catch(e){}if(S.base==='esrih'&&!BKUP){mountBase('esrih');esdSoon()}renderLayers();return}
   if(id==='ndvi-date'){NDV.sel=+t.value;if(ndviLayer)ndviLayer.redraw();ndviPill();return}
   if(id==='pst-cul'){pstSetCul(t.value);return}
@@ -15835,7 +15933,7 @@ document.addEventListener('change',function(ev){
 });
 document.addEventListener('toggle',function(ev){if(ev.target.id==='more')moreOpen=ev.target.open},true);
 document.addEventListener('input',function(ev){if(ev.target&&ev.target.id==='pfw-name'&&pfWiz)pfWiz.name=ev.target.value;if(ev.target&&ev.target.id==='dw-title'){dl.title=ev.target.value;dl.titleEdited=true}if(ev.target&&ev.target.id==='pac-name'&&pac)pac.name=ev.target.value});
-document.addEventListener('change',function(ev){if(ev.target&&ev.target.id==='dw-scale')dl.scale=+ev.target.value;if(ev.target&&ev.target.id==='rec-fsrc'){rec.fsrc=+ev.target.value||0;renderRec()}if(ev.target&&ev.target.id==='dw-wby'){dl.wbYear=+ev.target.value||0;renderDw()}});
+document.addEventListener('change',function(ev){if(ev.target&&ev.target.id==='dw-scale')dl.scale=+ev.target.value;if(ev.target&&ev.target.id==='rec-fsrc'){rec.fsrc=+ev.target.value||0;renderRec()}if(ev.target&&ev.target.id==='dw-wby'){var v=ev.target.value||'';if(/^h:/.test(v)){dl.hLay=v.slice(2);dl.wbYear=0}else{dl.hLay='';dl.wbYear=+v||0}renderDw()}});
 document.addEventListener('input',function(ev){if(tp&&ev.target&&ev.target.id==='tpname'){tp.name=ev.target.value;if(tp.mk)tp.mk.setIcon(tpIcon(tp.name,tp.c))}});
 document.addEventListener('keydown',function(ev){
   if(ev.key==='Enter'&&tp&&ev.target.id==='tpname'){ev.preventDefault();tpCreate();return}
@@ -16297,7 +16395,7 @@ function offSynced(){
 /* lo que necesita internet: sin conexión se avisa en vez de dejar la pantalla esperando */
 function offNeed(act,b){
   var k=b&&b.dataset?b.dataset.k:'';
-  return (act==='ov'&&/^(sig|cat|ndvi)$/.test(k||'')&&!OV[k])||(act==='rad-tg'&&!(typeof RAD!=='undefined'&&RAD&&RAD.on))||act==='rad-up'||act==='sigpac-open'||act==='cat-load'||act==='ndv-chart'||act==='acl-calc'||act==='aclf-calc'||act==='acl-sim'||act==='aclf-open'||act==='ndvi-step'||act==='wb-retry'||act==='wb-retry-dw';
+  return (act==='ov'&&/^(sig|cat|ndvi)$/.test(k||'')&&!OV[k])||(act==='rad-tg'&&!(typeof RAD!=='undefined'&&RAD&&RAD.on))||act==='rad-up'||act==='sigpac-open'||act==='cat-load'||act==='ndv-chart'||act==='acl-calc'||act==='aclf-calc'||act==='acl-sim'||act==='aclf-open'||act==='ndvi-step'||act==='ih-step'||act==='wb-retry'||act==='wb-retry-dw';
 }
 /* pregunta antes de descargar el mapa de fincas nuevas (o con recintos nuevos) y avisa de los mapas de más de un año */
 function offAskShow(){
@@ -16380,6 +16478,7 @@ setTimeout(function(){map.invalidateSize();refreshSigpac();if(OV.ndvi){ndviPill(
 
 window.__mf={MP_FT:MP_FT,mpDose:mpDose,mpFtPicked:mpFtPicked,fbItems:fbItems,DOCs:function(){return DOC},mpFixNames:mpFixNames,renderAll:renderAll,mpAll:mpAll,mpInfo:mpInfo,mpWarnTxt:mpWarnTxt,MP:MP,trCardHTML0:trCardHTML0,aclState:function(){return ACL},aclCalc:aclCalc,aclSum:aclSum,aclShort:aclShort,aclMine:aclMine,aclSimOpen:aclSimOpen,aclSimClose:aclSimClose,aclPk:aclPk,loadPdfLib:loadPdfLib,pdfPiezas:pdfPiezas,pdfHay:pdfHay,pvState:function(){return PV},sigGroup:function(){return sigGroup},sigTiles:function(){return tiles},sigPaint:sigPaint,sigW:function(){return {ok:SWok,pend:Object.keys(SWel).length,carga:Object.keys(SWcb).length}},sigWOff:sigWOff,boxPad:boxPad,pdfFont:pdfFont,pdfFontC:pdfFontC,expMapHTML:expMapHTML,buildFichaPdf:buildFichaPdf,afCompute:afCompute,afCompare:afCompare,hatchOf:hatchOf,swBg:swBg,OV:OV,polyC:polyC,mmHTML:mmHTML,expClose:expClose,temaGet:temaGet,temaSet:temaSet,pvOpen:pvOpen,pvClose:pvClose,cvMatch:cvMatch,cvLabel:cvLabel,trVarList:trVarList,varReal:varReal,GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
+Object.assign(window.__mf,{IH:function(){return IH},IHL:IHL,ihSet:ihSet,ihStep:ihStep,ihList:ihList,ihCheck:ihCheck,ihItem:ihItem,ihBlank:ihBlank,setPHLAY:function(v){PHLAY=v},baseLayer:function(){return baseLayer}});
 Object.assign(window.__mf,{plFileBase:plFileBase,expGGet:expGGet,expGPick:expGPick,grbSplit:grbSplit,grStart:grStart,grSave:grSave,GRS:function(){return GRS},expHTML:expHTML,TRs:function(){return {tr:TR.cult,ab:AB.cult,fe:FE.cult,hi:HI.cult,inf:INF.cult,pl:PL.pid}},vfState:function(){return VFL},vfOn:vfOn,muniTxtSync:muniTxtSync,polyCount:function(){return polyC.size},ufbStart:ufbStart,ubkCheck:ubkCheck,ubkDue:ubkDue,bkOwn:bkOwn,fbBuild:fbBuild,UBK:UBK,getVersions:getVersions,prevGet:prevGet,spaceHTML:spaceHTML,snapVersion:snapVersion,datReady:function(){return DATP},datState:function(){return {ok:IDBOK,r:DATR,nv:VERS?VERS.length:-1,prev:!!PREV}},plPortrait:plPortrait,plCropTxt:plCropTxt,xlPlanBook:xlPlanBook,idbReset:function(w){idbP=null;if(w)IDB_WAIT=w},syncWait:function(w){SYNC_WAIT=w},syncBusy:function(){return syncing},uCvTxt:uCvTxt,feUcvForm:feUcvForm,feUnitConvert:feUnitConvert,rfEdit:rfEdit,rfSave:rfSave,infTotRows:infTotRows,abTotData:abTotData,cvLabel:cvLabel,feProds:feProds,pabShares:pabShares,pabHaR:pabHaR,pabSplits:pabSplits,pabSplitWarn:pabSplitWarn,pabXCands:pabXCands,pabAddX:pabAddX,pabMove:pabMove,buildPabPdf:buildPabPdf,buildPabXlsx:buildPabXlsx,pabBlocks:pabBlocks,pabCheck:pabCheck,pabReal:pabReal,pabCalc:pabCalc,pabAuto:pabAuto,pabHTML:pabHTML,pabCur:pabCur,pabTipo:pabTipo,pabLim:pabLim,PAB:PAB,haC:haC,haPair:haPair,plTrPlaces:plTrPlaces,daOpen:daOpen,daSave:daSave,PL:PL,plWeeks:plWeeks,plCalc:plCalc,plTrOrder:plTrOrder,plPending:plPending,plMarkGo:plMarkGo,buildTratPdf:buildTratPdf,xlPlanBook:xlPlanBook,xlBuild:xlBuild,plFromRecs:plFromRecs,plSecArgs:plSecArgs,plSecHTML:plSecHTML,plSecOut:plSecOut,plTrPRows:plTrPRows,buildPlanPdf:buildPlanPdf,buildPlanXlsx:buildPlanXlsx,planHTML:planHTML,plTrSources:plTrSources,fbBuild:fbBuild,fbRead:fbRead,fbItems:fbItems,fbRestoreFiles:fbRestoreFiles,idbPut:idbPut,idbGet:idbGet,idbKeys:idbKeys,applyImport:applyImport,pending:function(){return pendingImport},docPend:function(){return DOC.pend},phPend:function(){return PH.pend},phProcess:phProcess,phMax:function(n){PH_MAXB=n},trVarParts:trVarParts,numEs:numEs,nf:nf,trList:trList,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
 Object.assign(window.__mf,{llHTML:llHTML,llLoad:llLoad,llGet:llGet,llSum:llSum,llArr:llArr,llN:llN,LLU:function(){return LLU},LLSEL:LLSEL,pvHTML:pvHTML,pvLoad:pvLoad,pvGet:pvGet,pvParse:pvParse,pvDias:pvDias,PVU:function(){return PVU}});
 Object.assign(window.__mf,{offMigra:offMigra,OFFMG:function(){return OFFMG},offTCount:offTCount,offTGet:offTGet,arqList:arqList,arqHTML:arqHTML,offKeys:offKeys,offState:offState,offDownload:offDownload,offRemove:offRemove,offPend:offPend,offSet:offSet,offAskCheck:offAskCheck,offUrl:offUrl,offTotal:offTotal,offLoad:offLoad,offDiff:offDiff,offMark:offMark,offSig:offSig,OFFM:function(){return OFFM},OFF:function(){return OFF},offBusy:function(){return !!OFFD},save:function(){save()},renderDatos:renderDatos,offAskShown:function(){return OFFASK}});
