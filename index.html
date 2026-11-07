@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-6xaTSz3OqBPg1jwAdQwMFde1LHsy8d+LciTWZ6CcPdk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-DHvlnpA3BTwXxsPeAgH7voJQRPohCf7G0jyHVwgrLTA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -3009,7 +3009,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-06T22:31:55Z',n:'Entrega 129 · 6 nov · 23:31'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-07T23:04:49Z',n:'Entrega 130 · 8 nov · 00:04'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -4422,7 +4422,7 @@ function tagHere(){
 /* papelera y versiones */
 var UNDO=null;
 function undoPush(){
-  var x=S.x, sn={f:S.fincas.map(function(f){return Object.assign({},f)}),r:{},lc:Object.assign({},S.lastCrop),after:null};
+  var x=S.x, sn={f:S.fincas.map(function(f){return clone(f)}),r:{},lc:Object.assign({},S.lastCrop),after:null};      /* Entrega 130: copia completa (plan de abonado incluido) */
   Object.keys(S.recintos).forEach(function(k){sn.r[k]=Object.assign({},S.recintos[k])});
   sn.x=Object.assign({},x,{grupos:clone(x.grupos),cs:clone(x.cs),cl:x.cl.slice(),trash:x.trash.slice(),favs:Object.assign({},x.favs),tags:x.tags.slice(),meds:x.meds.slice()});
   sn.fo=x.fo; UNDO=sn;
@@ -9844,7 +9844,7 @@ function pabClick(b){
   if(a==='pa-mod-del'){undoPush();p.mods.splice(+b.dataset.j,1);p.m=Date.now();save();renderFincas();undoToast('Modificación quitada');return}
   if(a==='pa-ud-new'){undoPush();p.ud=p.ud||[];var u={id:uid(),n:'Unidad '+(p.ud.length+1),ck:'otro',rg:'secano',refs:[],zv:0,tp:0,inh:0,rc:{},su:{},ag:{},ne:{mo:'cos',ed:1},ap:{s:{},o:{},x:{}},pg:{src:'own',rows:[]}};p.ud.push(u);PAB.open[u.id]=true;save();renderFincas();undoToast('Unidad añadida: mueve a ella los recintos desde la tabla de recintos');return}
   var ui=+b.dataset.u, ud=(p.ud||[])[ui];
-  if(a==='pa-ud-del'&&ud){if(ud.refs.length&&p.ud.length>1){var to=p.ud[ui===0?1:0];to.refs=to.refs.concat(ud.refs)}if((ud.xr||[]).length&&p.ud.length>1){var to2=p.ud[ui===0?1:0];to2.xr=(to2.xr||[]).concat(ud.xr);to2.rc=to2.rc||{};ud.xr.forEach(function(x){if(ud.rc&&ud.rc[x])to2.rc[x]=ud.rc[x]})}undoPush();p.ud.splice(ui,1);save();renderFincas();undoToast('Unidad borrada'+(ud.refs.length&&p.ud.length?' (sus recintos pasan a «'+p.ud[0].n+'»)':''));return}
+  if(a==='pa-ud-del'&&ud){undoPush();if(ud.refs.length&&p.ud.length>1){var to=p.ud[ui===0?1:0];to.refs=to.refs.concat(ud.refs)}if((ud.xr||[]).length&&p.ud.length>1){var to2=p.ud[ui===0?1:0];to2.xr=(to2.xr||[]).concat(ud.xr);to2.rc=to2.rc||{};ud.xr.forEach(function(x){if(ud.rc&&ud.rc[x])to2.rc[x]=ud.rc[x]})}p.ud.splice(ui,1);save();renderFincas();undoToast('Unidad borrada'+(ud.refs.length&&p.ud.length?' (sus recintos pasan a «'+p.ud[0].n+'»)':''));return}
   if(a==='pa-row-add'&&ud){ud.pg=ud.pg||{src:'own',rows:[]};(ud.pg.rows||(ud.pg.rows=[])).push({id:uid(),mo:'',n:'',fo:'Suelo'});p.m=Date.now();save();renderFincas();return}
   if(a==='pa-row-del'&&ud){undoPush();ud.pg.rows.splice(+b.dataset.j,1);p.m=Date.now();save();renderFincas();undoToast('Aporte quitado');return}
 }
