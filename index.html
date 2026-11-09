@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-DHvlnpA3BTwXxsPeAgH7voJQRPohCf7G0jyHVwgrLTA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-ZnxAHaqIJMLr954BzHWxPjmZ/vRAUauFmd2tsiYjnzc='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -3009,7 +3009,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-07T23:04:49Z',n:'Entrega 130 · 8 nov · 00:04'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-09T12:41:56Z',n:'Entrega 131 · 9 nov · 13:41'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -5278,7 +5278,7 @@ function renderResumen(){
   el.innerHTML=h;
 }
 var staleBackup=function(){return backupDue()&&bkOwn()};
-function updateDot(){$('#navdot').hidden=!staleBackup()}
+function updateDot(){$('#navdot').hidden=!(staleBackup()||srvAviso())}
 /* ---- Entrega 56: paletas de colores por usuario (se guardan en la cuenta: S.x.pal) ---- */
 var PALS=[
   {id:'',n:'Original'},
@@ -5373,6 +5373,7 @@ function renderDatos(){
   if(isAdmin())T.cuenta+='<div class="fcard"><div class="t"><b>Usuarios</b></div><div class="small">Crea usuarios para otras personas, cambia contraseñas, bloquéalos o bórralos, y mira la herramienta como la ve cada uno.</div><div class="acts"><button class="btn sm" data-act="us-open">Gestionar usuarios…</button></div></div>';
   if(!storageOK)h+='<div class="note" style="background:var(--warn-bg);color:var(--warn-ink)">Este navegador no deja guardar datos. Guarda una copia ahora para no perder el trabajo.</div>';
   else if(staleBackup())h+='<div class="note" style="background:var(--warn-bg);color:var(--warn-ink)">Haz una copia de seguridad.'+(SY.rt?'':' Los datos viven solo en este aparato.')+'</div>';
+  if(srvAviso())h+='<div class="note srvaviso" style="background:var(--warn-bg);color:var(--warn-ink)">'+esc(srvTxt())+'</div>';
   T.apar+=temaHTML();
   if(dt==='prod'||dt==='all')T.prod+=mpHTML();
   T.sincon+=offHTML();
@@ -11138,9 +11139,9 @@ function syncNow(manual){
   if(syncing){syncAgain=true;return}
   syncing=true; syncErr=''; renderSync();
   var my=++syncGen, wd=setTimeout(function(){ if(my!==syncGen||!syncing)return; syncGen++; syncing=false; syncErr='No he podido terminar de sincronizar. Lo vuelvo a intentar solo; tus cambios siguen guardados en este aparato.'; renderSync(); },SYNC_WAIT);
-  syncRound().then(function(){ if(my!==syncGen)return; if(manual)toast('Sincronizado'); },function(e){ if(my!==syncGen)return;
+  syncRound().then(function(){ if(my!==syncGen)return; var vuelve=srvBien(); if(manual&&!vuelve)toast('Sincronizado'); },function(e){ if(my!==syncGen)return;
     if(e&&(e.code==='nologin'||e.code==='expired')){ kickOut(); }
-    else syncErr='Sin conexión. Los cambios se subirán solos cuando vuelva.';
+    else { syncErr='Sin conexión. Los cambios se subirán solos cuando vuelva.'; return srvFallo(my); }
   }).then(function(){
     clearTimeout(wd); if(my!==syncGen)return;
     syncing=false; renderSync(); offSynced(); setTimeout(phFlush,0); setTimeout(lkTick,0); setTimeout(ubkCheck,2500);
@@ -11148,6 +11149,42 @@ function syncNow(manual){
   });
 }
 function syncSoon(){clearTimeout(syncT);if(SY.rt)syncT=setTimeout(function(){syncNow()},2500)}
+/* ═════════ ENTREGA 131 · aviso si el servidor (Supabase) no contesta desde hace días aunque haya internet ═════════
+   Supabase gratis se pone en pausa si pasa una semana sin uso (el «despertador» de GitHub lo evita).
+   Si la sincronización falla, se pide version.json a la web de la app: si contesta, hay internet y el fallo es del servidor.
+   SY.srvKo = primera vez que falló con internet; se borra en cuanto sincroniza bien. El aviso sale si lleva más de 2 días sin sincronizar. */
+var SRV_DIAS=2, srvNet=null, srvNetT=0, srvToastOk=false;
+function srvProbe(){
+  if(srvNet!==null&&Date.now()-srvNetT<600000)return Promise.resolve(srvNet);
+  var ctl=(typeof AbortController!=='undefined')?new AbortController():null, to=setTimeout(function(){ctl&&ctl.abort()},8000);
+  return fetch('version.json?t='+Date.now(),{cache:'no-store',signal:ctl?ctl.signal:undefined}).then(function(r){clearTimeout(to);srvNet=!!r.ok;srvNetT=Date.now();return srvNet},function(){clearTimeout(to);srvNet=false;srvNetT=Date.now();return false});
+}
+function srvDesde(){return (SY&&(SY.last||SY.srvKo))||0}
+function srvAviso(){try{var d=srvDesde();return !GTOK&&!!SY.rt&&!!SY.srvKo&&!!d&&Date.now()-d>SRV_DIAS*864e5}catch(e){return false}}
+function srvTxt(){
+  var d=srvDesde(), n=Math.max(1,Math.floor((Date.now()-d)/864e5));
+  return 'No llego al servidor desde el '+new Date(d).toLocaleDateString('es-ES',{day:'numeric',month:'long'})+' (hace '+n+(n===1?' día':' días')+'), aunque hay internet. Puede que Supabase esté en pausa por falta de uso. Tus datos están a salvo en este aparato y lo que cambies se subirá solo cuando vuelva. '+
+    (isAdmin()?'Qué hacer: entra en supabase.com, abre el proyecto y pulsa «Resume project» (o pídeselo a Claude).':'Avisa a Ramón para que lo ponga en marcha.');
+}
+function srvFallo(my){
+  return srvProbe().then(function(net){
+    if(!net||(my&&my!==syncGen))return;
+    var was=srvAviso();
+    if(!SY.srvKo){SY.srvKo=Date.now();saveSY()}
+    syncErr=srvAviso()?'No llego al servidor desde hace días aunque hay internet. Mira el aviso de arriba.':'No llego al servidor aunque hay internet. Lo vuelvo a intentar solo; tus cambios siguen guardados en este aparato.';
+    updateDot();
+    if(srvAviso()&&!srvToastOk){srvToastOk=true;toast('El servidor no contesta desde hace días. Mira el aviso en Datos.','Ver',function(){setTab('datos')},12000)}
+    if(srvAviso()!==was&&typeof tab!=='undefined'&&tab==='datos')renderDatos();
+  });
+}
+function srvBien(){
+  srvNet=null;
+  if(!SY.srvKo)return false;
+  var was=!!document.querySelector('.srvaviso'); delete SY.srvKo; saveSY(); updateDot();
+  if(was&&typeof tab!=='undefined'&&tab==='datos')renderDatos();
+  if(srvToastOk||was){srvToastOk=false;toast('El servidor vuelve a contestar. Todo sincronizado.');return true}
+  return false;
+}
 var agoTxt=function(t){var m=Math.round((Date.now()-t)/60000);return m<1?'ahora mismo':m<60?'hace '+m+' min':m<1440?'hace '+Math.round(m/60)+' h':'hace '+Math.round(m/1440)+' d'};
 function renderSync(force){
   var box=$('#syncbox'); if(!box)return;
