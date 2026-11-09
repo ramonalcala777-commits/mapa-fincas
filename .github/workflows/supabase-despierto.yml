@@ -1,0 +1,37 @@
+# Mapa de Fincas · Entrega 131 · «despertador» de Supabase
+# El plan gratuito de Supabase pone el proyecto en pausa si pasa una semana sin uso.
+# Dos veces al día (7:00 y 19:00 en invierno; 8:00 y 20:00 en verano, hora de España) se hace una consulta
+# de solo lectura a la base de datos: así nunca llega a pausarse aunque nadie abra la app.
+# - No lee ni cambia datos: llama a enlace_ver con un código de enlace que no existe y la base contesta «anulado».
+# - Usa la clave pública de la app (la misma que va dentro de index.html); no hace falta ninguna contraseña.
+# - Si Supabase no contesta tras 3 intentos, la ejecución sale en rojo y GitHub manda un correo de aviso.
+#   Qué hacer entonces: entrar en supabase.com, abrir el proyecto y pulsar «Resume project».
+# - Se puede lanzar a mano en GitHub → Actions → «Mantener Supabase despierto» → Run workflow.
+name: Mantener Supabase despierto
+on:
+  schedule:
+    - cron: '0 6,18 * * *'
+  workflow_dispatch:
+permissions: {}
+jobs:
+  despertar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Consulta de solo lectura a Supabase
+        env:
+          SB_URL: https://rbrvokfrbvcsqmskshul.supabase.co
+          SB_KEY: sb_publishable_zIM_WAdcN0zYzAS5pbtdOw_Zb1hKJzN
+        run: |
+          for i in 1 2 3; do
+            code=$(curl -s -o r.txt -w '%{http_code}' --max-time 30 -X POST "$SB_URL/rest/v1/rpc/enlace_ver" \
+              -H "apikey: $SB_KEY" -H "Content-Type: application/json" -d '{"p_token":"despertador"}' || echo 000)
+            echo "Intento $i: HTTP $code · $(head -c 200 r.txt)"
+            if [ "$code" = "200" ] && grep -q anulado r.txt; then
+              echo "✅ Supabase despierto ($(TZ=Europe/Madrid date '+%d/%m/%Y %H:%M') hora de España)"
+              exit 0
+            fi
+            [ $i -lt 3 ] && sleep 90
+          done
+          echo "::error::Supabase no contesta (puede estar en pausa). Entra en supabase.com, abre el proyecto y pulsa «Resume project»."
+          exit 1
