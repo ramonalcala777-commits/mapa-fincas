@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-ZnxAHaqIJMLr954BzHWxPjmZ/vRAUauFmd2tsiYjnzc='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-HYjrW3nT5Dy8ffyXiGhF3+6HwGjHNycpvNmLklP1Vjo='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -3009,7 +3009,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-09T12:41:56Z',n:'Entrega 131 · 9 nov · 13:41'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-10T18:57:39Z',n:'Entrega 132 · 10 nov · 19:57'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -4745,9 +4745,9 @@ function llHTML(id){
     return o+'</details>';
   }
   var y0=llCampY(llN(c.d0)), camps=[]; for(var y=cyHoy;y>=y0;y--)camps.push(y);
-  o+='<div class="row" style="margin:8px 0 2px"><label for="ll-camp" class="small" style="flex:1"><b>Campaña</b></label><select id="ll-camp" class="in" style="max-width:170px" aria-label="Campaña de la lluvia">'+camps.map(function(y){return '<option value="'+y+'"'+(y===cy?' selected':'')+'>'+y+'/'+(y+1)+'</option>'}).join('')+'</select></div>';
+  o+='<div class="row" style="margin:8px 0 2px"><label for="ll-camp" class="small" style="flex:1"><b>Campaña</b></label><select id="ll-camp" class="in" style="max-width:170px" aria-label="Campaña de la lluvia">'+camps.map(function(y){return '<option value="'+y+'"'+(y===cy?' selected':'')+'>'+campLbl(y+1)+'</option>'}).join('')+'</select></div>';
   var yy=new Date(hoy*864e5).getUTCFullYear();
-  o+='<div class="big3"><div><span>Campaña '+cy+'/'+(cy+1)+'</span><b>'+nf(tot.mm,1)+' mm</b><small class="small" style="display:block">'+(act?'desde el 1 nov':'1 nov – 31 oct')+'</small></div>';
+  o+='<div class="big3"><div><span>Campaña '+campLbl(cy+1)+'</span><b>'+nf(tot.mm,1)+' mm</b><small class="small" style="display:block">'+(act?'desde el 1 nov':'1 nov – 31 oct')+'</small></div>';
   if(act){
     var ya=llSum(c,a,llN(yy+'-01-01'),hoy);
     o+='<div><span>Año '+yy+'</span><b>'+nf(ya.mm,1)+' mm</b><small class="small" style="display:block">desde el 1 ene</small></div>';
@@ -4758,7 +4758,7 @@ function llHTML(id){
   var ps=llN((cy-1)+'-11-01');
   if(ps>=llN(c.d0)){
     var pe=act?llN((+c.h.slice(0,4)-1)+c.h.slice(4)):llN(cy+'-10-31'), pv=llSum(c,a,ps,pe), df=tot.mm-pv.mm;
-    lin.push((act?'A la misma fecha de la campaña ':'Campaña ')+(cy-1)+'/'+cy+': <b>'+nf(pv.mm,1)+' mm</b>'+(Math.abs(df)>=0.05?' ('+nf(Math.abs(df),1)+' mm '+(df>0?'más':'menos')+' ahora)':''));
+    lin.push((act?'A la misma fecha de la campaña ':'Campaña ')+campLbl(cy)+': <b>'+nf(pv.mm,1)+' mm</b>'+(Math.abs(df)>=0.05?' ('+nf(Math.abs(df),1)+' mm '+(df>0?'más':'menos')+' ahora)':''));
   }
   if(act&&llN((yy-1)+'-01-01')>=llN(c.d0))lin.push('Año '+(yy-1)+' completo: <b>'+nf(llSum(c,a,llN((yy-1)+'-01-01'),llN((yy-1)+'-12-31')).mm,1)+' mm</b>');
   o+='<p class="small">'+lin.join('<br>')+'</p>';
@@ -5254,7 +5254,7 @@ function renderResumen(){
       var v=st.byPd[k[0]]||0; if(!v)return;
       h+='<div class="crow"><i class="pdot'+(k[0]==='cn'||k[0]===''?' cn':'')+'"></i><span class="cn">'+k[1]+'</span><span class="num"><b>'+ha2(v)+' ha</b> <span class="small">· '+nf(v/st.tot*100,0)+' %</span></span><div class="bar"><i style="width:'+(v/st.tot*100).toFixed(2)+'%;background:'+(k[0]==='eco'||k[0]==='cv'?PROD_COL:'#8a9283')+'"></i></div></div>';
     });
-    var xc={}; vrs.forEach(function(r){var c=r.cultivo||NOCROP,o=xc[c]||(xc[c]={});var k=prodKind(r.prod);o[k]=(o[k]||0)+r.ha});
+    var xc={}; vrs.forEach(function(r){var c=r.cultivo||NOCROP,o=xc[c]||(xc[c]={});var k=prodKind(r.prod);o[k]=(o[k]||0)+haC(r)});
     h+='<div class="small" style="margin:8px 0 2px">Cada cultivo según su producción:</div>';
     Object.keys(xc).sort(function(a,b){return (st.byCrop[b]||0)-(st.byCrop[a]||0)}).forEach(function(c){
       var o=xc[c], t=[]; [['eco','Ecológico'],['cv','En conversión'],['cn','Convencional'],['','Sin indicar']].forEach(function(k){if(o[k[0]])t.push(k[1]+' '+ha2(o[k[0]])+' ha')});
@@ -6285,15 +6285,15 @@ function expAforosHTML(f){
   if(ysel)h+='<div class="trfl">'+ysel+'</div>';
   if(ye)ys=ys.filter(function(y){return y===ye});
   ys.forEach(function(y){
-    var a=af0[y], done=0, omit=0, kg=0, hs=0, rows=[];
+    var a=af0[y], done=0, omit=0, kg=0, hs=0, rows=[], pc={}, pco=[];
     recs.slice().sort(function(p,q){return p.ref.localeCompare(q.ref,'es',{numeric:true})}).forEach(function(r){
       var v=a[r.ref]; if(v===undefined)return; done++;
       if(v==='x'){omit++;rows.push('<tr><td>'+esc(refShort(r.ref))+'</td><td>'+ha4(haC(r))+'</td><td colspan="2">sin aforar</td></tr>');return}
-      var hr=haC(r); kg+=hr*v; hs+=hr; rows.push('<tr><td>'+esc(refShort(r.ref))+'</td><td>'+ha4(hr)+'</td><td>'+nf(v,0)+'</td><td>'+nf(hr*v,0)+'</td></tr>');
+      var hr=haC(r), cu=trCultOf(r), ec=pc[cu]||(pc[cu]={c:cu,kg:0,ha:0}); if(ec.kg===0&&ec.ha===0&&pco.indexOf(ec)<0)pco.push(ec); ec.kg+=hr*v; ec.ha+=hr; kg+=hr*v; hs+=hr; rows.push('<tr><td>'+esc(refShort(r.ref))+'</td><td>'+ha4(hr)+'</td><td>'+nf(v,0)+'</td><td>'+nf(hr*v,0)+'</td></tr>');
     });
     var at='data-s="finca" data-i="'+esc(id)+'" data-y="'+y+'"';
-    h+='<div class="afyr"><h4>Campaña '+y+'</h4><div class="small">Hechos '+done+' de '+recs.length+(omit?' ('+omit+' sin aforar)':'')+'</div>';
-    h+=hs?'<div class="big3" style="margin-top:8px"><div><span>kg/ha (media)</span><b>'+nf(kg/hs,0)+'</b></div><div><span>Producción total</span><b>'+nf(kg,0)+' kg</b></div><div><span>Superficie aforada</span><b>'+ha2(hs)+' ha</b></div></div>':'<div class="small" style="margin-top:6px">Aún no hay recintos con kg/ha.</div>';
+    h+='<div class="afyr"><h4>Campaña '+campLbl(y)+'</h4><div class="small">Hechos '+done+' de '+recs.length+(omit?' ('+omit+' sin aforar)':'')+'</div>';
+    h+=hs?'<div class="big3" style="margin-top:8px">'+(pco.length>1?pco.map(function(e){return '<div><span>'+esc(e.c)+' (kg/ha)</span><b>'+(e.ha?nf(e.kg/e.ha,0):'—')+'</b></div>'}).join(''):'<div><span>kg/ha (media)</span><b>'+nf(kg/hs,0)+'</b></div>')+'<div><span>Producción total</span><b>'+nf(kg,0)+' kg</b></div><div><span>Superficie aforada</span><b>'+ha2(hs)+' ha</b></div></div>':'<div class="small" style="margin-top:6px">Aún no hay recintos con kg/ha.</div>';
     if(rows.length)h+='<details class="more" style="margin-top:8px"><summary>Detalle por recinto</summary><table style="width:100%;margin-top:6px"><thead><tr><th>Recinto</th><th>ha</th><th>kg/ha</th><th>kg</th></tr></thead><tbody>'+rows.join('')+'</tbody></table></details>';
     h+='<div class="acts" style="margin-top:8px"><button class="btn sm" data-act="afm-go" '+at+'>Continuar o corregir</button><button class="btn sm" data-act="afm-rep" '+at+'>Informe (PDF / Excel)</button></div></div>';
   });
@@ -6306,12 +6306,17 @@ function expLinkHTML(f){
   return h;
 }
 /* ---- filtro por año (Aforos, Tratamientos, Abonado, Fertirrigación) ---- */
-function yrOf(t){return ((t.f||'').slice(0,4))||'Sin fecha'}
+/* Entrega 132: la campaña va de noviembre a octubre. Se guarda con el año en que acaba (el de la cosecha): 2026 = campaña 2025/26 (1 nov 2025 – 31 oct 2026) */
+function campOf(d){d=String(d||'');var y=+d.slice(0,4);if(!(y>0))return '';return String(+d.slice(5,7)>=11?y+1:y)}
+function campLbl(k){k=String(k==null?'':k);return /^\d{4}$/.test(k)?(+k-1)+'/'+k.slice(2):k}
+function campFile(k){return campLbl(k).replace('/','-')}
+function campHoy(){return campOf(diaToday())}
+function yrOf(t){return campOf(t.f)||'Sin fecha'}
 function yrYears(list){var o={};list.forEach(function(t){o[yrOf(t)]=1});return Object.keys(o).sort(function(a,b){if(a==='Sin fecha')return 1;if(b==='Sin fecha')return -1;return b.localeCompare(a)})}
-function yrEff(cur,list){if(cur==='all')return '';var ys=yrYears(list);return ys.indexOf(cur)>=0?cur:(ys[0]||'')}
+function yrEff(cur,list){if(cur==='all')return '';var ys=yrYears(list),h=campHoy(),c=ys.filter(function(y){return y!=='Sin fecha'&&y<=h})[0];return ys.indexOf(cur)>=0?cur:(c||ys[0]||'')}
 function yrSelHTML(id,cur,list,ed){
   var ys=yrYears(list); if(ys.length<2||ed)return ''; var e=yrEff(cur,list);
-  return '<select id="'+id+'" class="trsel'+(e?' on':'')+'" aria-label="Año"><option value="all"'+(e?'':' selected')+'>Año: Todos</option>'+ys.map(function(y){return '<option value="'+esc(y)+'"'+(e===y?' selected':'')+'>Año '+esc(y)+'</option>'}).join('')+'</select>';
+  return '<select id="'+id+'" class="trsel'+(e?' on':'')+'" aria-label="Campaña"><option value="all"'+(e?'':' selected')+'>Campaña: todas</option>'+ys.map(function(y){return '<option value="'+esc(y)+'"'+(e===y?' selected':'')+'>Campaña '+esc(campLbl(y))+'</option>'}).join('')+'</select>';
 }
 /* Resumen de la ficha: abonado y fertirrigación hechos de la campaña más reciente */
 /* ---- Entrega 50: minimapa de recintos (ortofoto del IGN de fondo; sin internet queda el dibujo) ---- */
@@ -6352,7 +6357,7 @@ function expNutrHTML(f){
   var all=!!EXP.nutAll, show=all?yl:[yl[0]];
   var h='<div class="note"><b>Abonado y fertirrigación</b>';
   show.forEach(function(y){
-    h+='<div style="margin-top:10px"><div class="lbl" style="margin:0">Campaña '+esc(y)+'</div>';
+    h+='<div style="margin-top:10px"><div class="lbl" style="margin:0">Campaña '+esc(campLbl(y))+'</div>';
     [[ra,'Abonado','abonadas'],[rf,'Fertirrigación','aplicadas']].forEach(function(k){
       var e=k[0].ys[y]; if(!e||!e.h.c)return;
       h+='<div class="small" style="color:inherit;margin-top:2px"><b>'+k[1]+':</b> '+k[2]+' '+ha2(e.h.ha)+' ha de '+ha2(k[0].haB)+' · '+abUFtxt(e.h)+' U.F./ha</div>';
@@ -6364,10 +6369,10 @@ function expNutrHTML(f){
   return h+'</div>';
 }
 /* Entrega 50: unidades fertilizantes aportadas en una campaña (abonado + fertirrigación hechos) */
-function nutYear(f,y){
+function nutYear(f,y,cult){
   var e={n:0,p:0,k:0,refs:{},c:0};
   ['abon','fert'].forEach(function(k){(f[k]||[]).forEach(function(t){
-    if(t.e==='p'||yrOf(t)!==y)return; var refs=trRefs(f,t); if(!refs.length)return;
+    if(t.e==='p'||yrOf(t)!==y)return; var refs=hiRefs(f,t,cult||''); if(!refs.length)return;
     var c=abCalc(f,t,refs); e.n+=c.tot.n*c.ha; e.p+=c.tot.p*c.ha; e.k+=c.tot.k*c.ha; e.c++; refs.forEach(function(r){e.refs[r]=1});
   })});
   if(!e.c)return null;
@@ -6383,24 +6388,24 @@ function fincaPend(f){
 }
 function expCampHTML(f){
   if(GTOK)return '';
-  var ys={}; (f.trat||[]).concat(f.abon||[],f.fert||[]).forEach(function(t){var y=yrOf(t);if(y!=='Sin fecha')ys[y]=1});
-  hiAfYears(f,'').forEach(function(y){ys[y]=1});
+  var eg=expGGet(f), cult=eg?'gr§'+eg:'', ys={}; (f.trat||[]).concat(f.abon||[],f.fert||[]).forEach(function(t){if(cult&&!hiRefs(f,t,cult).length)return;var y=yrOf(t);if(y!=='Sin fecha')ys[y]=1});
+  hiAfYears(f,cult).forEach(function(y){ys[y]=1});
   var yl=Object.keys(ys).sort().reverse(); if(!yl.length)return '';
-  var cy=diaToday().slice(0,4), y=ys[cy]?cy:yl[0];
-  var nu=nutYear(f,y), tr=(f.trat||[]).filter(function(t){return yrOf(t)===y}).sort(function(a,b){return (a.f||'').localeCompare(b.f||'')}), af=hiAf(f,y,'');
-  var h='<div class="kbox" style="margin-top:12px"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><h4>Campaña '+esc(y)+'</h4><button type="button" class="btn sm lk" data-act="exp-go" data-s="historico">Ver histórico</button></div><div class="kcamp">';
+  var cy=campHoy(), y=ys[cy]?cy:(yl.filter(function(x){return x<=cy})[0]||yl[0]);
+  var nu=nutYear(f,y,cult), tr=(f.trat||[]).filter(function(t){return yrOf(t)===y&&(!cult||hiRefs(f,t,cult).length)}).sort(function(a,b){return (a.f||'').localeCompare(b.f||'')}), af=hiAf(f,y,cult), afc=hiAfCrops(f,y,cult);
+  var h='<div class="kbox" style="margin-top:12px"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><h4>Campaña '+esc(campLbl(y))+(eg?' · '+esc(grOf(f,eg).n):'')+'</h4><button type="button" class="btn sm lk" data-act="exp-go" data-s="historico">Ver histórico</button></div><div class="kcamp">';
   h+='<div><div class="kt">'+(nu?'Abonado y fertirrigación, sobre '+ha2(nu.ha)+' ha':'Abonado y fertirrigación')+'</div>';
   if(nu)h+='<div class="kcells" style="margin-top:4px"><div><span>N</span><b>'+trTxt(nu.n,1)+'</b></div><div><span>P₂O₅</span><b>'+trTxt(nu.p,1)+'</b></div><div><span>K₂O</span><b>'+trTxt(nu.k,1)+'</b></div><div style="align-self:flex-end"><span>U.F./ha</span></div></div><button type="button" class="btn sm lk" data-act="exp-go" data-s="abonado">Ver abonado</button>';
   else h+='<div class="kline">Sin abonar todavía</div><button type="button" class="btn sm lk" data-act="exp-go" data-s="abonado">Apuntar abonado</button>';
   h+='</div><div><div class="kt">Tratamientos</div>';
   if(tr.length)tr.slice(0,4).forEach(function(t){var p=t.e==='p';h+='<div class="kline"><span class="dt" style="'+(p?'border:2px solid var(--pend)':'background:var(--ok)')+'"></span><span'+(p?' style="font-weight:600"':'')+'>'+trOrd(f,t)+'.º '+(p?'pendiente':'hecho')+', '+esc(fechaLarga(t.f)||'sin fecha')+'</span></div>'});
-  else h+='<div class="kline">Ninguno en '+esc(y)+'</div>';
+  else h+='<div class="kline">Ninguno en esta campaña</div>';
   h+='<button type="button" class="btn sm lk" data-act="exp-go" data-s="tratamientos">Ver tratamientos</button></div>';
-  h+='<div><div class="kt">Aforo</div>'+(af.n?'<div class="kcells" style="margin-top:4px"><div><span>Media</span><b>'+(af.kgha!==null?nf(af.kgha,0)+' kg/ha':'—')+'</b></div><div><span>Aforados</span><b>'+af.n+'</b></div></div>':'<div class="kline">Sin aforar</div>')+'<button type="button" class="btn sm lk" data-act="exp-go" data-s="aforos">'+(af.n?'Ver aforos':'Apuntar aforo')+'</button></div>';
+  h+='<div><div class="kt">Aforo</div>'+(af.n?'<div class="kcells" style="margin-top:4px">'+(afc.length?afc.map(function(e){return '<div><span>'+esc(e.c)+'</span><b>'+(e.kgha!==null?nf(e.kgha,0)+' kg/ha':'—')+'</b></div>'}).join(''):'<div><span>Media</span><b>—</b></div>')+'<div><span>Aforados</span><b>'+af.n+'</b></div></div>':'<div class="kline">Sin aforar</div>')+'<button type="button" class="btn sm lk" data-act="exp-go" data-s="aforos">'+(af.n?'Ver aforos':'Apuntar aforo')+'</button></div>';
   return h+'</div></div>';
 }
 function expCultTblHTML(recs){
-  var gs=varGroups(recs), tot=recs.reduce(function(a,r){return a+r.ha},0); if(!gs.length)return '';
+  var gs=varGroups(recs), tot=recs.reduce(function(a,r){return a+haC(r)},0); if(!gs.length)return '';
   var h='<table class="ktb"><thead><tr><th>Cultivo</th><th>Variedad</th><th class="r">ha</th><th class="r">%</th></tr></thead><tbody>';
   gs.forEach(function(o){
     var named=o.g.filter(function(g){return g.key}), rows=named.length?o.g:[{name:'',ha:o.ha}];
@@ -6607,7 +6612,7 @@ function trSafe(t){var z=trPlazo(t);return z===null?'':trAdd(t.f2||t.f,z)}
 function trDates(t){return diaFmt(t.f)+(t.f2&&t.f2!==t.f?' → '+diaFmt(t.f2):'')}
 function trOrd(f,t){
   if(t.num)return t.num;
-  var y=(t.f||'').slice(0,4), l=(f.trat||[]).filter(function(q){return (q.f||'').slice(0,4)===y}).sort(function(a,b){return (a.f||'').localeCompare(b.f||'')||(a.c||0)-(b.c||0)});
+  var y=campOf(t.f), l=(f.trat||[]).filter(function(q){return campOf(q.f)===y}).sort(function(a,b){return (a.f||'').localeCompare(b.f||'')||(a.c||0)-(b.c||0)});
   var i=l.findIndex(function(q){return q.id===t.id}); return i<0?l.length+1:i+1;
 }
 function trRefs(f,t){return (t.r&&t.r.length)?t.r.filter(function(r){var x=S.recintos[r];return x&&x.fincaId===f.id}):fincaRecs(f.id).map(function(r){return r.ref})}
@@ -6631,9 +6636,9 @@ function trRecTxt(f,t){
   return rs.length+(rs.length===1?' recinto: ':' recintos: ')+txt;
 }
 function trRecSum(f,refs){
-  var all=fincaRecs(f.id), tot=all.reduce(function(a,r){return a+r.ha},0), ok=refs.filter(function(r){return S.recintos[r]&&S.recintos[r].fincaId===f.id});
+  var all=fincaRecs(f.id), tot=all.reduce(function(a,r){return a+haC(r)},0), ok=refs.filter(function(r){return S.recintos[r]&&S.recintos[r].fincaId===f.id});
   if(!ok.length)return 'Toda la finca ('+all.length+(all.length===1?' recinto':' recintos')+' · '+ha2(tot)+' ha)';
-  return ok.length+' de '+all.length+(all.length===1?' recinto':' recintos')+' · '+ha2(ok.reduce(function(a,r){return a+S.recintos[r].ha},0))+' ha';
+  return ok.length+' de '+all.length+(all.length===1?' recinto':' recintos')+' · '+ha2(ok.reduce(function(a,r){return a+haC(S.recintos[r])},0))+' ha';
 }
 function trRecLbl(r){var gn=grNameOf(r),vn=varReal(r)?varName(varStrip(trCultOf(r),r.variedad)):''; return refShort(r.ref)+(r.nombre?' · '+r.nombre:'')+' · '+(r.cultivo||'Sin cultivo')+(vn?' · '+vn:'')+(gn?' · Grupo '+gn:'')+' · '+ha2(haC(r))+' ha'}
 /* ---- Entrega 55: grupos de recintos dentro de cada finca. f.gr=[{id,n}], recinto.gr=id (un recinto, un solo grupo) ---- */
@@ -6712,17 +6717,19 @@ function grRefs(f,id){return grRecs(f,id).map(function(r){return r.ref})}
 function grNameOf(r){var f=r&&finca(r.fincaId), g=f&&grOf(f,r.gr); return g?g.n:''}
 function grBtns(f,ed,act,id){
   var gl=grList(f).filter(function(g){return grRecs(f,g.id).length}); if(!gl.length)return '';
-  return '<div class="lbl" style="margin:0 0 6px">Escoger por grupo</div><div class="chips" id="'+id+'" style="margin-bottom:8px">'+gl.map(function(g){var rs=grRecs(f,g.id);return '<button type="button" class="chip'+(grOn(rs,ed.r)?' on':'')+'" data-act="'+act+'" data-id="'+esc(g.id)+'">'+esc(g.n)+' ('+ha2(rs.reduce(function(a,r){return a+r.ha},0))+' ha)</button>'}).join('')+'</div>';
+  return '<div class="lbl" style="margin:0 0 6px">Escoger por grupo</div><div class="chips" id="'+id+'" style="margin-bottom:8px">'+gl.map(function(g){var rs=grRecs(f,g.id);return '<button type="button" class="chip'+(grOn(rs,ed.r)?' on':'')+'" data-act="'+act+'" data-id="'+esc(g.id)+'">'+esc(g.n)+' ('+ha2(rs.reduce(function(a,r){return a+haC(r)},0))+' ha)</button>'}).join('')+'</div>';
 }
 function grOn(rs,sel){return !!(sel.length&&rs.length&&rs.every(function(r){return sel.indexOf(r.ref)>=0}))}
 function grSync(f,sel,id){$$('#'+id+' .chip').forEach(function(b){b.classList.toggle('on',grOn(grRecs(f,b.dataset.id),sel))})}
 /* texto de grupos de unos recintos (vacío si la finca no tiene grupos) */
 function grParts(f,refs){
   if(!grList(f).length)return [];
-  var m={},o=[]; (refs||[]).forEach(function(r){var x=S.recintos[r];if(!x||x.fincaId!==f.id)return;var g=grOf(f,x.gr),k=g?g.id:'',e=m[k];if(!e){e=m[k]={n:g?g.n:'Sin grupo',ha:0};o.push(e)}e.ha+=x.ha});
+  var m={},o=[]; (refs||[]).forEach(function(r){var x=S.recintos[r];if(!x||x.fincaId!==f.id)return;var g=grOf(f,x.gr),k=g?g.id:'',e=m[k];if(!e){e=m[k]={n:g?g.n:'Sin grupo',ha:0};o.push(e)}e.ha+=haC(x)});
   return o.sort(function(a,b){return (a.n==='Sin grupo')-(b.n==='Sin grupo')||b.ha-a.ha});
 }
-function grTxt(f,refs){var p=grParts(f,refs); return p.length?'Grupos: '+p.map(function(e){return e.n+' '+ha2(e.ha)+' ha'}).join(', '):''}
+/* Entrega 132: en PDF y Excel sin la palabra «grupo»: «La vega 58,02 ha, resto de la finca 70,12 ha» */
+function grDocN(n){return n==='Sin grupo'?'resto de la finca':n}
+function grTxt(f,refs){var p=grParts(f,refs); return p.length?p.map(function(e){return grDocN(e.n)+' '+ha2(e.ha)+' ha'}).join(', '):''}
 function grHTML(f,refs){var p=grParts(f,refs); return p.length?'<div class="small" style="margin-top:2px"><b>Grupos:</b> '+p.map(function(e){return esc(e.n)+' '+ha2(e.ha)+' ha'}).join(' · ')+'</div>':''}
 function grOpts(f,cur){var gl=grList(f).filter(function(g){return grRecs(f,g.id).length}); if(!gl.length)return ''; return '<optgroup label="Grupos">'+gl.map(function(g){var v='gr§'+g.id;return '<option value="'+esc(v)+'"'+(cur===v?' selected':'')+'>Grupo: '+esc(g.n)+' · '+ha2(grRecs(f,g.id).reduce(function(a,r){return a+r.ha},0))+' ha</option>'}).join('')+'</optgroup>'}
 function grStart(id){
@@ -6764,12 +6771,12 @@ function grByVar(){
   f.gr=gl; save(); renderFincas(); undoToast('Grupos creados por variedad');
 }
 function grApplied(f,id){
-  var rs=grRefs(f,id), y=diaToday().slice(0,4), out=[];
+  var rs=grRefs(f,id), y=campHoy(), out=[];
   [['trat','tratamiento','tratamientos'],['abon','abonado','abonados'],['fert','fertirrigación','fertirrigaciones']].forEach(function(k){
     var n=(f[k[0]]||[]).filter(function(t){return t.e!=='p'&&yrOf(t)===y&&trRefs(f,t).some(function(r){return rs.indexOf(r)>=0})}).length;
     if(n)out.push(n+' '+(n===1?k[1]:k[2]));
   });
-  return out.length?'En '+y+': '+out.join(' · '):'Sin aplicaciones en '+y;
+  return out.length?'En la campaña '+campLbl(y)+': '+out.join(' · '):'Sin aplicaciones en la campaña '+campLbl(y);
 }
 function grSecHTML(f){
   if(GTOK)return '';
@@ -6796,7 +6803,7 @@ function grSecHTML(f){
     h+='<div class="kline" style="display:block;padding:8px 0;border-top:1px solid var(--line)"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap"><button type="button" class="lnk grpick" data-act="exp-g" data-g="'+esc(g.id)+'" title="Ver toda la ficha de este grupo"><b>'+esc(g.n)+'</b> ›</button><span class="small">'+rs.length+(rs.length===1?' recinto':' recintos')+' · '+ha2(ha)+' ha</span></div><div class="small">'+esc(grApplied(f,g.id))+'</div><div class="acts" style="margin:6px 0 0">'+(rs.length&&!isOc(f)?'<button type="button" class="btn sm" data-act="gr-map" data-id="'+esc(g.id)+'">Ver en el mapa</button>':'')+'<button type="button" class="btn sm" data-act="gr-edit" data-id="'+esc(g.id)+'">Editar</button></div></div>';
   });
   var ng=recs.filter(function(r){return !grOf(f,r.gr)});
-  if(ng.length)h+='<div class="kline" style="display:block;padding:8px 0;border-top:1px solid var(--line)"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><b>Sin grupo</b><span class="small">'+ng.length+(ng.length===1?' recinto':' recintos')+' · '+ha2(ng.reduce(function(a,r){return a+r.ha},0))+' ha</span></div></div>';
+  if(ng.length)h+='<div class="kline" style="display:block;padding:8px 0;border-top:1px solid var(--line)"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><b>Sin grupo</b><span class="small">'+ng.length+(ng.length===1?' recinto':' recintos')+' · '+ha2(ng.reduce(function(a,r){return a+haC(r)},0))+' ha</span></div></div>';
   h+='<div class="acts"><button type="button" class="btn sm" data-act="gr-byvar">Un grupo por cada variedad</button></div>';
   return h+'</div>';
 }
@@ -6991,7 +6998,7 @@ var FOLD={}, FOLDK={tr:'trat',ab:'abon',fe:'fert'};
 function foldOpen(k,t){var key=k+':'+t.id; return (key in FOLD)?FOLD[key]:(k==='fe'?t.e==='p':true)}
 function cardFold(k,f,t,html){
   var key=k+':'+t.id, open=foldOpen(k,t);
-  var refs=trRefs(f,t), ha=refs.reduce(function(a,r){return a+(S.recintos[r]?S.recintos[r].ha:0)},0);
+  var refs=trRefs(f,t), ha=refs.reduce(function(a,r){return a+haC(S.recintos[r])},0);
   var prods=(t.ps||[]).concat(t.pd||[]).map(function(q){return q.n}).filter(Boolean).join(', '), gps=grParts(f,refs).map(function(e){return e.n}).join(', ');
   var sum='<div class="cfsum" data-act="card-fold" data-fk="'+esc(key)+'">'+ha2(ha)+' ha'+(gps?' · '+esc(gps):'')+(prods?' · '+esc(prods):'')+(t.e==='p'?' · pendiente':'')+'</div>';
   var i=html.indexOf('class="diah"'); if(i<0)return html;
@@ -7056,7 +7063,7 @@ function trGroupHTML(f,list,title,today){
   if(!list.length)return '';
   var h='<h3>'+title+' <span class="small">('+list.length+')</span></h3>', yr=null;
   list.forEach(function(t){
-    var y=(t.f||'').slice(0,4)||'Sin fecha'; if(y!==yr){yr=y;h+='<div class="lbl">Campaña '+esc(y)+'</div>'}
+    var y=yrOf(t); if(y!==yr){yr=y;h+='<div class="lbl">Campaña '+esc(campLbl(y))+'</div>'}
     h+=trCardHTML(f,t,today);
   });
   return h;
@@ -7131,7 +7138,7 @@ function trSave(){
   var z=String(ed.z||'').trim(), ob=String(ed.o||'').trim(), fe=String(ed.fe||'').trim();
   if(f2&&f2!==ed.f)t.f2=f2; if(fe)t.fe=fe; if(nm)t.num=+nm; if(z)t.z=z; if(ob)t.o=ob;
   if(cl!==null){t.cl=Math.round(cl.max*100)/100; if(cl.min<cl.max)t.cl0=Math.round(cl.min*100)/100}
-  var list=(f.trat||[]).filter(function(q){return q.id!==id}); list.push(t); f.trat=list; TR.yr=(t.f||'').slice(0,4)||'all';
+  var list=(f.trat||[]).filter(function(q){return q.id!==id}); list.push(t); f.trat=list; TR.yr=campOf(t.f)||'all';
   trRegUpdate(ps,pcCtx('tr',f,t));
   var pf=ed.pdf, pn=ed.pdfN, pd=ed.pdfD||ed.f, fid=f.id;
   TR.ed=null; save(); renderFincas(); undoToast(ed.id?'Tratamiento actualizado':'Tratamiento guardado');
@@ -7708,7 +7715,7 @@ function abResumen(f,cult){
   var base=fincaRecs(f.id).filter(function(r){return cvMatch(r,cult)}), haB=base.reduce(function(a,r){return a+haC(r)},0), ys={};
   function sumHa(o){return Object.keys(o).reduce(function(a,r){return a+(haC(S.recintos[r]))},0)}
   (f.abon||[]).forEach(function(t){
-    var y=(t.f||'').slice(0,4)||'Sin fecha', refs=trRefs(f,t).filter(function(r){return cvMatch(S.recintos[r],cult)});
+    var y=yrOf(t), refs=trRefs(f,t).filter(function(r){return cvMatch(S.recintos[r],cult)});
     if(!refs.length)return;
     var c=abCalc(f,t,refs), e=ys[y]||(ys[y]={y:y,h:{n:0,p:0,k:0,c:0,refs:{}},p:{n:0,p:0,k:0,c:0,refs:{}},prods:{}}), g=t.e==='p'?e.p:e.h;
     g.c++; g.n+=c.tot.n*c.ha; g.p+=c.tot.p*c.ha; g.k+=c.tot.k*c.ha; refs.forEach(function(r){g.refs[r]=1});
@@ -7722,7 +7729,7 @@ function abResumen(f,cult){
     var g=ys[y][k]; g.ha=sumHa(g.refs); g.n=g.ha?g.n/g.ha:0; g.p=g.ha?g.p/g.ha:0; g.k=g.ha?g.k/g.ha:0;
   });
     ys[y].sin=base.filter(function(r){return !ys[y].h.refs[r.ref]}).map(function(r){return r.ref});
-    ys[y].haSin=ys[y].sin.reduce(function(a,r){return a+S.recintos[r].ha},0);
+    ys[y].haSin=ys[y].sin.reduce(function(a,r){return a+haC(S.recintos[r])},0);
   });
   return {ys:ys,haB:haB};
 }
@@ -7731,7 +7738,7 @@ function abResumenHTML(f,cult,ye){
   var h='<div class="note"><b>Resumen por campaña</b>';
   yl.forEach(function(y){
     var e=R.ys[y], op=!!AB.open['y'+y], ou=!!AB.open['u'+y], pl=Object.keys(e.prods).map(function(k){return e.prods[k]}).sort(function(a,b){return a.n.localeCompare(b.n,'es')});
-    h+='<div style="margin-top:10px"><div class="lbl" style="margin:0">Campaña '+esc(y)+'</div>';
+    h+='<div style="margin-top:10px"><div class="lbl" style="margin:0">Campaña '+esc(campLbl(y))+'</div>';
     h+='<div class="small" style="color:inherit"><b>'+(cult?esc(cvLabel(f,cult)):'Toda la finca')+':</b> '+ha2(R.haB)+' ha · <b>abonadas '+ha2(e.h.ha)+' ha</b> · sin abonar '+ha2(e.haSin)+' ha</div>';
     h+=e.h.c?'<div class="small" style="color:inherit;margin-top:2px"><b>Aportado</b> (sobre '+ha2(e.h.ha)+' ha): '+abUFtxt(e.h)+' U.F./ha</div>':'<div class="small" style="color:inherit;margin-top:2px">Todavía nada aportado</div>';
     h+=abTotLine(f,cult,y);
@@ -7748,7 +7755,7 @@ function abResumenHTML(f,cult,ye){
 function abTotData(f,cult,y){
   var e={n:0,p:0,k:0,refs:{},a:0,f:0,an:0,ap:0,ak:0};
   [['abon','a'],['fert','f']].forEach(function(kk){(f[kk[0]]||[]).forEach(function(t){
-    if(t.e==='p'||((t.f||'').slice(0,4)||'Sin fecha')!==y)return;
+    if(t.e==='p'||yrOf(t)!==y)return;
     var refs=trRefs(f,t).filter(function(r){return cvMatch(S.recintos[r],cult)}); if(!refs.length)return;
     var c=abCalc(f,t,refs); e.n+=c.tot.n*c.ha; e.p+=c.tot.p*c.ha; e.k+=c.tot.k*c.ha; if(kk[1]==='a'){e.an+=c.tot.n*c.ha;e.ap+=c.tot.p*c.ha;e.ak+=c.tot.k*c.ha} e[kk[1]]++; refs.forEach(function(r){e.refs[r]=1});
   })});
@@ -7852,7 +7859,7 @@ function abGroupHTML(f,list,title,today){
   if(!list.length)return '';
   var h='<h3>'+title+' <span class="small">('+list.length+')</span></h3>', yr=null;
   list.forEach(function(t){
-    var y=(t.f||'').slice(0,4)||'Sin fecha'; if(y!==yr){yr=y;h+='<div class="lbl">Campaña '+esc(y)+'</div>'}
+    var y=yrOf(t); if(y!==yr){yr=y;h+='<div class="lbl">Campaña '+esc(campLbl(y))+'</div>'}
     h+=abCardHTML(f,t,today);
   });
   return h;
@@ -7925,7 +7932,7 @@ function abSave(){
   var t={id:id,f:ed.f,e:ed.e==='p'?'p':'h',ps:ps,r:rs,c:ed.c||now,m:now};
   var z=String(ed.z||'').trim(), ob=String(ed.o||'').trim();
   if(f2&&f2!==ed.f)t.f2=f2; if(z)t.z=z; if(ob)t.o=ob;
-  var list=(f.abon||[]).filter(function(q){return q.id!==id}); list.push(t); f.abon=list; AB.yr=(t.f||'').slice(0,4)||'all';
+  var list=(f.abon||[]).filter(function(q){return q.id!==id}); list.push(t); f.abon=list; AB.yr=campOf(t.f)||'all';
   abRegUpdate(ps,pcCtx('ab',f,t));
   AB.ed=null; save(); renderFincas(); undoToast(ed.id?'Abonado actualizado':'Abonado guardado');
 }
@@ -7985,7 +7992,7 @@ function feResumen(f,cult){
   var base=fincaRecs(f.id).filter(function(r){return cvMatch(r,cult)}), haB=base.reduce(function(a,r){return a+haC(r)},0), ys={};
   function sumHa(o){return Object.keys(o).reduce(function(a,r){return a+(haC(S.recintos[r]))},0)}
   (f.fert||[]).forEach(function(t){
-    var y=(t.f||'').slice(0,4)||'Sin fecha', refs=trRefs(f,t).filter(function(r){return cvMatch(S.recintos[r],cult)});
+    var y=yrOf(t), refs=trRefs(f,t).filter(function(r){return cvMatch(S.recintos[r],cult)});
     if(!refs.length)return;
     var c=abCalc(f,t,refs), e=ys[y]||(ys[y]={y:y,h:{n:0,p:0,k:0,c:0,refs:{}},p:{n:0,p:0,k:0,c:0,refs:{}},prods:{},pdq:{}}), g=t.e==='p'?e.p:e.h;
     g.c++; g.n+=c.tot.n*c.ha; g.p+=c.tot.p*c.ha; g.k+=c.tot.k*c.ha; refs.forEach(function(r){g.refs[r]=1});
@@ -8004,7 +8011,7 @@ function feResumen(f,cult){
     var g=ys[y][k]; g.ha=sumHa(g.refs); g.n=g.ha?g.n/g.ha:0; g.p=g.ha?g.p/g.ha:0; g.k=g.ha?g.k/g.ha:0;
   });
     ys[y].sin=base.filter(function(r){return !ys[y].h.refs[r.ref]}).map(function(r){return r.ref});
-    ys[y].haSin=ys[y].sin.reduce(function(a,r){return a+S.recintos[r].ha},0);
+    ys[y].haSin=ys[y].sin.reduce(function(a,r){return a+haC(S.recintos[r])},0);
   });
   return {ys:ys,haB:haB};
 }
@@ -8013,7 +8020,7 @@ function feResumenHTML(f,cult,ye){
   var h='<div class="note"><b>Resumen por campaña</b>';
   yl.forEach(function(y){
     var e=R.ys[y], op=!!FE.open['y'+y], ou=!!FE.open['u'+y], oq=!!FE.open['q'+y], pl=Object.keys(e.prods).map(function(k){return e.prods[k]}).sort(function(a,b){return a.n.localeCompare(b.n,'es')}), ql=Object.keys(e.pdq).map(function(k){return e.pdq[k]}).sort(function(a,b){return a.n.localeCompare(b.n,'es')});
-    h+='<div style="margin-top:10px"><div class="lbl" style="margin:0">Campaña '+esc(y)+'</div>';
+    h+='<div style="margin-top:10px"><div class="lbl" style="margin:0">Campaña '+esc(campLbl(y))+'</div>';
     h+='<div class="small" style="color:inherit"><b>'+(cult?esc(cvLabel(f,cult)):'Toda la finca')+':</b> '+ha2(R.haB)+' ha · <b>aplicadas '+ha2(e.h.ha)+' ha</b> · sin aplicar '+ha2(e.haSin)+' ha</div>';
     h+=e.h.c?'<div class="small" style="color:inherit;margin-top:2px"><b>Aportado</b> (sobre '+ha2(e.h.ha)+' ha): '+abUFtxt(e.h)+' U.F./ha</div>':'<div class="small" style="color:inherit;margin-top:2px">Todavía nada aportado</div>';
     h+=abTotLine(f,cult,y);
@@ -8175,7 +8182,7 @@ function feGroupHTML(f,list,title,today){
   if(!list.length)return '';
   var h='<h3>'+title+' <span class="small">('+list.length+')</span></h3>', yr=null;
   list.forEach(function(t){
-    var y=(t.f||'').slice(0,4)||'Sin fecha'; if(y!==yr){yr=y;h+='<div class="lbl">Campaña '+esc(y)+'</div>'}
+    var y=yrOf(t); if(y!==yr){yr=y;h+='<div class="lbl">Campaña '+esc(campLbl(y))+'</div>'}
     h+=feCardHTML(f,t,today);
   });
   return h;
@@ -8262,7 +8269,7 @@ function feSave(){
   var z=String(ed.z||'').trim(), ob=String(ed.o||'').trim(), wv=trNum(ed.w);
   if(wv!==null&&(isNaN(wv)||wv<0)){toast('El agua tiene que ser un número (m³ por hectárea)');return}
   if(f2&&f2!==ed.f)t.f2=f2; if(z)t.z=z; if(ob)t.o=ob; if(wv!==null)t.w=wv;
-  undoPush(); var list=(f.fert||[]).filter(function(q){return q.id!==id}); list.push(t); f.fert=list; FE.yr=(t.f||'').slice(0,4)||'all';
+  undoPush(); var list=(f.fert||[]).filter(function(q){return q.id!==id}); list.push(t); f.fert=list; FE.yr=campOf(t.f)||'all';
   feRegUpdate(ps,pd,pcCtx('fe',f,t));
   FE.ed=null; save(); renderFincas(); undoToast(ed.id?'Fertirrigación actualizada':'Fertirrigación guardada');
 }
@@ -8333,9 +8340,9 @@ var PL_C=['#2E7D4F','#C9822B','#3B6EA8'];
 function plCap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
 function plIso(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
 function plWeeks(y,all){
-  y=+y; var out=[], cnt={}, d=new Date(y,all?0:2,1,12); if(!(y>1900))return out;
+  y=+y; var out=[], cnt={}, d=all?new Date(y-1,10,1,12):new Date(y,2,1,12), end=new Date(y,9,31,12); if(!(y>1900))return out;
   while(d.getDay()!==4)d.setDate(d.getDate()+1);
-  while(d.getFullYear()===y&&d.getMonth()<=(all?11:9)){
+  while(d<=end){
     var m=d.getMonth(), mo=new Date(d.getTime()), su=new Date(d.getTime()); mo.setDate(d.getDate()-3); su.setDate(d.getDate()+3);
     cnt[m]=(cnt[m]||0)+1; out.push({k:plIso(mo),m:m,i:cnt[m],f:plIso(mo),f2:plIso(su)});
     d.setDate(d.getDate()+7);
@@ -8385,20 +8392,20 @@ function plCap0(f){var d=f.datos||{};return d.maq&&+d.maq.atom>0?+d.maq.atom:nul
 function plTrCl(f,t,haS){if(t.cm==='at'){var na=plNum(t.na),cap=plCap0(f);return (na>0&&cap&&haS>0)?na*cap/haS:null}return plNum(t.cl)}
 /* todos los números del plan: U.F. por mes y acumuladas, totales, costes y cantidades para la finca */
 function plCalc(f,p){
-  var recs=plRecs(f,p), ha=plHaOf(recs), W=plWeeks(p.y,p.wa), MS=p.wa?[0,1,2,3,4,5,6,7,8,9,10,11]:[2,3,4,5,6,7,8,9], wm={}, mon={}, tot={n:0,p:0,k:0}, fon={n:0,p:0,k:0}, cost={fe:0,fo:0,tr:0}, has={fe:false,fo:false,tr:false};
+  var UA={}, recs=plRecs(f,p), ha=plHaOf(recs), W=plWeeks(p.y,p.wa), MS=p.wa?[10,11,0,1,2,3,4,5,6,7,8,9]:[2,3,4,5,6,7,8,9], wm={}, mon={}, tot={n:0,p:0,k:0}, fon={n:0,p:0,k:0}, cost={fe:0,fo:0,tr:0}, has={fe:false,fo:false,tr:false};
   W.forEach(function(w){wm[w.k]=w});
   for(var m=0;m<=11;m++)mon[m]={n:0,p:0,k:0};
   /* Entrega 69: si hay dosis solo para un grupo, los totales por ha se dan por grupo (no una media que no existe en el campo) */
   var GB=[], gl=p.g?[]:grList(f);
   if(gl.length){gl.forEach(function(g){var hg=plHaOf(recs.filter(function(r){return r.gr===g.id}));if(hg>0)GB.push({g:g,ha:hg,tot:{n:0,p:0,k:0}})});
-    var hs=plHaOf(recs.filter(function(r){return !r.gr||!gl.some(function(g){return g.id===r.gr})}));if(hs>0)GB.push({g:{id:'',n:'Sin grupo'},ha:hs,tot:{n:0,p:0,k:0}})}
+    var hs=plHaOf(recs.filter(function(r){return !r.gr||!gl.some(function(g){return g.id===r.gr})}));if(hs>0)GB.push({g:{id:'',n:'Resto de la finca'},ha:hs,tot:{n:0,p:0,k:0}})}
   var split=GB.length>1&&(p.rows||[]).some(function(r){return Object.keys(r.c||{}).some(function(k){var c=r.c[k];return c&&c.g&&+c.d>0&&wm[k]})});
   var rows=(p.rows||[]).map(function(r){
     var o={r:r,dHa:0,qty:0,cost:null,uf:{n:0,p:0,k:0},noKg:false,part:false,bg:GB.map(function(){return 0})}, U={};
     Object.keys(r.c||{}).forEach(function(k){
       var c=r.c[k], w=wm[k], d=+c.d; if(!w||!(d>0))return;
       var rs=plCellRecs(f,p,c), hc=plHaOf(rs), fr=ha?hc/ha:0;
-      o.dHa+=d*fr; o.qty+=d*hc; if(c.rs&&hc<ha-1e-9)o.part=true; rs.forEach(function(z){U[z.ref||z.id]=z});
+      o.dHa+=d*fr; o.qty+=d*hc; if(c.rs&&hc<ha-1e-9)o.part=true; rs.forEach(function(z){U[z.ref||z.id]=z;UA[z.ref||z.id]=z});
       GB.forEach(function(b,i){if(!c.g||c.g===b.g.id){o.bg[i]+=d;if(r.k==='a'){var kb=plKg(r,d);if(kb!==null)['n','p','k'].forEach(function(x){b.tot[x]+=kb*(+r['q'+x]||0)/100})}}});
       if(c.cs!==undefined){if(c.cs!==null){o.cost=(o.cost||0)+c.cs; has.fe=true}}
       else if(abHas(r.pr)){o.cost=(o.cost||0)+d*(+r.pr)*hc; has.fe=true}
@@ -8412,11 +8419,13 @@ function plCalc(f,p){
     return o;
   });
   var fo=(p.fo||[]).map(function(q){
-    var d=+q.d, hq=q.rs?plHaOf(q.rs):ha, fr=q.rs?(ha?hq/ha:0):1, o={q:q,qty:null,cost:null,uf:null,ha:hq,part:!!q.rs&&hq<ha-1e-9};
+    if(p.vr&&+q.d>0)(q.rs||recs).forEach(function(z){UA[z.ref||z.id]=z}); var d=+q.d, hq=q.rs?plHaOf(q.rs):ha, fr=q.rs?(ha?hq/ha:0):1, o={q:q,qty:null,cost:null,uf:null,ha:hq,part:!!q.rs&&hq<ha-1e-9};
     if(d>0){o.qty=d*hq; var kg=plKg(q,d); if(kg!==null){o.uf={n:kg*(+q.qn||0)/100,p:kg*(+q.qp||0)/100,k:kg*(+q.qk||0)/100};['n','p','k'].forEach(function(x){fon[x]+=o.uf[x]*fr;tot[x]+=o.uf[x]*fr})}
       if(abHas(q.pr)){o.cost=d*(+q.pr)*hq;cost.fo+=o.cost;has.fo=true}}
     return o;
   });
+  /* Entrega 132: en Abonado y Fertirrigación las U.F./ha van sobre las hectáreas abonadas o regadas, no sobre toda la finca */
+  var haT=ha; if(p.vr){haT=plHaOf(Object.keys(UA).map(function(k){return UA[k]})); if(haT>0&&ha>0&&haT<ha-1e-9){var kT=ha/haT; ['n','p','k'].forEach(function(x){tot[x]*=kT;fon[x]*=kT;for(var m=0;m<=11;m++)mon[m][x]*=kT})}}
   GB.forEach(function(b){['n','p','k'].forEach(function(x){b.tot[x]+=fon[x]})});
   var TO=plTrOrder(f,p), cap=plCap0(f);
   var trs=TO.list.map(function(t){
@@ -8433,7 +8442,7 @@ function plCalc(f,p){
   var obj=p.obj||{}, cub={};
   ['n','p','k'].forEach(function(x){var ob=plNum(obj[x]);cub[x]=ob?{o:ob,pc:tot[x]/ob*100,dif:tot[x]-ob}:null});
   var ct=(has.fe?cost.fe:0)+(has.fo?cost.fo:0)+(has.tr?cost.tr:0), anyC=has.fe||has.fo||has.tr;
-  return {vr:p.vr||'',MS:MS,GB:GB,split:split,recs:recs,ha:ha,W:W,mon:mon,tot:tot,fon:fon,rows:rows,fo:fo,trs:trs,code:TO.code,acc:acc,cub:cub,cap:cap,
+  return {vr:p.vr||'',MS:MS,GB:GB,split:split,recs:recs,ha:ha,haT:haT,W:W,mon:mon,tot:tot,fon:fon,rows:rows,fo:fo,trs:trs,code:TO.code,acc:acc,cub:cub,cap:cap,
     cost:{fe:has.fe?cost.fe:null,fo:has.fo?cost.fo:null,tr:has.tr?cost.tr:null,tot:anyC?ct:null,ha:anyC&&ha?ct/ha:null}};
 }
 /* total por ha de una fila: un número, o uno por grupo si las dosis cambian entre grupos */
@@ -8442,7 +8451,7 @@ function plTotTxt(C0,o,sep){var t=plTotParts(C0,o);return t?t.map(function(x){re
 /* U.F./ha de la campaña por grupo (solo si hay dosis distintas entre grupos) */
 function plUfTxt(C0){var u=function(t){return 'N '+trTxt(t.n,1)+' · P₂O₅ '+trTxt(t.p,1)+' · K₂O '+trTxt(t.k,1)};return C0.split?C0.GB.map(function(b){return b.g.n+': '+u(b.tot)}):[u(C0.tot)]}
 /* Entrega 70: total por ha = media de la finca, señalada con * cuando el abono no va igual a todos los grupos */
-function plTitle(p){if(p.vr)return PL_SEC[p.vr]+' '+p.y;return ((p.tr||[]).length?'Plan de campaña ':'Plan de fertirrigación ')+p.y}
+function plTitle(p){if(p.vr)return PL_SEC[p.vr]+' '+campLbl(p.y);return ((p.tr||[]).length?'Plan de campaña ':'Plan de fertirrigación ')+campLbl(p.y)}
 var PL_TN='* Total por hectárea sobre las hectáreas tratadas con ese producto, no sobre toda la finca.';
 function plTotNote(C0,unit){if(C0.vr&&C0.rows.some(function(o){return o.split}))return PL_TN;if(C0.rows.some(function(o){return o.split}))return '* Media de la finca.';var L=[];C0.rows.forEach(function(o){if(o.split)L.push(o.r.n+': '+plTotParts(C0,o).map(function(x){return x[0]+' '+trTxt(x[1],2,1)}).join(' · ')+' '+(o.r.u==='L'?'L':'kg')+'/ha')});return L.length?'* Media de la finca; estos abonos no van igual a todos los grupos: '+L.join(' — '):''}
 /* fechas de un periodo: «enero 2026» si es el mes entero, «1–15 ene 2026» si es dentro del mismo mes */
@@ -8546,9 +8555,9 @@ function plSecHTML(f,sec){
   if(!A.y)return '<div class="small" style="margin-top:10px">Elige una campaña (año) para ver el calendario por semanas y sacar el PDF de la campaña.</div>';
   if(!A.list.length)return '';
   var p=plFromRecs(f,sec,A), C0=plCalc(f,p), h='';
-  var bt='<div class="acts" style="margin:8px 0 0"><button class="btn" data-act="pl-spdf" data-k="'+sec+'">PDF de la campaña '+esc(A.y)+'</button><button class="btn" data-act="pl-sxlsx" data-k="'+sec+'">Excel</button></div>';
+  var bt='<div class="acts" style="margin:8px 0 0"><button class="btn" data-act="pl-spdf" data-k="'+sec+'">PDF de la campaña '+esc(campLbl(A.y))+'</button><button class="btn" data-act="pl-sxlsx" data-k="'+sec+'">Excel</button></div>';
   if(sec==='ab')return bt;
-  h+='<h3 style="margin-top:14px">Calendario '+esc(A.y)+' por semanas</h3>';
+  h+='<h3 style="margin-top:14px">Calendario '+esc(campLbl(A.y))+' por semanas</h3>';
   var any=sec==='fe'?C0.rows.length>0:C0.trs.some(function(o){return o.pls.some(function(x){return x.k})});
   h+=any?plGridHTML(f,p,C0):'<div class="small">Nada con dosis en esta campaña.</div>';
   return h+bt;
@@ -8558,7 +8567,7 @@ function plSecOut(f,sec,kind){
   if(kind==='pdf'&&!loadPdfLib()){pdfNoListo();return}
   var p=plFromRecs(f,sec,A), cos=plCalc(f,p).cost.tot!==null, b;
   try{b=kind==='pdf'?buildPlanPdf(f,p,cos):buildPlanXlsx(f,p,cos)}catch(e){toast('No he podido crear el '+(kind==='pdf'?'PDF':'Excel')+'.');return}
-  showDl(b,plFileBase(f,p)+(kind==='pdf'?'.pdf':'.xlsx'),PL_SEC[sec]+' · campaña '+esc(A.y),esc(f.nombre)+esc(plScopeSuf(f,p)));
+  showDl(b,plFileBase(f,p)+(kind==='pdf'?'.pdf':'.xlsx'),PL_SEC[sec]+' · campaña '+esc(campLbl(A.y)),esc(f.nombre)+esc(plScopeSuf(f,p)));
 }
 /* ---- apuntes ya creados desde el plan ---- */
 function plDoneRec(f,p,key){
@@ -8736,7 +8745,7 @@ function plClTxt(f,p){
 function plTrSources(f){
   var out=[], seen={};
   (S.fincas||[]).forEach(function(ff){
-    (ff.plan||[]).forEach(function(p){var TO=plTrOrder(ff,p);(p.tr||[]).forEach(function(t){out.push({l:'Plan '+p.y+' · '+ff.nombre+' · '+TO.code[t.id]+(t.fe?' · '+t.fe:''),t:t,d:'p'+p.y})})});
+    (ff.plan||[]).forEach(function(p){var TO=plTrOrder(ff,p);(p.tr||[]).forEach(function(t){out.push({l:'Plan '+campLbl(p.y)+' · '+ff.nombre+' · '+TO.code[t.id]+(t.fe?' · '+t.fe:''),t:t,d:'p'+p.y})})});
     (ff.trat||[]).forEach(function(t){out.push({l:ff.nombre+' · '+diaFmt(t.f)+(t.fe?' · '+t.fe:'')+' · '+(t.ps||[]).map(function(q){return q.n}).join(', '),t:t,d:t.f||''})});
   });
   out.sort(function(a,b){return String(b.d).localeCompare(String(a.d))});
@@ -8817,18 +8826,18 @@ function planHTML(f){
   if(GTOK)return '<div class="small">El plan de campaña no está disponible en esta vista.</div>';
   var l=plList(f), p=plCur(f), h='';
   var egp=expGGet(f); if(egp&&!PL.nw&&!l.some(function(x){return x.g===egp}))h+='<div class="note" style="margin-top:0">«'+esc(grOf(f,egp).n)+'» todavía no tiene plan de campaña propio.<div class="acts"><button class="btn sm primary" data-act="exp-gplan">Crear plan para «'+esc(grOf(f,egp).n)+'»</button></div></div>';
-  h+='<div class="acts" style="margin-top:0">'+l.map(function(x){return '<button type="button" class="chip'+(p&&x.id===p.id?' on':'')+'" data-act="pl-pick" data-id="'+esc(x.id)+'">'+esc(x.y)+' · '+esc(plScopeName(f,x))+'</button>'}).join('')+'<button class="btn'+(l.length?'':' primary')+'" data-act="pl-new">+ Nuevo plan</button></div>';
+  h+='<div class="acts" style="margin-top:0">'+l.map(function(x){return '<button type="button" class="chip'+(p&&x.id===p.id?' on':'')+'" data-act="pl-pick" data-id="'+esc(x.id)+'">'+esc(campLbl(x.y))+' · '+esc(plScopeName(f,x))+'</button>'}).join('')+'<button class="btn'+(l.length?'':' primary')+'" data-act="pl-new">+ Nuevo plan</button></div>';
   if(PL.nw&&PL.nw.fid===f.id){
     var gl=grList(f).filter(function(g){return grRecs(f,g.id).length}), src=[];
     (S.fincas||[]).forEach(function(ff){(ff.plan||[]).forEach(function(x){src.push({id:x.id,fid:ff.id,l:ff.nombre+' · '+x.y+' · '+plScopeName(ff,x)})})});
-    h+='<div class="note diaf"><b>Plan nuevo</b><div class="lbl" style="margin-top:8px">Campaña (año)</div><input id="pl-ny" class="in" inputmode="numeric" value="'+esc(PL.nw.y)+'" autocomplete="off">';
+    h+='<div class="note diaf"><b>Plan nuevo</b><div class="lbl" style="margin-top:8px">Campaña (año de la cosecha: 2027 = campaña 2026/27)</div><input id="pl-ny" class="in" inputmode="numeric" value="'+esc(PL.nw.y)+'" autocomplete="off">';
     h+='<div class="lbl" style="margin-top:8px">Para</div><div class="chips" id="pl-ng"><button type="button" class="chip'+(PL.nw.g?'':' on')+'" data-act="pl-ng" data-g="">Toda la finca</button>'+gl.map(function(g){return '<button type="button" class="chip'+(PL.nw.g===g.id?' on':'')+'" data-act="pl-ng" data-g="'+esc(g.id)+'">'+esc(g.n)+'</button>'}).join('')+'</div>';
     if(src.length)h+='<div class="lbl" style="margin-top:8px">Empezar copiando otro plan (opcional)</div><select id="pl-ncp" class="trsel" style="width:100%"><option value="">— En blanco —</option>'+src.map(function(s){return '<option value="'+esc(s.fid+'|'+s.id)+'"'+(PL.nw.cp===s.fid+'|'+s.id?' selected':'')+'>'+esc(s.l)+'</option>'}).join('')+'</select><div class="small" style="margin-top:4px">Se copian abonos, dosis por semana (misma semana del mes), fondo, tratamientos, objetivo y notas.</div>';
     h+='<div class="acts"><button class="btn primary" data-act="pl-create">Crear plan</button><button class="btn" data-act="pl-new-cancel">Cancelar</button></div></div>';
   }
   if(!p){if(!PL.nw)h+='<div class="small">Prepara aquí la campaña de riego de esta finca (o de un grupo): los abonos por semanas de marzo a octubre, el abonado de fondo y los tratamientos. Verás las U.F. frente al objetivo, las gráficas y el coste, y con un toque pasas a hecho lo que se vaya cumpliendo.</div>';return h}
   var C0=plCalc(f,p);
-  h+='<div class="plhead"><div><div class="exptt" style="font-size:20px">Plan '+esc(p.y)+' · '+esc(plScopeName(f,p))+'</div><div class="small">'+haTxt(C0.recs)+' · '+C0.recs.length+(C0.recs.length===1?' recinto':' recintos')+' · semanas de lunes a domingo (cada una cuenta en el mes de su jueves)</div></div>';
+  h+='<div class="plhead"><div><div class="exptt" style="font-size:20px">Plan '+esc(campLbl(p.y))+' · '+esc(plScopeName(f,p))+'</div><div class="small">'+haTxt(C0.recs)+' · '+C0.recs.length+(C0.recs.length===1?' recinto':' recintos')+' · semanas de lunes a domingo (cada una cuenta en el mes de su jueves)</div></div>';
   h+='<div class="acts" style="margin:6px 0 0"><button class="btn primary" data-act="pl-mark">Marcar como hecho</button><button class="btn" data-act="pl-pdf">PDF</button><button class="btn" data-act="pl-xlsx">Excel</button><button class="btn sm lk danger" data-act="pl-del">Borrar plan</button></div></div>';
   if(PL.mark)h+=plMarkHTML(f,p);
   h+='<h3 style="margin-top:14px">Fertirrigación por semanas</h3>';
@@ -8856,7 +8865,7 @@ function plNew(f){var d=new Date(), y=d.getMonth()>=8?d.getFullYear()+1:d.getFul
 function plCreate(f){
   var e=PL.nw; if(!e)return; var y=String(e.y||'').trim();
   if(!/^\d{4}$/.test(y)||+y<2000||+y>2100){toast('Pon el año de la campaña (ej. 2027)');return}
-  if((f.plan||[]).some(function(p){return String(p.y)===y&&(p.g||'')===(e.g||'')})){toast('Ya hay un plan '+y+' para '+(e.g?plGrp(f,e.g).n:'toda la finca'));return}
+  if((f.plan||[]).some(function(p){return String(p.y)===y&&(p.g||'')===(e.g||'')})){toast('Ya hay un plan '+campLbl(y)+' para '+(e.g?plGrp(f,e.g).n:'toda la finca'));return}
   var p={id:uid(),y:y,g:e.g||'',obj:{},nt:'',rows:[],fo:[],tr:[],tw:{},hd:{},c:Date.now(),m:Date.now()};
   if(e.cp){var a=e.cp.split('|'), sf=finca(a[0]), sp=sf&&plGet(sf,a[1]);
     if(sp){var map={},ow=plWeeks(sp.y),nw=plWeeks(y); ow.forEach(function(w){var t=nw.filter(function(x){return x.m===w.m&&x.i===w.i})[0]||nw.filter(function(x){return x.m===w.m}).slice(-1)[0];if(t)map[w.k]=t.k});
@@ -8870,10 +8879,10 @@ function plCreate(f){
       Object.keys(cp.tw||{}).forEach(function(k){if(map[k]&&tid[cp.tw[k]])p.tw[map[k]]=tid[cp.tw[k]]});
       p.fo=(cp.fo||[]).map(function(q){q.id=uid();if(q.f)q.f=y+q.f.slice(4);if(q.f2)q.f2=y+q.f2.slice(4);return q});
     }}
-  undoPush(); f.plan=(f.plan||[]).concat([p]); PL.pid=p.id; PL.nw=null; plSave(f,p,'Plan '+y+' creado');
+  undoPush(); f.plan=(f.plan||[]).concat([p]); PL.pid=p.id; PL.nw=null; plSave(f,p,'Plan '+campLbl(y)+' creado');
 }
 function plDel(f,p){
-  if(typeof confirm==='function'&&!confirm('¿Borrar el plan '+p.y+' · '+plScopeName(f,p)+'? Lo que ya pasaste a hecho se queda en Fertirrigación, Abonado y Tratamientos.'))return;
+  if(typeof confirm==='function'&&!confirm('¿Borrar el plan '+campLbl(p.y)+' · '+plScopeName(f,p)+'? Lo que ya pasaste a hecho se queda en Fertirrigación, Abonado y Tratamientos.'))return;
   undoPush(); f.plan=(f.plan||[]).filter(function(x){return x.id!==p.id}); PL.pid=null; PL.cell=PL.tcell=PL.row=PL.fo=PL.tr=PL.mark=null; save(); renderFincas(); undoToast('Plan borrado');
 }
 function plCellOpen(p,r,w){PL.cell={r:r,w:w,g:null};PL.tcell=null;PL.row=PL.fo=PL.tr=null;var rr=(p.rows||[]).filter(function(x){return x.id===r})[0],c=rr&&(rr.c||{})[w];PL.cell.g=c&&c.g?c.g:'';renderFincas();setTimeout(function(){var e=$('#pl-cd');if(e){try{e.scrollIntoView({block:'center'})}catch(x){}e.focus()}},60)}
@@ -8987,15 +8996,15 @@ function plMarkGo(f,p){
   var now=Date.now(), nF=0, nT=0, nA=0, TO=plTrOrder(f,p), haS=plHaOf(plRecs(f,p));
   var mkTr=function(x){
     var tr=x.t, cl=plTrCl(f,tr,haS), t2={id:uid(),f:x.f,e:'h',tp:tr.tp==='e'?'e':'c',ps:(tr.ps||[]).map(function(q){var o={n:q.n,u:q.u==='kg'?'kg':'L'};if(q.a)o.a=q.a;if(abHas(q.d))o.d=q.d;if(abHas(q.pr))o.pr=q.pr;return o}),r:rOf(x.rs.map(function(r){return r.ref})),c:now,m:now};
-    if(x.f2&&x.f2!==x.f)t2.f2=x.f2; if(tr.fe)t2.fe=tr.fe; if(cl!==null)t2.cl=Math.round(cl*10)/10; t2.z='Plan '+p.y+' · '+(TO.code[tr.id]||'')+(x.g&&plGrp(f,x.g)?' · '+plGrp(f,x.g).n:''); if(tr.o)t2.o=tr.o;
+    if(x.f2&&x.f2!==x.f)t2.f2=x.f2; if(tr.fe)t2.fe=tr.fe; if(cl!==null)t2.cl=Math.round(cl*10)/10; t2.z='Plan '+campLbl(p.y)+' · '+(TO.code[tr.id]||'')+(x.g&&plGrp(f,x.g)?' · '+plGrp(f,x.g).n:''); if(tr.o)t2.o=tr.o;
     f.trat=(f.trat||[]).concat([t2]); trRegUpdate(t2.ps,pcCtx('tr',f,t2)); p.hd[x.key]=t2.id; nT++;
   };
   undoPush(); p.hd=p.hd||{};
   L.forEach(function(x){
-    if(x.fo){var q=x.fo, t={id:uid(),f:q.f,e:'h',ps:[{n:q.n,u:'kg',qn:q.qn||0,qp:q.qp||0,qk:q.qk||0,d:q.d}],r:rOf(scope),o:'Abonado de fondo del plan '+p.y+'.',c:now,m:now}; if(abHas(q.pr))t.ps[0].pr=q.pr; if(q.f2&&q.f2!==q.f)t.f2=q.f2;
+    if(x.fo){var q=x.fo, t={id:uid(),f:q.f,e:'h',ps:[{n:q.n,u:'kg',qn:q.qn||0,qp:q.qp||0,qk:q.qk||0,d:q.d}],r:rOf(scope),o:'Abonado de fondo del plan '+campLbl(p.y)+'.',c:now,m:now}; if(abHas(q.pr))t.ps[0].pr=q.pr; if(q.f2&&q.f2!==q.f)t.f2=q.f2;
       f.abon=(f.abon||[]).concat([t]); abRegUpdate(t.ps,pcCtx('ab',f,t)); p.hd['f:'+q.id]=t.id; nA++; return}
     if(x.x){mkTr(x.x);return}
-    var w=x.w, z='Plan '+p.y+' · '+plWkLbl(w);
+    var w=x.w, z='Plan '+campLbl(p.y)+' · '+plWkLbl(w);
     x.ks.forEach(function(k){
       if(k.charAt(0)==='w'){
         var g=k.split(':')[2]||'', ps=[], pd=[], refs=g?plCellRecs(f,p,{g:g}).map(function(r){return r.ref}):scope;
@@ -9014,7 +9023,7 @@ function plMarkGo(f,p){
 }
 function plMarkToday(f,p){var t=diaToday(); PL.mark={}; plPending(f,p).forEach(function(x){if(x.w&&x.w.f2<=t)PL.mark['w'+x.w.k]=1;if(x.x&&(x.x.f2||x.x.f)<=t)PL.mark[plPendId(x)]=1;if(x.fo&&x.fo.f&&(x.fo.f2||x.fo.f)<=t)PL.mark['f'+x.fo.id]=1}); renderFincas()}
 /* ---- PDF del plan para el cliente ---- */
-function plFileBase(f,p){return ((p.vr?({fe:'fertirrigacion',tr:'tratamientos',ab:'abonado'})[p.vr]:'plan')+'-'+p.y+'-'+f.nombre+(p.g||p.sn?'-'+plScopeName(f,p):'')).replace(/[^\wÁÉÍÓÚÑáéíóúñ-]+/g,'_')}
+function plFileBase(f,p){return ((p.vr?({fe:'fertirrigacion',tr:'tratamientos',ab:'abonado'})[p.vr]:'plan')+'-'+campFile(p.y)+'-'+f.nombre+(p.g||p.sn?'-'+plScopeName(f,p):'')).replace(/[^\wÁÉÍÓÚÑáéíóúñ-]+/g,'_')}
 /* Entrega 93: los calendarios y el plan salen en vertical si las semanas caben (mín. 9 mm por semana); si no, en horizontal. Igual en su Excel. */
 var PL_WMIN=9;
 function plPortrait(f,p,C0){C0=C0||plCalc(f,p); if(p.vr==='ab')return true; var W=plWeeksUsed(f,p,C0); return 44+16+W.length*PL_WMIN<=186}
@@ -9091,13 +9100,13 @@ function buildPlanPdf0(f,p,cos,PO){
   if(p.nt){doc.setFont(FN,'normal');doc.setFontSize(8.6);var nl=doc.splitTextToSize(String(p.nt),CW-8), nh=nl.length*4.2+9;room(nh+4);doc.setDrawColor(46,125,79);doc.setLineWidth(.35);doc.roundedRect(M,y,CW,nh,1.5,1.5,'S');doc.setFont(FN,'bold');doc.setFontSize(8.2);doc.setTextColor(46,125,79);doc.text('Notas',M+4,y+4.8);doc.setFont(FN,'normal');doc.setFontSize(8.6);doc.setTextColor.apply(doc,ink);doc.text(nl,M+4,y+9.3);y+=nh+6}
   /* abonado de fondo y U.F. de la campaña, en un recuadro */
   var bl=[];
-  if(p.vr==='fe'||p.vr==='ab'){var anyS=C0.rows.some(function(o){return o.split})||C0.fo.some(function(o){return o.part});bl.push((p.vr==='ab'?'Total del abonado de la campaña: ':'Total de la campaña: ')+plUfTxt(C0)[0]+' U.F./ha'+(anyS?' (media de la finca)':''))}
+  if(p.vr==='fe'||p.vr==='ab'){var anyS=C0.rows.some(function(o){return o.split})||C0.fo.some(function(o){return o.part});bl.push((p.vr==='ab'?'Total del abonado de la campaña: ':'Total de la campaña: ')+plUfTxt(C0)[0]+' U.F./ha'+(C0.haT&&C0.haT<C0.ha-1e-9?' (sobre las '+ha2(C0.haT)+' ha '+(p.vr==='ab'?'abonadas':'fertirrigadas')+')':''))}
   else if(!p.vr){
   if(C0.fo.length)bl.push('Abonado de fondo: '+C0.fo.map(function(o){return o.q.n+' '+trTxt(o.q.d,0)+' kg/ha ('+(abRich(o.q)||'sin riqueza')+')'+(o.q.f?', '+plRangeTxt(o.q.f,o.q.f2):'')}).join(' · '));
   var ob=['n','p','k'].filter(function(x){return C0.cub[x]}).map(function(x){var c=C0.cub[x];return ({n:'N',p:'P₂O₅',k:'K₂O'})[x]+' '+trTxt(c.pc,0)+' % del objetivo ('+trTxt(c.o,0)+')'});
-  if(C0.split){bl.push('Total de la campaña, U.F./ha por grupo (con el fondo):');plUfTxt(C0).forEach(function(t){bl.push('   •  '+t)})}
+  if(C0.split){bl.push('Total de la campaña, U.F./ha de cada parte de la finca (con el fondo):');plUfTxt(C0).forEach(function(t){bl.push('   •  '+t)})}
   else bl.push('Total de la campaña (con el fondo): '+plUfTxt(C0)[0]+' U.F./ha');
-  if(ob.length)bl.push((C0.split?'Media de la finca frente al objetivo: ':'Objetivo: ')+ob.join(' · '));
+  if(ob.length)bl.push('Objetivo: '+ob.join(' · '));
   }
   if(bl.length){
   doc.setFont(FN,'normal'); doc.setFontSize(8.6); var bls=[].concat.apply([],bl.map(function(t){return doc.splitTextToSize(t,CW-8)})), bh=bls.length*4.3+3.6;
@@ -9106,11 +9115,10 @@ function buildPlanPdf0(f,p,cos,PO){
   }
   /* tratamientos */
   if(C0.trs.length){
-    title(p.vr?'Tratamientos de la campaña':'Tratamientos del plan',30);
+    var tTit=p.vr?'Tratamientos de la campaña':'Tratamientos del plan';
     var cols=PO?[{h:'Código',w:16},{h:'Estado fenol.',w:21},{h:'Fecha',w:24},{h:'Caldo L/ha',w:15,a:'c'},{h:'Productos · dosis /1.000 L → /ha',w:54},{h:'Caldo finca',w:22,a:'c'},{h:'Cantidades finca',w:34}]
       :[{h:'Código',w:18},{h:'Estado fenológico',w:38},{h:'Fecha',w:34},{h:'Caldo L/ha',w:18,a:'c'},{h:'Productos · dosis por 1.000 L → por ha',w:84},{h:'Caldo para la finca',w:38,a:'c'},{h:'Cantidades para la finca',w:43}];
     var hdr=function(){doc.setFont(FN,'bold');doc.setFontSize(7.6);doc.setTextColor.apply(doc,ink);var x=M;cols.forEach(function(c){doc.text(c.h,c.a==='r'?x+c.w-1:(c.a==='c'?x+c.w/2:x+1),y,{align:c.a==='r'?'right':(c.a==='c'?'center':'left')});x+=c.w});doc.setDrawColor.apply(doc,ink);doc.setLineWidth(.25);doc.line(M,y+1.3,PW-M,y+1.3);y+=5};
-    hdr();
     C0.trs.forEach(function(o,ri){
       var t=o.t, cells=[[o.code].concat(t.tp==='e'?['Ecológico']:[]).concat(p.vr&&t.e==='p'?['Pendiente']:[]),[t.fe||''],o.pls.length?o.pls.map(function(x){return plPlTxt(f,x)}):['sin fecha'],[o.cl!==null?trTxt(o.cl,0):'—'],
         o.ps.map(function(x){var q=x.q,u=q.u==='kg'?'kg':'L';return q.n+' '+(abHas(q.d)?trTxt(q.d,3,1)+' '+u:'')+(x.dh!==null?' → '+trTxt(x.dh,3,1)+' '+u+'/ha':'')}),
@@ -9121,6 +9129,7 @@ function buildPlanPdf0(f,p,cos,PO){
       doc.setFontSize(7.6); QT.forEach(function(e){doc.setFont(FN,'bold');var qw=doc.getTextWidth(e.q)+2.5;doc.setFont(FN,'normal');e.l=doc.splitTextToSize(e.n,Math.max(8,QW-2-qw))});
       var L=cells.map(function(c,j){return [].concat.apply([],c.map(function(s){return doc.splitTextToSize(String(s),cols[j].w-2)}))}); L[cq]=new Array(QT.reduce(function(a,e){return a+e.l.length},0));
       var rh=Math.max.apply(null,L.map(function(l){return l.length}))*3.4+1.6;
+      if(ri===0){title(tTit,rh+12);hdr()}
       if(y+rh>PH-12){doc.addPage();y=16;hdr()}
       if(ri%2===0){doc.setFillColor(243,245,244);doc.rect(M,y-3.2,CW,rh,'F')}
       var x=M; L.forEach(function(l,j){if(j===cq){var yy=y;QT.forEach(function(e){doc.setFont(FN,'normal');doc.setFontSize(7.6);doc.setTextColor.apply(doc,ink);doc.text(e.l,x+1,yy);doc.setFont(FN,'bold');doc.text(e.q,x+QW-1,yy,{align:'right'});yy+=e.l.length*3.4});x+=cols[j].w;return}doc.setFont(FN,j===0?'bold':'normal');doc.setFontSize(7.6);doc.setTextColor.apply(doc,ink);if(j===0&&l.length>1){doc.text(l[0],x+1,y);doc.setFont(FN,'normal');doc.setFontSize(6.6);doc.setTextColor.apply(doc,gray);doc.text(l.slice(1),x+1,y+3.4);x+=cols[j].w;return}doc.text(l,cols[j].a==='r'?x+cols[j].w-1:(cols[j].a==='c'?x+cols[j].w/2:x+1),y,{align:cols[j].a==='r'?'right':(cols[j].a==='c'?'center':'left')});x+=cols[j].w}); y+=rh;
@@ -9128,7 +9137,7 @@ function buildPlanPdf0(f,p,cos,PO){
     y+=7;
   }
   /* gráficas */
-  var any=false; for(var mm=2;mm<=9;mm++)if(C0.mon[mm].n+C0.mon[mm].p+C0.mon[mm].k>0)any=true;
+  var any=C0.MS.some(function(mm){return C0.mon[mm].n+C0.mon[mm].p+C0.mon[mm].k>0});
   if(any){
     title('Gráficas de unidades fertilizantes',78);
     doc.setFontSize(7.5); [['N',0],['P₂O₅',1],['K₂O',2]].forEach(function(l,i){var c=rgb(PL_C[l[1]]);doc.setFillColor(c[0],c[1],c[2]);doc.rect(M+i*22,y-2.4,3,3,'F');doc.setTextColor.apply(doc,ink);doc.setFont(FN,'normal');doc.text(l[0],M+i*22+4.5,y)});
@@ -9211,7 +9220,7 @@ function plPdfCosts(doc,FN,f,p,C0,G){
 function plPdfFrame(doc,FN,x,y,w,h,t){doc.setFont(FN,'bold');doc.setFontSize(8);doc.setTextColor(23,33,38);doc.text(t,x,y);doc.setDrawColor(225,230,228);doc.setLineWidth(.2)}
 function plPdfAxis(doc,FN,x0,y0,w,h,mx){var st=mx/5;doc.setFont(FN,'normal');doc.setFontSize(5.8);doc.setTextColor(90,103,101);for(var v=0;v<=mx+1e-9;v+=st){var yy=y0+h-v/mx*h;doc.setDrawColor(230,233,232);doc.line(x0,yy,x0+w,yy);doc.text(trTxt(v,v<10&&st<1?1:0),x0-1,yy+1,{align:'right'})}}
 /* meses de las gráficas del PDF: del primero al último que aportan U.F. (sin meses vacíos delante ni detrás) */
-function plMonRange(C0){var a=null,b=null,MS=C0.MS||[2,3,4,5,6,7,8,9];MS.forEach(function(m){if(C0.mon[m].n+C0.mon[m].p+C0.mon[m].k>0){if(a===null)a=m;b=m}});var r=[];if(a===null){a=MS[0];b=MS[MS.length-1]}for(var m=a;m<=b;m++)r.push(m);return r}
+function plMonRange(C0){var a=null,b=null,MS=C0.MS||[2,3,4,5,6,7,8,9];MS.forEach(function(m,i){if(C0.mon[m].n+C0.mon[m].p+C0.mon[m].k>0){if(a===null)a=i;b=i}});if(a===null){a=0;b=MS.length-1}return MS.slice(a,b+1)}
 function plPdfBars(doc,FN,C0,x,y,w,h){
   var SR=plSeries(C0,plMonRange(C0)); plPdfFrame(doc,FN,x,y,w,h,C0.vr?'U.F./ha que aporta cada mes':'U.F./ha que aporta cada mes (y el fondo)'); var mx=0; SR.forEach(function(e){['n','p','k'].forEach(function(k){mx=Math.max(mx,e.v[k])})}); mx=plNice(mx||1);
   var x0=x+8,y0=y+4,gw=w-10,gh=h-10,bw=gw/SR.length; plPdfAxis(doc,FN,x0,y0,gw,gh,mx);
@@ -9378,13 +9387,13 @@ function xlPlanBook(f,p,cos){
   if(p.nt){var nl=xlLines(p.nt,chars);xlMerge(sh,r,0,r,L,{rich:[{t:'Notas',b:true,col:XC.grn,sz:9},{t:'\n'+p.nt,sz:10}]},{wrap:true,va:'top',bd:'medium',bc:XC.grn,ind:1});xlH(sh,r,nl*13+20);r+=2}
   /* 4. recuadro: fondo y total de U.F. */
   var bl=[];
-  if(vr==='fe'||vr==='ab'){var anyS=C0.rows.some(function(o){return o.split})||C0.fo.some(function(o){return o.part});bl.push((vr==='ab'?'Total del abonado de la campaña: ':'Total de la campaña: ')+plUfTxt(C0)[0]+' U.F./ha'+(anyS?' (media de la finca)':''))}
+  if(vr==='fe'||vr==='ab'){var anyS=C0.rows.some(function(o){return o.split})||C0.fo.some(function(o){return o.part});bl.push((vr==='ab'?'Total del abonado de la campaña: ':'Total de la campaña: ')+plUfTxt(C0)[0]+' U.F./ha'+(C0.haT&&C0.haT<C0.ha-1e-9?' (sobre las '+ha2(C0.haT)+' ha '+(vr==='ab'?'abonadas':'fertirrigadas')+')':''))}
   else if(!vr){
     if(C0.fo.length)bl.push('Abonado de fondo: '+C0.fo.map(function(o){return o.q.n+' '+trTxt(o.q.d,0)+' kg/ha ('+(abRich(o.q)||'sin riqueza')+')'+(o.q.f?', '+plRangeTxt(o.q.f,o.q.f2):'')}).join(' · '));
     var ob=['n','p','k'].filter(function(x){return C0.cub[x]}).map(function(x){var c=C0.cub[x];return ({n:'N',p:'P₂O₅',k:'K₂O'})[x]+' '+trTxt(c.pc,0)+' % del objetivo ('+trTxt(c.o,0)+')'});
-    if(C0.split){bl.push('Total de la campaña, U.F./ha por grupo (con el fondo):');plUfTxt(C0).forEach(function(t){bl.push('   •  '+t)})}
+    if(C0.split){bl.push('Total de la campaña, U.F./ha de cada parte de la finca (con el fondo):');plUfTxt(C0).forEach(function(t){bl.push('   •  '+t)})}
     else bl.push('Total de la campaña (con el fondo): '+plUfTxt(C0)[0]+' U.F./ha');
-    if(ob.length)bl.push((C0.split?'Media de la finca frente al objetivo: ':'Objetivo: ')+ob.join(' · '));
+    if(ob.length)bl.push('Objetivo: '+ob.join(' · '));
   }
   if(bl.length){var rich=[];bl.forEach(function(t,i){rich.push({t:(i?'\n':'')+t,b:i===0||/^Total/.test(t)})});
     xlMerge(sh,r,0,r,L,{rich:rich},{wrap:true,fill:XC.box,bd:{l:'thick',r:'thin',t:'thin',b:'thin',lc:XC.yel},bc:'CDD4D1',ind:1});xlH(sh,r,bl.reduce(function(a,t){return a+xlLines(t,chars)},0)*14+8);r+=2}
@@ -9503,7 +9512,7 @@ function buildPlanXlsx(f,p,cos){return xlBuild(xlPlanBook(f,p,cos))}
 function plOut(f,p,kind){
   if(kind==='pdf'&&!loadPdfLib()){pdfNoListo();return}
   var b; try{b=kind==='pdf'?buildPlanPdf(f,p,PL.cos):buildPlanXlsx(f,p,PL.cos)}catch(e){toast('No he podido crear el '+(kind==='pdf'?'PDF':'Excel')+'.');return}
-  showDl(b,plFileBase(f,p)+(kind==='pdf'?'.pdf':'.xlsx'),'Plan listo',esc(f.nombre)+' · plan '+esc(p.y)+(p.g?' · '+esc(plScopeName(f,p)):''));
+  showDl(b,plFileBase(f,p)+(kind==='pdf'?'.pdf':'.xlsx'),'Plan listo',esc(f.nombre)+' · plan '+esc(campLbl(p.y))+(p.g?' · '+esc(plScopeName(f,p)):''));
 }
 document.addEventListener('click',function(ev){
   var b=ev.target&&ev.target.closest&&ev.target.closest('[data-act^="pl-"]'); if(!b)return;
@@ -9610,7 +9619,7 @@ function pabCkName(k){return daLbl(PAB_CK,k)||'Otro'}
 function pabRg(r){return r.riego==='regadio'?'regadio':'secano'}
 function pabList(f){return (f.pab||[]).slice().sort(function(a,b){return String(b.y).localeCompare(String(a.y))})}
 function pabCur(f){var l=pabList(f);if(!l.length)return null;var id=PAB.cur[f.id];return l.filter(function(p){return p.id===id})[0]||l[0]}
-function pabCamp(y){y=+y;return y+'/'+(y+1)}
+function pabCamp(y){return campLbl(+y+1)}
 /* Entrega 80: una unidad puede llevar recintos de otra finca del mismo propietario (u.xr) y cada recinto sus «ha en este plan» (u.rc[ref].ph) */
 function pabUdRecs(f,u){var m={};fincaRecs(f.id).forEach(function(r){m[r.ref]=r});var o=(u.refs||[]).map(function(x){return m[x]}).filter(Boolean);
   (u.xr||[]).forEach(function(x){var r=S.recintos[x];if(r&&r.fincaId!==f.id&&finca(r.fincaId)&&o.indexOf(r)<0)o.push(r)});return o}
@@ -9908,7 +9917,7 @@ var PAB_RES=[
 var PAB_PER={almendro:[11,12,1],pistacho:[11,12,1],nogal:[11,12,1],olivo:[11,12,1],vid:[11,12,1,2],trigo:[6,7,8,9],trigoduro:[6,7,8,9],cebada:[6,7,8,9],avena:[6,7,8,9],centeno:[6,7,8,9],triticale:[6,7,8,9]};
 var PAB_MES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 function pabPerTxt(ck){var m=PAB_PER[ck];if(m)return m.map(function(x){return PAB_MES[x-1]}).join(', ').replace(/, ([^,]*)$/,' y $1');if(ck==='frutal'||ck==='melocotonero')return 'de la caída de la hoja al inicio de la brotación';return ''}
-function pabCampRange(p){var y=+p.y;return [y+'-09-01',(y+1)+'-08-31']}
+function pabCampRange(p){var y=+p.y;return [y+'-11-01',(y+1)+'-10-31']}
 function pabIso(s){s=String(s||'').trim();var m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(s);if(m)return s;m=/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/.exec(s);if(m){var y=+m[3];if(y<100)y+=2000;return y+'-'+('0'+m[2]).slice(-2)+'-'+('0'+m[1]).slice(-2)}m=/^(\d{4})$/.exec(s);return m?s+'-06-30':''}
 function pabDays(a,b){return Math.round((new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/864e5)}
 function pabAs(){return (S.x&&S.x.asesor)||{}}
@@ -10142,7 +10151,7 @@ function pabOut(f,p,kind){
   try{
     if(kind==='pdf'){if(!loadPdfLib()){pdfNoListo();return}}
     var b=kind==='pdf'?buildPabPdf(f,p):buildPabXlsx(f,p);
-    showDl(b,'plan-de-abonado-'+safeName(f.nombre)+'-'+p.y+'-'+(+p.y+1)+'.'+(kind==='pdf'?'pdf':'xlsx'),'Plan de abonado listo',esc(f.nombre)+' · campaña '+pabCamp(p.y));
+    showDl(b,'plan-de-abonado-'+safeName(f.nombre)+'-'+campFile(+p.y+1)+'.'+(kind==='pdf'?'pdf':'xlsx'),'Plan de abonado listo',esc(f.nombre)+' · campaña '+pabCamp(p.y));
   }catch(e){toast('No he podido crear el plan de abonado.')}
 }
 /* ───────── Entrega 43: datos de la explotación ───────── */
@@ -10241,7 +10250,7 @@ function cvCrop(s){return String(s||'').split('§')[0]}
 function cvVar(s){var p=String(s||'').split('§');return p.length>1&&p[1]?p[1]:null}
 function cvKeyOf(r){return varKey(trCultOf(r),r.variedad)||'-'}
 function cvMatch(r,s){if(!s)return true; if(/^gr§/.test(s))return r&&r.gr===s.slice(3); if(!r||trCultOf(r)!==cvCrop(s))return false; var v=cvVar(s); return v===null||cvKeyOf(r)===v}
-function cvGroups(f,crop){var rows=fincaRecs(f.id).filter(function(r){return trCultOf(r)===crop}).map(function(r){return {cultivo:r.cultivo,variedad:r.variedad,ha:r.ha}}); var o=varGroups(rows)[0]; return o?o.g:[]}
+function cvGroups(f,crop){var rows=fincaRecs(f.id).filter(function(r){return trCultOf(r)===crop}).map(function(r){return {cultivo:r.cultivo,variedad:r.variedad,ha:haC(r)}}); var o=varGroups(rows)[0]; return o?o.g:[]}
 function cvLabel(f,s){var c=cvCrop(s), v=cvVar(s); if(c==='gr'){var gg=grOf(f,s.slice(3));return gg?gg.n:''} if(!v)return c; var g=cvGroups(f,c).filter(function(x){return (x.key||'-')===v})[0]; return c+' · '+(g?g.name:'Sin variedad')}
 function cvFix(f,cur,culs){var c=cvCrop(cur); if(!c)return ''; if(c==='gr')return (f&&grOf(f,cur.slice(3)))?cur:''; if(!culs.some(function(x){return x.c===c}))return ''; var v=cvVar(cur); if(v&&!cvGroups(f,c).some(function(x){return (x.key||'-')===v}))return c; return cur}
 function cvCropSel(f,cur,id,allTxt,culs){return '<select id="'+id+'" class="trsel'+(cur?' on':'')+'" aria-label="Cultivo"><option value=""'+(cur?'':' selected')+'>'+allTxt+'</option>'+culs.map(function(c){return '<option value="'+esc(c.c)+'"'+(cvCrop(cur)===c.c?' selected':'')+'>'+esc(c.c)+'</option>'}).join('')+grOpts(f,cur)+'</select>'}
@@ -10260,13 +10269,15 @@ function hiAf(f,y,cult){
   hiRecs(f,cult).forEach(function(r){var v=a[r.ref];if(v===undefined)return;if(v==='x'){om++;return}if(typeof v==='number'&&isFinite(v)){n++;ha+=haC(r);kg+=haC(r)*v}});
   return {n:n,om:om,ha:ha,kg:kg,kgha:ha?kg/ha:null};
 }
+/* Entrega 132: aforo de una campaña con la media de cada cultivo (una media mezclando cultivos no dice nada) */
+function hiAfCrops(f,y,cult){var a=(S.x.af||{})[y]||{},m={},o=[];hiRecs(f,cult).forEach(function(r){var v=a[r.ref];if(typeof v!=='number'||!isFinite(v))return;var c=trCultOf(r),e=m[c];if(!e){e=m[c]={c:c,ha:0,kg:0,n:0};o.push(e)}e.n++;e.ha+=haC(r);e.kg+=haC(r)*v});o.forEach(function(e){e.kgha=e.ha?e.kg/e.ha:null});return o.sort(function(a,b){return b.ha-a.ha})}
 /* todos los hechos de la finca ordenados por fecha */
 function hiEvents(f,cult){
   var ev=[], tl=function(k){return (HI_T.filter(function(x){return x[0]===k})[0]||[])[1]||''};
   (f.trat||[]).forEach(function(t){var rf=hiRefs(f,t,cult);if(cult&&!rf.length)return;var c=trCalc(f,t,cult?rf:null);ev.push({k:'tr',d:t.f||'',e:t.e,s:'tratamientos',t:hiProds(t.ps)+' · '+ha2(c.ha)+' ha'})});
   (f.abon||[]).forEach(function(t){var rf=hiRefs(f,t,cult);if(cult&&!rf.length)return;var c=abCalc(f,t,cult?rf:undefined);ev.push({k:'ab',d:t.f||'',e:t.e,s:'abonado',t:hiProds(t.ps)+' · '+ha2(c.ha)+' ha'+(c.tot.n||c.tot.p||c.tot.k?' · N '+trTxt(c.tot.n,1)+' / P₂O₅ '+trTxt(c.tot.p,1)+' / K₂O '+trTxt(c.tot.k,1)+' U.F./ha':'')})});
   (f.fert||[]).forEach(function(t){var rf=hiRefs(f,t,cult);if(cult&&!rf.length)return;var c=abCalc(f,t,cult?rf:undefined);ev.push({k:'fe',d:t.f||'',e:t.e,s:'fertirrigacion',t:hiProds((t.ps||[]).concat(t.pd||[]))+' · '+ha2(c.ha)+' ha'+(c.tot.n||c.tot.p||c.tot.k?' · N '+trTxt(c.tot.n,1)+' / P₂O₅ '+trTxt(c.tot.p,1)+' / K₂O '+trTxt(c.tot.k,1)+' U.F./ha':'')})});
-  hiAfYears(f,cult).forEach(function(y){var a=hiAf(f,y,cult);ev.push({k:'af',d:y+'-12-31',yo:true,e:'h',s:'aforos',t:a.n+(a.n===1?' recinto aforado':' recintos aforados')+(a.kgha!==null?' · '+nf(a.kgha,0)+' kg/ha de media · '+nf(a.kg,0)+' kg':'')})});
+  hiAfYears(f,cult).forEach(function(y){var a=hiAf(f,y,cult);ev.push({k:'af',d:y+'-10-31',yo:true,e:'h',s:'aforos',t:a.n+(a.n===1?' recinto aforado':' recintos aforados')+(a.kgha!==null?' · '+nf(a.kgha,0)+' kg/ha de media · '+nf(a.kg,0)+' kg':'')})});
   if(!cult)(f.docs||[]).forEach(function(d){ev.push({k:'doc',d:d.f||'',e:'h',s:'documentos',t:(d.n||'Documento')+(d.t?' · '+((DOC_T.filter(function(x){return x[0]===d.t})[0]||[])[1]||''):'')})});
   ev.forEach(function(x){x.l=tl(x.k);x.f=x.d});
   return ev.sort(function(a,b){return (b.d||'').localeCompare(a.d||'')});
@@ -10299,7 +10310,7 @@ function hiTableHTML(f,cult){
     ['Aforo (kg/ha, media)',function(e){return e.af&&e.af.kgha!==null?nf(e.af.kgha,0):'–'}],
     ['Producción aforada (kg)',function(e){return e.af?nf(e.af.kg,0):'–'}]
   ].filter(function(r){return yl.some(function(y){return r[1](ys[y])!=='–'})});
-  var h='<div class="note"><b>Comparación entre campañas'+(cult?' · '+esc(cvLabel(f,cult)):'')+'</b><div class="hitw xs"><table class="hitb"><thead><tr><th></th>'+yl.map(function(y){return '<th>'+esc(y)+'</th>'}).join('')+'</tr></thead><tbody>';
+  var h='<div class="note"><b>Comparación entre campañas'+(cult?' · '+esc(cvLabel(f,cult)):'')+'</b><div class="hitw xs"><table class="hitb"><thead><tr><th></th>'+yl.map(function(y){return '<th>'+esc(campLbl(y))+'</th>'}).join('')+'</tr></thead><tbody>';
   rows.forEach(function(r){h+='<tr><th>'+r[0]+'</th>'+yl.map(function(y){return '<td>'+r[1](ys[y])+'</td>'}).join('')+'</tr>'});
   h+='</tbody></table></div><div class="small" style="margin-top:6px;color:inherit">Solo cuenta lo hecho. Las U.F./ha son medias sobre las hectáreas realmente aplicadas.</div></div>';
   return h;
@@ -10320,7 +10331,7 @@ function hisHTML(f){
   if(!list.length)return h+'<div class="small">No hay nada con este filtro.</div>';
   h+='<div class="hitl">';
   list.slice(0,HI.n).forEach(function(x){
-    h+='<button type="button" class="hiev" data-act="exp-go" data-s="'+x.s+'"><span class="hid">'+(x.yo?'Campaña '+esc(yrOf(x)):esc(diaFmt(x.d)))+'</span><span class="hik hik-'+x.k+'">'+esc(x.l)+(x.e==='p'?' · pendiente':'')+'</span><span class="hit">'+esc(x.t)+'</span></button>';
+    h+='<button type="button" class="hiev" data-act="exp-go" data-s="'+x.s+'"><span class="hid">'+(x.yo?'Campaña '+esc(campLbl(yrOf(x))):esc(diaFmt(x.d)))+'</span><span class="hik hik-'+x.k+'">'+esc(x.l)+(x.e==='p'?' · pendiente':'')+'</span><span class="hit">'+esc(x.t)+'</span></button>';
   });
   h+='</div>';
   if(list.length>HI.n)h+='<div class="acts"><button type="button" class="btn sm" data-act="hi-more">Ver más ('+(list.length-HI.n)+')</button></div>';
@@ -10335,7 +10346,7 @@ function infHTML(f){
   if(GTOK)return '<div class="small">Los informes no están disponibles en esta vista.</div>';
   var culs=trCultList(f); INF.cult=cvFix(f,INF.cult,culs);
   var yl=infYears(f,INF.cult), h='<div class="note"><b>Informe de la finca</b><div class="small" style="margin-top:6px;color:inherit">Elige la campaña, qué partes entran y el formato. Se crea al momento, sin subir nada.</div>';
-  h+='<div class="lbl" style="margin-top:12px">Campaña</div><select id="inf-yr" class="trsel'+(INF.yr!=='all'?' on':'')+'" aria-label="Campaña"><option value="all"'+(INF.yr==='all'?' selected':'')+'>Todas las campañas</option>'+yl.map(function(y){return '<option value="'+esc(y)+'"'+(INF.yr===y?' selected':'')+'>Campaña '+esc(y)+'</option>'}).join('')+'</select>';
+  h+='<div class="lbl" style="margin-top:12px">Campaña</div><select id="inf-yr" class="trsel'+(INF.yr!=='all'?' on':'')+'" aria-label="Campaña"><option value="all"'+(INF.yr==='all'?' selected':'')+'>Todas las campañas</option>'+yl.map(function(y){return '<option value="'+esc(y)+'"'+(INF.yr===y?' selected':'')+'>Campaña '+esc(campLbl(y))+'</option>'}).join('')+'</select>';
   if(culs.length>1||grList(f).length){h+='<div class="lbl" style="margin-top:12px">Cultivo</div>'+cvCropSel(f,INF.cult,'inf-cult','Todos los cultivos',culs); var vs2=cvVarSel(f,INF.cult,'inf-vflt'); if(vs2)h+='<div class="lbl" style="margin-top:8px">Variedad</div>'+vs2; if(INF.cult)h+='<div class="small" style="margin-top:4px;color:inherit">Solo cuenta lo hecho en los recintos de '+esc(cvLabel(f,INF.cult))+'. La lista de documentos no se incluye (no se asignan a un cultivo).</div>'}
   h+='<div class="lbl" style="margin-top:12px">Qué incluir</div>';
   INF_P.forEach(function(p){if(p[0]==='doc'&&INF.cult)return;h+='<label class="infck"><input type="checkbox" data-inf="'+p[0]+'"'+(INF.p[p[0]]?' checked':'')+'> <span>'+p[1]+'</span></label>'});
@@ -10538,13 +10549,13 @@ function buildInfPdf0(f,yr,o,cult){
   y=SC?HB+9:32; doc.setTextColor.apply(doc,ink); doc.setFont(FN,'normal'); doc.setFontSize(10.5);
   if(SC){
     var mrecs=hiRecs(f,cult), mw=64, mh=40, drawn=infMiniMap(doc,f,mrecs,M,y-2,mw,mh,FN), tx=drawn?M+mw+6:M;
-    doc.setFont(FN,'bold'); doc.setFontSize(11); doc.setTextColor.apply(doc,ink); doc.text(yr==='all'?'Todas las campañas':'Campaña '+yr,tx,y+3);
+    doc.setFont(FN,'bold'); doc.setFontSize(11); doc.setTextColor.apply(doc,ink); doc.text(yr==='all'?'Todas las campañas':'Campaña '+campLbl(yr),tx,y+3);
     doc.setFont(FN,'normal'); doc.setFontSize(9.5); var ty=y+9;
     var vg=varGroups(mrecs.map(function(r){return {cultivo:r.cultivo,variedad:r.variedad,ha:haC(r)}}));
     vg.forEach(function(o2){var named=o2.g.filter(function(g){return g.key}); var ln=o2.c+' '+ha2(o2.ha)+' ha'+(named.length?' ('+named.map(function(g){return g.name+' '+ha2(g.ha)}).join(', ')+')':''); doc.splitTextToSize(ln,PW-M-tx).slice(0,3).forEach(function(t2){doc.text(t2,tx,ty);ty+=4.6})});
-    if(SC.kind!=='grupo'&&grList(f).length){var gp=grParts(f,mrecs.map(function(r){return r.ref})); if(gp.length){ty+=1.5;doc.splitTextToSize('Grupos: '+gp.map(function(e){return e.n+' '+ha2(e.ha)+' ha'}).join(', '),PW-M-tx).slice(0,3).forEach(function(t2){doc.text(t2,tx,ty);ty+=4.6})}}
+    if(SC.kind!=='grupo'&&grList(f).length){var gp=grParts(f,mrecs.map(function(r){return r.ref})); if(gp.length){ty+=1.5;doc.splitTextToSize('Recintos: '+gp.map(function(e){return grDocN(e.n)+' '+ha2(e.ha)+' ha'}).join(', '),PW-M-tx).slice(0,3).forEach(function(t2){doc.text(t2,tx,ty);ty+=4.6})}}
     y=y-2+mh+7;
-  }else{doc.text((yr==='all'?'Todas las campañas':'Campaña '+yr),M,y); y+=8}
+  }else{doc.text((yr==='all'?'Todas las campañas':'Campaña '+campLbl(yr)),M,y); y+=8}
   if(o.dat){var L=infDatosLines(f); title('Titular y datos de la explotación'); if(L.length)L.forEach(function(x){kv(x[0],x[1])}); else para('Sin datos.',9,gray); y+=3}
   var TH=function(n,extra){return 7+5.8+n*6.2+(extra||0)+4};
   if(o.sup){var st=infSup(f,cult); title('Superficie y cultivos',TH(Object.keys(infSup(f,cult).crops||{}).length,20)); para(ha2(st.ha)+(st.dif?' ha cultivadas (SIGPAC '+ha2(st.sig)+' ha)':' ha')+' en '+st.n+(st.n===1?' recinto':' recintos'),10.5);
@@ -10572,7 +10583,7 @@ function buildInfPdf0(f,yr,o,cult){
   if((o.ab||o.fe)&&Object.keys(D.camp).some(function(yy){return (yr==='all'||yy===yr)&&D.camp[yy].tot})){var tys=hiYears(D.camp).filter(function(yy){return (yr==='all'||yy===yr)&&D.camp[yy].tot});
     title('Total de la campaña (abonado + fertirrigación)',infTotH(infTotRows(D.camp[tys[0]],cos,o)));
     tys.forEach(function(yy,i){var e=D.camp[yy],t=e.tot,R=infTotRows(e,cos,o);if(i)room(infTotH(R));
-      doc.setFont(FN,'bold');doc.setFontSize(9.5);doc.setTextColor.apply(doc,ink);doc.text('Campaña '+yy+' · sobre '+ha2(t.ha)+' ha',M,y);y+=5.5;
+      doc.setFont(FN,'bold');doc.setFontSize(9.5);doc.setTextColor.apply(doc,ink);doc.text('Campaña '+campLbl(yy)+' · sobre '+ha2(t.ha)+' ha',M,y);y+=5.5;
       y=infTotPdf(doc,FN,M,y,CW,R)})}
   if(cos&&(o.tr||o.ab||o.fe)){var cy=hiYears(D.camp).filter(function(yy){var e=D.camp[yy];return (yr==='all'||yy===yr)&&((o.tr&&e.cTr!==null)||(o.ab&&e.cAb!==null)||(o.fe&&e.cFe!==null))});
     if(cy.length){title('Coste de la campaña');cy.forEach(function(yy){var e=D.camp[yy], pts=[], sm=0;
@@ -10580,12 +10591,12 @@ function buildInfPdf0(f,yr,o,cult){
       if(o.ab&&e.cAb!==null){pts.push('abonado '+nf(e.cAb,0)+' €');sm+=e.cAb}
       if(o.fe&&e.cFe!==null){pts.push('fertirrigación '+nf(e.cFe,0)+' €');sm+=e.cFe}
       var haC=e.tot&&e.tot.ha?e.tot.ha:0, nut=((o.ab&&e.cAb!==null?e.cAb:0)+(o.fe&&e.cFe!==null?e.cFe:0));
-      para('Campaña '+yy+': '+pts.join(' · ')+(pts.length>1?' · total '+nf(sm,0)+' €':'')+(haC&&nut?' · abonado + fertirrigación ≈ '+nf(nut/haC,2)+' €/ha':''),9.5)})}}
-  if(o.af){title('Aforos de cosecha',TH(D.af.length)); if(!D.af.length)para('Sin aforos en este periodo.',9,gray); else tbl([{h:'Campaña',w:30},{h:'Recintos aforados',w:44,a:'r'},{h:'Superficie (ha)',w:36,a:'r'},{h:'kg/ha (media)',w:36,a:'r'},{h:'Producción (kg)',w:36,a:'r'}],D.af.map(function(x){return [x.y,String(x.n),ha2(x.ha),x.kgha===null?'':nf(x.kgha,0),nf(x.kg,0)]}))}
+      para('Campaña '+campLbl(yy)+': '+pts.join(' · ')+(pts.length>1?' · total '+nf(sm,0)+' €':'')+(haC&&nut?' · abonado + fertirrigación ≈ '+nf(nut/haC,2)+' €/ha':''),9.5)})}}
+  if(o.af){title('Aforos de cosecha',TH(D.af.length)); if(!D.af.length)para('Sin aforos en este periodo.',9,gray); else tbl([{h:'Campaña',w:30},{h:'Recintos aforados',w:44,a:'r'},{h:'Superficie (ha)',w:36,a:'r'},{h:'kg/ha (media)',w:36,a:'r'},{h:'Producción (kg)',w:36,a:'r'}],D.af.map(function(x){return [campLbl(x.y),String(x.n),ha2(x.ha),x.kgha===null?'':nf(x.kgha,0),nf(x.kg,0)]}))}
   if(o.doc){title('Documentos',TH(D.doc.length)); if(!D.doc.length)para('Sin documentos en este periodo.',9,gray); else tbl([{h:'Fecha',w:30},{h:'Nombre',w:112},{h:'Tipo',w:40}],D.doc.map(function(x){return [x.f,x.n,x.t]}))}
   kpEnd(doc,y);
   var n=doc.getNumberOfPages();
-  for(var p=1;p<=n;p++){doc.setPage(p);doc.setFont(FN,'normal');doc.setFontSize(8);doc.setTextColor.apply(doc,gray);doc.text(nm+' · '+(yr==='all'?'todas las campañas':'campaña '+yr)+(SC?' · '+SC.lbl:''),M,PH-8);doc.text(p+' / '+n,PW-M,PH-8,{align:'right'})}
+  for(var p=1;p<=n;p++){doc.setPage(p);doc.setFont(FN,'normal');doc.setFontSize(8);doc.setTextColor.apply(doc,gray);doc.text(nm+' · '+(yr==='all'?'todas las campañas':'campaña '+campLbl(yr))+(SC?' · '+SC.lbl:''),M,PH-8);doc.text(p+' / '+n,PW-M,PH-8,{align:'right'})}
   return doc.output('blob');
 }
 /* ---- Excel ---- */
@@ -10626,13 +10637,13 @@ function xlDoc(name,foot){
 function xlN(v,d,suf){if(v===null||v===undefined||v===''||isNaN(+v))return {v:null};var x=Math.round(+v*Math.pow(10,d||0))/Math.pow(10,d||0);return {v:x,f:'#,##0'+(d?'.'+new Array(d+1).join('0'):'')+(suf?'"'+suf+'"':'')}}
 function buildInfXlsx(f,yr,o,cult){
   var D=infData(f,yr,o,cult), cos=!!o.cos, SC=infScope(f,cult), nm=String(f.nombre||''), SQ=infSup(f,cult);
-  var foot=nm+' · '+(yr==='all'?'todas las campañas':'campaña '+yr)+(SC?' · '+SC.lbl:'');
+  var foot=nm+' · '+(yr==='all'?'todas las campañas':'campaña '+campLbl(yr))+(SC?' · '+SC.lbl:'');
   var X=xlDoc('Informe',foot), gray=XC.gray;
   X.band('Informe '+(SC?SC.top:'de la finca'),SC?nm+' · '+SC.lbl:nm,new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}),SC?'Finca '+f.nombre+' · '+SC.sub+' · '+ha2(SQ.ha)+' ha · '+SQ.n+(SQ.n===1?' recinto':' recintos'):'');
-  X.para(yr==='all'?'Todas las campañas':'Campaña '+yr,{b:!!SC,sz:SC?11:10.5});
+  X.para(yr==='all'?'Todas las campañas':'Campaña '+campLbl(yr),{b:!!SC,sz:SC?11:10.5});
   if(SC){var vg=varGroups(hiRecs(f,cult).map(function(r){return {cultivo:r.cultivo,variedad:r.variedad,ha:haC(r)}}));
     vg.forEach(function(o2){var named=o2.g.filter(function(g){return g.key});X.para(o2.c+' '+ha2(o2.ha)+' ha'+(named.length?' ('+named.map(function(g){return g.name+' '+ha2(g.ha)}).join(', ')+')':''),{sz:9.5})});
-    if(SC.kind!=='grupo'&&grList(f).length){var gp=grParts(f,hiRecs(f,cult).map(function(r){return r.ref}));if(gp.length)X.para('Grupos: '+gp.map(function(e){return e.n+' '+ha2(e.ha)+' ha'}).join(', '),{sz:9.5})}}
+    if(SC.kind!=='grupo'&&grList(f).length){var gp=grParts(f,hiRecs(f,cult).map(function(r){return r.ref}));if(gp.length)X.para('Recintos: '+gp.map(function(e){return grDocN(e.n)+' '+ha2(e.ha)+' ha'}).join(', '),{sz:9.5})}}
   var cc=function(v,d){return v===null||v===undefined?'sin precio':xlN(v,d)};
   var csum=function(a){var t=null;a.forEach(function(x){if(x.e==='Hecho'&&x.cost!==null&&x.cost!==undefined)t=(t||0)+x.cost});return t};
   var dcell=function(x){return {t:x.f,s:x.e==='Pendiente'?'Previsto':''}};
@@ -10660,7 +10671,7 @@ function buildInfXlsx(f,yr,o,cult){
   });
   if((o.ab||o.fe)&&Object.keys(D.camp).some(function(yy){return (yr==='all'||yy===yr)&&D.camp[yy].tot})){X.title('Total de la campaña (abonado + fertirrigación)');
     hiYears(D.camp).filter(function(yy){return (yr==='all'||yy===yr)&&D.camp[yy].tot}).forEach(function(yy){var e=D.camp[yy],t=e.tot,R=infTotRows(e,cos,o);
-      X.para('Campaña '+yy+' · sobre '+ha2(t.ha)+' ha',{b:true,sz:10});
+      X.para('Campaña '+campLbl(yy)+' · sobre '+ha2(t.ha)+' ha',{b:true,sz:10});
       var sp=xlSpans(X.sh.widths,INF_TC_COLS.map(function(c){return c.w})), r0=X.r;
       X.tbl(INF_TC_COLS,R.map(function(r){return [r.l,xlN(r.a,r.d),xlN(r.f,r.d),xlN(r.t,r.d),r.pa===null?'–':xlN(r.pa,0,' %'),r.pf===null?'–':xlN(r.pf,0,' %')]}));
       var rf=function(k){return xlRef(X.sh,r0+1,sp[k][0],r0+R.length,sp[k][0])}, hcm=1.9+R.length*0.85, wcm=X.sh.widths.reduce(function(a,b){return a+b},0)*0.19-0.3;
@@ -10671,14 +10682,14 @@ function buildInfXlsx(f,yr,o,cult){
     if(cy.length){X.title('Coste de la campaña');cy.forEach(function(yy){var e=D.camp[yy], pts=[], sm=0;
       if(o.tr&&e.cTr!==null){pts.push('tratamientos '+nf(e.cTr,0)+' €');sm+=e.cTr} if(o.ab&&e.cAb!==null){pts.push('abonado '+nf(e.cAb,0)+' €');sm+=e.cAb} if(o.fe&&e.cFe!==null){pts.push('fertirrigación '+nf(e.cFe,0)+' €');sm+=e.cFe}
       var hC=e.tot&&e.tot.ha?e.tot.ha:0, nut=((o.ab&&e.cAb!==null?e.cAb:0)+(o.fe&&e.cFe!==null?e.cFe:0));
-      X.para('Campaña '+yy+': '+pts.join(' · ')+(pts.length>1?' · total '+nf(sm,0)+' €':'')+(hC&&nut?' · abonado + fertirrigación ≈ '+nf(nut/hC,2)+' €/ha':''),{sz:9.5})})}}
-  if(o.af){X.title('Aforos de cosecha');if(!D.af.length)X.para('Sin aforos en este periodo.',{sz:9,col:gray});else X.tbl([{h:'Campaña',w:30},{h:'Recintos aforados',w:44,a:'r'},{h:'Superficie (ha)',w:36,a:'r'},{h:'kg/ha (media)',w:36,a:'r'},{h:'Producción (kg)',w:36,a:'r'}],D.af.map(function(x){return [x.y,xlN(x.n,0),xlN(x.ha,2),x.kgha===null?'':xlN(x.kgha,0),xlN(x.kg,0)]}))}
+      X.para('Campaña '+campLbl(yy)+': '+pts.join(' · ')+(pts.length>1?' · total '+nf(sm,0)+' €':'')+(hC&&nut?' · abonado + fertirrigación ≈ '+nf(nut/hC,2)+' €/ha':''),{sz:9.5})})}}
+  if(o.af){X.title('Aforos de cosecha');if(!D.af.length)X.para('Sin aforos en este periodo.',{sz:9,col:gray});else X.tbl([{h:'Campaña',w:30},{h:'Recintos aforados',w:44,a:'r'},{h:'Superficie (ha)',w:36,a:'r'},{h:'kg/ha (media)',w:36,a:'r'},{h:'Producción (kg)',w:36,a:'r'}],D.af.map(function(x){return [campLbl(x.y),xlN(x.n,0),xlN(x.ha,2),x.kgha===null?'':xlN(x.kgha,0),xlN(x.kg,0)]}))}
   if(o.doc){X.title('Documentos');if(!D.doc.length)X.para('Sin documentos en este periodo.',{sz:9,col:gray});else X.tbl([{h:'Fecha',w:30},{h:'Nombre',w:112},{h:'Tipo',w:40}],D.doc.map(function(x){return [x.f,x.n,x.t]}))}
   return xlBuild([X.sh]);
 }
 function afXlsx(d,cmp){
-  var X=xlDoc('Aforo '+d.year,'Aforo de cosecha '+d.year+' · '+d.name);
-  X.band('Aforo de cosecha · Campaña '+d.year,d.name,new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}));
+  var X=xlDoc('Aforo '+campFile(d.year),'Aforo de cosecha '+campLbl(d.year)+' · '+d.name);
+  X.band('Aforo de cosecha · Campaña '+campLbl(d.year),d.name,new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}));
   X.para(d.rows.length+(d.rows.length===1?' recinto aforado':' recintos aforados'),{b:true,sz:13}); X.gap();
   var bf=function(r){return !!r.b}, K=function(e){return xlN(e.kg,0)}, KH=function(e){return xlN(e.ha?e.kg/e.ha:0,0)};
   var rc=[]; d.byCult.forEach(function(e){var r=[e.cultivo,xlN(e.n,0),xlN(e.ha,2),K(e),KH(e)];r.b=e.showVars;rc.push(r);if(e.showVars)e.vars.forEach(function(v){rc.push(['    - '+v.vname,xlN(v.n,0),xlN(v.ha,2),K(v),KH(v)])})});
@@ -10691,7 +10702,7 @@ function afXlsx(d,cmp){
   d.byCult.forEach(function(e){var r=['Total','','',e.cultivo,xlN(e.ha,4),KH(e),K(e)];r.b=true;rr.push(r)});
   X.sub('Por recinto'); X.tbl([{h:'Finca',w:28},{h:'Referencia SIGPAC',w:36},{h:'Nombre',w:20},{h:'Cultivo y producción',w:40},{h:'Sup. (ha)',w:20,a:'r'},{h:'kg/ha',w:18,a:'r'},{h:'kg totales',w:20,a:'r'}],rr,{bold:bf});
   if(cmp){var w=Math.floor((182-50)/cmp.years.length);X.sub('Comparación entre campañas (kg/ha de media)');
-    X.tbl([{h:'Cultivo',w:50}].concat(cmp.years.map(function(yy){return {h:String(yy),w:w,a:'r'}})),cmp.crops.map(function(c){return [c].concat(cmp.years.map(function(yy){var e=cmp.m[c][yy];return e?xlN(e.kgha,0):'—'}))}))}
+    X.tbl([{h:'Cultivo',w:50}].concat(cmp.years.map(function(yy){return {h:campLbl(yy),w:w,a:'r'}})),cmp.crops.map(function(c){return [c].concat(cmp.years.map(function(yy){var e=cmp.m[c][yy];return e?xlN(e.kgha,0):'—'}))}))}
   return xlBuild([X.sh]);
 }
 function afNumD(v){v=+v;return Math.abs(v-Math.round(v))<1e-9?0:(Math.abs(v*10-Math.round(v*10))<1e-9?1:2)}
@@ -10702,12 +10713,12 @@ function infGo(){
   if(!any){toast('Marca al menos una parte para el informe');return}
   if(!INF.fmt.pdf&&!INF.fmt.xlsx){toast('Elige PDF, Excel o los dos');return}
   if(INF.fmt.pdf&&!loadPdfLib()){pdfNoListo();return}
-  var base='informe-'+f.nombre.replace(/[^\wÁÉÍÓÚÑáéíóúñ-]+/g,'_')+'-'+(INF.yr==='all'?'todas-las-campanas':INF.yr)+(INF.cult?'-'+cvLabel(f,INF.cult).replace(/[^\wÁÉÍÓÚÑáéíóúñ-]+/g,'_'):''), out=[];
+  var base='informe-'+f.nombre.replace(/[^\wÁÉÍÓÚÑáéíóúñ-]+/g,'_')+'-'+(INF.yr==='all'?'todas-las-campanas':campFile(INF.yr))+(INF.cult?'-'+cvLabel(f,INF.cult).replace(/[^\wÁÉÍÓÚÑáéíóúñ-]+/g,'_'):''), out=[];
   try{
     if(INF.fmt.pdf)out.push({n:base+'.pdf',b:buildInfPdf(f,INF.yr,o,INF.cult)});
     if(INF.fmt.xlsx)out.push({n:base+'.xlsx',b:buildInfXlsx(f,INF.yr,o,INF.cult)});
   }catch(e){toast('No he podido crear el informe.');return}
-  var info=esc(f.nombre)+' · '+(INF.yr==='all'?'todas las campañas':'campaña '+INF.yr)+(INF.cult?' · '+esc(cvLabel(f,INF.cult)):'');
+  var info=esc(f.nombre)+' · '+(INF.yr==='all'?'todas las campañas':'campaña '+campLbl(INF.yr))+(INF.cult?' · '+esc(cvLabel(f,INF.cult)):'');
   if(out.length===1){INF.last=out;showDl(out[0].b,out[0].n,'Informe listo',info);return}
   INF.busy=true; renderFincas();
   Promise.all(out.map(function(x){return blobBytes(x.b)})).then(function(bs){
@@ -14099,7 +14110,7 @@ function dwGo(){
 
 /* ---- informe resumen en PDF ---- */
 function reportPdf(gid,opt){
-  var gSel=gid&&grupo(gid), fl=(opt&&opt.fincas?opt.fincas.map(finca).filter(Boolean):(gSel?grupoFincas(gid):VF())).filter(function(f){return !isOc(f)}), st=stats((gSel||opt)?fl.map(function(f){return f.id}):null); if(!st.n){toast('Todavía no hay recintos asignados a fincas.');return}
+  var gSel=gid&&grupo(gid), fl=(opt&&opt.fincas?opt.fincas.map(finca).filter(Boolean):(gSel?grupoFincas(gid):VF())).filter(function(f){return !isOc(f)}), st=stats(fl.map(function(f){return f.id})); if(!st.n){toast('Todavía no hay recintos asignados a fincas.');return}
   if(!loadPdfLib()){pdfNoListo();return}
   var jsPDF=window.jspdf.jsPDF, doc=new jsPDF({unit:'mm',format:'a4'}), PW=210, PH=297, M=14, CW=PW-2*M, green=[23,33,38], ink=[23,33,38], gray=[90,103,101], y=0;
   var fit=function(t,w){t=String(t==null?'':t);if(doc.getTextWidth(t)<=w-1.5)return t;while(t.length>1&&doc.getTextWidth(t+'…')>w-1.5)t=t.slice(0,-1);return t+'...'};
@@ -14128,7 +14139,7 @@ function reportPdf(gid,opt){
   var rowsC=Object.keys(st.byCrop).sort(function(a,b){return st.byCrop[b]-st.byCrop[a]}).map(function(c){return [c,nf(st.byCrop[c],2),nf(st.byCrop[c]/st.tot*100,1)+' %']});
   table('Totales por cultivo',[{h:'Cultivo',w:90},{h:'Sup. (ha)',w:46,a:'r'},{h:'% del total',w:46,a:'r'}],rowsC,['Total',nf(st.tot,2),'100 %']);
   if(st.byPd.eco||st.byPd.cv){
-    var xp={}; fl.forEach(function(f){fincaRecs(f.id).forEach(function(r){var c=r.cultivo||'Sin cultivo',o=xp[c]||(xp[c]={});var k=prodKind(r.prod);o[k]=(o[k]||0)+r.ha})});
+    var xp={}; fl.forEach(function(f){fincaRecs(f.id).forEach(function(r){var c=r.cultivo||'Sin cultivo',o=xp[c]||(xp[c]={});var k=prodKind(r.prod);o[k]=(o[k]||0)+haC(r)})});
     var rowsP=[]; Object.keys(xp).sort(function(a,b){return (st.byCrop[b]||0)-(st.byCrop[a]||0)}).forEach(function(c){var o=xp[c];rowsP.push([c,nf(o.eco||0,2),nf(o.cv||0,2),nf(o.cn||0,2),nf(o['']||0,2)])});
     /* Entrega 78: solo las columnas que tienen hectáreas */
     var pk=[['eco','Ecológico (ha)',30],['cv','En conversión (ha)',34],['cn','Convencional (ha)',32],['','Sin indicar (ha)',24]].filter(function(k){return (st.byPd[k[0]]||0)>0.00005}), pw0=pk.reduce(function(a,k){return a+k[2]},0);
@@ -14186,7 +14197,7 @@ function afDraw(){
   afLabelsRedraw();
 }
 function afBarHTML(){
-  var pg=afProg(), h='<div class="chd"><div class="aft">Aforo <span>· '+esc(afScopeName())+' · '+af.year+'</span></div><button class="x" data-act="af-close" aria-label="Cerrar">×</button></div>';
+  var pg=afProg(), h='<div class="chd"><div class="aft">Aforo <span>· '+esc(afScopeName())+' · '+campLbl(af.year)+'</span></div><button class="x" data-act="af-close" aria-label="Cerrar">×</button></div>';
   h+='<div class="afsum"><b>'+(pg.left?'Quedan '+pg.left:'¡Todos hechos!')+'</b> · Hechos '+pg.done+' de '+pg.n+(pg.omit?' ('+pg.omit+' sin aforar)':'')+' · '+ha2(pg.haDone)+' de '+ha2(pg.ha)+' ha</div>';
   h+='<div class="afbar"><i style="width:'+(pg.n?Math.round(pg.done/pg.n*100):0)+'%"></i></div>';
   var cs={}; afRecs().forEach(function(r){var c=r.cultivo||NOCROP;cs[c]=1});
@@ -14194,7 +14205,7 @@ function afBarHTML(){
   if(!r)h+='<div class="aflg">'+Object.keys(cs).sort().map(function(c){return '<span><i style="background:'+cropColor(c)+'"></i>'+esc(c)+'</span>'}).join('')+'</div><div class="aflg2 small">Borde: blanco hecho · naranja pendiente · gris no se afora'+(afRecs().some(function(r){return prodTag(r.prod)})?' · <span class="ecotag">ECO</span> ecológico · <span class="ecotag">CONV</span> en conversión':'')+'</div>';
   if(r){
     var v=afVal(af.year,r.ref);
-    h+='<div class="afed"><div><b>'+esc(refShort(r.ref))+'</b>'+(r.nombre?' · '+esc(r.nombre):'')+'</div><div class="small">'+esc(r.cultivo||'Sin cultivo')+(varReal(r)?' · '+esc(varReal(r)):'')+' · '+ha4(r.ha)+' ha</div>';
+    h+='<div class="afed"><div><b>'+esc(refShort(r.ref))+'</b>'+(r.nombre?' · '+esc(r.nombre):'')+'</div><div class="small">'+esc(r.cultivo||'Sin cultivo')+(varReal(r)?' · '+esc(varReal(r)):'')+' · '+ha4(haC(r))+' ha</div>';
     h+='<div class="row" style="margin-top:6px"><input id="af-kg" class="in" inputmode="decimal" placeholder="kg por hectárea" value="'+(typeof v==='number'?String(v).replace('.',','):'')+'" autocomplete="off" aria-label="Kilos por hectárea"><button class="btn primary" data-act="af-save">Guardar</button></div>';
     h+='<div class="acts" style="margin-top:6px"><button class="btn sm" data-act="af-skip">No aforar este recinto</button>'+(v!==undefined?'<button class="btn sm" data-act="af-clear">Quitar dato</button>':'')+'</div></div>';
   }else h+='<div class="small" style="margin-top:4px">Toca un recinto en el mapa.</div>';
@@ -14258,7 +14269,7 @@ function afManHTML(){
   var data=afAllData(), h='<div class="dlbox"><h2>Gestionar aforos</h2><p class="small" style="margin:6px 0 0">Todos los aforos que has hecho, por campaña. Puedes continuarlos, corregirlos, ver el informe o borrarlos.</p>';
   if(!data.length)h+='<div class="note">Todavía no has hecho ningún aforo.</div>';
   data.forEach(function(d){
-    h+='<div class="lbl">Campaña '+d.year+'</div><div class="paclist">';
+    h+='<div class="lbl">Campaña '+campLbl(d.year)+'</div><div class="paclist">';
     d.owners.forEach(function(o){
       h+=afManRow('owner',o.g.id,d.year,o.g.nombre+' (propietario)',o,false);
       o.fincas.forEach(function(e){h+=afManRow('finca',e.f.id,d.year,e.f.nombre,e,true)});
@@ -14267,7 +14278,7 @@ function afManHTML(){
     h+='</div>';
     if(d.orph)h+='<div class="small" style="margin-top:6px">Además hay '+d.orph+(d.orph===1?' dato de un recinto':' datos de recintos')+' que ya no están en tus fincas (solo se borran con «Borrar campaña entera»).</div>';
     var ky='year::'+d.year, ar=afMan.arm===ky;
-    h+='<div class="acts" style="margin-top:6px"><button class="btn sm danger'+(ar?' armed':'')+'" data-act="afm-delyear" data-y="'+d.year+'">'+(ar?'Pulsa otra vez: se borra TODA la campaña '+d.year:'Borrar campaña entera')+'</button></div>';
+    h+='<div class="acts" style="margin-top:6px"><button class="btn sm danger'+(ar?' armed':'')+'" data-act="afm-delyear" data-y="'+d.year+'">'+(ar?'Pulsa otra vez: se borra TODA la campaña '+campLbl(d.year):'Borrar campaña entera')+'</button></div>';
   });
   h+='<div class="dlacts" style="margin-top:12px"><button class="btn" data-act="afm-back">‹ Volver</button><button class="btn" data-act="af-modal-close">Cerrar</button></div></div>';
   return h;
@@ -14284,7 +14295,7 @@ function afmDel(kind,id,year){
   if(afMan.arm!==key){afMan.arm=key;afManOpen();return}
   afMan.arm=null; var a=S.x.af&&S.x.af[year]; if(!a){afManOpen();return}
   var snap={}, msg;
-  if(kind==='year'){Object.keys(a).forEach(function(r){snap[r]=a[r]});delete S.x.af[year];msg='Campaña '+year+' borrada'}
+  if(kind==='year'){Object.keys(a).forEach(function(r){snap[r]=a[r]});delete S.x.af[year];msg='Campaña '+campLbl(year)+' borrada'}
   else{afManRefs(kind,id).forEach(function(r){if(a[r]!==undefined){snap[r]=a[r];delete a[r]}});if(!Object.keys(a).length)delete S.x.af[year];msg='Aforo borrado ('+Object.keys(snap).length+' recintos)'}
   save();
   var undo=function(){S.x.af=S.x.af||{};var t=S.x.af[year]||(S.x.af[year]={});Object.keys(snap).forEach(function(r){t[r]=snap[r]});save();if(af.on){afDraw();renderAf()}if(!$('#afmodal').hidden&&/Gestionar aforos/.test($('#afmodal').textContent))afManOpen();toast('Aforo recuperado')};
@@ -14332,13 +14343,13 @@ function afCompare(){
 }
 function afRepHTML(){
   var d=afCompute(af.year), cmp=afCompare();
-  var h='<div class="dlbox"><h2>Informe de aforo</h2><p class="small" style="margin:6px 0 0"><b>'+esc(d.name)+'</b> · Campaña '+d.year+'</p>';
+  var h='<div class="dlbox"><h2>Informe de aforo</h2><p class="small" style="margin:6px 0 0"><b>'+esc(d.name)+'</b> · Campaña '+campLbl(d.year)+'</p>';
   if(d.pend)h+='<div class="note">'+(d.pend===1?'Aún queda <b>1</b> recinto':'Aún quedan <b>'+d.pend+'</b> recintos')+' sin dato: no entran en el informe.</div>';
   if(!d.rows.length)h+='<div class="note">Todavía no hay ningún recinto con kg/ha en esta campaña.</div>';
   else{
     h+='<div class="small">'+d.rows.length+(d.rows.length===1?' recinto aforado':' recintos aforados')+(d.omit?' · '+d.omit+' sin aforar':'')+' · los cultivos se cuentan por separado (y el ecológico aparte del convencional)</div>';
     h+='<div class="paclist" style="margin-top:8px">'+d.byCult.map(function(e){return '<div class="pacrow" style="grid-template-columns:1fr auto"><b><i style="display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;background:'+cropColor(e.cultivo.split(' · ')[0])+'"></i>'+esc(e.cultivo)+'</b><span>'+afF(e.kg,0)+' kg</span><small style="grid-column:1/3">'+ha2(e.ha)+' ha · '+afF(e.kgha,0)+' kg/ha de media · '+e.n+(e.n===1?' recinto':' recintos')+'</small>'+(e.showVars?e.vars.map(function(v){return '<small style="grid-column:1/3;padding-left:14px">↳ '+esc(v.vname)+': '+afF(v.kg,0)+' kg · '+ha2(v.ha)+' ha · '+afF(v.kgha,0)+' kg/ha</small>'}).join(''):'')+'</div>'}).join('')+'</div>';
-    if(cmp)h+='<div class="lbl">Comparación entre campañas (kg/ha de media)</div><div class="paclist">'+cmp.crops.map(function(c){return '<div class="pacrow" style="grid-template-columns:1fr"><b>'+esc(c)+'</b><small style="grid-column:1">'+cmp.years.map(function(y){var e=cmp.m[c][y];return y+': '+(e?afF(e.kgha,0):'—')}).join(' · ')+'</small></div>'}).join('')+'</div>';
+    if(cmp)h+='<div class="lbl">Comparación entre campañas (kg/ha de media)</div><div class="paclist">'+cmp.crops.map(function(c){return '<div class="pacrow" style="grid-template-columns:1fr"><b>'+esc(c)+'</b><small style="grid-column:1">'+cmp.years.map(function(y){var e=cmp.m[c][y];return campLbl(y)+': '+(e?afF(e.kgha,0):'—')}).join(' · ')+'</small></div>'}).join('')+'</div>';
     h+='<div class="lbl">¿Qué quieres generar?</div><div class="chips"><button class="chip'+(af.fmt.pdf?' on':'')+'" data-act="af-fmt" data-v="pdf" aria-pressed="'+af.fmt.pdf+'">PDF</button><button class="chip'+(af.fmt.xlsx?' on':'')+'" data-act="af-fmt" data-v="xlsx" aria-pressed="'+af.fmt.xlsx+'">Excel</button></div>';
     h+='<div class="small" style="margin-top:6px">'+(af.scope==='finca'?'PDF: informe por recinto y por finca. Excel:':'PDF: informe por recinto, finca y propietario. Excel:')+' las mismas tablas en hojas separadas (con fórmulas en los recintos). Cada cultivo va por separado; las variedades, debajo.</div>';
   }
@@ -14358,7 +14369,7 @@ function afStartHTML(){
   var opts=abc(af.scope==='finca'?fs:gs).map(function(o){return [o.id,o.nombre]}); AFO=opts;
   h+=lsInput('af',af.scope==='finca'?'Buscar finca…':'Buscar propietario…',opts.length);
   h+='<select id="af-sel" class="in" style="margin-top:8px" aria-label="Qué aforar">'+opts.map(function(o){return '<option value="'+esc(o[0])+'"'+(o[0]===af.id?' selected':'')+'>'+esc(o[1])+'</option>'}).join('')+'</select>';
-  h+='<div class="lbl">Campaña (año de la cosecha)</div><select id="af-year" class="in" aria-label="Campaña">'+afYears().map(function(y){return '<option value="'+y+'"'+(y===af.year?' selected':'')+'>'+y+'</option>'}).join('')+'</select>';
+  h+='<div class="lbl">Campaña (año de la cosecha)</div><select id="af-year" class="in" aria-label="Campaña">'+afYears().map(function(y){return '<option value="'+y+'"'+(y===af.year?' selected':'')+'>'+campLbl(y)+'</option>'}).join('')+'</select>';
   if(!opts.length)h+='<div class="note">Todavía no hay fincas con recintos.</div>';
   var beginTxt='Empezar a aforar';
   if(opts.length){if(!af.id||!opts.some(function(o){return o[0]===af.id}))af.id=opts[0][0];var pg0=afProg();if(pg0.done>0)beginTxt='Continuar aforo ('+pg0.done+' de '+pg0.n+' hechos)'}
@@ -14401,7 +14412,7 @@ function afPdf(d,cmp){
   var jsPDF=window.jspdf.jsPDF, doc=new jsPDF({unit:'mm',format:'a4'}), PW=210, PH=297, M=14, CW=PW-2*M, green=[23,33,38], ink=[23,33,38], gray=[90,103,101], y=0;
   var fit=function(t,w){t=String(t==null?'':t);if(doc.getTextWidth(t)<=w-1.5)return t;while(t.length>1&&doc.getTextWidth(t+'…')>w-1.5)t=t.slice(0,-1);return t+'...'};
   var room=function(h,hd){if(y+h>PH-16){doc.addPage();y=18;if(hd)hd()}};
-  doc.setFillColor.apply(doc,green); doc.rect(0,0,PW,24,'F'); doc.setFillColor(245,196,0); doc.rect(0,24,PW,1.4,'F'); doc.setTextColor(255,255,255); doc.setFont(pdfFont(doc),'normal'); doc.setFontSize(9); doc.text('Aforo de cosecha · Campaña '+d.year,M,9);
+  doc.setFillColor.apply(doc,green); doc.rect(0,0,PW,24,'F'); doc.setFillColor(245,196,0); doc.rect(0,24,PW,1.4,'F'); doc.setTextColor(255,255,255); doc.setFont(pdfFont(doc),'normal'); doc.setFontSize(9); doc.text('Aforo de cosecha · Campaña '+campLbl(d.year),M,9);
   doc.setFont(pdfFont(doc),'bold'); doc.setFontSize(20); doc.text(fit(d.name,CW-4),M,19); doc.setFont(pdfFont(doc),'normal'); doc.setFontSize(9); doc.text(new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}),PW-M,9,{align:'right'});
   y=34; doc.setTextColor.apply(doc,ink); doc.setFont(pdfFont(doc),'bold'); doc.setFontSize(13);
   doc.text(d.rows.length+(d.rows.length===1?' recinto aforado':' recintos aforados'),M,y); y+=9;
@@ -14430,20 +14441,20 @@ function afPdf(d,cmp){
   if(cmp){
     var cc=cmp.crops.map(function(c){return [c].concat(cmp.years.map(function(yy){var e=cmp.m[c][yy];return e?afF(e.kgha,0):'—'}))});
     var w=Math.floor((CW-50)/cmp.years.length);
-    table('Comparación entre campañas (kg/ha de media)',[{h:'Cultivo',w:50}].concat(cmp.years.map(function(yy){return {h:String(yy),w:w,a:'r'}})),cc,null);
+    table('Comparación entre campañas (kg/ha de media)',[{h:'Cultivo',w:50}].concat(cmp.years.map(function(yy){return {h:campLbl(yy),w:w,a:'r'}})),cc,null);
   }
-  var n=doc.getNumberOfPages(); for(var p=1;p<=n;p++){doc.setPage(p);doc.setFont(pdfFont(doc),'normal');doc.setFontSize(8);doc.setTextColor.apply(doc,gray);doc.text('Aforo de cosecha '+d.year+' · '+d.name,M,PH-8);doc.text(p+' / '+n,PW-M,PH-8,{align:'right'})}
+  var n=doc.getNumberOfPages(); for(var p=1;p<=n;p++){doc.setPage(p);doc.setFont(pdfFont(doc),'normal');doc.setFontSize(8);doc.setTextColor.apply(doc,gray);doc.text('Aforo de cosecha '+campLbl(d.year)+' · '+d.name,M,PH-8);doc.text(p+' / '+n,PW-M,PH-8,{align:'right'})}
   return doc.output('blob');
 }
 function afGenerate(){
   if(af.busy)return; var d=afCompute(af.year), cmp=afCompare(); if(!d.rows.length||(!af.fmt.pdf&&!af.fmt.xlsx))return;
   if(af.fmt.pdf&&!loadPdfLib()){pdfNoListo();return}
-  var base='aforo-'+safeName(d.name)+'-'+d.year, out=[];
+  var base='aforo-'+safeName(d.name)+'-'+campFile(d.year), out=[];
   try{
     if(af.fmt.pdf)out.push({n:base+'.pdf',b:afPdf(d,cmp)});
     if(af.fmt.xlsx)out.push({n:base+'.xlsx',b:afXlsx(d,cmp)});
   }catch(e){toast('No he podido crear el informe.');return}
-  var info=d.rows.length+' recintos aforados · campaña '+d.year;
+  var info=d.rows.length+' recintos aforados · campaña '+campLbl(d.year);
   var fin=function(blob,name){$('#afmodal').hidden=true;$('#afmodal').innerHTML='';showDl(blob,name,'Informe de aforo listo',info)};
   if(out.length===1)return fin(out[0].b,out[0].n);
   af.busy=true; afOpenReport();
@@ -16519,6 +16530,8 @@ Object.assign(window.__mf,{IH:function(){return IH},IHL:IHL,ihSet:ihSet,ihStep:i
 Object.assign(window.__mf,{plFileBase:plFileBase,expGGet:expGGet,expGPick:expGPick,grbSplit:grbSplit,grStart:grStart,grSave:grSave,GRS:function(){return GRS},expHTML:expHTML,TRs:function(){return {tr:TR.cult,ab:AB.cult,fe:FE.cult,hi:HI.cult,inf:INF.cult,pl:PL.pid}},vfState:function(){return VFL},vfOn:vfOn,muniTxtSync:muniTxtSync,polyCount:function(){return polyC.size},ufbStart:ufbStart,ubkCheck:ubkCheck,ubkDue:ubkDue,bkOwn:bkOwn,fbBuild:fbBuild,UBK:UBK,getVersions:getVersions,prevGet:prevGet,spaceHTML:spaceHTML,snapVersion:snapVersion,datReady:function(){return DATP},datState:function(){return {ok:IDBOK,r:DATR,nv:VERS?VERS.length:-1,prev:!!PREV}},plPortrait:plPortrait,plCropTxt:plCropTxt,xlPlanBook:xlPlanBook,idbReset:function(w){idbP=null;if(w)IDB_WAIT=w},syncWait:function(w){SYNC_WAIT=w},syncBusy:function(){return syncing},uCvTxt:uCvTxt,feUcvForm:feUcvForm,feUnitConvert:feUnitConvert,rfEdit:rfEdit,rfSave:rfSave,infTotRows:infTotRows,abTotData:abTotData,cvLabel:cvLabel,feProds:feProds,pabShares:pabShares,pabHaR:pabHaR,pabSplits:pabSplits,pabSplitWarn:pabSplitWarn,pabXCands:pabXCands,pabAddX:pabAddX,pabMove:pabMove,buildPabPdf:buildPabPdf,buildPabXlsx:buildPabXlsx,pabBlocks:pabBlocks,pabCheck:pabCheck,pabReal:pabReal,pabCalc:pabCalc,pabAuto:pabAuto,pabHTML:pabHTML,pabCur:pabCur,pabTipo:pabTipo,pabLim:pabLim,PAB:PAB,haC:haC,haPair:haPair,plTrPlaces:plTrPlaces,daOpen:daOpen,daSave:daSave,PL:PL,plWeeks:plWeeks,plCalc:plCalc,plTrOrder:plTrOrder,plPending:plPending,plMarkGo:plMarkGo,buildTratPdf:buildTratPdf,xlPlanBook:xlPlanBook,xlBuild:xlBuild,plFromRecs:plFromRecs,plSecArgs:plSecArgs,plSecHTML:plSecHTML,plSecOut:plSecOut,plTrPRows:plTrPRows,buildPlanPdf:buildPlanPdf,buildPlanXlsx:buildPlanXlsx,planHTML:planHTML,plTrSources:plTrSources,fbBuild:fbBuild,fbRead:fbRead,fbItems:fbItems,fbRestoreFiles:fbRestoreFiles,idbPut:idbPut,idbGet:idbGet,idbKeys:idbKeys,applyImport:applyImport,pending:function(){return pendingImport},docPend:function(){return DOC.pend},phPend:function(){return PH.pend},phProcess:phProcess,phMax:function(n){PH_MAXB=n},trVarParts:trVarParts,numEs:numEs,nf:nf,trList:trList,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
 Object.assign(window.__mf,{llHTML:llHTML,llLoad:llLoad,llGet:llGet,llSum:llSum,llArr:llArr,llN:llN,LLU:function(){return LLU},LLSEL:LLSEL,pvHTML:pvHTML,pvLoad:pvLoad,pvGet:pvGet,pvParse:pvParse,pvDias:pvDias,PVU:function(){return PVU}});
 Object.assign(window.__mf,{offMigra:offMigra,OFFMG:function(){return OFFMG},offTCount:offTCount,offTGet:offTGet,arqList:arqList,arqHTML:arqHTML,offKeys:offKeys,offState:offState,offDownload:offDownload,offRemove:offRemove,offPend:offPend,offSet:offSet,offAskCheck:offAskCheck,offUrl:offUrl,offTotal:offTotal,offLoad:offLoad,offDiff:offDiff,offMark:offMark,offSig:offSig,OFFM:function(){return OFFM},OFF:function(){return OFF},offBusy:function(){return !!OFFD},save:function(){save()},renderDatos:renderDatos,offAskShown:function(){return OFFASK}});
+/* Entrega 132: para las pruebas */
+Object.assign(window.__mf,{campOf:campOf,campLbl:campLbl,campFile:campFile,campHoy:campHoy,yrOf:yrOf,yrEff:yrEff,hiAfCrops:hiAfCrops,feResumen:feResumen,trRecSum:trRecSum,expCampHTML:expCampHTML,expCultTblHTML:expCultTblHTML,cardFold:cardFold,expAforosHTML:expAforosHTML,pabCamp:pabCamp,pabCampRange:pabCampRange,trOrd:trOrd,grParts:grParts,nutYear:nutYear});
 })();
 </script>
 <script type="text/plain" id="pdflib"></script>
