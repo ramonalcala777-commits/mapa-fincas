@@ -1,0 +1,14 @@
+{
+  "id": "/mapa-fincas/",
+  "name": "Mis fincas",
+  "short_name": "Mis fincas",
+  "start_url": "/mapa-fincas/",
+  "scope": "/mapa-fincas/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "lang": "es",
+  "icons": [
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+  ]
+}

@@ -8,7 +8,9 @@
      Entrega 102: esos trozos están en una base de datos propia (IndexedDB «mf-mapas»), no en el almacén de la app:
      en el iPhone ese almacén se revisa entero al abrir y con miles de trozos la app tardaba más de 10 s en arrancar.
      Mientras la app los pasa del almacén viejo al nuevo, lo que aún no se ha pasado se sirve del viejo.
-   - Todo lo demás (sincronización, SIGPAC, Catastro, radar, NDVI…) va directo a internet, sin tocarlo. */
+   - Todo lo demás (sincronización, SIGPAC, Catastro, radar, NDVI…) va directo a internet, sin tocarlo.
+   - Entrega 140: recibe los avisos de los recordatorios (los manda la función «avisos» de Supabase), los enseña,
+     pone el número del icono y, al tocar el aviso, abre la app en esa nota. */
 'use strict';
 var APP = 'mf-app-1', MAPAS = 'mf-mapas', PIEZAS = 'mf-piezas', ESPERA = 6000;
 
@@ -125,4 +127,30 @@ self.addEventListener('message', function (e) {
   if (u.origin !== location.origin) return fin(false);
   e.waitUntil(caches.open(APP).then(function (c) { return renueva(c, clave(u)); })
     .then(function (r) { fin(!!(r && r.ok)); }, function () { fin(false); }));
+});
+
+/* Entrega 140 · avisos de los recordatorios de las notas (Web Push). Llegan cifrados desde la función «avisos» de Supabase:
+   {t: título, b: texto, id: nota, n: número para el icono, u: dirección que abre}. Siempre se enseña el aviso (el iPhone lo exige). */
+self.addEventListener('push', function (e) {
+  var d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (x) { try { d = { b: e.data ? e.data.text() : '' }; } catch (y) { d = {}; } }
+  var p = self.registration.showNotification(String(d.t || '⏰ Recordatorio'), {
+    body: String(d.b || ''), tag: d.id ? 'nota-' + d.id : 'mf-aviso', data: d, icon: 'apple-touch-icon.png', badge: 'apple-touch-icon.png'
+  });
+  if (typeof d.n === 'number' && self.navigator && self.navigator.setAppBadge) {
+    p = p.then(function () { return d.n > 0 ? self.navigator.setAppBadge(d.n) : (self.navigator.clearAppBadge ? self.navigator.clearAppBadge() : null); }).catch(function () {});
+  }
+  e.waitUntil(p);
+});
+self.addEventListener('notificationclick', function (e) {
+  e.notification.close();
+  var d = e.notification.data || {}, sc = self.registration.scope, u = sc;
+  try { var x = new URL(d.u || sc, sc); if (x.origin === location.origin) u = x.href; } catch (y) {}
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (cs) {
+    for (var i = 0; i < cs.length; i++) {
+      var c = cs[i];
+      if (c.url.indexOf(sc) === 0 && 'focus' in c) { try { c.postMessage({ mf: 'nota', id: d.id || '' }); } catch (z) {} return c.focus(); }
+    }
+    return self.clients.openWindow ? self.clients.openWindow(u) : null;
+  }));
 });

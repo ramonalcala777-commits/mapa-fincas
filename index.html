@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-UDzclEybuIi1d0YsDreoUctxZc2ml++tahcitNanwL8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-8QbOdfbjIXIRRhQRHDjElF/Ifng/sUBYsFw9OPmbN+w='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
@@ -17,6 +17,7 @@ try{var __h=String(location.hash||''),__s=null;try{__s=history.state}catch(e){}i
 <title>Mapa de Fincas</title>
 <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAEuUlEQVR42u3dsWoUURSA4byJiCAiooi29oL4AmKwFQRBLIRUYhHBTtFCxSZp1CYgVoIgBixEsIy9WIidLzByVhaWEOPs7oQ55+Yr/j4Tvrl7Z5iZs3Jp7UgntdKKf4KAloCWgJaAFtAS0BLQEtAS0AJaAloCWgJaAlpAS0BLQEtAS0ALaAloCWgJaAloAS0BLQEtAS0BLaAloCWgpSZBX7t3tHv+7ES3/frUpO7juVHbeXNm8ndsbZzsbj84dmDHvXr/fPdw61b39vOzST9/fxu1Tztbk79j8/16d/PJRaAXKdCMDbgP8DjphjzuQDM24D7A46QDuueqHFCyY572693Z7v6j44OsygElO+ZpOz+2u7sbq0D/r0qYZ1t2pa6EebZsK/WKbcZwK3XL24z9Vmqg/7HVqIp5WlzALrLVqIp5WlzAAr2rwFAddGyX5j3uwFAddGyXgN5VhttyQzTvcWe4LTdEQAMNdMugW8AczXsLrwXMUZZbeEADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDXT706+WnYZVdfpV1mlYvuDvC/6+4G+k23Cj3SqPdMs42i0N6JidXR10nJTzHnfMzq4OOk5KoBvcRy86Tbb6PjrTNNlUoANE/Gwfhrsbu4dvxs+2uxsNzvoOGNUwxwXtsscdMKphjgtaw+sbW6mXWZkrr9TZVubUoGfHJWfcV8fJFheAi+6Z+4xLzrivjpMtLgAz7ZlLgd5rOzJmBwW4z3ZkzDIDLg1aAlpAS0BLQEtAS0ALaAloCWgJaKkY6HiGIB7UiccUM7x7Fw8Mxd8RD+jEmyYHddxX1k9366+udpsf1iZ9/f5y1N58eTD5Ox6/vdFdf3gB6EWq8K5dAB/6wZ1AMzbgPsDjpAO656pc6ZWkeKRyiGeDA0hAyY552oedp92dF5eBbvX9umVX6kqYZ8u2Uq/YZoz/Kn+FbcZ+KzXQ/9hqVH+dPy5gF9lqVMU8LS5ggd7jtaPqoGO7NO9xB4bqoGO7BLRPYv3dZiW4LTdEQAMNdMugD+tnZVvAHGW5hQc00EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EC3P/1q2WlYVadfZZ2G5Qv+vuDvC/5Gug032q3ySLeMo93SgI7Z2dVBx0k573HH7OzqoOOkBLrBffSi02Sr76MzTZNNBTpAxM/2Ybi7sXv4Zvxsu7vR4KzvgFENc1zQLnvcAaMa5rigNby+sZV6mZW58kqdbWVODXp2XHLGfXWcbHEBuOieuc+45Iz76jjZ4gIw0565FOi9tiNjdlCA+2xHxiwz4NKgJaAFtAS0BLQEtAS0gJaAloCWgJaAFtAS0BLQEtAS0AJaAloCWgJaAlpAS0BLQEtAC2j/BAEtAS0BLQEtoCWgpVz9AatCqmZzGHFMAAAAAElFTkSuQmCC">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-startup-image" media="screen and (device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: light)" href="inicio/1320x2868-claro.png">
 <link rel="apple-touch-startup-image" media="screen and (device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: dark)" href="inicio/1320x2868-oscuro.png">
 <link rel="apple-touch-startup-image" media="screen and (device-width: 420px) and (device-height: 912px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: light)" href="inicio/1260x2736-claro.png">
@@ -841,6 +842,11 @@ h2,h3{margin:0;text-wrap:balance}
 .ntbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.ntbar .small{flex:1;text-align:center}
 #p-notas textarea.ntx{height:56vh;min-height:260px;font-size:16px;line-height:1.5;resize:vertical}
 .ntbar2{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
+.rcbox{margin-top:8px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.rcrow{display:flex;gap:8px;margin:8px 0}.rcrow .in{flex:1;min-width:0;margin:0}
+.rcdue{margin:0 0 8px}.btn.on{background:var(--accent-soft)}
+.btn.rcv,.ntit .ntc.rcv{background:var(--warn-bg);color:var(--warn-ink)}
+#nav button[data-rc]{position:relative}#nav button[data-rc]::after{content:attr(data-rc);position:absolute;top:2px;left:calc(50% + 6px);min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:8px;background:#d93025;color:#fff;font-size:11px;line-height:16px;font-weight:600;text-align:center}
 .topbar form #goclr{width:34px;flex:none;color:var(--ink2);font-weight:400;font-size:17px;padding:0}
 #goinput:placeholder-shown+#goclr{display:none}
 .rbtn{width:48px;height:48px;flex:none;display:grid;place-items:center;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;box-shadow:var(--shadow);cursor:pointer;padding:0}
@@ -3057,7 +3063,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-11T06:24:17Z',n:'Entrega 139 · 11 nov · 07:24'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-11T07:43:30Z',n:'Entrega 140 · 11 nov · 08:43'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -5452,15 +5458,16 @@ function temaSet(v){
 function temaOscuro(){var t=temaGet();return t==='dark'||(t==='auto'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)}
 function temaNav(){var b=$('#nav .navtheme');if(!b)return;var t=temaGet();b.setAttribute('aria-label','Apariencia: '+(t==='light'?'claro':t==='dark'?'oscuro':'automático')+'. Tocar para cambiar');b.title=b.getAttribute('aria-label');b.innerHTML=t==='dark'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg>':t==='light'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor"/></svg>'}
 function temaHTML(){var t=temaGet();return '<h3>Apariencia</h3><div class="thseg" role="group" aria-label="Apariencia">'+[['auto','Automático'],['light','Claro'],['dark','Oscuro']].map(function(o){return '<button type="button" class="'+(t===o[0]?'on':'')+'" aria-pressed="'+(t===o[0])+'" data-act="tema" data-v="'+o[0]+'">'+o[1]+'</button>'}).join('')+'</div><p class="small" style="margin-top:6px">Automático sigue el modo claro u oscuro de este aparato. Se recuerda en cada aparato.</p>'+palHTML()}
-var DATT_K=['copias','cuenta','imp','gest','prod','sincon','apar'];
+var DATT_K=['copias','cuenta','imp','gest','prod','sincon','avisos','apar'];
 function datTab(){var t='copias';try{t=lsGet('mapa-fincas:dtab')||'copias'}catch(e){} return t==='all'?'all':(DATT_K.indexOf(t)>=0?t:'copias')}
 function renderDatos(){
   var el=$('#p-datos'), st=stats(null,true,true);
   if(hist.st==='idle'&&SY.rt)setTimeout(histLoad,0);
   var last=S.lastExport?new Date(S.lastExport).toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}):'nunca';
   var h='<div class="ph"><h2>Datos</h2></div>';
-  var T={copias:'',cuenta:'',imp:'',gest:'',prod:'',sincon:'',apar:''}, DT=[['copias','Copias'],['cuenta','Cuenta y compartir'],['imp','Importar y exportar'],['gest','Gestionar'],['prod','Mis productos'],['sincon','Sin conexión'],['apar','Apariencia']], dt=datTab();
-  if(GTOK||VC)DT=DT.filter(function(x){return x[0]!=='sincon'});
+  var T={copias:'',cuenta:'',imp:'',gest:'',prod:'',sincon:'',avisos:'',apar:''}, DT=[['copias','Copias'],['cuenta','Cuenta y compartir'],['imp','Importar y exportar'],['gest','Gestionar'],['prod','Mis productos'],['sincon','Sin conexión'],['avisos','Avisos'],['apar','Apariencia']], dt=datTab();
+  if(GTOK||VC){DT=DT.filter(function(x){return x[0]!=='sincon'&&x[0]!=='avisos'});if(dt==='avisos')dt='copias'}
+  if(!GTOK&&!VC){T.avisos='<div id="avbox">'+avHTML()+'</div>';if((dt==='avisos'||dt==='all')&&AV.st==='idle')setTimeout(avList,0)}
   h+='<div class="fcard"><div class="t"><b>En este aparato</b> <span class="small">(todas las pestañas, también las fincas ocultas)</span></div><div class="small">'+S.fincas.length+(S.fincas.length===1?' finca':' fincas')+' · '+st.n+(st.n===1?' recinto':' recintos')+' · '+ha2(st.tot)+' ha</div><div class="small">Última copia guardada: '+last+'</div></div>';
   T.cuenta+='<div id="syncbox"></div>';
   T.gest+='<div class="fcard"><div class="t"><b>Gestionar datos</b></div><div class="small">Mira todas tus fincas, etiquetas, mediciones, favoritos y propietarios, en qué pestañas están, y cópialos, muévelos o elimínalos de golpe. También compara pestañas, une duplicados y limpia lo suelto.</div><div class="acts"><button class="btn sm" data-act="gd-open">Gestionar datos…</button></div></div>';
@@ -15643,6 +15650,18 @@ document.addEventListener('click',function(ev){
     case 'nt-back':ntBack();break;
     case 'nt-del':ntDel(id);break;
     case 'nt-chk':ntBox();break;
+    case 'rc-open':{RC.open=RC.open===id?null:id;rcRender();var rbx=$('#rcbox');if(rbx&&rbx.scrollIntoView)try{rbx.scrollIntoView({block:'nearest',behavior:'smooth'})}catch(e){}break}
+    case 'rc-close':RC.open=null;rcRender();break;
+    case 'rc-q':rcQuick(id,b.dataset.k);break;
+    case 'rc-save':rcCustom(id);break;
+    case 'rc-off':rcOff(id);break;
+    case 'rc-done':rcDone(id);break;
+    case 'rc-snz':rcSnooze(id,b.dataset.k);break;
+    case 'av-go':try{lsSet('mapa-fincas:dtab','avisos')}catch(e){}setTab('datos');break;
+    case 'av-on':avOn();break;
+    case 'av-off':avOffDev();break;
+    case 'av-test':avTest();break;
+    case 'av-del':avDel(id);break;
     case 'go-clr':{var gci=$('#goinput');if(gci){gci.value='';lastUser=Date.now();try{gci.focus()}catch(e){}sresMode='home';renderSres()}break}
     case 'recent':{var rcn=getRecents()[+b.dataset.i];if(rcn){$('#goinput').value=rcn.t;goTo(rcn.t)}break}
     case 'guide-open':sresMode='guide';renderSres();break;
@@ -17051,7 +17070,7 @@ function ntFull(ms){var d=new Date(ms||0);return d.getDate()+' de '+['enero','fe
 function ntList(){
   var q=norm(NT.q||'').trim(), ff=NT.ff;
   return ntAll().filter(function(n){
-    if(ff&&n.fid!==ff)return false; if(!q)return true;
+    if(ff==='__rc'){if(!(n.r&&n.r.t))return false}else if(ff&&n.fid!==ff)return false; if(!q)return true;
     var fi=n.fid&&finca(n.fid); return norm(n.x||'').indexOf(q)>=0||(fi&&norm(fi.nombre).indexOf(q)>=0);
   }).sort(function(a,b){return (b.m||0)-(a.m||0)});
 }
@@ -17061,28 +17080,30 @@ function ntItemsHTML(l){
   var h='', g0=null;
   l.forEach(function(n){
     var g=ntGroup(n.m); if(g!==g0){h+='<div class="ntg">'+esc(g)+'</div>';g0=g}
-    var c=ntChk(n), fi=n.fid&&finca(n.fid), pv=ntPrev(n);
+    var c=ntChk(n), fi=n.fid&&finca(n.fid), pv=ntPrev(n), rl=rcLbl(n), rs=rl&&rcState(n);
     h+='<button type="button" class="ntit" data-act="nt-open" data-id="'+esc(n.id)+'"><b>'+esc(ntTitle(n))+'</b><span class="small">'+esc(ntWhen(n.m))+(pv?'  '+esc(pv):'')+'</span>'+
-       ((fi||c.tot)?'<span>'+(fi?'<span class="ntc">'+esc(fi.nombre)+'</span>':'')+(c.tot?'<span class="ntc">'+(c.pend?'☐ '+c.hech+' de '+c.tot+' hechas':'☑ todas hechas')+'</span>':'')+'</span>':'')+'</button>';
+       ((fi||c.tot||rl)?'<span>'+(rl?'<span class="ntc'+(rs.venc?' rcv':'')+'">⏰ '+esc(rl)+'</span>':'')+(fi?'<span class="ntc">'+esc(fi.nombre)+'</span>':'')+(c.tot?'<span class="ntc">'+(c.pend?'☐ '+c.hech+' de '+c.tot+' hechas':'☑ todas hechas')+'</span>':'')+'</span>':'')+'</button>';
   });
   return h;
 }
 function ntListHTML(){
   var all=ntAll(), fs=VF().filter(function(f){return all.some(function(n){return n.fid===f.id})});
-  if(NT.ff&&!fs.some(function(f){return f.id===NT.ff}))NT.ff='';
+  if(NT.ff&&NT.ff!=='__rc'&&!fs.some(function(f){return f.id===NT.ff}))NT.ff=''; var hayRc=rcAll().length; if(NT.ff==='__rc'&&!hayRc)NT.ff='';
   var h='<div class="nthead"><h2>Notas'+(all.length?' <span class="small">('+all.length+')</span>':'')+'</h2><button type="button" class="btn primary" data-act="nt-new">+ Nueva nota</button></div>';
   h+='<div class="small" style="margin:0 0 10px">Solo las ves tú: van con tu usuario, se sincronizan con tus aparatos y no salen en los enlaces compartidos.</div>';
   if(all.length)h+='<input id="nt-q" class="in" type="search" placeholder="Buscar en las notas" value="'+esc(NT.q)+'" autocomplete="off" aria-label="Buscar en las notas">';
-  if(fs.length)h+='<div class="trfl" style="margin-top:8px"><select id="nt-ff" class="trsel'+(NT.ff?' on':'')+'" aria-label="Finca"><option value="">Finca: todas</option>'+fs.map(function(f){return '<option value="'+esc(f.id)+'"'+(NT.ff===f.id?' selected':'')+'>'+esc(f.nombre)+'</option>'}).join('')+'</select></div>';
+  if(fs.length||hayRc)h+='<div class="trfl" style="margin-top:8px"><select id="nt-ff" class="trsel'+(NT.ff?' on':'')+'" aria-label="Finca"><option value="">'+(fs.length?'Finca: todas':'Todas las notas')+'</option>'+(hayRc?'<option value="__rc"'+(NT.ff==='__rc'?' selected':'')+'>⏰ Con recordatorio</option>':'')+fs.map(function(f){return '<option value="'+esc(f.id)+'"'+(NT.ff===f.id?' selected':'')+'>'+esc(f.nombre)+'</option>'}).join('')+'</select></div>';
   return h+'<div id="ntlist">'+ntItemsHTML(ntList())+'</div>';
 }
 function ntEdHTML(n){
   var a=NT.arm===n.id, fs=VF().slice().sort(function(p,q){return String(p.nombre).localeCompare(String(q.nombre),'es')});
   var h='<div class="ntbar"><button type="button" class="btn" data-act="nt-back">‹ Notas</button><span class="small" id="nt-when">'+(n.x?esc(ntFull(n.m)):'Nota nueva')+'</span>'+
         '<button type="button" class="btn sm danger'+(a?' armed':'')+'" data-act="nt-del" data-id="'+esc(n.id)+'">'+(a?'Pulsa otra vez para borrar':'Borrar')+'</button></div>';
+  h+=rcDueHTML(n);
   h+='<textarea id="nt-x" class="in ntx" placeholder="Escribe aquí. La primera línea es el título." aria-label="Texto de la nota">'+esc(n.x||'')+'</textarea>';
-  h+='<div class="ntbar2"><button type="button" class="btn sm" data-act="nt-chk">☐ Casilla</button>'+
+  h+='<div class="ntbar2"><button type="button" class="btn sm" data-act="nt-chk">☐ Casilla</button>'+rcBtnHTML(n)+
      '<select id="nt-f" class="trsel'+(n.fid?' on':'')+'" aria-label="Finca de la nota"><option value="">Sin finca</option>'+fs.map(function(f){return '<option value="'+esc(f.id)+'"'+(n.fid===f.id?' selected':'')+'>'+esc(f.nombre)+'</option>'}).join('')+'</select></div>';
+  h+=rcBoxHTML(n);
   h+='<div class="small" style="margin-top:8px">Se guarda sola mientras escribes. Toca una ☐ para marcarla como hecha.</div>';
   return h;
 }
@@ -17097,7 +17118,7 @@ function renderNotas(){
   if(n&&NT.neu){NT.neu=false;setTimeout(function(){var t=$('#nt-x');if(t){try{t.focus();t.setSelectionRange(t.value.length,t.value.length)}catch(e){}}},40)}
 }
 function ntNew(){
-  if(GTOK)return; S.x.notas=ntAll().slice(); var now=Date.now(), n={id:uid(),x:'',fid:NT.ff||'',c:now,m:now};
+  if(GTOK)return; S.x.notas=ntAll().slice(); var now=Date.now(), n={id:uid(),x:'',fid:(NT.ff&&NT.ff!=='__rc'?NT.ff:''),c:now,m:now};
   S.x.notas.unshift(n); NT.ed=n.id; NT.neu=true; NT.arm=null; if(tab!=='notas')setTab('notas');else renderNotas();
   var p=$('#p-notas'); if(p)try{p.scrollTop=0}catch(e){}
   return n;
@@ -17145,6 +17166,325 @@ function ntDel(id){
   var old=ntAll().slice(); S.x.notas=old.filter(function(x){return x.id!==id}); NT.ed=null; save(); renderNotas();
   if(String(n.x||'').trim())toast('Nota borrada','Deshacer',function(){var cur=ntAll();if(!cur.some(function(x){return x.id===n.id}))S.x.notas=[n].concat(cur);save();renderNotas();toast('Nota recuperada')},7000);
 }
+/* ───────── Entrega 140: recordatorios de las notas y avisos en el móvil ─────────
+   Cada nota puede llevar un recordatorio: n.r = {t: fecha y hora (ms), rep: '' (una vez) | 'd' cada día | 'w' cada semana | 'm' cada mes,
+   p: pospuesto hasta (ms, solo los que se repiten), h: última vez que se marcó «Hecho» (ms, solo los que se repiten)}.
+   Va dentro de la nota, así que se sincroniza como siempre. En Supabase, una regla copia los recordatorios de tus datos a la tabla
+   «recordatorios» y la función «avisos» (cada minuto) manda el aviso a los aparatos que lo tienen activado (Datos > Avisos).
+   Con la app abierta, además, avisa ella misma (y al abrirla, de lo que esté vencido). El número del icono son los vencidos. */
+var RC={open:null,seen:{},tick:null,msg:''};
+var RC_REP=[['','No se repite'],['d','Cada día'],['w','Cada semana'],['m','Cada mes']];
+var RC_REPT={d:'cada día',w:'cada semana',m:'cada mes'};
+var RC_DIAS=['dom','lun','mar','mié','jue','vie','sáb'], RC_MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+/* redibuja la nota aunque el cursor siga en el texto (si no, renderNotas no la toca) */
+function rcRender(){var ta=$('#nt-x');if(ta&&document.activeElement===ta)try{ta.blur()}catch(e){}renderNotas()}
+function rcMin(ms){var d=new Date(ms);d.setSeconds(0,0);return d.getTime()}
+/* vez número k de un recordatorio (k=0 es la fecha puesta); los meses cortos se quedan en su último día */
+function rcAdd(t,rep,k){
+  var d=new Date(t), y=d.getFullYear(), m=d.getMonth(), dd=d.getDate(), hh=d.getHours(), mi=d.getMinutes();
+  if(rep==='d')return new Date(y,m,dd+k,hh,mi).getTime();
+  if(rep==='w')return new Date(y,m,dd+7*k,hh,mi).getTime();
+  if(rep==='m'){var dim=new Date(y,m+k+1,0).getDate();return new Date(y,m+k,Math.min(dd,dim),hh,mi).getTime()}
+  return t;
+}
+/* primera vez que toca desde «desde» (incluida); null si no se repite y ya pasó */
+function rcNext(r,desde){
+  if(!r||!r.t)return null; if(r.t>=desde)return r.t; if(!r.rep||!RC_REPT[r.rep])return null;
+  var span=r.rep==='d'?864e5:r.rep==='w'?6048e5:31*864e5, k=Math.max(1,Math.floor((desde-r.t)/span)-1), v;
+  for(var i=0;i<400;i++){v=rcAdd(r.t,r.rep,k);if(v>=desde)return v;k++}
+  return null;
+}
+/* última vez que tocó hasta «hasta» (incluida); null si aún no ha tocado ninguna */
+function rcLast(r,hasta){
+  if(!r||!r.t||r.t>hasta)return null; if(!r.rep||!RC_REPT[r.rep])return r.t;
+  var nx=rcNext(r,hasta+1), span=r.rep==='d'?864e5:r.rep==='w'?6048e5:31*864e5, k=Math.max(0,Math.floor((nx-r.t)/span)-2), v, last=r.t;
+  for(var i=0;i<400;i++){v=rcAdd(r.t,r.rep,k);if(v>hasta)break;last=v;k++}
+  return last;
+}
+/* estado del recordatorio de una nota: cuándo toca (prox), si está vencido (venc: tocó y no está hecho ni pospuesto) y cuándo tocó */
+function rcState(n,now){
+  var r=n&&n.r; if(!r||!r.t)return null; now=now||Date.now();
+  var last=rcLast(r,now), nx=rcNext(r,now+1), pos=r.rep&&r.p&&r.p>now?r.p:0;
+  if(r.rep&&r.p&&r.p<=now&&(!last||r.p>last))last=r.p;      /* lo pospuesto cuenta como una vez más */
+  var venc=!!last&&!pos&&(!r.rep||!r.h||r.h<last);
+  return {venc:venc,last:last,prox:pos||nx,pos:pos,rep:r.rep||''};
+}
+function rcHora(ms){var d=new Date(ms);return d.getHours()+':'+('0'+d.getMinutes()).slice(-2)}
+/* «hoy 18:00», «mañana 9:00», «jue 13 nov 18:00», «13 nov 2027 18:00» */
+function rcTxt(ms){
+  var d=new Date(ms), t0=ntDay0(), dd=new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime(), h=rcHora(ms);
+  if(dd===t0)return 'hoy '+h; if(dd===t0+864e5||Math.round((dd-t0)/864e5)===1)return 'mañana '+h; if(Math.round((t0-dd)/864e5)===1)return 'ayer '+h;
+  var dif=Math.round((dd-t0)/864e5);
+  return (dif>1&&dif<7?RC_DIAS[d.getDay()]+' ':'')+d.getDate()+' '+RC_MES[d.getMonth()]+(d.getFullYear()!==new Date().getFullYear()?' '+d.getFullYear():'')+' '+h;
+}
+/* texto corto de la etiqueta: «⏰ hoy 18:00», «⏰ vencido · hoy 18:00», «⏰ cada día 9:00» */
+function rcLbl(n){
+  var s=rcState(n); if(!s)return '';
+  if(s.venc)return 'vencido · '+rcTxt(s.last);
+  if(s.rep)return RC_REPT[s.rep]+' · '+(s.prox?rcTxt(s.prox):'');
+  return s.prox?rcTxt(s.prox):'';
+}
+function rcAll(){return ntAll().filter(function(n){return n&&n.r&&n.r.t})}
+function rcVenc(){var now=Date.now();return rcAll().filter(function(n){var s=rcState(n,now);return s&&s.venc})}
+/* poner, cambiar y quitar */
+function rcSet(id,t,rep){
+  var n=ntGet(id); if(!n||GTOK)return; t=rcMin(t);
+  if(!(t>0)){toast('Pon una fecha y una hora.');return}
+  if(t<Date.now()-60000&&!rep){toast('Esa hora ya ha pasado. Elige una hora que venga.');return}
+  n.r={t:t,rep:RC_REPT[rep]?rep:''}; RC.open=null; RC.seen[id]=0; save(); rcPush(); rcRender(); rcTick();
+  toast('⏰ Te avisaré '+rcTxt(rcNext(n.r,Date.now()-60000)||t)+(n.r.rep?' y luego '+RC_REPT[n.r.rep]:'')+'.'+(avIs()?'':' Para que te avise con la app cerrada, activa los avisos en Datos > Avisos.'));
+}
+function rcOff(id){var n=ntGet(id); if(!n||!n.r||GTOK)return; delete n.r; RC.open=null; save(); rcPush(); rcRender(); rcTick(); toast('Recordatorio quitado.')}
+/* «Hecho»: uno que no se repite se quita; uno que se repite se queda para la próxima vez */
+function rcDone(id){
+  var n=ntGet(id); if(!n||!n.r||GTOK)return;
+  if(n.r.rep){n.r.h=Date.now();delete n.r.p;toast('Hecho. Te vuelvo a avisar '+rcTxt(rcNext(n.r,Date.now()+1))+'.')}
+  else{delete n.r;toast('Hecho. Recordatorio quitado.')}
+  save(); rcPush(); rcRender(); rcTick();
+}
+/* posponer: los que no se repiten cambian de hora; los que se repiten se aplazan solo esta vez */
+function rcSnooze(id,how){
+  var n=ntGet(id); if(!n||!n.r||GTOK)return; var now=Date.now(), t;
+  if(how==='1h')t=rcMin(now+36e5);
+  else{var d=new Date(now+864e5);t=new Date(d.getFullYear(),d.getMonth(),d.getDate(),9,0).getTime()}
+  if(n.r.rep){n.r.p=t;n.r.h=now}else n.r.t=t;
+  RC.seen[id]=0; save(); rcPush(); rcRender(); rcTick(); toast('Pospuesto: te aviso '+rcTxt(t)+'.');
+}
+/* que llegue cuanto antes al servidor (si cierras la app justo después, el aviso ya está allí) */
+function rcPush(){if(SY.rt&&!GTOK)setTimeout(function(){try{syncNow()}catch(e){}},450)}
+/* atajos del desplegable */
+function rcQuick(id,k){
+  var now=new Date(), t, rep=(($('#rc-rep')||{}).value)||'';
+  if(k==='1h')t=rcMin(Date.now()+36e5);
+  else if(k==='18')t=new Date(now.getFullYear(),now.getMonth(),now.getDate()+(now.getHours()>=18?1:0),18,0).getTime();
+  else t=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,9,0).getTime();
+  rcSet(id,t,rep);
+}
+function rcCustom(id){
+  var d=($('#rc-d')||{}).value||'', h=($('#rc-h')||{}).value||'', rep=($('#rc-rep')||{}).value||'';
+  var md=/^(\d{4})-(\d\d)-(\d\d)$/.exec(d), mh=/^(\d\d?):(\d\d)/.exec(h);
+  if(!md||!mh){toast('Pon la fecha y la hora del aviso.');return}
+  rcSet(id,new Date(+md[1],+md[2]-1,+md[3],+mh[1],+mh[2]).getTime(),rep);
+}
+function rcYmd(ms){var d=new Date(ms);return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function rcHm(ms){var d=new Date(ms);return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)}
+/* botón y desplegable dentro de la nota */
+function rcBtnHTML(n){
+  var s=rcState(n);
+  return '<button type="button" class="btn sm'+(s?(s.venc?' rcv':' on'):'')+'" data-act="rc-open" data-id="'+esc(n.id)+'" aria-expanded="'+(RC.open===n.id)+'">⏰ '+(s?esc(rcLbl(n)):'Recordar')+'</button>';
+}
+function rcBoxHTML(n){
+  if(RC.open!==n.id)return '';
+  var r=n.r||{}, base=r.t&&r.t>Date.now()?r.t:new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()+(new Date().getHours()>=18?1:0),18,0).getTime();
+  var h='<div class="rcbox" id="rcbox"><div class="small" style="margin-bottom:6px"><b>Recordar esta nota</b></div><div class="acts" style="margin-top:0">'+
+    '<button type="button" class="btn sm" data-act="rc-q" data-k="1h" data-id="'+esc(n.id)+'">Dentro de 1 hora</button>'+
+    '<button type="button" class="btn sm" data-act="rc-q" data-k="18" data-id="'+esc(n.id)+'">'+(new Date().getHours()>=18?'Mañana 18:00':'Hoy 18:00')+'</button>'+
+    '<button type="button" class="btn sm" data-act="rc-q" data-k="9" data-id="'+esc(n.id)+'">Mañana 9:00</button></div>';
+  h+='<div class="rcrow"><input id="rc-d" class="in" type="date" value="'+rcYmd(base)+'" aria-label="Día del aviso"><input id="rc-h" class="in" type="time" value="'+rcHm(base)+'" aria-label="Hora del aviso"></div>';
+  h+='<select id="rc-rep" class="trsel" aria-label="Repetir">'+RC_REP.map(function(o){return '<option value="'+o[0]+'"'+((r.rep||'')===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>';
+  h+='<div class="acts"><button type="button" class="btn sm primary" data-act="rc-save" data-id="'+esc(n.id)+'">'+(n.r?'Cambiar el aviso':'Poner el aviso')+'</button>'+
+     (n.r?'<button type="button" class="btn sm danger" data-act="rc-off" data-id="'+esc(n.id)+'">Quitar recordatorio</button>':'')+
+     '<button type="button" class="btn sm" data-act="rc-close">Cerrar</button></div>';
+  h+='<div class="small" style="margin-top:6px">'+(avIs()?'Este aparato tiene los avisos activados: te avisará aunque la app esté cerrada.':
+     'En este aparato no están activados los avisos: solo te avisaré al abrir la app.')+'</div>'+(avIs()?'':'<div class="acts" style="margin-top:4px"><button type="button" class="btn sm" data-act="av-go">Activar los avisos</button></div>');
+  return h+'</div>';
+}
+/* aviso dentro de la nota cuando ha tocado */
+function rcDueHTML(n){
+  var s=rcState(n); if(!s||!s.venc)return '';
+  return '<div class="note rcdue"><b>⏰ Recordatorio de '+esc(rcTxt(s.last))+'</b>'+(s.rep?' <span class="small">(se repite '+RC_REPT[s.rep]+')</span>':'')+
+    '<div class="acts"><button type="button" class="btn sm primary" data-act="rc-done" data-id="'+esc(n.id)+'">Hecho</button>'+
+    '<button type="button" class="btn sm" data-act="rc-snz" data-k="1h" data-id="'+esc(n.id)+'">Posponer 1 hora</button>'+
+    '<button type="button" class="btn sm" data-act="rc-snz" data-k="m" data-id="'+esc(n.id)+'">Mañana 9:00</button></div></div>';
+}
+/* cada 30 s con la app abierta: número del icono y de la pestaña Notas, y aviso de lo que acaba de tocar */
+function rcTick(){
+  if(GTOK)return;
+  var v=rcVenc(), nb=document.querySelector('#nav button[data-tab=notas]');
+  if(nb){if(v.length)nb.setAttribute('data-rc',v.length>9?'9+':String(v.length));else nb.removeAttribute('data-rc')}
+  try{if(navigator.setAppBadge){if(v.length)navigator.setAppBadge(v.length).catch(function(){});else if(navigator.clearAppBadge)navigator.clearAppBadge().catch(function(){})}}catch(e){}
+  if(document.hidden||!v.length)return;
+  var nuevos=v.filter(function(n){var s=rcState(n);return RC.seen[n.id]!==s.last});
+  if(!nuevos.length)return;
+  nuevos.forEach(function(n){RC.seen[n.id]=rcState(n).last});
+  if(NT.ed&&tab==='notas'&&nuevos.length===1&&nuevos[0].id===NT.ed){renderNotas();return}
+  if(nuevos.length===1){var n1=nuevos[0];toast('⏰ '+ntTitle(n1)+' ('+rcTxt(rcState(n1).last)+')','Ver',function(){rcGo(n1.id)},15000)}
+  else toast('⏰ Tienes '+v.length+' recordatorios pendientes','Ver',function(){NT.ff='__rc';NT.ed=null;setTab('notas');renderNotas()},15000);
+  if(tab==='notas'&&!NT.ed)renderNotas();
+}
+/* abrir una nota desde el aviso (#nota=… o mensaje del trabajador sin conexión) */
+function rcGo(id){
+  if(GTOK)return;
+  try{if(/[#&]nota=|^#notas$/.test(location.hash||''))history.replaceState(history.state,'',location.pathname+location.search)}catch(e){}
+  if(id&&ntGet(id)){if(tab!=='notas')setTab('notas');ntOpen(id)}
+  else{NT.ed=null;if(tab!=='notas')setTab('notas');else renderNotas()}
+}
+function rcHash(){
+  var h=String(location.hash||''), m=/[#&]nota=([^&]*)/.exec(h);
+  if(m){var id='';try{id=decodeURIComponent(m[1])}catch(e){}rcGo(id);return true}
+  if(h==='#notas'){rcGo('');return true}
+  return false;
+}
+
+/* ── Datos > Avisos: activar los avisos en este aparato (Web Push) ── */
+var AV={st:'idle',list:null,msg:'',err:'',busy:false,key:null,res:null};
+var AV_LS='mapa-fincas:avisos', AV_KEY='mapa-fincas:avisos-clave';
+function avIOS(){var u=navigator.userAgent||'';return /iPhone|iPad|iPod/.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1)}
+function avStandalone(){try{return !!(navigator.standalone||(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches))}catch(e){return false}}
+function avSupport(){return typeof window!=='undefined'&&'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window&&window.isSecureContext}
+function avPerm(){try{return Notification.permission}catch(e){return 'default'}}
+function avIs(){return avSupport()&&avPerm()==='granted'&&!!lsGet(AV_LS)}
+function avName(){
+  var u=navigator.userAgent||'';
+  if(/iPhone/.test(u))return 'iPhone'; if(/iPad/.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1))return 'iPad'; if(/Android/.test(u))return 'Android';
+  return 'Ordenador · '+(/Edg\//.test(u)?'Edge':/Chrome\//.test(u)?'Chrome':/Firefox\//.test(u)?'Firefox':/Safari\//.test(u)?'Safari':'navegador');
+}
+function avFn(op,args){
+  return authToken().then(function(tok){
+    return sbFetch('/functions/v1/avisos',{method:'POST',body:JSON.stringify(Object.assign({op:op},args||{}))},tok).then(function(r){
+      return r.json().catch(function(){return {}}).then(function(j){
+        if(r.status===404)return {error:'nofn'}; if(r.status===401)return {error:'nologin'};
+        if(!r.ok&&!j.error)j.error='http'+r.status; return j;
+      });
+    });
+  },function(){return {error:'nologin'}}).catch(function(){return {error:'net'}});
+}
+function avErrTxt(e){
+  e=e&&e.error||e;
+  if(e==='nofn')return 'El servidor de avisos aún no está instalado en Supabase.';
+  if(e==='nologin')return 'Entra con tu usuario para usar los avisos.';
+  if(e==='net')return 'No hay conexión. Inténtalo con internet.';
+  if(e==='sinaparatos')return 'No hay ningún aparato con los avisos activados.';
+  return 'No he podido hacerlo ('+String(e||'error')+'). Inténtalo otra vez.';
+}
+function avKey(){
+  if(AV.key)return Promise.resolve(AV.key);
+  var c=lsGet(AV_KEY); if(c&&/^[A-Za-z0-9_-]{80,}$/.test(c)){AV.key=c;return Promise.resolve(c)}
+  return avFn('clave').then(function(j){if(!j||!j.pub)throw j;AV.key=j.pub;lsSet(AV_KEY,j.pub);return j.pub});
+}
+function avU8(s){var b=atob(s.replace(/-/g,'+').replace(/_/g,'/')+'==='.slice((s.length+3)%4)),u=new Uint8Array(b.length);for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+function avSub(reg,key){
+  return reg.pushManager.getSubscription().then(function(s){
+    if(s){
+      var k=s.options&&s.options.applicationServerKey;
+      if(!k)return s;
+      var a=new Uint8Array(k), b=avU8(key), same=a.length===b.length&&a.every(function(x,i){return x===b[i]});
+      if(same)return s;
+      return s.unsubscribe().then(function(){return null},function(){return null});
+    }
+    return null;
+  }).then(function(s){return s||reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:avU8(key)})});
+}
+function avAlta(s){
+  var j=s.toJSON?s.toJSON():s;
+  return avFn('alta',{sub:{endpoint:j.endpoint,keys:j.keys},nombre:avName()}).then(function(r){if(!r||!r.ok)throw r;lsSet(AV_LS,j.endpoint);try{lsSet(AV_LS+'-t',String(Date.now()))}catch(e){}return j.endpoint});
+}
+/* «Activar»: el permiso se pide en el mismo toque (el iPhone lo exige) */
+function avOn(){
+  if(!avSupport()||AV.busy)return;
+  AV.busy=true; AV.err=''; AV.msg=''; avRender();
+  var kp=avKey();
+  var pp; try{pp=Notification.requestPermission()}catch(e){pp=null}
+  if(!pp||typeof pp.then!=='function')pp=new Promise(function(ok){try{Notification.requestPermission(ok)}catch(e){ok(avPerm())}});
+  pp.then(function(p){
+    if(p!=='granted')throw {error:p==='denied'?'denegado':'sinpermiso'};
+    return Promise.all([navigator.serviceWorker.ready,kp]);
+  }).then(function(a){return avSub(a[0],a[1])}).then(avAlta).then(function(){
+    AV.busy=false; AV.msg='✓ Avisos activados en este aparato. Pulsa «Mandar aviso de prueba» para comprobarlo.'; avList(); rcTick();
+  },function(e){
+    AV.busy=false;
+    AV.err=e&&e.error==='denegado'?'Has dicho que no a los avisos. Para activarlos: Ajustes del iPhone > Notificaciones > Mis fincas > Permitir notificaciones, y vuelve a pulsar «Activar».':
+      e&&e.error==='sinpermiso'?'No se han activado: hace falta pulsar «Permitir» cuando el aparato lo pregunta.':
+      e&&e.error?avErrTxt(e):'No he podido activar los avisos en este aparato'+(e&&e.name?' ('+e.name+')':'')+'.';
+    avRender();
+  });
+}
+function avOffDev(){
+  if(AV.busy)return; AV.busy=true; avRender();
+  var ep=lsGet(AV_LS);
+  (navigator.serviceWorker?navigator.serviceWorker.ready:Promise.reject()).then(function(reg){return reg.pushManager.getSubscription()}).then(function(s){
+    if(s){ep=s.endpoint;return s.unsubscribe()}
+  }).catch(function(){}).then(function(){return ep?avFn('baja',{endpoint:ep}):null}).then(function(){
+    try{localStorage.removeItem(AV_LS);localStorage.removeItem(AV_LS+'-t')}catch(e){}
+    AV.busy=false; AV.msg='Avisos desactivados en este aparato.'; AV.err=''; avList();
+  });
+}
+function avTest(){
+  if(AV.busy)return; AV.busy=true; AV.err=''; AV.msg=''; AV.res=null; avRender();
+  avFn('prueba').then(function(j){
+    AV.busy=false;
+    if(!j||!j.ok){AV.err=avErrTxt(j);avRender();return}
+    var ok=j.res.filter(function(r){return r.estado>=200&&r.estado<300});
+    AV.msg=ok.length===j.res.length?'✓ Aviso de prueba mandado a '+(ok.length===1?'1 aparato':ok.length+' aparatos')+'. Debería salirte en unos segundos.':
+      'Mandado a '+ok.length+' de '+j.res.length+' aparatos. Los que fallan salen abajo.';
+    avList();
+  });
+}
+function avDel(id){
+  avFn('quitar',{id:id}).then(function(j){if(j&&j.error){AV.err=avErrTxt(j)}else{AV.msg='Aparato quitado de los avisos.'}avList()});
+}
+function avList(){
+  if(!SY.rt||GTOK){AV.st='ok';AV.list=[];avRender();return}
+  AV.st='load'; avRender();
+  avFn('lista').then(function(j){
+    if(j&&j.error){AV.st=j.error==='nofn'?'nofn':'err';AV.list=null;if(j.error!=='nofn')AV.err=avErrTxt(j)}
+    else{AV.st='ok';AV.list=(j&&j.aparatos)||[];
+      var ep=lsGet(AV_LS); if(ep&&!AV.list.some(function(a){return a.endpoint===ep})){try{localStorage.removeItem(AV_LS)}catch(e){}}}
+    avRender();
+  });
+}
+function avEstTxt(a){
+  if(!a.ultimo)return 'aún no ha recibido ningún aviso';
+  var c=parseInt(a.estado,10)||0, cu=new Date(a.ultimo);
+  return 'último aviso '+rcTxt(cu.getTime())+' · '+(c>=200&&c<300?'entregado al servicio de avisos':'falló ('+String(a.estado||'').slice(0,40)+')');
+}
+function avHTML(){
+  var h='<h3 style="margin-top:0">Avisos de los recordatorios</h3><p class="small" style="margin-top:0">Pon un recordatorio en una nota (botón ⏰) y te avisará a esa hora aunque tengas la app cerrada. Los avisos se activan en cada aparato.</p>';
+  h+='<div class="fcard"><div class="t"><b>Este aparato</b></div>';
+  if(!avSupport()){
+    h+='<div class="small">'+(avIOS()&&!avStandalone()?'En el iPhone, los avisos solo funcionan si abres la app desde su icono de la pantalla de inicio (con iOS 16.4 o más). Ábrela desde el icono y vuelve aquí.':
+      avIOS()?'Este iPhone no puede recibir avisos de la app. Hace falta iOS 16.4 o más (Ajustes > General > Actualización de software).':'Este navegador no puede recibir avisos.')+'</div>';
+  }else if(avPerm()==='denied'){
+    h+='<div class="small" style="color:var(--warn-ink)">Los avisos están bloqueados para esta app. '+(avIOS()?'Ve a Ajustes del iPhone > Notificaciones > Mis fincas y activa «Permitir notificaciones».':'Permítelos en los ajustes del navegador para esta web.')+'</div>';
+  }else if(avIs()){
+    h+='<div class="small">✓ Avisos activados ('+esc(avName())+').</div><div class="acts"><button type="button" class="btn sm primary" data-act="av-test"'+(AV.busy?' disabled':'')+'>Mandar aviso de prueba</button><button type="button" class="btn sm" data-act="av-off"'+(AV.busy?' disabled':'')+'>Desactivar en este aparato</button></div>';
+  }else{
+    h+='<div class="small">Los avisos no están activados en este aparato.'+(avIOS()?' Al pulsar, el iPhone te preguntará: elige «Permitir».':'')+'</div><div class="acts"><button type="button" class="btn sm primary" data-act="av-on"'+(AV.busy||!SY.rt?' disabled':'')+'>'+(AV.busy?'Activando…':'Activar avisos en este aparato')+'</button></div>';
+  }
+  h+='</div>';
+  if(AV.msg)h+='<div class="note">'+esc(AV.msg)+'</div>';
+  if(AV.err)h+='<div class="note" style="background:var(--warn-bg);color:var(--warn-ink)">'+esc(AV.err)+'</div>';
+  h+='<h3>Aparatos con avisos</h3>';
+  if(AV.st==='load'&&!AV.list)h+='<div class="small">Cargando…</div>';
+  else if(AV.st==='nofn')h+='<div class="small">El servidor de avisos aún no está instalado en Supabase. Mientras tanto, la app te avisa de los recordatorios al abrirla.</div>';
+  else if(AV.list&&!AV.list.length)h+='<div class="small">Ningún aparato tiene los avisos activados todavía.</div>';
+  else if(AV.list){
+    var ep=lsGet(AV_LS);
+    AV.list.forEach(function(a){
+      h+='<div class="fcard"><div class="t"><b>'+esc(a.nombre||'Aparato')+'</b>'+(a.endpoint===ep?' <span class="small">(este)</span>':'')+'</div><div class="small">Desde el '+esc(new Date(a.creado).toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}))+' · '+esc(avEstTxt(a))+'</div>'+
+        '<div class="acts"><button type="button" class="btn sm" data-act="av-del" data-id="'+esc(a.id)+'">Quitar</button></div></div>';
+    });
+    if(AV.list.length&&!avIs())h+='<div class="acts"><button type="button" class="btn sm" data-act="av-test"'+(AV.busy?' disabled':'')+'>Mandar aviso de prueba a mis aparatos</button></div>';
+  }
+  h+='<p class="small">Límites: el aviso llega en el minuto puesto si el aparato tiene internet (si no, al recuperarlo, hasta 12 horas después). «No molestar» o Concentración lo silencian. En el ordenador solo llega con el navegador abierto. Lo que se repite se avisa a la misma hora de España.</p>';
+  return h;
+}
+function avRender(){var b=$('#avbox');if(b)b.innerHTML=avHTML()}
+/* al abrir la app: si este aparato tenía los avisos y el aparato cambió la suscripción, se vuelve a dar de alta (una vez al día) */
+function avCheck(){
+  if(GTOK||VC||!SY.rt||!avSupport()||avPerm()!=='granted'||!lsGet(AV_LS))return;
+  var t=parseInt(lsGet(AV_LS+'-t')||'0',10)||0; if(Date.now()-t<864e5)return;
+  navigator.serviceWorker.ready.then(function(reg){return avKey().then(function(k){return avSub(reg,k)})}).then(avAlta).catch(function(){});
+}
+function rcInit(){
+  if(GTOK)return;
+  rcHash();
+  window.addEventListener('hashchange',function(){rcHash()});
+  try{if(navigator.serviceWorker)navigator.serviceWorker.addEventListener('message',function(ev){var d=ev.data||{};if(d.mf==='nota')rcGo(d.id||'')})}catch(e){}
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)setTimeout(rcTick,600)});
+  setTimeout(rcTick,1500); RC.tick=setInterval(rcTick,30000);
+  setTimeout(avCheck,6000);
+}
 function ntFinca(v){var n=NT.ed?ntGet(NT.ed):null; if(!n||GTOK)return; if(v)n.fid=v;else n.fid=''; n.m=Date.now(); save(); var s=$('#nt-f'); if(s)s.classList.toggle('on',!!v)}
 document.addEventListener('input',function(ev){
   var id=ev.target&&ev.target.id;
@@ -17172,6 +17512,8 @@ Object.assign(window.__mf,{expRow:expRow,csvBuild:csvBuild,kmlBuild:kmlBuild,shp
 Object.assign(window.__mf,{plCampOpts:plCampOpts,coYcDef:coYcDef,grNoVar:grNoVar,infVT:infVT,fsFit:fsFit,xlNU:xlNU,abTotData:abTotData,hiCamp:hiCamp,refQMatch:refQMatch,recMatch:recMatch,bkSoon:bkSoon,BKs:function(){return BK},setBKQ:function(v){BKQ=v},dwReal:dwReal,docPicked:docPicked,DOCst:function(){return DOC},prEd:prEd,bkPos:bkPos,aclSimWatch:aclSimWatch,reportPdf:reportPdf,coYcOpts:coYcOpts}); /* Entrega 137: para las pruebas */
 Object.assign(window.__mf,{dxfRecLayer:dxfRecLayer,ihPill:ihPill,mbTxt:mbTxt,offPill:offPill,USOS:USOS,DWN:DWN,showPoint:showPoint,toast:toast,buildTratPdf:buildTratPdf,recMatch:recMatch}); /* Entrega 138: para las pruebas */
 Object.assign(window.__mf,{gateNeed:gateNeed,gateSet:gateSet,devPend:devPend}); /* Entrega 139: para las pruebas */
+Object.assign(window.__mf,{rcAdd:rcAdd,rcNext:rcNext,rcLast:rcLast,rcState:rcState,rcTxt:rcTxt,rcLbl:rcLbl,rcSet:rcSet,rcVenc:rcVenc,rcTick:rcTick,rcGo:rcGo,rcHash:rcHash,avHTML:avHTML,avU8:avU8,avName:avName,avIs:avIs,AV:function(){return AV},RC:function(){return RC}}); /* Entrega 140: para las pruebas */
+rcInit();
 Object.assign(window.__mf,{campOf:campOf,campLbl:campLbl,campFile:campFile,campHoy:campHoy,yrOf:yrOf,yrEff:yrEff,hiAfCrops:hiAfCrops,feResumen:feResumen,trRecSum:trRecSum,expCampHTML:expCampHTML,expCultTblHTML:expCultTblHTML,cardFold:cardFold,expAforosHTML:expAforosHTML,pabCamp:pabCamp,pabCampRange:pabCampRange,trOrd:trOrd,grParts:grParts,nutYear:nutYear});
 })();
 </script>
