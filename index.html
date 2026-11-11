@@ -2,12 +2,15 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-FE9Y7BUGEZr+jQuSGJDdQGOBttwGCIEtwLGQUlR0gkI='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-UDzclEybuIi1d0YsDreoUctxZc2ml++tahcitNanwL8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
 <script>try{var __pc=localStorage.getItem('mapa-fincas:palcss');if(__pc){var __i=__pc.indexOf('|'),__st=document.createElement('style');__st.id='palstyle';__st.textContent=__pc.slice(__i+1);document.head.appendChild(__st);document.documentElement.setAttribute('data-pal',__pc.slice(0,__i))}}catch(e){}</script>
-<script>try{var __t=localStorage.getItem('mapa-fincas:tema');if(__t==='light'||__t==='dark')document.documentElement.setAttribute('data-theme',__t)}catch(e){}</script>
+<script>try{var __t=localStorage.getItem('mapa-fincas:tema');if(__t==='light'||__t==='dark')document.documentElement.setAttribute('data-theme',__t)}catch(e){}
+/* Entrega 139: sin la sesión guardada en este aparato, solo se ve la pantalla de entrada (los enlaces compartidos no la piden) */
+try{var __h=String(location.hash||''),__s=null;try{__s=history.state}catch(e){}if(!/[#&](ver|vc)=/.test(__h)&&!(__s&&(__s.mfver||__s.mfvc))&&!window.__mfPrueba){var __j=null;try{__j=JSON.parse(localStorage.getItem('mapa-fincas:sesion')||'null')}catch(e){}if(!(__j&&__j.rt))document.documentElement.classList.add('mf-gate')}}catch(e){}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Mis fincas">
@@ -1696,9 +1699,21 @@ body.radon #verbtn{transform:translateY(calc(-1 * var(--radh,0px)))}
 .aclsimt{display:flex;flex-direction:column;min-width:0;line-height:1.25}.aclsimt span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .aclsimf{flex:1;width:100%;border:0;display:block;background:var(--bg)}
 .aclload{padding:9px 14px;background:var(--accent-soft);color:var(--ink);font-size:14px;flex:none}
+/* Entrega 139: pantalla de entrada */
+#gate{display:none}
+html.mf-gate body>*:not(#gate){display:none!important}
+html.mf-gate #gate{display:flex;position:fixed;inset:0;z-index:99999;align-items:center;justify-content:center;background:var(--bg);color:var(--ink);padding:24px;padding-top:max(24px,env(safe-area-inset-top));padding-bottom:max(24px,env(safe-area-inset-bottom));overflow:auto}
+#gate .gbox{width:100%;max-width:360px}
+#gate .glogo{width:64px;height:64px;border-radius:15px;display:block;margin:0 0 14px}
+#gate h1{font-size:26px;line-height:1.2;margin:0 0 6px}
+#gate .gsub{color:var(--muted);margin:0;font-size:15px;line-height:1.4}
+#gate .gnote{background:var(--warn-bg);color:var(--warn-ink)}
+html.mf-gonly body>*:not(#gover){display:none!important}
+html.mf-gonly #gover{background:var(--bg)}
 </style>
 </head>
 <body>
+<div id="gate" role="dialog" aria-modal="true" aria-labelledby="gt-h"><div class="gbox"><img class="glogo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAEuUlEQVR42u3dsWoUURSA4byJiCAiooi29oL4AmKwFQRBLIRUYhHBTtFCxSZp1CYgVoIgBixEsIy9WIidLzByVhaWEOPs7oQ55+Yr/j4Tvrl7Z5iZs3Jp7UgntdKKf4KAloCWgJaAFtAS0BLQEtAS0AJaAloCWgJaAlpAS0BLQEtAS0ALaAloCWgJaAloAS0BLQEtAS0BLaAloCWgpSZBX7t3tHv+7ES3/frUpO7juVHbeXNm8ndsbZzsbj84dmDHvXr/fPdw61b39vOzST9/fxu1Tztbk79j8/16d/PJRaAXKdCMDbgP8DjphjzuQDM24D7A46QDuueqHFCyY572693Z7v6j44OsygElO+ZpOz+2u7sbq0D/r0qYZ1t2pa6EebZsK/WKbcZwK3XL24z9Vmqg/7HVqIp5WlzALrLVqIp5WlzAAr2rwFAddGyX5j3uwFAddGyXgN5VhttyQzTvcWe4LTdEQAMNdMugW8AczXsLrwXMUZZbeEADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDXT706+WnYZVdfpV1mlYvuDvC/6+4G+k23Cj3SqPdMs42i0N6JidXR10nJTzHnfMzq4OOk5KoBvcRy86Tbb6PjrTNNlUoANE/Gwfhrsbu4dvxs+2uxsNzvoOGNUwxwXtsscdMKphjgtaw+sbW6mXWZkrr9TZVubUoGfHJWfcV8fJFheAi+6Z+4xLzrivjpMtLgAz7ZlLgd5rOzJmBwW4z3ZkzDIDLg1aAlpAS0BLQEtAS0ALaAloCWgJaKkY6HiGIB7UiccUM7x7Fw8Mxd8RD+jEmyYHddxX1k9366+udpsf1iZ9/f5y1N58eTD5Ox6/vdFdf3gB6EWq8K5dAB/6wZ1AMzbgPsDjpAO656pc6ZWkeKRyiGeDA0hAyY552oedp92dF5eBbvX9umVX6kqYZ8u2Uq/YZoz/Kn+FbcZ+KzXQ/9hqVH+dPy5gF9lqVMU8LS5ggd7jtaPqoGO7NO9xB4bqoGO7BLRPYv3dZiW4LTdEQAMNdMugD+tnZVvAHGW5hQc00EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EADDTTQQAMNNNBAAw000EC3P/1q2WlYVadfZZ2G5Qv+vuDvC/5Gug032q3ySLeMo93SgI7Z2dVBx0k573HH7OzqoOOkBLrBffSi02Sr76MzTZNNBTpAxM/2Ybi7sXv4Zvxsu7vR4KzvgFENc1zQLnvcAaMa5rigNby+sZV6mZW58kqdbWVODXp2XHLGfXWcbHEBuOieuc+45Iz76jjZ4gIw0565FOi9tiNjdlCA+2xHxiwz4NKgJaAFtAS0BLQEtAS0gJaAloCWgJaAFtAS0BLQEtAS0AJaAloCWgJaAlpAS0BLQEtAC2j/BAEtAS0BLQEtoCWgpVz9AatCqmZzGHFMAAAAAElFTkSuQmCC" alt=""><h1 id="gt-h">Entrar</h1><p class="gsub">Escribe tu usuario y tu contraseña para abrir la app.</p><form id="gateform" class="loginf"><input id="gt-u" name="username" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Usuario" aria-label="Usuario"><input id="gt-p" name="password" type="password" autocomplete="current-password" placeholder="Contraseña" aria-label="Contraseña"><button id="gt-b" class="btn primary wide" type="submit">Entrar</button></form><div id="gt-msg" class="note gnote" role="alert" hidden></div></div></div>
 <div id="app">
   <div id="mapwrap">
     <div id="map" role="application" aria-label="Mapa de fincas"></div>
@@ -1975,7 +1990,7 @@ var normX=function(x){x=x||{};var o=Object.assign({},x);o.tags=x.tags||[];o.meds
 var blank=function(){return {fincas:[],recintos:{},lastCrop:{},x:blankX(),base:'pnoa',lastExport:null}};
 var S=blank(), storageOK=true;
 function lsGet(k){if(GTOK&&String(k).indexOf('mf-guest')!==0)return null;try{return localStorage.getItem(k)}catch(e){storageOK=false;return null}}
-function lsSet(k,v){if(GTOK&&String(k).indexOf('mf-guest')!==0)return true;if(k===KEY)datMirror(v);try{localStorage.setItem(k,v);return true}catch(e){if(k===KEY&&IDBOK)return true;storageOK=false;return false}}
+function lsSet(k,v){if(WIPE)return true;if(GTOK&&String(k).indexOf('mf-guest')!==0)return true;if(k===KEY)datMirror(v);try{localStorage.setItem(k,v);return true}catch(e){if(k===KEY&&IDBOK)return true;storageOK=false;return false}}
 try{var t0=lsGet(KEY); if(t0){var j0=JSON.parse(t0); if(j0&&typeof j0==='object')S=Object.assign(blank(),j0)}}catch(e){}
 S.x=normX(S.x);
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
@@ -3042,7 +3057,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-11T01:11:30Z',n:'Entrega 138 · 11 nov · 02:11'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-11T06:24:17Z',n:'Entrega 139 · 11 nov · 07:24'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -11125,6 +11140,7 @@ function srvLogout(scope){
 function signOut(scope){
   var p=srvLogout(scope);
   SY={};try{localStorage.removeItem(KEYS)}catch(e){}renderSync(true);updateDot();
+  gateSet(scope==='global'?'Has salido en todos los aparatos. Para volver a entrar escribe tu usuario y tu contraseña.':'Has salido. Para volver a entrar escribe tu usuario y tu contraseña.');
   return p;
 }
 function kickOut(){
@@ -11134,6 +11150,7 @@ function kickOut(){
   syncErr='';
   try{toast('Tu sesión se ha cerrado. Vuelve a entrar en Datos.')}catch(e){}
   try{if(!GTOK)setTab('datos')}catch(e){}
+  gateSet('Tu sesión se ha cerrado (por ejemplo, porque se cambió la contraseña). Vuelve a entrar. Tus datos siguen guardados en este aparato.');
   updateDot();
 }
 function authToken(force){
@@ -11372,7 +11389,10 @@ function renderSync(force){
     var pend=!!S.dirty;
     var st=syncing?'Sincronizando…':syncErr?esc(syncErr):pend?'Hay cambios por subir.':'Todo sincronizado'+(SY.last?' · '+agoTxt(SY.last):'')+(SY.act?' ('+esc(SY.act.toLowerCase())+')':'');
     h+='<div class="fcard"><div class="t"><b>Conectado'+(SY.name?' como '+esc(SY.name):'')+'</b></div><div class="small"'+(syncErr?' style="color:var(--warn-ink)"':'')+'>'+st+'</div>'+
-      '<div class="acts"><button class="btn sm primary" data-act="sync-now">Sincronizar ahora</button><button class="btn sm" data-act="sync-out">Salir</button><button class="btn sm" data-act="sync-out-all">Salir en todos los aparatos</button></div></div>';
+      (OUTASK?'<div class="note" id="outask"><b>¿Salir de tu usuario en este aparato?</b><div class="small" style="margin-top:4px">Para volver a abrir la app aquí harán falta el usuario y la contraseña.</div>'+
+        '<label class="small" style="display:flex;gap:8px;align-items:flex-start;margin-top:8px"><input type="checkbox" id="out-wipe"'+(OUTW?' checked':'')+'><span>Borrar también los datos guardados en este aparato (en la nube siguen)</span></label>'+
+        '<div class="acts"><button class="btn sm primary" data-act="sync-out-ok">Salir</button><button class="btn sm" data-act="sync-out-no">Cancelar</button></div></div>':
+      '<div class="acts"><button class="btn sm primary" data-act="sync-now">Sincronizar ahora</button><button class="btn sm" data-act="sync-out">Salir</button><button class="btn sm" data-act="sync-out-all">Salir en todos los aparatos</button></div>')+'</div>';
   }
   box.innerHTML=h;
 }
@@ -11381,8 +11401,58 @@ document.addEventListener('submit',function(ev){
   ev.preventDefault();
   var u=$('#lg-u').value, pw=$('#lg-p').value;
   loginBusy=true; loginMsg=''; renderSync(true);
-  login(u,pw).then(function(){loginBusy=false;loginMsg='';syncErr='';renderSync(true);syncNow(true)},function(e){loginBusy=false;loginMsg=(e&&e.msg)||'No he podido entrar.';renderSync(true)});
+  login(u,pw).then(function(){loginBusy=false;loginMsg='';syncErr='';renderSync(true);gateSet('');syncNow(true)},function(e){loginBusy=false;loginMsg=(e&&e.msg)||'No he podido entrar.';renderSync(true)});
 });
+/* ═════════ Entrega 139 · pantalla de entrada ═════════
+   Sin la sesión guardada en este aparato no se ve nada de la app: solo usuario y contraseña.
+   · Con la sesión guardada (lo normal en tus aparatos) abre directamente, también sin conexión.
+   · Al salir o si la sesión se cierra (contraseña cambiada, usuario borrado) vuelve esta pantalla.
+   · Los enlaces compartidos (#ver=…) y «Ver como» no la piden: enseñan solo lo compartido.
+   · Ojo: esto cierra la puerta de la herramienta; los datos los protege Supabase, que sin sesión no da nada. */
+var WIPE=false, OUTASK=false, OUTW=false, GATEMSG='';
+function gateNeed(){return !GTOK&&!SY.rt&&!window.__mfPrueba}
+function gateSet(msg){
+  if(msg!==undefined)GATEMSG=msg||'';
+  var on=gateNeed(), de=document.documentElement, was=de.classList.contains('mf-gate');
+  de.classList.toggle('mf-gate',on);
+  var m=$('#gt-msg'); if(m){m.textContent=GATEMSG;m.hidden=!(GATEMSG&&on)}
+  var b=$('#gt-b'); if(b){b.disabled=!!loginBusy;b.textContent=loginBusy?'Entrando…':'Entrar'}
+  if(was&&!on){GATEMSG='';setTimeout(function(){try{setTab(tab);map.invalidateSize();renderAll()}catch(e){}},60)}
+  if(on&&!isTouch()){var u=$('#gt-u'),g=$('#gate'),ae=document.activeElement;if(u&&g&&!(ae&&g.contains(ae)))setTimeout(function(){try{u.focus()}catch(e){}},50)}
+}
+function isTouch(){try{return matchMedia('(pointer:coarse)').matches}catch(e){return false}}
+document.addEventListener('submit',function(ev){
+  if(!ev.target||ev.target.id!=='gateform')return;
+  ev.preventDefault(); if(loginBusy)return;
+  var u=$('#gt-u').value, pw=$('#gt-p').value;
+  loginBusy=true; gateSet('');
+  login(u,pw).then(function(){
+    loginBusy=false; loginMsg=''; syncErr=''; var pp=$('#gt-p'); if(pp)pp.value='';
+    gateSet(''); renderSync(true); syncNow(true);
+  },function(e){loginBusy=false; var pp=$('#gt-p'); if(pp)pp.value=''; gateSet((e&&e.msg)||'No he podido entrar.')});
+});
+document.addEventListener('change',function(ev){if(ev.target&&ev.target.id==='out-wipe')OUTW=!!ev.target.checked});
+/* cambios que aún no han llegado a la nube (datos, fotos o documentos en cola): entonces no se borra nada */
+function devPend(){
+  if(S.dirty)return Promise.resolve(1);
+  return wt(idbKeys('q').then(function(k){return (k||[]).length},function(){return 0}),3000,0);
+}
+/* borra lo guardado en este aparato (datos, sesión, fotos, documentos, copias); deja los mapas sin conexión y la apariencia */
+function devWipe(){
+  WIPE=true; clearTimeout(saveT);
+  try{
+    var ks=[],i; for(i=0;i<localStorage.length;i++)ks.push(localStorage.key(i));
+    ks.forEach(function(k){if(/^(mapa-fincas:|mf)/.test(k)&&['mapa-fincas:offsel','mapa-fincas:tema','mapa-fincas:palcss'].indexOf(k)<0)localStorage.removeItem(k)});
+  }catch(e){}
+  try{sessionStorage.clear()}catch(e){}
+  var cerrar=idbP?wt(idbP.then(function(d){try{if(d&&d.close)d.close()}catch(e){}},function(){}),2000):Promise.resolve();
+  return cerrar.then(function(){
+    return Promise.all(['mf-fotos','mf-aptitud'].map(function(n){return new Promise(function(ok){
+      try{var r=indexedDB.deleteDatabase(n); r.onsuccess=r.onerror=r.onblocked=function(){ok()}; setTimeout(ok,3000)}catch(e){ok()}
+    })}));
+  }).then(function(){try{location.replace(location.pathname+location.search)}catch(e){location.reload()}});
+}
+gateSet();
 document.addEventListener('visibilitychange',function(){if(!document.hidden)syncNow()});
 window.addEventListener('online',function(){syncNow()});
 setInterval(function(){if(!document.hidden)syncNow()},30000);
@@ -11866,6 +11936,7 @@ function guLock(){
 }
 function guMsg(t){
   var m=document.getElementById('gover');
+  document.documentElement.classList.toggle('mf-gonly',!!t&&!GU.loaded);
   if(!t){if(m)m.hidden=true;return}
   if(!m){m=document.createElement('div');m.id='gover';m.className='modal';document.body.appendChild(m)}
   m.innerHTML='<div class="dlbox"><h2>'+esc(t[0])+'</h2><p class="small" style="margin:6px 0 0">'+esc(t[1])+'</p></div>'; m.hidden=false;
@@ -15975,7 +16046,14 @@ document.addEventListener('click',function(ev){
       expClose(); pendingFit=null;
       toMap(); setTimeout(function(){map.invalidateSize();select({ref:rr.ref,ha:rr.ha,uso:rr.uso,geom:rr.geom,pt:rr.pt},true)},80); break}
     case 'sync-now':syncNow(true);break;
-    case 'sync-out':signOut();toast('Has salido. Los datos siguen en este aparato.');break;
+    case 'sync-out':OUTASK=true;OUTW=false;renderSync(true);break;
+    case 'sync-out-no':OUTASK=false;OUTW=false;renderSync(true);break;
+    case 'sync-out-ok':{var wpe=$('#out-wipe'), wp=OUTW||!!(wpe&&wpe.checked); OUTASK=false; OUTW=false;
+      if(!wp){signOut();toast('Has salido. Los datos siguen en este aparato.');break}
+      devPend().then(function(n){
+        if(n){renderSync(true);toast('No he borrado nada: hay cambios sin subir a la nube. Pulsa «Sincronizar ahora» y vuelve a probar.');return}
+        wt(signOut(),4000).then(devWipe,devWipe);
+      });break}
     case 'sync-out-all':signOut('global').then(function(ok){toast(ok?'Sesión cerrada en todos los aparatos.':'Has salido aquí, pero no he podido avisar al servidor (¿sin conexión?). Repite desde otro aparato con internet.')});break;
     case 'export':doExport();break;
     case 'fb-now':fbStart();break;
@@ -17093,6 +17171,7 @@ Object.assign(window.__mf,{offMigra:offMigra,OFFMG:function(){return OFFMG},offT
 Object.assign(window.__mf,{expRow:expRow,csvBuild:csvBuild,kmlBuild:kmlBuild,shpVals:shpVals,SHP_F:SHP_F,cropForUso:cropForUso,ntConflict:ntConflict,ntConfTxt:ntConfTxt,dwBig:dwBig,dwAutoZones:dwAutoZones,dwUnits:dwUnits,merge3:merge3,fincaHa:fincaHa,grOpts:grOpts,plTotNote:plTotNote,buildPlanPdfE136:function(){return typeof buildPlanPdf==='function'}}); /* Entrega 136: para las pruebas */
 Object.assign(window.__mf,{plCampOpts:plCampOpts,coYcDef:coYcDef,grNoVar:grNoVar,infVT:infVT,fsFit:fsFit,xlNU:xlNU,abTotData:abTotData,hiCamp:hiCamp,refQMatch:refQMatch,recMatch:recMatch,bkSoon:bkSoon,BKs:function(){return BK},setBKQ:function(v){BKQ=v},dwReal:dwReal,docPicked:docPicked,DOCst:function(){return DOC},prEd:prEd,bkPos:bkPos,aclSimWatch:aclSimWatch,reportPdf:reportPdf,coYcOpts:coYcOpts}); /* Entrega 137: para las pruebas */
 Object.assign(window.__mf,{dxfRecLayer:dxfRecLayer,ihPill:ihPill,mbTxt:mbTxt,offPill:offPill,USOS:USOS,DWN:DWN,showPoint:showPoint,toast:toast,buildTratPdf:buildTratPdf,recMatch:recMatch}); /* Entrega 138: para las pruebas */
+Object.assign(window.__mf,{gateNeed:gateNeed,gateSet:gateSet,devPend:devPend}); /* Entrega 139: para las pruebas */
 Object.assign(window.__mf,{campOf:campOf,campLbl:campLbl,campFile:campFile,campHoy:campHoy,yrOf:yrOf,yrEff:yrEff,hiAfCrops:hiAfCrops,feResumen:feResumen,trRecSum:trRecSum,expCampHTML:expCampHTML,expCultTblHTML:expCultTblHTML,cardFold:cardFold,expAforosHTML:expAforosHTML,pabCamp:pabCamp,pabCampRange:pabCampRange,trOrd:trOrd,grParts:grParts,nutYear:nutYear});
 })();
 </script>
