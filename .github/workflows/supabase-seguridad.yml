@@ -1,0 +1,56 @@
+# Mapa de Fincas · Entrega 139 · comprobación de seguridad de Supabase (solo lectura)
+# Comprueba, como lo haría un desconocido que tiene el enlace de la app y su clave pública:
+#   1) que nadie puede crearse un usuario por su cuenta (registro cerrado);
+#   2) que sin entrar no se lee ninguna tabla (datos, copias, fotos, enlaces, comentarios);
+#   3) que sin entrar no se ven los documentos guardados en la nube;
+#   4) que la función del servidor (usuarios y radar) no contesta sin sesión.
+# No crea, cambia ni borra nada: solo pregunta. Si algo falla, sale en rojo y GitHub manda un correo.
+# Se lanza a mano en GitHub → Actions → «Comprobar seguridad de Supabase» → Run workflow.
+name: Comprobar seguridad de Supabase
+on:
+  workflow_dispatch:
+permissions: {}
+jobs:
+  comprobar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Preguntas de solo lectura, sin usuario
+        env:
+          SB_URL: https://rbrvokfrbvcsqmskshul.supabase.co
+          SB_KEY: sb_publishable_zIM_WAdcN0zYzAS5pbtdOw_Zb1hKJzN
+        run: |
+          F=0
+          ok(){ echo "✅ $1"; }
+          mal(){ echo "::error::$1"; F=1; }
+          echo "— 1) Registro de usuarios nuevos"
+          s=$(curl -s --max-time 30 "$SB_URL/auth/v1/settings" -H "apikey: $SB_KEY")
+          echo "   respuesta: $(echo "$s" | head -c 400)"
+          if echo "$s" | grep -Eq '"disable_signup" *: *true'; then ok "registro cerrado: nadie puede crearse un usuario"
+          elif echo "$s" | grep -Eq '"disable_signup" *: *false'; then mal "registro ABIERTO: cualquiera podría crearse un usuario (Authentication → Sign In / Providers → quitar «Allow new users to sign up»)"
+          else mal "no se ha podido leer el ajuste de registro"; fi
+          echo "— 2) Tablas sin entrar"
+          for t in datos datos_hist fotos enlaces enlace_comentarios; do
+            c=$(curl -s -o r.txt -w '%{http_code}' --max-time 30 "$SB_URL/rest/v1/$t?select=*&limit=1" -H "apikey: $SB_KEY" -H "Accept: application/json")
+            b=$(head -c 160 r.txt | tr -d '\n')
+            echo "   $t: HTTP $c · $b"
+            if [ "$c" = "401" ] || [ "$c" = "403" ] || [ "$c" = "404" ]; then ok "$t: sin entrar no se puede leer"
+            elif [ "$c" = "200" ] && [ "$b" = "[]" ]; then ok "$t: sin entrar no sale nada (aviso: el anónimo aún tiene permiso de lectura; lo frena la regla por usuario)"
+            else mal "$t: sin entrar se lee algo (HTTP $c)"; fi
+          done
+          echo "— 3) Documentos de la nube sin entrar"
+          c=$(curl -s -o r.txt -w '%{http_code}' --max-time 30 -X POST "$SB_URL/storage/v1/object/list/documentos" -H "apikey: $SB_KEY" -H "Authorization: Bearer $SB_KEY" -H "Content-Type: application/json" -d '{"prefix":"","limit":5}')
+          b=$(head -c 160 r.txt | tr -d '\n')
+          echo "   documentos: HTTP $c · $b"
+          if [ "$c" = "200" ] && [ "$b" = "[]" ]; then ok "documentos: sin entrar no se ve ninguno"
+          elif [ "$c" = "400" ] || [ "$c" = "401" ] || [ "$c" = "403" ] || [ "$c" = "404" ]; then ok "documentos: sin entrar no se puede listar"
+          else mal "documentos: sin entrar se ve algo (HTTP $c)"; fi
+          echo "— 4) Función del servidor sin sesión"
+          c=$(curl -s -o r.txt -w '%{http_code}' --max-time 30 -X POST "$SB_URL/functions/v1/servidor" -H "apikey: $SB_KEY" -H "Content-Type: application/json" -d '{"accion":"lista"}')
+          echo "   servidor: HTTP $c · $(head -c 160 r.txt | tr -d '\n')"
+          if [ "$c" = "401" ] || [ "$c" = "403" ]; then ok "servidor: sin sesión no hace nada"
+          elif [ "$c" = "200" ] && grep -Eq '"error"' r.txt; then ok "servidor: sin sesión contesta con error (no hace nada)"
+          else mal "servidor: contesta sin sesión (HTTP $c)"; fi
+          echo
+          if [ $F = 0 ]; then echo "✅ TODO BIEN ($(TZ=Europe/Madrid date '+%d/%m/%Y %H:%M') hora de España)"; else echo "::error::Hay algo que revisar (mira las líneas en rojo)"; fi
+          exit $F
