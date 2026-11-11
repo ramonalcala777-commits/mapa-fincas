@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-Mdp3OZsoK17hb3KMGSX0wHfy6tdM6dYG2hq4L12f6F4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-mURsNZm05C7DdvTUG/dloaobDrF7LEpxYg7iCyNWIOE='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
@@ -2033,10 +2033,14 @@ function dataStr(){
   return out;
 }
 var lastData=dataStr();
+/* Entrega 142: las notas (texto, casillas, recordatorios, borrarlas) no cuentan para el aviso de copia de seguridad.
+   bkSig quita de los datos el trozo de las notas; solo cuenta un cambio si cambia lo demás. */
+function bkSig(d){var k='"notas":'+JSON.stringify((S.x&&S.x.notas)||[]), i=d.lastIndexOf(k), j; if(i<0)return d; j=i+k.length; if(d.charAt(i-1)===',')i--;else if(d.charAt(j)===',')j++; return d.slice(0,i)+d.slice(j)}
+var BKG=bkSig(lastData);
 if(!S.mod&&(S.fincas.length||Object.keys(S.recintos).length))S.mod=Date.now();
 if(S.dirty===undefined)S.dirty=!!(S.fincas.length||Object.keys(S.recintos).length);
 function save(){clearTimeout(saveT);saveT=setTimeout(function(){
-  var d=dataStr(); if(d!==lastData){snapVersion(lastData);lastData=d;S.mod=Date.now();S.dirty=true;syncSoon();bkSoon()}
+  var d=dataStr(); if(d!==lastData){snapVersion(lastData);lastData=d;S.mod=Date.now();S.dirty=true;syncSoon();var g=bkSig(d);if(g!==BKG){BKG=g;bkSoon()}}
   storageOK=lsSet(KEY,JSON.stringify(S));$('#warn').hidden=storageOK;updateDot()},200)}
 
 var finca=function(id){return S.fincas.filter(function(f){return f.id===id})[0]};
@@ -3086,7 +3090,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-11T15:36:13Z',n:'Entrega 141 · 11 nov · 16:36'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-11T16:42:10Z',n:'Entrega 142 · 11 nov · 17:42'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -11470,9 +11474,10 @@ function putRemote(tok,rev,expect){
   });
 }
 function applyRemote(rem,fit){
+  var g0=bkSig(lastData);
   S=Object.assign(blank(),{fincas:rem.fincas||[],recintos:rem.recintos||{},lastCrop:rem.lastCrop||{},x:normX(rem.x),base:S.base,lastExport:S.lastExport,mod:rem.mod||Date.now(),dirty:false});
-  lastData=dataStr();
-  var dr=(rem.rev||0)-(SY.baseRev||0); if(dr>0){BK.chg+=Math.min(dr,20);saveBK()}
+  lastData=dataStr(); BKG=bkSig(lastData);
+  var dr=(rem.rev||0)-(SY.baseRev||0); if(dr>0&&BKG!==g0){BK.chg++;saveBK()}
   bkAdopt(); lsSet(KEY,JSON.stringify(S));
   sel=null; activeFinca=null; UNDO=null; if(detailId&&!finca(detailId))detailId=null;
   SY.baseRev=rem.rev||0; SY.act='Bajados los cambios del otro aparato';
@@ -11580,7 +11585,7 @@ function aptHTML(){
 function applyMerged(rem,m){
   var af=activeFinca, di=detailId;
   S=Object.assign(blank(),{fincas:m.fincas||[],recintos:m.recintos||{},lastCrop:m.lastCrop||{},x:normX(m.x),base:S.base,lastExport:S.lastExport,mod:Date.now(),dirty:true});
-  lastData=dataStr(); bkAdopt(); lsSet(KEY,JSON.stringify(S));
+  lastData=dataStr(); BKG=bkSig(lastData); bkAdopt(); lsSet(KEY,JSON.stringify(S));
   sel=null; UNDO=null; activeFinca=(af&&finca(af))?af:null; detailId=(di&&finca(di))?di:null;
   SY.baseRev=parseInt(rem.rev,10)||0; SY.act='Juntados los cambios de los dos aparatos';
   afterDataChange(false);
@@ -12206,7 +12211,7 @@ function guMsg(t){
 function guApply(v,first){
   var x=v.x||{};
   S=Object.assign(blank(),{fincas:v.fincas||[],recintos:v.recintos||{},lastCrop:VC?(v.lastCrop||{}):{},x:normX(VC?x:{tags:x.tags,meds:x.meds,grupos:x.grupos,cs:x.cs,cl:x.cl,fo:x.fo}),base:S.base});
-  S.dirty=false; lastData=dataStr(); GU.title=v.pfn||GU.title||'Pestaña compartida';
+  S.dirty=false; lastData=dataStr(); BKG=bkSig(lastData); GU.title=v.pfn||GU.title||'Pestaña compartida';
   sel=null; if(detailId&&!finca(detailId))detailId=null;
   afterDataChange(!!first);
 }
@@ -15103,7 +15108,7 @@ function fbRestoreFiles(F){
 var KEYB='mapa-fincas:copia';
 var BK=(function(){try{var j=JSON.parse(lsGet(KEYB)||'null');return {chg:+(j&&j.chg)||0,snooze:+(j&&j.snooze)||0}}catch(e){return {chg:0,snooze:0}}})();
 function saveBK(){lsSet(KEYB,JSON.stringify(BK))}
-var BK_DAYS=3, BK_MAX=40;
+var BK_DAYS=3, BK_MAX=50;
 function bkAge(){return S.lastExport?(Date.now()-new Date(S.lastExport).getTime())/864e5:Infinity}
 function backupDue(){return allRecsAll().length>0&&(!S.lastExport||BK.chg>=BK_MAX||(BK.chg>0&&bkAge()>BK_DAYS))}
 var bkT=null;
@@ -15832,7 +15837,7 @@ DATP=GTOK?Promise.resolve():wt(idb(),4000,null).then(function(d){
   return wt(Promise.all([idbGet('sync','datos'),idbGet('sync','vers'),idbGet('sync','previo')]),4000,null).then(function(a){
     if(!a){IDBOK=false;return false}
     var adopt=false;
-    try{ if(a[0]){var j=JSON.parse(a[0]); if(j&&typeof j==='object'&&(j.mod||0)>(S.mod||0)){S=Object.assign(blank(),j);lastData=dataStr();adopt=true}} }catch(e){}
+    try{ if(a[0]){var j=JSON.parse(a[0]); if(j&&typeof j==='object'&&(j.mod||0)>(S.mod||0)){S=Object.assign(blank(),j);lastData=dataStr();BKG=bkSig(lastData);adopt=true}} }catch(e){}
     var v=Array.isArray(a[1])?a[1]:[], lv=[], lp=null;
     try{lv=JSON.parse(localStorage.getItem(KEYVER)||'[]')||[]}catch(e){lv=[]}
     try{lp=localStorage.getItem(KEYP)}catch(e){}
@@ -17764,7 +17769,7 @@ Object.assign(window.__mf,{llHTML:llHTML,llLoad:llLoad,llGet:llGet,llSum:llSum,l
 Object.assign(window.__mf,{offMigra:offMigra,OFFMG:function(){return OFFMG},offTCount:offTCount,offTGet:offTGet,arqList:arqList,arqHTML:arqHTML,offKeys:offKeys,offState:offState,offDownload:offDownload,offRemove:offRemove,offPend:offPend,offSet:offSet,offAskCheck:offAskCheck,offUrl:offUrl,offTotal:offTotal,offLoad:offLoad,offDiff:offDiff,offMark:offMark,offSig:offSig,OFFM:function(){return OFFM},OFF:function(){return OFF},offBusy:function(){return !!OFFD},save:function(){save()},renderDatos:renderDatos,offAskShown:function(){return OFFASK}});
 /* Entrega 132: para las pruebas */
 Object.assign(window.__mf,{expRow:expRow,csvBuild:csvBuild,kmlBuild:kmlBuild,shpVals:shpVals,SHP_F:SHP_F,cropForUso:cropForUso,ntConflict:ntConflict,ntConfTxt:ntConfTxt,dwBig:dwBig,dwAutoZones:dwAutoZones,dwUnits:dwUnits,merge3:merge3,fincaHa:fincaHa,grOpts:grOpts,plTotNote:plTotNote,buildPlanPdfE136:function(){return typeof buildPlanPdf==='function'}}); /* Entrega 136: para las pruebas */
-Object.assign(window.__mf,{plCampOpts:plCampOpts,coYcDef:coYcDef,grNoVar:grNoVar,infVT:infVT,fsFit:fsFit,xlNU:xlNU,abTotData:abTotData,hiCamp:hiCamp,refQMatch:refQMatch,recMatch:recMatch,bkSoon:bkSoon,BKs:function(){return BK},setBKQ:function(v){BKQ=v},dwReal:dwReal,docPicked:docPicked,DOCst:function(){return DOC},prEd:prEd,bkPos:bkPos,aclSimWatch:aclSimWatch,reportPdf:reportPdf,coYcOpts:coYcOpts}); /* Entrega 137: para las pruebas */
+Object.assign(window.__mf,{plCampOpts:plCampOpts,coYcDef:coYcDef,grNoVar:grNoVar,infVT:infVT,fsFit:fsFit,xlNU:xlNU,abTotData:abTotData,hiCamp:hiCamp,refQMatch:refQMatch,recMatch:recMatch,bkSoon:bkSoon,BKs:function(){return BK},bkSig:bkSig,BKG:function(){return BKG},BK_MAX:function(){return BK_MAX},setBKQ:function(v){BKQ=v},dwReal:dwReal,docPicked:docPicked,DOCst:function(){return DOC},prEd:prEd,bkPos:bkPos,aclSimWatch:aclSimWatch,reportPdf:reportPdf,coYcOpts:coYcOpts}); /* Entrega 137: para las pruebas */
 Object.assign(window.__mf,{dxfRecLayer:dxfRecLayer,ihPill:ihPill,mbTxt:mbTxt,offPill:offPill,USOS:USOS,DWN:DWN,showPoint:showPoint,toast:toast,buildTratPdf:buildTratPdf,recMatch:recMatch}); /* Entrega 138: para las pruebas */
 Object.assign(window.__mf,{gateNeed:gateNeed,gateSet:gateSet,devPend:devPend}); /* Entrega 139: para las pruebas */
 Object.assign(window.__mf,{rcAdd:rcAdd,rcNext:rcNext,rcLast:rcLast,rcState:rcState,rcTxt:rcTxt,rcLbl:rcLbl,rcSet:rcSet,rcVenc:rcVenc,rcTick:rcTick,rcGo:rcGo,rcHash:rcHash,avHTML:avHTML,avU8:avU8,avName:avName,avIs:avIs,AV:function(){return AV},RC:function(){return RC}}); /* Entrega 140: para las pruebas */
