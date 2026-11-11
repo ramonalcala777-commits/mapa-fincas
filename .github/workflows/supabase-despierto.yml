@@ -7,12 +7,16 @@
 # - Si Supabase no contesta tras 3 intentos, la ejecución sale en rojo y GitHub manda un correo de aviso.
 #   Qué hacer entonces: entrar en supabase.com, abrir el proyecto y pulsar «Resume project».
 # - Se puede lanzar a mano en GitHub → Actions → «Mantener Supabase despierto» → Run workflow.
+# - Entrega 140: GitHub apaga las tareas programadas si el repositorio pasa 60 días sin cambios. Al final de cada
+#   ejecución se le dice a GitHub que la tarea sigue activa (como hacen las herramientas habituales para esto),
+#   así no se apaga aunque pasen meses sin entregas. Solo toca el estado de esta tarea, nada del código ni de los datos.
 name: Mantener Supabase despierto
 on:
   schedule:
     - cron: '0 6,18 * * *'
   workflow_dispatch:
-permissions: {}
+permissions:
+  actions: write    # Entrega 140: solo para mantener activa esta tarea
 jobs:
   despertar:
     runs-on: ubuntu-latest
@@ -35,3 +39,13 @@ jobs:
           done
           echo "::error::Supabase no contesta (puede estar en pausa). Entra en supabase.com, abre el proyecto y pulsa «Resume project»."
           exit 1
+      - name: Que GitHub no apague esta tarea a los 60 días
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh api -X PUT "repos/${{ github.repository }}/actions/workflows/supabase-despierto.yml/enable"; then
+            echo "✅ Tarea marcada como activa: GitHub no la apagará por falta de cambios"
+          else
+            echo "::warning::No se ha podido marcar la tarea como activa (no afecta a Supabase)"
+          fi

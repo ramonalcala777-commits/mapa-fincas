@@ -3,7 +3,8 @@
 #   1) que nadie puede crearse un usuario por su cuenta (registro cerrado);
 #   2) que sin entrar no se lee ninguna tabla (datos, copias, fotos, enlaces, comentarios);
 #   3) que sin entrar no se ven los documentos guardados en la nube;
-#   4) que la función del servidor (usuarios y radar) no contesta sin sesión.
+#   4) que la función del servidor (usuarios y radar) no contesta sin sesión;
+#   5) (Entrega 140) que la función de avisos no contesta sin sesión ni sin su clave interna.
 # No crea, cambia ni borra nada: solo pregunta. Si algo falla, sale en rojo y GitHub manda un correo.
 # Se lanza a mano en GitHub → Actions → «Comprobar seguridad de Supabase» → Run workflow.
 name: Comprobar seguridad de Supabase
@@ -30,7 +31,7 @@ jobs:
           elif echo "$s" | grep -Eq '"disable_signup" *: *false'; then mal "registro ABIERTO: cualquiera podría crearse un usuario (Authentication → Sign In / Providers → quitar «Allow new users to sign up»)"
           else mal "no se ha podido leer el ajuste de registro"; fi
           echo "— 2) Tablas sin entrar"
-          for t in datos datos_hist fotos enlaces enlace_comentarios; do
+          for t in datos datos_hist fotos enlaces enlace_comentarios recordatorios avisos_aparatos avisos_claves; do
             c=$(curl -s -o r.txt -w '%{http_code}' --max-time 30 "$SB_URL/rest/v1/$t?select=*&limit=1" -H "apikey: $SB_KEY" -H "Accept: application/json")
             b=$(head -c 160 r.txt | tr -d '\n')
             echo "   $t: HTTP $c · $b"
@@ -51,6 +52,14 @@ jobs:
           if [ "$c" = "401" ] || [ "$c" = "403" ]; then ok "servidor: sin sesión no hace nada"
           elif [ "$c" = "200" ] && grep -Eq '"error"' r.txt; then ok "servidor: sin sesión contesta con error (no hace nada)"
           else mal "servidor: contesta sin sesión (HTTP $c)"; fi
+          echo "— 5) Función de avisos sin sesión"
+          for b in '{"op":"lista"}' '{"op":"cron"}'; do
+            c=$(curl -s -o r.txt -w '%{http_code}' --max-time 30 -X POST "$SB_URL/functions/v1/avisos" -H "apikey: $SB_KEY" -H "Content-Type: application/json" -d "$b")
+            echo "   avisos $b: HTTP $c · $(head -c 160 r.txt | tr -d '\n')"
+            if [ "$c" = "401" ] || [ "$c" = "403" ]; then ok "avisos $b: sin sesión no hace nada"
+            elif [ "$c" = "404" ]; then ok "avisos: la función aún no está instalada"
+            else mal "avisos $b: contesta sin sesión (HTTP $c)"; fi
+          done
           echo
           if [ $F = 0 ]; then echo "✅ TODO BIEN ($(TZ=Europe/Madrid date '+%d/%m/%Y %H:%M') hora de España)"; else echo "::error::Hay algo que revisar (mira las líneas en rojo)"; fi
           exit $F
