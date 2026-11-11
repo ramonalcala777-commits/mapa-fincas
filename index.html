@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-jPj+7DxgOD/WQ2kpXogzxnzMtOeDtCDLADwR93ZyXzc='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-FsbNYkD5ulg1lCYkGje02OaWIn3L9dJt97FcZ5lkZ44=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-IrzDf0CM44hb8D5mvOZXwHKec3Q0SEy97wi+n03x9vA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#1B2427" media="(prefers-color-scheme: dark)">
@@ -3034,7 +3034,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-10T21:22:21Z',n:'Entrega 135 · 10 nov · 22:22'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-11T00:30:33Z',n:'Entrega 136 · 11 nov · 01:30'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -3651,12 +3651,13 @@ function pick(f){
     var fi=finca(activeFinca);
     if(sel){sel=null;drawSel()}
     addTo(fi.id,f);
-    toast('Añadido a '+fi.nombre+' · '+ha4(f.ha)+' ha · total '+ha2(fincaHa(fi.id))+' ha','Deshacer',function(){removeRec(f.ref)});
+    var nr=S.recintos[f.ref], lc=S.lastCrop[fi.id]||'', ct=nr&&nr.cultivo!==lc?' · '+(nr.cultivo?nr.cultivo:'sin cultivo')+' (SIGPAC: '+(USOS[f.uso]||f.uso||'sin uso')+')':'';
+    toast('Añadido a '+fi.nombre+' · '+ha4(f.ha)+' ha'+ct+' · total '+ha2(fincaHa(fi.id))+' ha','Deshacer',function(){removeRec(f.ref)});
     return;
   }
   select(saved?{ref:saved.ref,ha:saved.ha,uso:saved.uso,geom:saved.geom,pt:saved.pt}:{ref:f.ref,ha:f.ha,uso:f.uso,geom:f.geom});
 }
-var fincaHa=function(id){return fincaRecs(id).reduce(function(s,r){return s+r.ha},0)};
+var fincaHa=function(id){return fincaRecs(id).reduce(function(s,r){return s+haC(r)},0)}; /* Entrega 136: cultivada */
 /* Entrega 67: hectáreas cultivadas (r.hc) cuando no coinciden con las del SIGPAC (encinas, caminos, marras…). Se usan en todos los cálculos */
 function haC(r){return r?(+r.hc>0?+r.hc:(r.ha||0)):0}
 function haPair(rs){var s=0,c=0,d=false;(rs||[]).forEach(function(r){s+=r.ha||0;c+=haC(r);if(+r.hc>0)d=true});return {s:s,c:c,d:d&&Math.abs(s-c)>0.00005}}
@@ -3677,10 +3678,19 @@ function fdropHTML(){
   else h+='<button class="fdnew" data-act="newfinca-toggle">+ Nueva finca</button>';
   return h+'</div>';
 }
+/* Entrega 136: el cultivo de la finca solo se pone si cuadra con el uso SIGPAC del recinto (antes, un recinto de tierra
+   arable o de viñedo añadido a una finca de pistacho salía como «Pistacho») */
+var CROP_HERB=/cereal|cebada|trigo|avena|centeno|triticale|girasol|barbecho|guisante|veza|colza|ma[ií]z|alfalfa|leguminosa|forraje|yeros|lenteja|garbanzo|melon|melón|ajo|cebolla|patata|hortaliza/i;
+function cropForUso(c,uso){
+  uso=String(uso||'').toUpperCase(); var out='';
+  if(c){if(/^olivo|olivar/i.test(c))out=uso==='OV'?c:'';else if(/^vi(ñ|n)|^vid\b/i.test(c))out=uso==='VI'?c:'';else if(CROP_HERB.test(c))out=(uso==='TA'||uso==='TH')?c:'';else out=(uso==='FS'||uso==='FY'||uso==='CI')?c:''}
+  if(!out&&c)out=uso==='OV'?'Olivo':uso==='VI'?'Viña':'';
+  return out;
+}
 function addTo(fid,f){
   var r=S.recintos[f.ref];
   if(r){if(r.fincaId!==fid)delete r.sin;else r.sin=(r.sin||[]).filter(function(p){return p!==PF});if(r.sin&&!r.sin.length)delete r.sin;r.fincaId=fid}
-  else{S.recintos[f.ref]={ref:f.ref,ha:f.ha,uso:f.uso,geom:f.geom,pt:pointInside(f.geom),fincaId:fid,cultivo:S.lastCrop[fid]||'',riego:'',variedad:'',notas:'',sig:sigCache[f.ref]||undefined}}
+  else{S.recintos[f.ref]={ref:f.ref,ha:f.ha,uso:f.uso,geom:f.geom,pt:pointInside(f.geom),fincaId:fid,cultivo:cropForUso(S.lastCrop[fid]||'',f.uso),riego:'',variedad:'',notas:'',sig:sigCache[f.ref]||undefined}}
   save(); drawSaved(); redrawTiles(f.ref); renderAll();
 }
 function removeRec(ref){
@@ -4274,7 +4284,7 @@ function itemFind(k,key){if(k==='fav')return S.x.favs[key];if(k==='tag')return t
 var GLBL={fav:'favorito',tag:'etiqueta',med:'medición'};
 function ggTot(k,items){
   var n=items.length;
-  if(k==='fav')return n+(n===1?' favorito':' favoritos')+' · '+ha2(items.reduce(function(a,f){return a+(f.ha||0)},0))+' ha';
+  if(k==='fav')return n+(n===1?' favorito':' favoritos')+' · '+ha2(items.reduce(function(a,f){return a+haC(S.recintos[f.ref]||f)},0))+' ha';
   if(k==='tag')return n+(n===1?' etiqueta':' etiquetas');
   var ar=items.filter(function(m){return m.kind==='area'}), di=items.filter(function(m){return m.kind!=='area'}), pt=[];
   if(ar.length)pt.push(ar.length+(ar.length===1?' superficie':' superficies')+' · '+nf(ar.reduce(function(a,m){return a+m.val},0)/1e4,4)+' ha');
@@ -4523,7 +4533,7 @@ function renderGuardados(){
     var ents=[];
     fv.forEach(function(f){
       var a=delArm==='fav:'+f.ref;
-      ents.push({it:f,html:'<div class="grow"><button class="rrow" data-act="fav-go" data-ref="'+esc(f.ref)+'"><span class="rr">★ '+esc(f.name)+'</span><span class="rh">'+ha4(f.ha)+' ha</span><span class="rc">'+esc(refLabel(f.ref))+(f.uso?' · '+esc(USOS[f.uso]||f.uso):'')+'</span></button><button class="btn sm danger'+(a?' armed':'')+'" data-act="fav-rm" data-ref="'+esc(f.ref)+'">'+(a?'¿Seguro?':'Quitar')+'</button></div>'});
+      ents.push({it:f,html:'<div class="grow"><button class="rrow" data-act="fav-go" data-ref="'+esc(f.ref)+'"><span class="rr">★ '+esc(f.name)+'</span><span class="rh">'+ha4(haC(S.recintos[f.ref]||f))+' ha</span><span class="rc">'+esc(refLabel(f.ref))+(f.uso?' · '+esc(USOS[f.uso]||f.uso):'')+'</span></button><button class="btn sm danger'+(a?' armed':'')+'" data-act="fav-rm" data-ref="'+esc(f.ref)+'">'+(a?'¿Seguro?':'Quitar')+'</button></div>'});
     });
     if(fv.length)h+=ggBlock('fav',ents);
   }else if(gsub==='tag'){
@@ -4676,7 +4686,7 @@ function fincasListHTML(){
     h+='<h3>Recintos que coinciden</h3><div class="small" style="margin-bottom:8px">'+recs.length+(recs.length===1?' recinto':' recintos')+' · '+ha2(totHa)+' ha</div>';
     recs.slice(0,80).forEach(function(r){
       var c=r.cultivo||NOCROP, f=finca(r.fincaId);
-      h+='<button class="rrow" data-act="rec-open" data-ref="'+esc(r.ref)+'"><span class="rr">'+esc(refShort(r.ref))+(r.nombre?' · '+esc(r.nombre):'')+'</span><span class="rh">'+ha4(r.ha)+' ha</span><span class="rc"><i style="background:'+cropColor(c)+'"></i>'+esc(f.nombre)+' · '+esc(c)+(r.riego?' · '+riegoName(r.riego):'')+(prodTag(r.prod)?' · '+prodTag(r.prod):'')+'</span></button>';
+      h+='<button class="rrow" data-act="rec-open" data-ref="'+esc(r.ref)+'"><span class="rr">'+esc(refShort(r.ref))+(r.nombre?' · '+esc(r.nombre):'')+'</span><span class="rh">'+ha4(haC(r))+' ha</span><span class="rc"><i style="background:'+cropColor(c)+'"></i>'+esc(f.nombre)+' · '+esc(c)+(r.riego?' · '+riegoName(r.riego):'')+(prodTag(r.prod)?' · '+prodTag(r.prod):'')+'</span></button>';
     });
     if(recs.length>80)h+='<div class="small">Se muestran los 80 primeros.</div>';
   }
@@ -5172,7 +5182,7 @@ function fincaDetailHTML(id){
     h+='<h3>Recintos</h3>';
     recs.forEach(function(r){
       var c=r.cultivo||NOCROP;
-      h+='<button class="rrow" data-act="rec-open" data-ref="'+esc(r.ref)+'"><span class="rr">'+esc(refShort(r.ref))+(r.nombre?' · '+esc(r.nombre):'')+'</span><span class="rh">'+ha4(r.ha)+' ha</span><span class="rc"><i style="background:'+cropColor(c)+'"></i>'+esc(c)+(r.riego?' · '+riegoName(r.riego):'')+(prodTag(r.prod)?' · '+prodTag(r.prod):'')+(r.variedad?' · '+esc(r.variedad):'')+'</span></button>';
+      h+='<button class="rrow" data-act="rec-open" data-ref="'+esc(r.ref)+'"><span class="rr">'+esc(refShort(r.ref))+(r.nombre?' · '+esc(r.nombre):'')+'</span><span class="rh">'+ha4(haC(r))+' ha</span><span class="rc"><i style="background:'+cropColor(c)+'"></i>'+esc(c)+(r.riego?' · '+riegoName(r.riego):'')+(prodTag(r.prod)?' · '+prodTag(r.prod):'')+(r.variedad?' · '+esc(r.variedad):'')+'</span></button>';
     });
   }
   var da=delArm==='finca:'+id;
@@ -6471,7 +6481,7 @@ function expResumenHTML(f){
   h+='<div style="margin-top:14px">'; 
     h+='<details class="more" data-sec="exrec"'+(secOpen.exrec?' open':'')+'><summary>Recintos ('+recs.length+')</summary>';
     recs.forEach(function(r){var c=r.cultivo||NOCROP;
-      h+='<button class="rrow" data-act="rec-open" data-ref="'+esc(r.ref)+'"><span class="rr">'+esc(refShort(r.ref))+(r.nombre?' · '+esc(r.nombre):'')+'</span><span class="rh">'+ha4(r.ha)+' ha</span><span class="rc"><i style="background:'+cropColor(c)+'"></i>'+esc(c)+(r.riego?' · '+riegoName(r.riego):'')+(prodTag(r.prod)?' · '+prodTag(r.prod):'')+(r.variedad?' · '+esc(r.variedad):'')+(grNameOf(r)?' · Grupo '+esc(grNameOf(r)):'')+'</span></button>';
+      h+='<button class="rrow" data-act="rec-open" data-ref="'+esc(r.ref)+'"><span class="rr">'+esc(refShort(r.ref))+(r.nombre?' · '+esc(r.nombre):'')+'</span><span class="rh">'+ha4(haC(r))+' ha</span><span class="rc"><i style="background:'+cropColor(c)+'"></i>'+esc(c)+(r.riego?' · '+riegoName(r.riego):'')+(prodTag(r.prod)?' · '+prodTag(r.prod):'')+(r.variedad?' · '+esc(r.variedad):'')+(grNameOf(r)?' · Grupo '+esc(grNameOf(r)):'')+'</span></button>';
     });
     h+='</details>';
   h+='</div>';
@@ -6773,7 +6783,7 @@ function grParts(f,refs){
 function grDocN(n){return n==='Sin grupo'?'resto de la finca':n}
 function grTxt(f,refs){var p=grParts(f,refs); return p.length?p.map(function(e){return grDocN(e.n)+' '+ha2(e.ha)+' ha'}).join(', '):''}
 function grHTML(f,refs){var p=grParts(f,refs); return p.length?'<div class="small" style="margin-top:2px"><b>Grupos:</b> '+p.map(function(e){return esc(e.n)+' '+ha2(e.ha)+' ha'}).join(' · ')+'</div>':''}
-function grOpts(f,cur){var gl=grList(f).filter(function(g){return grRecs(f,g.id).length}); if(!gl.length)return ''; return '<optgroup label="Grupos">'+gl.map(function(g){var v='gr§'+g.id;return '<option value="'+esc(v)+'"'+(cur===v?' selected':'')+'>Grupo: '+esc(g.n)+' · '+ha2(grRecs(f,g.id).reduce(function(a,r){return a+r.ha},0))+' ha</option>'}).join('')+'</optgroup>'}
+function grOpts(f,cur){var gl=grList(f).filter(function(g){return grRecs(f,g.id).length}); if(!gl.length)return ''; return '<optgroup label="Agrupaciones">'+gl.map(function(g){var v='gr§'+g.id;return '<option value="'+esc(v)+'"'+(cur===v?' selected':'')+'>'+esc(g.n)+' · '+ha2(grRecs(f,g.id).reduce(function(a,r){return a+haC(r)},0))+' ha</option>'}).join('')+'</optgroup>'}
 function grStart(id){
   var f=finca(detailId); if(!f)return;
   GRS.ed=id; GRS.name=id==='new'?'':(grOf(f,id)||{n:''}).n; GRS.sel=id==='new'?[]:grRefs(f,id); GRS.b={};
@@ -7609,7 +7619,7 @@ function trvBarHTML(){
   h+='<div class="afsum"><b>'+ok.length+(ok.length===1?' recinto':' recintos')+' · '+ha2(ha)+' ha</b></div>';
   var r=trm.cur&&S.recintos[trm.cur];
   if(r){var c=r.cultivo||NOCROP, vn=varReal(r)?varName(varStrip(c,r.variedad)):'';
-    h+='<div style="margin-top:6px"><b>'+esc(trRefS(r.ref))+(r.nombre?' · '+esc(r.nombre):'')+'</b></div><div class="small">'+esc(c)+(vn?' · '+esc(vn):'')+' · '+ha2(r.ha)+' ha'+(r.riego?' · '+esc(riegoName(r.riego)):'')+(prodTag(r.prod)?' · '+prodTag(r.prod):'')+'</div>';
+    h+='<div style="margin-top:6px"><b>'+esc(trRefS(r.ref))+(r.nombre?' · '+esc(r.nombre):'')+'</b></div><div class="small">'+esc(c)+(vn?' · '+esc(vn):'')+' · '+ha2(haC(r))+' ha'+(r.riego?' · '+esc(riegoName(r.riego)):'')+(prodTag(r.prod)?' · '+prodTag(r.prod):'')+'</div>';
   }else h+='<div class="small" style="margin-top:4px">Borde amarillo = recintos de este '+nm+'. Toca uno para ver su ficha.</div>';
   if(r&&ok.length>1)h+='<div class="acts"><button class="btn" data-act="trv-show-all">Ver todos los recintos</button></div>';
   h+='<div class="acts"><button class="btn primary" data-act="trm-cancel">✕ Volver '+(trm.kind==='fe'?'a la ':'al ')+nm+'</button></div>';
@@ -8504,7 +8514,7 @@ function plUfTxt(C0){var u=function(t){return 'N '+trTxt(t.n,1)+' · P₂O₅ '+
 /* Entrega 70: total por ha = media de la finca, señalada con * cuando el abono no va igual a todos los grupos */
 function plTitle(p){if(p.vr)return PL_SEC[p.vr]+' '+campLbl(p.y);return ((p.tr||[]).length?'Plan de campaña ':'Plan de fertirrigación ')+campLbl(p.y)}
 var PL_TN='* Total por hectárea sobre las hectáreas tratadas con ese producto, no sobre toda la finca.';
-function plTotNote(C0,unit){if(C0.vr&&C0.rows.some(function(o){return o.split}))return PL_TN;if(C0.rows.some(function(o){return o.split}))return '* Media de la finca.';var L=[];C0.rows.forEach(function(o){if(o.split)L.push(o.r.n+': '+plTotParts(C0,o).map(function(x){return x[0]+' '+trTxt(x[1],2,1)}).join(' · ')+' '+(o.r.u==='L'?'L':'kg')+'/ha')});return L.length?'* Media de la finca; estos abonos no van igual a todos los grupos: '+L.join(' — '):''}
+function plTotNote(C0,unit){if(C0.vr&&C0.rows.some(function(o){return o.split}))return PL_TN;return ''} /* Entrega 136: sin «* Media de la finca» */
 /* fechas de un periodo: «enero 2026» si es el mes entero, «1–15 ene 2026» si es dentro del mismo mes */
 function plRangeTxt(a,b){if(!a)return '';if(!b||b===a)return diaFmt(a);var A=a.split('-'),B=b.split('-');if(A[0]===B[0]&&A[1]===B[1]){var last=new Date(+A[0],+A[1],0).getDate();if(+A[2]===1&&+B[2]===last)return PL_MES[+A[1]-1]+' '+A[0];return (+A[2])+'–'+(+B[2])+' '+diaMes[+A[1]-1]+' '+A[0]}return diaFmt(a)+' → '+diaFmt(b)}
 /* cantidades: 2 decimales si son pequeñas, sin el error de redondeo de los decimales (15,75 y no 15,7) */
@@ -8692,7 +8702,7 @@ function plGridHTML(f,p,C0){
       var on=PL.cell&&PL.cell.r===r.id&&PL.cell.w===w.k, gk=c&&c.g&&plGrp(f,c.g)?c.g:'', dn=c&&+c.d>0&&plDoneRec(f,p,'w:'+w.k+':'+gk);
       h+='<td class="plc'+(c&&+c.d>0?' on':'')+(dn?' dn':'')+(on?' sel':'')+'"><button type="button" data-act="pl-cell" data-r="'+esc(r.id)+'" data-w="'+w.k+'" aria-label="'+esc(r.n+' · '+plWkLbl(w))+'">'+(c&&+c.d>0?trTxt(c.d,2,1)+(gk?'<small>'+esc(plGrp(f,gk).n)+'</small>':''):'')+(dn?'<i>✓</i>':'')+'</button></td>';
     });
-    h+='<td class="plt"'+(o.split&&!vr?' title="'+esc(plTotTxt(C0,o))+'"':'')+'>'+(o.dHa?trTxt(o.dHa,2,1)+(o.split?'*':''):'')+'</td></tr>';
+    h+='<td class="plt"'+(o.split&&!vr?' title="'+esc(plTotTxt(C0,o))+'"':'')+'>'+(o.dHa?trTxt(o.dHa,2,1)+(o.split&&vr?'*':''):'')+'</td></tr>';
   });
   var tp=p.vr==='tr'?plTrPRows(f,p,C0):[];
   tp.forEach(function(r){
@@ -8837,7 +8847,7 @@ function plCostHTML(C0,f,p){
   C0.fo.forEach(function(o){if(o.qty)L.push([o.q.n+' (fondo)',+o.q.d,o.qty,o.q.u==='L'?'L':'kg',o.cost])});
   if(!L.length&&!C0.trs.length)return '';
   var h='<div class="plwrap"><table class="ktb"><thead><tr><th>Producto</th><th class="r">Total /ha</th><th class="r">Para la finca</th>'+(PL.cos?'<th class="r">€/ha</th><th class="r">€</th>':'')+'</tr></thead><tbody>';
-  L.forEach(function(x){h+='<tr><td class="b">'+esc(x[0])+'</td><td class="r">'+trTxt(x[1],2,1)+' '+x[3]+(x[5]&&x[5].split?'*':'')+'</td><td class="r">'+trTxt(x[2],0)+' '+x[3]+'</td>'+(PL.cos?'<td class="r">'+(x[4]!==null?trTxt(x[4]/(C0.ha||1),2):'sin precio')+'</td><td class="r">'+(x[4]!==null?trTxt(x[4],0):'—')+'</td>':'')+'</tr>'});
+  L.forEach(function(x){h+='<tr><td class="b">'+esc(x[0])+'</td><td class="r">'+trTxt(x[1],2,1)+' '+x[3]+(x[5]&&x[5].split&&C0.vr?'*':'')+'</td><td class="r">'+trTxt(x[2],0)+' '+x[3]+'</td>'+(PL.cos?'<td class="r">'+(x[4]!==null?trTxt(x[4]/(C0.ha||1),2):'sin precio')+'</td><td class="r">'+(x[4]!==null?trTxt(x[4],0):'—')+'</td>':'')+'</tr>'});
   h+='</tbody></table></div>';
   if(PL.cos&&C0.cost.tot!==null){var K=plCostCalc(f,p,C0);
     h+='<div class="plwrap" style="margin-top:10px"><table class="ktb"><thead><tr><th>Coste de la campaña (sin IVA)</th><th class="r">€ total</th><th class="r">€/ha</th><th class="r">%</th></tr></thead><tbody>'+K.sum.map(function(e){return '<tr><td>'+esc(e.n)+'</td><td class="r">'+trTxt(e.cost,0)+'</td><td class="r">'+trTxt(e.costHa,2)+'</td><td class="r">'+trTxt(e.pct,1)+'</td></tr>'}).join('')+'<tr><td class="b">Total</td><td class="r b">'+trTxt(K.tot,0)+'</td><td class="r b">'+trTxt(K.totHa,2)+'</td><td class="r">100</td></tr></tbody></table></div>';
@@ -9124,7 +9134,7 @@ function buildPlanPdf0(f,p,cos,PO){
     else tl.forEach(function(t,i){doc.setFont(FN,'bold');doc.setFontSize(6.2);doc.setTextColor.apply(doc,ink);doc.text(t,xt+tc-1.2,y+3+i*3.1,{align:'right'})});
     y+=rh;
   };
-  rows.forEach(function(o){var r=o.r;cellRow(r.n,(r.k==='a'?(abRich(r)||'sin riqueza'):'producto')+' · '+(r.u==='L'?'L':'kg')+'/ha',W.map(function(w){var c=(r.c||{})[w.k];if(!c||!(+c.d>0))return null;var g=c.g&&plGrp(f,c.g),pe=c.pe===1;return {t:trTxt(c.d,2,1),s:p.vr?(c.sl||''):(g?g.n:''),bg:pe?GRAY:[227,241,232],pe:pe}}),o.dHa?trTxt(o.dHa,2,1)+(o.split?' *':''):'')});
+  rows.forEach(function(o){var r=o.r;cellRow(r.n,(r.k==='a'?(abRich(r)||'sin riqueza'):'producto')+' · '+(r.u==='L'?'L':'kg')+'/ha',W.map(function(w){var c=(r.c||{})[w.k];if(!c||!(+c.d>0))return null;var g=c.g&&plGrp(f,c.g),pe=c.pe===1;return {t:trTxt(c.d,2,1),s:p.vr?(c.sl||''):(g?g.n:''),bg:pe?GRAY:[227,241,232],pe:pe}}),o.dHa?trTxt(o.dHa,2,1)+(o.split&&p.vr?' *':''):'')});
   /* Entrega 74: en Tratamientos, una fila por producto con su dosis por ha en la semana del tratamiento */
   var tpr=p.vr==='tr'?plTrPRows(f,p,C0):[];
   tpr.forEach(function(r){cellRow(r.n,'producto · '+r.u+'/ha',W.map(function(w){var c=r.c[w.k];if(!c)return null;var pe=c.pe===1;return {t:plQt(c.d),s:c.codes.join(' '),bg:pe?GRAY:[227,241,232],pe:pe}}),r.dHa?plQt(r.dHa)+(r.split?' *':''):'')});
@@ -9223,7 +9233,8 @@ function plPdfCosts(doc,FN,f,p,C0,G){
   var table=function(cols,rows,o){o=o||{};var tw=cols.reduce(function(a,c){return a+c.w},0),x0=M,rh=5.2;
     if(!o.narrow){var sc=CW/tw;cols=cols.map(function(c){return {h:c.h,w:c.w*sc,a:c.a}});tw=CW}
     var hdr=function(){doc.setFillColor(233,239,236);doc.rect(x0,y-3.7,tw,5.4,'F');doc.setFont(FN,'bold');doc.setFontSize(7.4);doc.setTextColor.apply(doc,ink);var x=x0;cols.forEach(function(c){doc.text(c.h,c.a==='r'?x+c.w-1.5:x+1.5,y,{align:c.a==='r'?'right':'left'});x+=c.w});y+=5.4};
-    var tH=5.4+rows.reduce(function(a,r,i){return a+(o.sub&&o.sub.indexOf(i)>=0?4.2:rh)},0)+4; if(y+tH>PH-14&&tH<=PH-32)newPage(); else room(rh*Math.min(rows.length,3)+8); hdr();
+    /* Entrega 136: el título va con su tabla (o.tit): si la tabla salta de página, el título salta con ella */
+    var tT=o.tit?6:0, tH=tT+5.4+rows.reduce(function(a,r,i){return a+(o.sub&&o.sub.indexOf(i)>=0?4.2:rh)},0)+4; if(y+tH>PH-14&&tH<=PH-32)newPage(); else room(tT+rh*Math.min(rows.length,3)+8); if(o.tit)title(o.tit,1); hdr();
     rows.forEach(function(r,i){var sub=o.sub&&o.sub.indexOf(i)>=0, bold=o.bold&&o.bold.indexOf(i)>=0;
       if(bold&&i>0&&o.sub&&o.sub.indexOf(i-1)>=0)y+=1.6;
       var blk=o.keep&&o.keep[i]?o.keep[i]:1; if(y+rh+(blk-1)*4.2>PH-14){newPage();hdr()}
@@ -9243,23 +9254,22 @@ function plPdfCosts(doc,FN,f,p,C0,G){
   table([{h:'Concepto',w:70},{h:'€ total',w:34,a:'r'},{h:'€/ha',w:30,a:'r'},{h:'% del total',w:28,a:'r'}],rs,{bold:[rs.length-1]});
   /* 2-3. fertirrigación y fondo por producto */
   var prodCols=[{h:'Producto',w:62},{h:'Precio',w:24,a:'r'},{h:'Dosis /ha',w:26,a:'r'},{h:'Para la finca',w:30,a:'r'},{h:'€/ha',w:24,a:'r'},{h:'€ total',w:28,a:'r'},{h:'% del apartado',w:26,a:'r'}];
-  var prodRows=function(L,tot){var r=L.map(function(x){return [x.n,x.pr!==null?trTxt(x.pr,2)+' €/'+x.u:'sin precio',trTxt(x.dHa,2,1)+' '+x.u+(x.split?' *':''),plQt(x.qty)+' '+x.u,eur(x.costHa,2),eur(x.cost),x.cost!==null&&tot?pct(x.cost/tot*100):'']});
+  var prodRows=function(L,tot){var r=L.map(function(x){return [x.n,x.pr!==null?trTxt(x.pr,2)+' €/'+x.u:'sin precio',trTxt(x.dHa,2,1)+' '+x.u+(x.split&&C0.vr?' *':''),plQt(x.qty)+' '+x.u,eur(x.costHa,2),eur(x.cost),x.cost!==null&&tot?pct(x.cost/tot*100):'']});
     r.push(['Total','','','',eur(tot!==null&&C0.ha?tot/C0.ha:null,2),eur(tot),tot?'100 %':'']);return r};
-  if(K.fe.length){var cf=C0.cost.fe;title('Fertirrigación por producto');var r2=prodRows(K.fe,cf);table(prodCols,r2,{bold:[r2.length-1]});
-    if(K.fe.some(function(x){return x.split})){doc.setFont(FN,'normal');doc.setFontSize(6.8);doc.setTextColor.apply(doc,gray);doc.text(C0.vr?PL_TN:'* Media de la finca.',M,y-1.5);y+=3.5}}
-  if(K.fo.length){title(C0.vr==='ab'?'Abonado por producto':'Abonado de fondo');var r3=prodRows(K.fo,C0.cost.fo);table(prodCols,r3,{bold:[r3.length-1]});
-    if(C0.vr==='ab'&&K.fo.some(function(x){return x.split})){doc.setFont(FN,'normal');doc.setFontSize(6.8);doc.setTextColor.apply(doc,gray);doc.text(C0.vr?PL_TN:'* Media de la finca.',M,y-1.5);y+=3.5}}
+  if(K.fe.length){var cf=C0.cost.fe;var r2=prodRows(K.fe,cf);table(prodCols,r2,{bold:[r2.length-1],tit:'Fertirrigación por producto'});
+    if(C0.vr&&K.fe.some(function(x){return x.split})){doc.setFont(FN,'normal');doc.setFontSize(6.8);doc.setTextColor.apply(doc,gray);doc.text(PL_TN,M,y-1.5);y+=3.5}}
+  if(K.fo.length){var r3=prodRows(K.fo,C0.cost.fo);table(prodCols,r3,{bold:[r3.length-1],tit:C0.vr==='ab'?'Abonado por producto':'Abonado de fondo'});
+    if(C0.vr==='ab'&&K.fo.some(function(x){return x.split})){doc.setFont(FN,'normal');doc.setFontSize(6.8);doc.setTextColor.apply(doc,gray);doc.text(PL_TN,M,y-1.5);y+=3.5}}
   /* 4. tratamientos uno a uno, con sus productos */
-  if(K.trs.length){title('Tratamientos',45);
+  if(K.trs.length){
     var tr=[],bo=[],sb=[];
     var kp={}; K.trs.forEach(function(t){kp[tr.length]=t.ps.length+1;bo.push(tr.length);tr.push([t.code+(t.fe?' · '+t.fe:''),t.fecha,'',eur(t.costHa,2),eur(t.cost)]);
       t.ps.forEach(function(x){sb.push(tr.length);tr.push([x.n,x.qty!==null?plQt(x.qty)+' '+x.u:'',x.pr!==null?trTxt(x.pr,2)+' €/'+x.u:'sin precio',x.cost!==null&&C0.ha?eur(x.cost/C0.ha,2):'',eur(x.cost)])})});
     bo.push(tr.length);tr.push(['Total tratamientos','','',eur(C0.cost.tr!==null&&C0.ha?C0.cost.tr/C0.ha:null,2),eur(C0.cost.tr)]);
-    table([{h:'Tratamiento · producto',w:84},{h:'Fecha · cantidad',w:56},{h:'Precio',w:30,a:'r'},{h:'€/ha',w:28,a:'r'},{h:'€ total',w:30,a:'r'}],tr,{bold:bo,sub:sb,keep:kp});
+    table([{h:'Tratamiento · producto',w:84},{h:'Fecha · cantidad',w:56},{h:'Precio',w:30,a:'r'},{h:'€/ha',w:28,a:'r'},{h:'€ total',w:30,a:'r'}],tr,{bold:bo,sub:sb,keep:kp,tit:'Tratamientos'});
     /* 5. productos de tratamientos sumados */
-    title('Productos de tratamientos en toda la campaña',30);
     var pr5=K.trProd.map(function(a){return [a.n,a.codes.join(', '),plQt(a.qty)+' '+a.u,a.pr!==null?trTxt(a.pr,2)+' €/'+a.u:'sin precio',a.nc?'sin precio':eur(a.cost)]});
-    table([{h:'Producto',w:72},{h:'Tratamientos',w:40},{h:'Cantidad total',w:34,a:'r'},{h:'Precio',w:30,a:'r'},{h:'€ total',w:30,a:'r'}],pr5)}
+    table([{h:'Producto',w:72},{h:'Tratamientos',w:40},{h:'Cantidad total',w:34,a:'r'},{h:'Precio',w:30,a:'r'},{h:'€ total',w:30,a:'r'}],pr5,{tit:'Productos de tratamientos en toda la campaña'})}
   /* 6. coste por mes: tabla y gráfica */
   if(K.months.length>(C0.vr?1:0)){var GHM=K.months.length<=4?26:40, MC0=[['fo'],['fe'],['tr']].filter(function(c){return K.months.some(function(e){return e[c[0]]>0})}).length, gx0=M+Math.min(176,30+28*MC0+(MC0===1?26:50)+14), BEL=PW-M-gx0<70;
     title('Coste por mes',6+(BEL?9.4+K.months.length*5.2+Math.max(GHM,K.months.length*5.2+8)+8:Math.max(9.4+K.months.length*5.2,Math.max(GHM,K.months.length*5.2+8))));
@@ -9425,7 +9435,7 @@ function xlPlanBook(f,p,cos){
         var s=cellSt(v.pe,v.fill); if(v.s){xlSet(sh,r,1+k,{rich:[{t:v.t,b:true},{t:'\n'+v.s,sz:7,col:XC.gray}]},s)} else {if(typeof v.t==='number')s.fmt=xlFmt(v.t,v.d||2); xlSet(sh,r,1+k,v.t,s)}});
       xlSet(sh,r,ct,tot,{b:true,ha:'right',fill:lfill,bd:'thin',bc:XC.bd,fmt:typeof tot==='number'?tfmt:undefined,ind:1}); xlH(sh,r,27); r++;
     };
-    C0.rows.forEach(function(o){var rr=o.r;row(rr.n,(rr.k==='a'?(abRich(rr)||'sin riqueza'):'producto')+' · '+(rr.u==='L'?'L':'kg')+'/ha',W.map(function(w){var c=(rr.c||{})[w.k];if(!c||!(+c.d>0))return null;var g=c.g&&plGrp(f,c.g),lb=vr?(c.sl||''):(g?g.n:'');return {t:lb?trTxt(c.d,2,1):Math.round(+c.d*100)/100,s:lb,fill:XC.on,pe:c.pe===1}}),o.dHa?Math.round(o.dHa*100)/100:'',xlFmt(Math.round(o.dHa*100)/100,2,o.split?' *':''))});
+    C0.rows.forEach(function(o){var rr=o.r;row(rr.n,(rr.k==='a'?(abRich(rr)||'sin riqueza'):'producto')+' · '+(rr.u==='L'?'L':'kg')+'/ha',W.map(function(w){var c=(rr.c||{})[w.k];if(!c||!(+c.d>0))return null;var g=c.g&&plGrp(f,c.g),lb=vr?(c.sl||''):(g?g.n:'');return {t:lb?trTxt(c.d,2,1):Math.round(+c.d*100)/100,s:lb,fill:XC.on,pe:c.pe===1}}),o.dHa?Math.round(o.dHa*100)/100:'',xlFmt(Math.round(o.dHa*100)/100,2,o.split&&vr?' *':''))});
     var tpr=vr==='tr'?plTrPRows(f,p,C0):[];
     tpr.forEach(function(rr){row(rr.n,'producto · '+rr.u+'/ha',W.map(function(w){var c=rr.c[w.k];if(!c)return null;return {t:plQt(c.d),s:c.codes.join(' '),fill:XC.on,pe:c.pe===1}}),rr.dHa?Math.round(rr.dHa*100)/100:'',xlFmt(Math.round(rr.dHa*100)/100,2,rr.split?' *':''))});
     if((p.tr||[]).length)row('Tratamientos','código',W.map(function(w){var xs=plWeekTr(f,p,C0,w.k);if(!xs.length)return null;var gs=xs.map(function(x){var g=x.g?plGrp(f,x.g):null;return g?g.n:''}).filter(Boolean).join(' ');return {t:xs.map(function(x){return C0.code[x.t.id]}).join(' '),s:gs,fill:XC.yel,pe:!!(vr&&plPeTr(xs))}}),'',null,XC.yel2);
@@ -9539,11 +9549,11 @@ function xlCostSheet(f,p,C0,ttl,PO){
     var sp=xlSpans(CW,cols.map(function(c){return c.w}));
     sp.forEach(function(s,k){xlMerge(sh,r,s[0],r,s[1],cols[k].h,{b:true,fill:XC.hd,ha:cols[k].a==='r'?'right':'left',sz:9,ind:1})});xlH(sh,r,17);r++;
     rows.forEach(function(rw,ri){var bold=ri===rows.length-1,x=Lp[ri];sp.forEach(function(s,k){var v=rw[k],u=x?x.u:'',fm=cols[k].f;
-      if(x&&k===1&&typeof v==='number')fm='#,##0.00" €/'+u+'"'; if(x&&k===2)fm=xlFmt(v,2,' '+u+(x.split?' *':'')); if(x&&k===3)fm=xlFmt(v,2,' '+u);
+      if(x&&k===1&&typeof v==='number')fm='#,##0.00" €/'+u+'"'; if(x&&k===2)fm=xlFmt(v,2,' '+u+(x.split&&C0.vr?' *':'')); if(x&&k===3)fm=xlFmt(v,2,' '+u);
       xlMerge(sh,r,s[0],r,s[1],v===null||v===undefined?'':v,{b:bold,col:v==='sin precio'?XC.red:undefined,fill:bold?XC.box:undefined,ha:cols[k].a==='r'?'right':'left',ind:1,fmt:typeof v==='number'?fm:undefined,bd:bold?{t:'thin',b:'thin'}:{b:'thin'},bc:bold?'CDD4D1':'E8ECEA'})});xlH(sh,r,17);r++});
     r++};
-  if(K.fe.length){title('Fertirrigación por producto');prodRows(K.fe,C0.cost.fe);if(K.fe.some(function(x){return x.split})){xlMerge(sh,r-1,0,r-1,L,'* Media de la finca.',{i:true,sz:8,col:XC.gray});r++}}
-  if(K.fo.length){title(C0.vr==='ab'?'Abonado por producto':'Abonado de fondo');prodRows(K.fo,C0.cost.fo);if(C0.vr==='ab'&&K.fo.some(function(x){return x.split})){xlMerge(sh,r-1,0,r-1,L,'* Media de la finca.',{i:true,sz:8,col:XC.gray});r++}}
+  if(K.fe.length){title('Fertirrigación por producto');prodRows(K.fe,C0.cost.fe);if(C0.vr&&K.fe.some(function(x){return x.split})){xlMerge(sh,r-1,0,r-1,L,PL_TN,{i:true,sz:8,col:XC.gray});r++}}
+  if(K.fo.length){title(C0.vr==='ab'?'Abonado por producto':'Abonado de fondo');prodRows(K.fo,C0.cost.fo);if(C0.vr==='ab'&&K.fo.some(function(x){return x.split})){xlMerge(sh,r-1,0,r-1,L,PL_TN,{i:true,sz:8,col:XC.gray});r++}}
   /* 4. tratamientos con sus productos */
   if(K.trs.length){title('Tratamientos');
     var tr=[],bo=[],sb=[];
@@ -11134,12 +11144,12 @@ function syncRound(retry,tries){
         /* cambios en los dos aparatos: se juntan; si los dos cambiaron lo mismo, se queda lo que ya estaba en la nube y lo de este aparato se aparta */
         return syBaseGet().then(function(bs){
           var b; try{b=bs?JSON.parse(bs.d):undefined}catch(e){b=undefined}
-          var c={n:0}, rc=syDoc(rem), m=merge3(b,JSON.parse(JSON.stringify(syDoc(S))),rc,c);
+          var c={n:0}, rc=syDoc(rem), lc=JSON.parse(JSON.stringify(syDoc(S))), nc=ntConflict(b,lc,rc), m=merge3(b,lc,rc,c);
           return (c.n?aptAdd(S):Promise.resolve()).then(function(){
             applyMerged(rem,m);
             return syBaseSet(rem).then(function(){
-              if(jeq(m,rc)){ S.dirty=false; lsSet(KEY,JSON.stringify(S)); updateDot(); toast(syMsg(c.n)); return 'pull'; }
-              toast(syMsg(c.n)); return putRemote(tok,RR+1,RR);
+              if(jeq(m,rc)){ S.dirty=false; lsSet(KEY,JSON.stringify(S)); updateDot(); toast(syMsg(c.n)+ntConfTxt(nc)); return 'pull'; }
+              toast(syMsg(c.n)+ntConfTxt(nc)); return putRemote(tok,RR+1,RR);
             });
           });
         });
@@ -11181,6 +11191,24 @@ function merge3(b,l,r,c){
   }
   c.n++; return r;
 }
+/* Entrega 136: si la misma nota se cambió en los dos aparatos, se quedan las dos (la de este aparato, como copia
+   «(otra versión)»); si en el otro aparato se borró y aquí se cambió, se queda la de aquí. Antes ganaba una sin avisar. */
+function ntCopyX(x){var L=String(x||'').split('\n');L[0]=(L[0]||'Nota')+' (otra versión)';return L.join('\n')}
+function ntConflict(b,l,r){
+  var out=[]; try{
+    var bn=b&&b.x&&b.x.notas, ln=l&&l.x&&l.x.notas, rn=(r&&r.x&&r.x.notas)||[];
+    if(!Array.isArray(bn)||!Array.isArray(ln)||!Array.isArray(rn))return out;
+    var mb={},mr={},add=[]; bn.forEach(function(n){if(n&&n.id)mb[n.id]=n}); rn.forEach(function(n){if(n&&n.id)mr[n.id]=n});
+    ln.forEach(function(n,i){
+      if(!n||!n.id||!mb[n.id])return; var lx=String(n.x||''), bx=String(mb[n.id].x||''), q=mr[n.id]; if(lx===bx)return;
+      if(q){var rx=String(q.x||''); if(rx===bx||rx===lx)return; var cp=clone(n); cp.id=uid(); cp.x=ntCopyX(lx); add.push(cp); ln[i]=clone(q); out.push(ntTitle(q))}
+      else if(lx.trim()){var cp2=clone(n); cp2.id=uid(); ln[i]=cp2}
+    });
+    add.forEach(function(n){ln.unshift(n)});
+  }catch(e){}
+  return out;
+}
+function ntConfTxt(nc){return nc&&nc.length?' La nota «'+nc[0]+'»'+(nc.length>1?' y '+(nc.length-1)+(nc.length===2?' más':' más')+' se cambiaron':' se cambió')+' a la vez en los dos aparatos: están las dos versiones; la de este aparato lleva «(otra versión)» en el título.':''}
 function syMsg(n){return n?'Había cambios en otro aparato y los he juntado. En '+n+(n===1?' dato':' datos')+' cambiado'+(n===1?'':'s')+' en los dos sitios se ha quedado lo de la nube; lo de este aparato queda en Datos → «Versiones apartadas».':'Había cambios en otro aparato y los he juntado con los de este.'}
 function syBaseGet(){return idbGet('sync','base').then(function(v){return v&&v.uid===SY.uid?v:null},function(){return null})}
 function syBaseSet(doc){return idbPut('sync','base',{uid:SY.uid,rev:parseInt(doc.rev,10)||0,d:JSON.stringify(syDoc(doc))}).then(null,function(){})}
@@ -11329,6 +11357,7 @@ function buildVista(l){
     Object.keys(S.recintos).forEach(function(k){
       var r=S.recintos[k]; if(!ok[r.fincaId]||!recIn(r))return;
       var c={ref:r.ref,ha:r.ha,uso:r.uso,geom:r.geom,pt:r.pt,fincaId:r.fincaId};
+      if(+r.hc>0)c.hc=r.hc; /* Entrega 136: el enlace lleva la superficie cultivada */
       if(o.cultivo){c.cultivo=r.cultivo;c.riego=r.riego;c.prod=r.prod;c.variedad=r.variedad;c.anio=r.anio;c.marco=r.marco;c.patron=r.patron;c.arb=r.arb}
       if(o.notas)c.notas=r.notas;
       if(r.nombre)c.nombre=r.nombre;
@@ -12050,7 +12079,8 @@ var zipStore=function(files){return new Blob(zipBytes(files),{type:'application/
 /* ---- filas para exportar ---- */
 function expRow(o){
   var r=S.recintos[o.ref], f=r?finca(r.fincaId):null, a=o.ref.split(':').map(Number);
-  return {ref:o.ref,prov:a[0],muni:a[1],agr:a[2],zona:a[3],pol:a[4],par:a[5],rec:a[6],ha:o.ha||0,uso:o.uso||'',usoN:USOS[o.uso]||'',
+  /* Entrega 136: ha = superficie cultivada (la que se enseña); hs = la del SIGPAC */
+  return {ref:o.ref,prov:a[0],muni:a[1],agr:a[2],zona:a[3],pol:a[4],par:a[5],rec:a[6],ha:r?haC(r):(o.ha||0),hs:o.ha||0,uso:o.uso||'',usoN:USOS[o.uso]||'',
     finca:f?f.nombre:'',fcol:f?fcolor(f):'',cultivo:(r&&r.cultivo)||'',riego:(r&&r.riego)?riegoName(r.riego):'',prod:(r&&r.prod)?prodName(r.prod):'',variedad:(r&&r.variedad)||'',nombre:(r&&r.nombre)||'',geom:o.geom};
 }
 function expList(scope,id){
@@ -12071,8 +12101,8 @@ function expBase(scope,id,rows){
 }
 
 /* ---- Shapefile ---- */
-var SHP_F=[['REF','C',24],['PROV','N',3],['MUNI','N',4],['POLIGONO','N',5],['PARCELA','N',6],['RECINTO','N',5],['HA','N',13,4],['USO','C',3],['USO_NOM','C',24],['FINCA','C',40],['CULTIVO','C',30],['RIEGO','C',10],['VARIEDAD','C',30],['NOMBRE','C',40],['PRODUCCION','C',26]];
-function shpVals(r){return [refLabel(r.ref),r.prov,r.muni,r.pol,r.par,r.rec,r.ha,r.uso,r.usoN,r.finca,r.cultivo,r.riego,r.variedad,r.nombre||'-',r.prod]}
+var SHP_F=[['REF','C',24],['PROV','N',3],['MUNI','N',4],['POLIGONO','N',5],['PARCELA','N',6],['RECINTO','N',5],['HA','N',13,4],['HA_SIGPAC','N',13,4],['USO','C',3],['USO_NOM','C',24],['FINCA','C',40],['CULTIVO','C',30],['RIEGO','C',10],['VARIEDAD','C',30],['NOMBRE','C',40],['PRODUCCION','C',26]];
+function shpVals(r){return [refLabel(r.ref),r.prov,r.muni,r.pol,r.par,r.rec,r.ha,r.hs,r.uso,r.usoN,r.finca,r.cultivo,r.riego,r.variedad,r.nombre||'-',r.prod]}
 function fitBytes(s,n){s=String(s==null?'':s);var b=u8s(s);while(b.length>n){s=s.slice(0,-1);b=u8s(s)}return b}
 function shpBuild(rows){
   var recs=rows.map(function(r){
@@ -12137,7 +12167,7 @@ function kmlBuild(rows,name){
     var pg=polys(r.geom).map(function(poly){
       return '<Polygon><outerBoundaryIs><LinearRing><coordinates>'+ring(fixRing(poly[0],true).reverse())+'</coordinates></LinearRing></outerBoundaryIs>'+poly.slice(1).map(function(h){return '<innerBoundaryIs><LinearRing><coordinates>'+ring(fixRing(h,false).reverse())+'</coordinates></LinearRing></innerBoundaryIs>'}).join('')+'</Polygon>';
     });
-    var data=[['Referencia',refLabel(r.ref)],['Poligono',r.pol],['Parcela',r.par],['Recinto',r.rec],['Hectareas',r.ha.toFixed(4)],['Uso SIGPAC',(r.uso?r.uso+' '+r.usoN:'')],['Finca',r.finca],['Cultivo',r.cultivo],['Riego',r.riego],['Produccion',r.prod],['Variedad',r.variedad],['Nombre del recinto',r.nombre||'-']];
+    var data=[['Referencia',refLabel(r.ref)],['Poligono',r.pol],['Parcela',r.par],['Recinto',r.rec],['Hectareas cultivadas',r.ha.toFixed(4).replace('.',',')],['Hectareas SIGPAC',(r.hs||0).toFixed(4).replace('.',',')],['Uso SIGPAC',(r.uso?r.uso+' '+r.usoN:'')],['Finca',r.finca],['Cultivo',r.cultivo],['Riego',r.riego],['Produccion',r.prod],['Variedad',r.variedad],['Nombre del recinto',r.nombre||'-']];
     out+='<Placemark><name>'+esc(r.pol+'-'+r.par+'-'+r.rec+(r.finca?' · '+r.finca:''))+'</name><Style><LineStyle><color>ffffffff</color><width>2</width></LineStyle><PolyStyle><color>'+kc+'</color></PolyStyle></Style><ExtendedData>'+
       data.map(function(d){return '<Data name="'+esc(d[0])+'"><value>'+esc(d[1])+'</value></Data>'}).join('')+'</ExtendedData>'+(pg.length>1?'<MultiGeometry>'+pg.join('')+'</MultiGeometry>':pg[0])+'</Placemark>\n';
   });
@@ -12147,10 +12177,10 @@ function kmlBuild(rows,name){
 /* ---- CSV (Excel en español: ; y coma decimal) ---- */
 function csvBuild(rows){
   var q=function(v){v=String(v==null?'':v);return /[;"\r\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}, dec=function(n,d){return Number(n).toFixed(d).replace('.',',')};
-  var lines=[['Referencia','Provincia','Municipio','Agregado','Zona','Poligono','Parcela','Recinto','Hectareas','Uso','Uso nombre','Finca','Cultivo','Riego','Variedad','Nombre del recinto','Produccion','Latitud','Longitud','UTM30 X','UTM30 Y'].join(';')];
+  var lines=[['Referencia','Provincia','Municipio','Agregado','Zona','Poligono','Parcela','Recinto','Hectareas cultivadas','Hectareas SIGPAC','Uso','Uso nombre','Finca','Cultivo','Riego','Variedad','Nombre del recinto','Produccion','Latitud','Longitud','UTM30 X','UTM30 Y'].join(';')];
   rows.forEach(function(r){
     var p=pointInside(r.geom), u=toUTM(p[0],p[1]);
-    lines.push([refLabel(r.ref),r.prov,r.muni,r.agr,r.zona,r.pol,r.par,r.rec,dec(r.ha,4),r.uso,r.usoN,r.finca,r.cultivo,r.riego,r.variedad,r.nombre||'-',r.prod,dec(p[1],6),dec(p[0],6),dec(u[0],2),dec(u[1],2)].map(q).join(';'));
+    lines.push([refLabel(r.ref),r.prov,r.muni,r.agr,r.zona,r.pol,r.par,r.rec,dec(r.ha,4),dec(r.hs||0,4),r.uso,r.usoN,r.finca,r.cultivo,r.riego,r.variedad,r.nombre||'-',r.prod,dec(p[1],6),dec(p[0],6),dec(u[0],2),dec(u[1],2)].map(q).join(';'));
   });
   return '﻿'+lines.join('\r\n')+'\r\n';
 }
@@ -12731,7 +12761,7 @@ function drawSelMulti(){
 function selConflicts(fid){return selItems().filter(function(o){var q=S.recintos[o.ref];return q&&finca(q.fincaId)&&q.fincaId!==fid}).length}
 function selListHTML(){
   return selItems().map(function(o){var q=S.recintos[o.ref], f=q&&finca(q.fincaId);
-    return '<div class="selrow"><button class="selgo" data-act="sel-go" data-ref="'+esc(o.ref)+'"><b>'+esc(refLabel(o.ref))+'</b><span>'+ha4(o.ha)+' ha'+(f?' · '+esc(f.nombre):'')+'</span></button><button class="x" data-act="sel-rm" data-ref="'+esc(o.ref)+'" aria-label="Quitar de la selección">×</button></div>'}).join('');
+    return '<div class="selrow"><button class="selgo" data-act="sel-go" data-ref="'+esc(o.ref)+'"><b>'+esc(refLabel(o.ref))+'</b><span>'+ha4(haC(q||o))+' ha'+(f?' · '+esc(f.nombre):'')+'</span></button><button class="x" data-act="sel-rm" data-ref="'+esc(o.ref)+'" aria-label="Quitar de la selección">×</button></div>'}).join('');
 }
 function selDropHTML(){
   var q=norm(selQ), h='', n=0;
@@ -12750,7 +12780,7 @@ function selDoAdd(fid){
 }
 function renderSel(){
   var el=$('#selbar'); if(!msel.on){el.hidden=true;el.innerHTML='';return}
-  var it=selItems(), ha=it.reduce(function(s,o){return s+(o.ha||0)},0), n=it.length;
+  var it=selItems(), ha=it.reduce(function(s,o){return s+haC(S.recintos[o.ref]||o)},0), n=it.length;
   el.classList.toggle('tall',!!(n&&(selDrop||selConf||SBK.open)));
   var h='<div class="chd"><div><div class="ref" style="font-family:var(--sans)">Selección de recintos</div><div class="sub">Toca recintos en el mapa para sumarlos o quitarlos</div></div><button class="x" data-act="sel-close" aria-label="Cerrar">×</button></div>';
   h+='<div class="mbig">'+ha4(ha)+' ha</div><div class="small">'+n+(n===1?' recinto seleccionado':' recintos seleccionados')+'</div>';
@@ -13927,6 +13957,9 @@ function dwNums(a){
   while(i<n.length){var j=i;while(j+1<n.length&&n[j+1]===n[j]+1)j++;if(j-i>=2)out.push(n[i]+' a '+n[j]);else for(var k=i;k<=j;k++)out.push(String(n[k]));i=j+1}
   return out.length>1?out.slice(0,-1).join(', ')+' y '+out[out.length-1]:out[0];
 }
+/* Entrega 136: una finca (o zona) de más de 15 km por lado se divide sola por zonas para el plano y la foto */
+function dwBig(u){var b=dwBox(u);return !!(b&&(b.w>15000||b.h>15000))}
+function dwAutoZones(u){if(!dwBig(u))return null;var zs=dwZones(u.rows);return zs.length>1?zs:null}
 function dwPlan(){
   var base=safeName((dl.title||'').trim()||'Plano'), sp=dl.split&&(dl.src==='fincas'||dl.src==='owners')&&dwFincasSel().length>1, nm=sp?'<finca>':base, out=[];
   DWF.forEach(function(x){
@@ -13972,7 +14005,7 @@ function renderDw(){
         h+='</div>';
       }
     }else if(dl.src==='recs'){
-      var nr=dl.recs?Object.keys(dl.recs).length:0, hr=dl.recs?Object.keys(dl.recs).reduce(function(a,k){return a+(dl.recs[k].ha||0)},0):0;
+      var nr=dl.recs?Object.keys(dl.recs).length:0, hr=dl.recs?Object.keys(dl.recs).reduce(function(a,k){return a+haC(S.recintos[k]||dl.recs[k])},0):0;
       h+='<p class="small">Toca en el mapa los recintos que quieras, también los que no son de ninguna finca.</p>'+(nr?'<div class="mbig">'+nr+(nr===1?' recinto':' recintos')+' · '+ha4(hr)+' ha</div>':'')+'<div class="acts"><button class="btn primary" data-act="dw-pick-recs">'+(nr?'Elegir otros en el mapa':'Elegir en el mapa')+'</button></div>';
     }else{
       var zb=dwZoneBox();
@@ -14018,7 +14051,9 @@ function renderDw(){
     if(dl.f.plano||dl.f.dxfplano){
       var oz=dl.orient==='h'?'horizontal':dl.orient==='v'?'vertical':'automática (según la forma)';
       var zl='<div style="margin-top:8px"><b>Plano:</b> '+(dl.paper==='a3'?'A3':'A4')+', orientación '+oz+'.';
-      if(dl.zones)dwUnits().forEach(function(u){
+      dwUnits().forEach(function(u){
+        var bg=dwBig(u); if(!dl.zones&&!bg)return;
+        if(!dl.zones){var az=dwAutoZones(u);if(!az){zl+='<br>«'+esc(u.name)+'» pasa de 15 km por lado y sus recintos están todos juntos: no se puede dividir y el plano no saldrá. Elige menos fincas o «Recintos sueltos».';return}zl+='<br>«'+esc(u.name)+'» pasa de 15 km por lado: el plano sale dividido por zonas (separadas más de '+String(dl.zkm).replace('.',',')+' km).'}
         var zs=dwZones(u.rows);
         if(zs.length>1){
           var gz0=dwGeneral(zs), gen0=gz0.filter(function(g){return g.idx.length>1});
@@ -14027,8 +14062,10 @@ function renderDw(){
         else zl+='<br>«'+esc(u.name)+'»: está todo cerca, sale un solo plano.';
       });
       zl+='</div>';
+      if(dl.f.foto)dwUnits().forEach(function(u){var az=dwAutoZones(u);if(az)zl=zl.replace(/<\/div>$/,'<br><b>Foto:</b> «'+esc(u.name)+'» pasa de 15 km, así que sale una foto por zona ('+az.length+').</div>');else if(dwBig(u))zl=zl.replace(/<\/div>$/,'<br><b>Foto:</b> «'+esc(u.name)+'» pasa de 15 km y no se puede dividir: la foto no saldrá.</div>')});
       h=h.replace('<div style="margin-top:8px">Si hay más de un archivo','<div style="margin-top:8px"></div>'+zl+'<div style="margin-top:8px">Si hay más de un archivo');
     }
+    if(dl.f.foto&&!(dl.f.plano||dl.f.dxfplano)){var fzl=[];dwUnits().forEach(function(u){var az=dwAutoZones(u);if(az)fzl.push('«'+esc(u.name)+'» pasa de 15 km por lado: sale una foto por zona ('+az.length+').');else if(dwBig(u))fzl.push('«'+esc(u.name)+'» pasa de 15 km y sus recintos están todos juntos: la foto no saldrá.')});if(fzl.length)h=h.replace('<div style="margin-top:8px">Si hay más de un archivo','<div style="margin-top:8px"><b>Foto:</b> '+fzl.join('<br>')+'</div><div style="margin-top:8px">Si hay más de un archivo')}
     if(dl.busy)h+='<div class="note" style="margin-top:10px">Preparando… '+esc(dl.prog)+'</div>';
   }
   h+='<div class="dwfoot">';
@@ -14081,7 +14118,8 @@ function dwGo(){
     if(dl.f.kml)steps.push(['KML de '+u.name,function(){add(pre,nm+'.kml',u8s(kmlBuild(u.rows,u.name)));return Promise.resolve()}]);
     if(dl.f.csv)steps.push(['CSV de '+u.name,function(){add(pre,nm+'.csv',u8s(csvBuild(u.rows)));return Promise.resolve()}]);
     if(dl.f.informe&&dwFmtOk('informe'))steps.push(['Informe de '+u.name,function(){var o=reportPdf(null,{fincas:u.ids,title:u.name,ret:true});if(!o){notes.push('No se ha podido crear el informe de '+u.name+'.');return Promise.resolve()}return blobBytes(o.blob).then(function(by){add(pre,'informe-'+nm+'.pdf',by)})}]);
-    var wantP=dl.f.plano||dl.f.dxfplano, zs=(wantP&&dl.zones)?dwZones(u.rows):null, dxP=[];
+    var wantP=dl.f.plano||dl.f.dxfplano, zs=(wantP&&dl.zones)?dwZones(u.rows):(wantP&&big?dwAutoZones(u):null), dxP=[];
+    if(wantP&&big&&!dl.zones&&zs)notes.push('«'+u.name+'» pasa de 15 km por lado: el plano sale dividido en '+zs.length+' zonas.');
     if(zs&&zs.length>1)steps.push(['Plano por zonas de '+u.name,function(){
       rec.paper=dl.paper; rec.scale=dl.scale;
       /* Entrega 18: una página general con foto por cada grupo de zonas que cabe en DWGEN (15 km); un grupo de una sola zona ya tiene su página de zona */
@@ -14127,7 +14165,7 @@ function dwGo(){
       return one().then(function(){if(wbp.length)notes.push('«'+u.name+'»: '+(PHREL?'la foto de fondo es de Esri, año '+PHREL.y+' (la que elegiste): ':'el IGN y el exportador de Esri fallaron; la foto de fondo es una versión guardada de Esri: ')+wbp.join(', ')+'.');if(esr.length)notes.push('«'+u.name+'»: el IGN falló ('+IGNWHY+'); la foto de fondo de '+esr.join(', ')+' es de Esri (menos resolución que el PNOA).');if(dl.f.dxfplano&&dxP.length)add(pre+'plano-editable/','LEEME-plano-editable.txt',u8s(dxPlanoLeeme(u.name,dxP)));if(!doc||!dl.f.plano)return;return blobBytes(doc.output('blob')).then(function(by){add(pre,nm+'-plano-por-zonas.pdf',by)})});
     }]);
     else if(wantP)steps.push(['Plano de '+u.name,function(){
-      if(!b||big){notes.push('Plano de '+u.name+' no creado: la zona pasa de 15 km por lado.');return Promise.resolve()}
+      if(!b||big){notes.push('Plano de '+u.name+' no creado: pasa de 15 km por lado y sus recintos están todos juntos, así que no se puede dividir por zonas.');return Promise.resolve()}
       rec.paper=dl.paper; rec.scale=dl.scale;
       var G=recPlanGeom(b), ew0=G.mw*G.S/1000, eh0=G.mh*G.S/1000, ext0={minx:b.cx-ew0/2,maxx:b.cx+ew0/2,miny:b.cy-eh0/2,maxy:b.cy+eh0/2};
       var ext=planFix(G,b,u.zone?recRowsInBox(ext0):u.rows,{toneRows:u.rows});
@@ -14146,7 +14184,15 @@ function dwGo(){
       });
     }]);
     if(dl.f.foto)steps.push(['Foto aérea de '+u.name,function(){
-      if(!b||big||b.w<20||b.h<20){notes.push('Foto de '+u.name+' no creada: la zona debe medir entre 20 m y 15 km por lado.');return Promise.resolve()}
+      var fz=big?dwAutoZones(u):null;
+      if(fz){var k=0;notes.push('«'+u.name+'» pasa de 15 km por lado: la foto sale en '+fz.length+' partes, una por zona (carpetas foto/zona-1, foto/zona-2…).');
+        var runZ=function(){if(k>=fz.length)return Promise.resolve();var kk=++k, zb=fz[kk-1].box, zn=u.name+' zona '+kk;
+          if(!zb||zb.w>15000||zb.h>15000||zb.w<20||zb.h<20){notes.push('Foto de '+zn+' no creada: la zona debe medir entre 20 m y 15 km por lado.');return runZ()}
+          dwProg('Foto aérea de '+zn+' ('+kk+' de '+fz.length+')');
+          var PZ=photoFiles(zb,zn,false,null,photoSrc(dl.wbYear,dl.hLay));
+          return PZ.run().then(function(o){o.files.forEach(function(f){add(pre+'foto/zona-'+kk+'/',f.n,f.d)});if(PZ.noteTxt())notes.push('Foto de '+zn+': '+PZ.noteTxt())}).catch(function(e){notes.push('No ha llegado la foto de '+zn+(e&&e.why?' ('+e.why+')':' ('+whyErr(e)+')')+'.')}).then(runZ)};
+        return runZ()}
+      if(!b||big||b.w<20||b.h<20){notes.push('Foto de '+u.name+' no creada: '+(big?'pasa de 15 km por lado y sus recintos están todos juntos, así que no se puede dividir por zonas.':'la zona debe medir entre 20 m y 15 km por lado.'));return Promise.resolve()}
       var P=photoFiles(b,u.name,false,null,photoSrc(dl.wbYear,dl.hLay));
       return P.run().then(function(o){o.files.forEach(function(f){add(pre+'foto/',f.n,f.d)});if(P.noteTxt())notes.push('Foto de '+u.name+': '+P.noteTxt())}).catch(function(e){notes.push('No ha llegado la foto de '+u.name+(e&&e.why?' ('+e.why+')':P.src.k==='ign'?' (ni el IGN ni Esri responden)':' ('+whyErr(e)+')')+'.')});
     }]);
@@ -16955,6 +17001,7 @@ Object.assign(window.__mf,{NT:NT,ntNew:ntNew,ntOpen:ntOpen,ntBack:ntBack,ntLeave
 Object.assign(window.__mf,{llHTML:llHTML,llLoad:llLoad,llGet:llGet,llSum:llSum,llArr:llArr,llN:llN,LLU:function(){return LLU},LLSEL:LLSEL,pvHTML:pvHTML,pvLoad:pvLoad,pvGet:pvGet,pvParse:pvParse,pvDias:pvDias,PVU:function(){return PVU}});
 Object.assign(window.__mf,{offMigra:offMigra,OFFMG:function(){return OFFMG},offTCount:offTCount,offTGet:offTGet,arqList:arqList,arqHTML:arqHTML,offKeys:offKeys,offState:offState,offDownload:offDownload,offRemove:offRemove,offPend:offPend,offSet:offSet,offAskCheck:offAskCheck,offUrl:offUrl,offTotal:offTotal,offLoad:offLoad,offDiff:offDiff,offMark:offMark,offSig:offSig,OFFM:function(){return OFFM},OFF:function(){return OFF},offBusy:function(){return !!OFFD},save:function(){save()},renderDatos:renderDatos,offAskShown:function(){return OFFASK}});
 /* Entrega 132: para las pruebas */
+Object.assign(window.__mf,{expRow:expRow,csvBuild:csvBuild,kmlBuild:kmlBuild,shpVals:shpVals,SHP_F:SHP_F,cropForUso:cropForUso,ntConflict:ntConflict,ntConfTxt:ntConfTxt,dwBig:dwBig,dwAutoZones:dwAutoZones,dwUnits:dwUnits,merge3:merge3,fincaHa:fincaHa,grOpts:grOpts,plTotNote:plTotNote,buildPlanPdfE136:function(){return typeof buildPlanPdf==='function'}}); /* Entrega 136: para las pruebas */
 Object.assign(window.__mf,{campOf:campOf,campLbl:campLbl,campFile:campFile,campHoy:campHoy,yrOf:yrOf,yrEff:yrEff,hiAfCrops:hiAfCrops,feResumen:feResumen,trRecSum:trRecSum,expCampHTML:expCampHTML,expCultTblHTML:expCultTblHTML,cardFold:cardFold,expAforosHTML:expAforosHTML,pabCamp:pabCamp,pabCampRange:pabCampRange,trOrd:trOrd,grParts:grParts,nutYear:nutYear});
 })();
 </script>
