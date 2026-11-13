@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-8elsgLLUVVT/BnvTdLDlBZY5UnAgrLnLonK6kchUkTs='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-Sf3RmJGfa5V1R7FTfeI74Lf+AHsGMwcdWNmyBYzlWAU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
@@ -3218,7 +3218,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-13T18:01:50Z',n:'Entrega 147 · 13 nov · 19:01'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-13T19:41:29Z',n:'Entrega 148 · 13 nov · 20:41'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -4442,7 +4442,7 @@ function medAngles(pts){
   return out;
 }
 function medText(){
-  var s=medStats(), t=med.kind==='area'?'Superficie: '+nf(s.area/1e4,4)+' ha ('+nf(s.area,0)+' m²) · Perímetro: '+fmtLen(s.per):'Distancia: '+fmtLen(s.len);
+  var s=medStats(), t=med.kind==='area'?'Superficie: '+nf(s.area/1e4,2)+' ha ('+nf(s.area,0)+' m²) · Perímetro: '+fmtLen(s.per):'Distancia: '+fmtLen(s.len);
   if(med.pts.length)t+='\nPuntos (latitud, longitud):\n'+med.pts.map(function(p,i){return (i+1)+'. '+nf(Math.abs(p[1]),6)+(p[1]<0?' S':' N')+' · '+nf(Math.abs(p[0]),6)+(p[0]<0?' O':' E')}).join('\n');
   return t;
 }
@@ -4666,14 +4666,14 @@ function medStripGo(){
   if(w>0){r=medStripPts(st,w).pts}
   else if(ha>0){
     var full=medStripPts(st,1e9), tot=full.pts.length>2?areaEllip(full.pts):0, goal=ha*1e4;
-    if(goal>=tot){toast('El recinto entero tiene '+nf(tot/1e4,4)+' ha: la franja no puede ser mayor.');return}
+    if(goal>=tot){toast('El recinto entero tiene '+nf(tot/1e4,2)+' ha: la franja no puede ser mayor.');return}
     var lo=0, hi=full.max+1; for(var it=0;it<45;it++){var md=(lo+hi)/2,pp=medStripPts(st,md).pts,aa=pp.length>2?areaEllip(pp):0;if(aa<goal)lo=md;else hi=md}
     w=(lo+hi)/2; r=medStripPts(st,w).pts;
   }else{toast('Escribe el ancho (m) o la superficie (ha) de la franja.');return}
   if(r.length<3){toast('Con ese ancho no sale ninguna franja dentro del recinto.');return}
   medHist(); med.kind='area'; med.pts=r; med.sn=r.map(function(){return ''}); med.sel=-1; med.strip=null;
   if(!med.id)med.name='Franja de '+nf(w,w<10?2:1)+' m';
-  toast('Franja de '+nf(w,2)+' m: '+nf(areaEllip(r)/1e4,4)+' ha. Puedes retocarla y guardarla.'); medRefresh();
+  toast('Franja de '+nf(w,2)+' m: '+nf(areaEllip(r)/1e4,2)+' ha. Puedes retocarla y guardarla.'); medRefresh();
 }
 /* ---- recintos que corta una superficie (triángulos de la medición recortando cada recinto) ---- */
 function medTris(P){
@@ -4725,7 +4725,7 @@ function medCuts(pts,val){
 function medKml(m){
   var c=(m.col||MEDC[0]).replace('#',''), bgr=c.slice(4,6)+c.slice(2,4)+c.slice(0,2);
   var co=m.pts.concat(m.kind==='area'?[m.pts[0]]:[]).map(function(p){return p[0].toFixed(7)+','+p[1].toFixed(7)+',0'}).join(' ');
-  var de=(m.kind==='area'?nf(m.val/1e4,4)+' ha · perímetro '+fmtLen(m.per||0):fmtLen(m.val))+(m.nota?' · '+m.nota:'');
+  var de=(m.kind==='area'?nf(m.val/1e4,2)+' ha · perímetro '+fmtLen(m.per||0):fmtLen(m.val))+(m.nota?' · '+m.nota:'');
   return '<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>'+esc(m.name)+'</name><Style id="m"><LineStyle><color>ff'+bgr+'</color><width>3</width></LineStyle><PolyStyle><color>55'+bgr+'</color></PolyStyle></Style><Placemark><name>'+esc(m.name)+'</name><description>'+esc(de)+'</description><styleUrl>#m</styleUrl>'+
     (m.kind==='area'?'<Polygon><outerBoundaryIs><LinearRing><coordinates>'+co+'</coordinates></LinearRing></outerBoundaryIs></Polygon>':'<LineString><coordinates>'+co+'</coordinates></LineString>')+'</Placemark></Document></kml>';
 }
@@ -4749,13 +4749,13 @@ function renderMed(){
   var el=$('#medbar'), cr=$('#medcross'); if(cr)cr.hidden=!(med.on&&!med.view&&med.cross);
   if(!med.on){el.hidden=true;el.innerHTML='';return}
   var s=medStats(), n=med.pts.length, area=med.kind==='area';
-  var big=area?'<span class="mbig">'+nf(s.area/1e4,4)+' ha</span><span class="small">'+nf(s.area,0)+' m² · Perímetro '+fmtLen(s.per)+'</span>':'<span class="mbig">'+fmtLen(s.len)+'</span><span class="small">'+(n-1)+(n===2?' tramo':' tramos')+'</span>';
+  var big=area?'<span class="mbig">'+nf(s.area/1e4,2)+' ha</span><span class="small">'+nf(s.area,0)+' m² · Perímetro '+fmtLen(s.per)+'</span>':'<span class="mbig">'+fmtLen(s.len)+'</span><span class="small">'+(n-1)+(n===2?' tramo':' tramos')+'</span>';
   var warn=area&&medCrosses(med.pts)?'<div class="small mwarn">⚠ Los lados se cruzan: así la superficie no sale bien. Mueve los puntos para que no se crucen.</div>':'';
   if(med.view){
     var rc=medRec()||{};
     var hv='<div class="chd"><div><div class="ref" style="font-family:var(--sans)"><i class="mdot" style="background:'+medCol()+'"></i>'+esc(med.name)+'</div><div class="sub">Medición guardada'+(rc.t?' · '+medDate(rc.t):'')+'</div></div><button class="x" data-act="med-close" aria-label="Cerrar">×</button></div>';
     hv+='<div class="mrow">'+big+'</div>'+warn;
-    hv+='<div class="acts" style="margin-top:10px"><button class="btn sm primary" data-act="med-edit">Editar</button><button class="btn sm" data-act="med-dup">Duplicar</button><button class="btn sm" data-act="med-copy">Copiar</button><button class="btn sm" data-act="med-kml">KML</button>'+(med.id?pfBtn('med',med.id):'')+'</div>';
+    hv+='<div class="acts" style="margin-top:10px"><button class="btn sm primary" data-act="med-edit">Editar</button><button class="btn sm" data-act="med-dup">Duplicar</button><button class="btn sm" data-act="med-copy">Copiar</button><button class="btn sm" data-act="med-kml">KML</button>'+(med.id?pfBtn('med',med.id):'')+(med.id?'<button class="btn sm danger'+(delArm==='med:'+med.id?' armed':'')+'" data-act="med-del" data-id="'+med.id+'">'+(delArm==='med:'+med.id?'Pulsa otra vez para borrarla':'Borrar')+'</button>':'')+'</div>';
     hv+='<div class="mcols"><span class="small">Color</span>'+MEDC.map(function(c,i){return '<button class="mcol'+(medCol()===c?' on':'')+'" data-act="med-col" data-v="'+c+'" style="background:'+c+'" aria-label="'+MEDCN[i]+'" title="'+MEDCN[i]+'"></button>'}).join('')+'</div>';
     hv+=(med.id?gPickHTML('med',med.id)+pfShared(pfItem('med',med.id)||{},'Esta medición'):'');
     if(med.open.nota===undefined&&med.nota)med.open.nota=true;
@@ -4851,7 +4851,7 @@ function medListHTML(){
   if(medSort==='nombre')L2.sort(function(a,b){return String(a.name).localeCompare(String(b.name),'es',{numeric:true})});else L2.sort(function(a,b){return b.t-a.t});
   L2.forEach(function(m){
     var a=delArm==='med:'+m.id;
-    ents.push({it:m,html:'<div class="grow"><button class="rrow" data-act="med-go" data-id="'+m.id+'"><span class="rr"><i class="mdot" style="background:'+(m.col||MEDC[0])+'"></i>'+esc(m.name)+'</span><span class="rh">'+(m.kind==='area'?nf(m.val/1e4,4)+' ha':fmtLen(m.val))+'</span><span class="rc">'+(m.kind==='area'?'Superficie · perímetro '+fmtLen(m.per||0):'Distancia')+' · '+m.pts.length+' puntos'+(m.t?' · '+medDate(m.t):'')+(m.nota?'<br>'+esc(m.nota.length>70?m.nota.slice(0,70)+'…':m.nota):'')+'</span></button><button class="btn sm danger'+(a?' armed':'')+'" data-act="med-rm" data-id="'+m.id+'">'+(a?'¿Seguro?':'Borrar')+'</button></div>'});
+    ents.push({it:m,html:'<div class="grow"><button class="rrow" data-act="med-go" data-id="'+m.id+'"><span class="rr"><i class="mdot" style="background:'+(m.col||MEDC[0])+'"></i>'+esc(m.name)+'</span><span class="rh">'+(m.kind==='area'?nf(m.val/1e4,2)+' ha':fmtLen(m.val))+'</span><span class="rc">'+(m.kind==='area'?'Superficie · perímetro '+fmtLen(m.per||0):'Distancia')+' · '+m.pts.length+' puntos'+(m.t?' · '+medDate(m.t):'')+(m.nota?'<br>'+esc(m.nota.length>70?m.nota.slice(0,70)+'…':m.nota):'')+'</span></button><button class="btn sm danger'+(a?' armed':'')+'" data-act="med-rm" data-id="'+m.id+'">'+(a?'¿Seguro?':'Borrar')+'</button></div>'});
   });
   return h+ggBlock('med',ents);
 }
@@ -4888,7 +4888,7 @@ function ggTot(k,items){
   if(k==='fav')return n+(n===1?' favorito':' favoritos')+' · '+ha2(items.reduce(function(a,f){return a+haC(S.recintos[f.ref]||f)},0))+' ha';
   if(k==='tag')return n+(n===1?' etiqueta':' etiquetas');
   var ar=items.filter(function(m){return m.kind==='area'}), di=items.filter(function(m){return m.kind!=='area'}), pt=[];
-  if(ar.length)pt.push(ar.length+(ar.length===1?' superficie':' superficies')+' · '+nf(ar.reduce(function(a,m){return a+m.val},0)/1e4,4)+' ha');
+  if(ar.length)pt.push(ar.length+(ar.length===1?' superficie':' superficies')+' · '+nf(ar.reduce(function(a,m){return a+m.val},0)/1e4,2)+' ha');
   if(di.length)pt.push(di.length+(di.length===1?' distancia':' distancias')+' · '+fmtLen(di.reduce(function(a,m){return a+m.val},0)));
   return pt.join(' · ')||'Vacío';
 }
@@ -15972,7 +15972,7 @@ function drawMedAll(){
       var sd0=medSides(m.pts,false), k=0; sd0.forEach(function(s,i){if(s.len>sd0[k].len)k=i});
       var A=m.pts[k],B=m.pts[k+1]; cen=[(A[1]+B[1])/2,(A[0]+B[0])/2];
     }
-    var val=area?nf(m.val/1e4,4)+' ha':fmtLen(m.val);
+    var val=area?nf(m.val/1e4,2)+' ha':fmtLen(m.val);
     mains.push({m:m,cen:cen,val:val,col:col});
     if(z>=17){var sd=medSides(m.pts,area);if(!(!area&&sd.length<2))sd.forEach(function(s){sides.push({A:m.pts[s.i],B:m.pts[(s.i+1)%m.pts.length],txt:fmtLen(s.len),col:col})})}
   });
@@ -16817,6 +16817,7 @@ document.addEventListener('click',function(ev){
     case 'med-save-ok':medSave(($('#medname')||{}).value);break;
     case 'med-go':medGo(id);break;
     case 'med-rm':{var mdx=pfItem('med',id);if(mdx&&pfOf(mdx).length>1){pfAsk('med',id);break}if(delArm==='med:'+id){delMedAll(id)}else{arm('med:'+id);renderGuardados()}break}
+    case 'med-del':{var mdd=pfItem('med',id);if(mdd&&pfOf(mdd).length>1){pfAsk('med',id);break}if(delArm==='med:'+id){delMedAll(id);toast('Medición borrada')}else{arm('med:'+id);renderMed();setTimeout(function(){if(med.on&&med.view&&med.id===id)renderMed()},4600)}break}
     case 'fav-open-new':favOpen=true;renderCard();{var fi0=$('#favnew');if(fi0){fi0.focus();fi0.select()}}break;
     case 'fav-save':{var fi=$('#favnew');favAdd(fi?fi.value:'');break}
     case 'fav-del':if(sel&&S.x.favs[sel.ref]){if(pfOf(S.x.favs[sel.ref]).length>1){pfAsk('fav',sel.ref);break}delFavAll(sel.ref);toast('Quitado de Favoritos')}break;
