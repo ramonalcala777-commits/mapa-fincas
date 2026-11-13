@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-Sf3RmJGfa5V1R7FTfeI74Lf+AHsGMwcdWNmyBYzlWAU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-M1YX+TP4Yg9ExNqFR4Oscq42UEdcDE8Qecw2iynSkfM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
@@ -3218,7 +3218,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-13T19:41:29Z',n:'Entrega 148 · 13 nov · 20:41'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-13T20:06:13Z',n:'Entrega 149 · 13 nov · 21:06'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -3738,7 +3738,7 @@ function txtW(t,fs){
 }
 function flabelOcc(){
   var occ=[], cont=map.getContainer(), cr=cont.getBoundingClientRect();
-  [].forEach.call(cont.querySelectorAll('.fl:not(.dim) .flabel'),function(e){var q=e.getBoundingClientRect(); if(q.width)occ.push([q.left-cr.left-3,q.top-cr.top-3,q.right-cr.left+3,q.bottom-cr.top+3])});
+  [].forEach.call(cont.querySelectorAll('.fl:not(.dim) .flabel,.mlab,.mside,.tg svg,.tg .tgn'),function(e){var q=e.getBoundingClientRect(); if(q.width)occ.push([q.left-cr.left-3,q.top-cr.top-3,q.right-cr.left+3,q.bottom-cr.top+3])});
   return occ;
 }
 /* busca el texto y tamaño mayores que caben dentro del recinto y sin pisar nada ya colocado */
@@ -15957,29 +15957,67 @@ function medPole(pts){
 }
 var MCTX=null;
 function medTW(t,f,k){try{MCTX=MCTX||document.createElement('canvas').getContext('2d');if(MCTX){MCTX.font=f;var w=MCTX.measureText(t).width;if(w>0)return w}}catch(e){}return t.length*k}
+/* Entrega 149: las etiquetas de las mediciones buscan un sitio libre dentro de su forma (o a lo largo de su línea)
+   sin pisar los nombres de las fincas, las etiquetas de los recintos ni las etiquetas puestas en el mapa;
+   y esas etiquetas se apartan a su vez de las de las mediciones */
+function medObst(){
+  var o=[], cont=map.getContainer(), cr=cont.getBoundingClientRect();
+  [].forEach.call(cont.querySelectorAll('.fl:not(.dim):not(.dot):not(.flgone) .flabel,.cl .clabel,.tg svg,.tg .tgn'),function(e){var q=e.getBoundingClientRect();if(q.width)o.push({x0:q.left-cr.left,y0:q.top-cr.top,x1:q.right-cr.left,y1:q.bottom-cr.top})});
+  return o;
+}
+var MCAND={};
+function medCands(m,area){
+  var key=m.id+'|'+(area?'a':'d')+'|'+m.pts.map(function(p){return p[0].toFixed(7)+','+p[1].toFixed(7)}).join(';');
+  if(MCAND[key])return MCAND[key];
+  var out=[];
+  if(area){
+    var pts=m.pts, o=pts[0], P=pts.map(function(c){return mXY(c,o)}), x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;
+    P.forEach(function(p){x0=Math.min(x0,p[0]);y0=Math.min(y0,p[1]);x1=Math.max(x1,p[0]);y1=Math.max(y1,p[1])});
+    var inside=function(q){var c=false;for(var i=0,j=P.length-1;i<P.length;j=i++){var a=P[i],b=P[j];if((a[1]>q[1])!==(b[1]>q[1])&&q[0]<(b[0]-a[0])*(q[1]-a[1])/(b[1]-a[1])+a[0])c=!c}return c};
+    var dist=function(q){var mm=Infinity;for(var i=0;i<P.length;i++){var a=P[i],b=P[(i+1)%P.length],dx=b[0]-a[0],dy=b[1]-a[1],L2=dx*dx+dy*dy,t=L2?((q[0]-a[0])*dx+(q[1]-a[1])*dy)/L2:0;t=Math.max(0,Math.min(1,t));mm=Math.min(mm,Math.hypot(q[0]-(a[0]+t*dx),q[1]-(a[1]+t*dy)))}return mm};
+    var N=24, sw=(x1-x0)||1, sh=(y1-y0)||1, g=[];
+    var gx=0,gy=0; P.forEach(function(p){gx+=p[0];gy+=p[1]}); gx/=P.length; gy/=P.length;
+    for(var i=0;i<N;i++)for(var j=0;j<N;j++){var q=[x0+(i+.5)/N*sw,y0+(j+.5)/N*sh];if(inside(q))g.push({q:q,d:dist(q),s:dist(q)-0.04*Math.hypot(q[0]-gx,q[1]-gy)})}
+    var dm=g.reduce(function(a,b){return Math.max(a,b.d)},0);
+    g=g.filter(function(c){return c.d>=dm*.35}).sort(function(a,b){return b.s-a.s});
+    var pc=medPole(pts); out.push(pc);
+    var sp=Math.max(sw,sh)/12, kept=[];
+    g.forEach(function(c){if(kept.length>=60)return;if(kept.some(function(k){return Math.hypot(k[0]-c.q[0],k[1]-c.q[1])<sp}))return;kept.push(c.q);out.push(mLL(c.q,o))});
+  }else{
+    var sd=medSides(m.pts,false).slice().sort(function(a,b){return b.len-a.len});
+    sd.forEach(function(s){var A=m.pts[s.i],B=m.pts[s.i+1];[.5,.32,.68,.18,.82].forEach(function(f){out.push([A[0]+(B[0]-A[0])*f,A[1]+(B[1]-A[1])*f])})});
+  }
+  MCAND[key]=out; return out;
+}
 function drawMedAll(){
   medAll.clearLayers(); if(!OV.med)return;
-  var z=map.getZoom(), boxes=[], drawing=med.on&&!med.view, mains=[], sides=[];
-  var free=function(x,y,w,h,g){var b={x0:x-w/2,y0:y-h/2,x1:x+w/2,y1:y+h/2};for(var i=0;i<boxes.length;i++){var o=boxes[i];if(b.x0<o.x1+g&&b.x1+g>o.x0&&b.y0<o.y1+g&&b.y1+g>o.y0)return false}boxes.push(b);return true};
+  var z=map.getZoom(), boxes=[], drawing=med.on&&!med.view, mains=[], sides=[], obs=medObst();
+  var hit=function(L0,b,g){for(var i=0;i<L0.length;i++){var o=L0[i];if(b.x0<o.x1+g&&b.x1+g>o.x0&&b.y0<o.y1+g&&b.y1+g>o.y0)return true}return false};
   MEDS().slice().sort(function(a,b){return (b.t||0)-(a.t||0)}).forEach(function(m){
     if(med.on&&med.id===m.id)return;
     if(!itemShown('med',m))return;
     var ll=m.pts.map(function(c){return [c[1],c[0]]}); if(ll.length<2)return;
-    var col=m.col||MEDC[0], st={renderer:canvasTop,color:col,weight:3,interactive:false}, cen, area=m.kind==='area'&&ll.length>2;
-    if(area){medAll.addLayer(L.polygon(ll,Object.assign({fillColor:col,fillOpacity:.2},st)));var pc=medPole(m.pts);cen=[pc[1],pc[0]]}
-    else{
-      medAll.addLayer(L.polyline(ll,st)); if(z>=15)medTicks(medAll,m.pts,col);
-      var sd0=medSides(m.pts,false), k=0; sd0.forEach(function(s,i){if(s.len>sd0[k].len)k=i});
-      var A=m.pts[k],B=m.pts[k+1]; cen=[(A[1]+B[1])/2,(A[0]+B[0])/2];
-    }
+    var col=m.col||MEDC[0], st={renderer:canvasTop,color:col,weight:3,interactive:false}, area=m.kind==='area'&&ll.length>2;
+    if(area)medAll.addLayer(L.polygon(ll,Object.assign({fillColor:col,fillOpacity:.2},st)));
+    else{medAll.addLayer(L.polyline(ll,st)); if(z>=15)medTicks(medAll,m.pts,col)}
     var val=area?nf(m.val/1e4,2)+' ha':fmtLen(m.val);
-    mains.push({m:m,cen:cen,val:val,col:col});
+    mains.push({m:m,cands:medCands(m,area),val:val,col:col});
     if(z>=17){var sd=medSides(m.pts,area);if(!(!area&&sd.length<2))sd.forEach(function(s){sides.push({A:m.pts[s.i],B:m.pts[(s.i+1)%m.pts.length],txt:fmtLen(s.len),col:col})})}
   });
   mains.forEach(function(o){
-    var q=map.latLngToContainerPoint(o.cen), two=z>=14, w=Math.max(two?medTW(o.m.name,"600 12px Barlow,sans-serif",6.4):0,medTW(o.val,"800 15px 'Barlow Semi Condensed',Barlow,sans-serif",8))+24, h=two?40:24;
-    if(!free(q.x,q.y,w,h,3))return;
-    var mk=L.marker(o.cen,{icon:L.divIcon({className:'mlw',html:'<div class="mlab'+(two?'':' v1')+(drawing?' dim':' on')+'" style="--mc:'+o.col+'">'+(two?'<b>'+esc(o.m.name)+'</b>':'')+'<span>'+o.val+'</span></div>',iconSize:[0,0]}),interactive:!drawing,keyboard:false,title:o.m.name});
+    var two=z>=14, w=Math.max(two?medTW(o.m.name,"600 12px Barlow,sans-serif",6.4):0,medTW(o.val,"800 15px 'Barlow Semi Condensed',Barlow,sans-serif",8))+24, h=two?40:24, pick=null, pb=null, alt=null, ab=null;
+    for(var i=0;i<o.cands.length;i++){
+      var c=o.cands[i], q=map.latLngToContainerPoint([c[1],c[0]]), b={x0:q.x-w/2,y0:q.y-h/2,x1:q.x+w/2,y1:q.y+h/2};
+      if(hit(boxes,b,3))continue;
+      if(!alt){alt=c;ab=b}
+      if(hit(obs,b,3))continue;
+      pick=c;pb=b;break;
+    }
+    if(!pick){pick=alt;pb=ab}
+    if(!pick)return;
+    boxes.push(pb);
+    var cen=[pick[1],pick[0]];
+    var mk=L.marker(cen,{icon:L.divIcon({className:'mlw',html:'<div class="mlab'+(two?'':' v1')+(drawing?' dim':' on')+'" style="--mc:'+o.col+'">'+(two?'<b>'+esc(o.m.name)+'</b>':'')+'<span>'+o.val+'</span></div>',iconSize:[0,0]}),interactive:!drawing,keyboard:false,title:o.m.name});
     if(!drawing)mk.on('click',function(){medGo(o.m.id)});
     medAll.addLayer(mk);
   });
@@ -15987,8 +16025,14 @@ function drawMedAll(){
     var a=map.latLngToContainerPoint([s.A[1],s.A[0]]), b=map.latLngToContainerPoint([s.B[1],s.B[0]]), px=Math.hypot(b.x-a.x,b.y-a.y), w=medTW(s.txt,"700 11.5px 'Barlow Semi Condensed',Barlow,sans-serif",6)+14;
     if(px<w+12)return;
     var ang=Math.atan2(b.y-a.y,b.x-a.x), W=Math.abs(w*Math.cos(ang))+Math.abs(17*Math.sin(ang)), H=Math.abs(w*Math.sin(ang))+Math.abs(17*Math.cos(ang));
-    if(!free((a.x+b.x)/2,(a.y+b.y)/2,W,H,0))return;
-    var mk=medSideLbl(s.A,s.B,s.txt,s.col,0); if(mk)medAll.addLayer(mk);
+    /* el largo va en el centro del lado; si ahí pisa otra etiqueta, se corre a lo largo del lado */
+    var fs=px>w*2.2?[.5,.36,.64,.24,.76]:[.5], fp=null, fb=null, fa=null, fab=null;
+    for(var i=0;i<fs.length;i++){var x=a.x+(b.x-a.x)*fs[i], y=a.y+(b.y-a.y)*fs[i], bx={x0:x-W/2,y0:y-H/2,x1:x+W/2,y1:y+H/2};
+      if(hit(boxes,bx,0))continue; if(fa===null){fa=fs[i];fab=bx} if(hit(obs,bx,2))continue; fp=fs[i];fb=bx;break}
+    if(fp===null){fp=fa;fb=fab} if(fp===null)return;
+    boxes.push(fb);
+    var d=.002, A2=[s.A[0]+(s.B[0]-s.A[0])*(fp-d),s.A[1]+(s.B[1]-s.A[1])*(fp-d)], B2=[s.A[0]+(s.B[0]-s.A[0])*(fp+d),s.A[1]+(s.B[1]-s.A[1])*(fp+d)];
+    var mk=medSideLbl(A2,B2,s.txt,s.col,0); if(mk)medAll.addLayer(mk);
   });
 }
 function finOn(){if(OV.fin)return;OV.fin=true;lsSet(KEYO,JSON.stringify(OV));redrawTiles();drawSaved()}
@@ -17497,7 +17541,7 @@ function flDeclutter(){
     var els=[].slice.call(cont.querySelectorAll('.fl:not(.dim)')); els.forEach(function(e){e.classList.remove('dot');e.classList.remove('flgone')});
     var it=els.map(function(e){var s=e.querySelector('.flabel'),q=s?s.getBoundingClientRect():null;return {e:e,q:q,ha:s?+(s.getAttribute('data-ha')||0):0}}).filter(function(o){return o.q&&o.q.width>0});
     it.sort(function(a,b){return b.ha-a.ha});
-    var kept=[]; it.forEach(function(o){var q=o.q,hit=kept.some(function(k){return !(q.right+2<k.left||q.left-2>k.right||q.bottom+2<k.top||q.top-2>k.bottom)});if(hit)o.e.classList.add('dot');else kept.push(q)});
+    var kept=[].map.call(cont.querySelectorAll('.mlab'),function(e){return e.getBoundingClientRect()}).filter(function(q){return q.width>0}); it.forEach(function(o){var q=o.q,hit=kept.some(function(k){return !(q.right+2<k.left||q.left-2>k.right||q.bottom+2<k.top||q.top-2>k.bottom)});if(hit)o.e.classList.add('dot');else kept.push(q)});
     /* Entrega 144: el punto que queda encima del rótulo de otra finca tapa las cifras; ese punto no se pinta */
     els.forEach(function(e){if(!e.classList.contains('dot'))return;var s=e.querySelector('.flabel'),q=s&&s.getBoundingClientRect();if(q&&kept.some(function(k){return !(q.right<k.left-3||q.left>k.right+3||q.bottom<k.top-3||q.top>k.bottom+3)}))e.classList.add('flgone')});
   }catch(e){}
