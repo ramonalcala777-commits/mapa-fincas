@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-wGWCv0lzaebO6A4d1ArjgWyOIpv3iSjJnS0pgh4k8OY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-JwHv3Qt2KO5Gorcq3QcKRJgGdIhxyCYQ3tXHdMxRUxg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
@@ -1740,6 +1740,7 @@ body.radon #verbtn{transform:translateY(calc(-1 * var(--radh,0px)))}
 .aclres{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:15px}
 .aclf .rc .aclc{margin-right:6px}
 .aclsimw{position:fixed;inset:0;z-index:2100}
+#dlsheet{z-index:2300} .aclw{color:var(--warn,#b07a12);font-weight:600}
 .aclsim{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg)}
 .aclsimh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:calc(env(safe-area-inset-top) + 8px) calc(env(safe-area-inset-right) + 12px) 8px calc(env(safe-area-inset-left) + 12px);background:var(--surface);border-bottom:1px solid var(--line)}
 .aclsimt{display:flex;flex-direction:column;min-width:0;line-height:1.25}.aclsimt span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -3180,7 +3181,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-12T00:46:43Z',n:'Entrega 144 · 12 nov · 01:46'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-13T05:57:08Z',n:'Entrega 145 · 13 nov · 06:57'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -5165,6 +5166,7 @@ function aclKey(){return (window.AptitudCore&&window.AptitudCore.PARAMS_KEY)||AC
 function aclPar(){try{return localStorage.getItem(aclKey())||''}catch(e){return ''}}
 /* los parámetros del simulador, como los monta él: los de fábrica y encima los cambiados */
 function aclCfg(){
+  if(window.AptitudCore&&window.AptitudCore.config){try{return window.AptitudCore.config()}catch(e){return undefined}}
   var s=aclPar(); if(!s||!window.CONFIG)return undefined;
   try{return Object.assign(JSON.parse(JSON.stringify(window.CONFIG)),JSON.parse(s))}catch(e){return undefined}
 }
@@ -5175,7 +5177,12 @@ function aclPk(){
   var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return 'p'+(h>>>0).toString(36);
 }
 /* el resultado guardado es de otros datos o de otro cálculo del simulador */
-function aclViejo(a){var k=aclPk();return !!a&&((ACL.dv&&a.dv&&ACL.dv!==a.dv)||(k!==null&&(a.pk||'')!==k))}
+function aclViejo(a,r){var k=aclPk();return !!a&&((ACL.dv&&a.dv&&ACL.dv!==a.dv)||(k!==null&&(a.pk||'')!==k)||(!!r&&(a.rg||'r')!==aclRg(r)))}
+/* Entrega 145: la cosecha del pistacho se calcula para regadío o para secano, según el recinto */
+function aclRg(r){return r&&r.riego==='secano'?'s':'r'}
+/* Entrega 145: sin relieve (el IGN no contestó) el resultado vale de momento, pero queda pendiente de recalcular */
+function aclSinRel(a){return !!a&&!a.rel}
+function aclPend(a,r){return aclViejo(a,r)||aclSinRel(a)}
 /* con un resultado guardado a la vista, carga el núcleo (sin calcular) para saber si está al día */
 function aclMira(ref){
   if(window.CONFIG||ACL.ld||ACL.mira||navigator.onLine===false)return; ACL.mira=1;
@@ -5199,36 +5206,45 @@ function aclReady(){
 /* ---- del resultado del simulador a lo que se guarda ---- */
 function aclMot(x){var l=((x.vd&&x.vd.ex)||[]).concat((x.vd&&x.vd.co)||[]).map(function(c){return c.nombre});return l.join(' · ')}
 function aclHel(x){var h=x.heladas||{},a=h.todo||{},b=h.ultimos10||{};return [a.n||0,a.dano||0,a.grave||0,b.n||0,b.dano||0,b.grave||0]}
-function aclSum(R){
+function aclSum(R,rg){
   var fem=function(l){return (l||[]).filter(function(x){return !x.male}).map(function(x){
     return {n:x.nm,c:x.cls,r:x.clsR||'',m:aclMot(x),h:aclHel(x),l:x.ml==null?null:Math.round(x.ml),f:x.mb==null?null:Math.round(x.mb)};
   }).sort(function(a,b){return (ACL_RANK[a.c]-ACL_RANK[b.c])||((a.l==null?999:a.l)-(b.l==null?999:b.l))})};
   var rl=R.relieve, ca=R.campañas||{};
   return {f:Date.now(),dv:(window.AptitudCore&&window.AptitudCore.DATA_V)||'',d:[ca.desde,ca.hasta],u:ca.ultimos10||[],
     rel:rl&&rl.delta!=null?{c:rl.clase||'',d:Math.round(rl.delta*10)/10,dl:rl.deltaLow!=null?Math.round(rl.deltaLow*10)/10:null}:null,
-    p:fem(R.pistacho),a:fem(R.almendro),pk:aclPk()||''};
+    p:fem(R.pistacho),a:fem(R.almendro),pk:aclPk()||'',rg:rg||'r',e:aclEst(R)};
+}
+/* Entrega 145: la estación SIAR más cercana (humedad, lluvia y viento) y su distancia */
+function aclEst(R){var l=(R&&R.celda&&R.celda.estaciones)||[], b=null; l.forEach(function(s){if(s&&(!b||s[2]<b[2]))b=s}); return b?[String(b[1]||''),Math.round(b[2])]:null
 }
 /* ---- textos ---- */
 function aclSign(v){return (v>=0?'+':'−')+nf(Math.abs(v),1)}
 function aclRelTxt(rel){
   if(!rel)return 'sin corrección por relieve (el IGN no contestó)';
-  return 'relieve: '+esc(rel.c||'—')+', noches de helada '+aclSign(rel.d)+' °C respecto a la zona'+(rel.dl!=null&&rel.dl<rel.d-0.3?' (la parte más baja del recinto, '+aclSign(rel.dl)+' °C)':'');
+  /* Entrega 145: el nombre sale del efecto (antes «zona alta» podía ser más fría) */
+  var ef=window.AptitudCore&&window.AptitudCore.reliefEffect?window.AptitudCore.reliefEffect(rel.d):(rel.d<=-1?'más frío que la zona':rel.d<=-0.3?'algo más frío que la zona':rel.d<0.3?'como la zona':rel.d<1?'algo más templado que la zona':'más templado que la zona');
+  return 'relieve: '+esc(ef)+', noches de helada '+aclSign(rel.d)+' °C respecto a la zona'+(rel.dl!=null&&rel.dl<rel.d-0.3?' (la parte más baja del recinto, '+aclSign(rel.dl)+' °C)':'');
 }
 function aclSpOf(r){var c=norm((r&&r.cultivo)||'');return /almendr/.test(c)?'a':/pistach/.test(c)?'p':''}
 function aclVarKey(s){return norm(String(s||'').replace(/\(.*?\)/g,' ')).replace(/[^a-z0-9]+/g,' ').trim()}
 /* la variedad del recinto entre las del simulador (solo si el cultivo es pistacho o almendro) */
 function aclMine(r,list){
-  var v=aclVarKey(varReal(r)); if(!v||!list)return null;
-  var hit=null; list.forEach(function(x){var k=aclVarKey(x.n||x.nm);if(!hit&&k&&(v===k||(' '+v+' ').indexOf(' '+k+' ')>=0))hit=x});
+  var v=aclVarKey(varReal(r)).replace(/\bgoldens\b/g,'golden'); if(!v||!list)return null;
+  /* Entrega 145: también por el nombre entre paréntesis (Lauranne (Avijor) = Avijor) */
+  var keys=function(n){var s=String(n||''), o=[aclVarKey(s)], m=s.match(/\(([^)]*)\)/); if(m)o.push(aclVarKey(m[1])); return o.filter(Boolean)};
+  var hit=null; list.forEach(function(x){keys(x.n||x.nm).forEach(function(k){if(!hit&&(v===k||(' '+v+' ').indexOf(' '+k+' ')>=0))hit=x})});
   return hit;
 }
+/* Entrega 145: lo que pone el recinto y el simulador no tiene: variedad desconocida o cultivo que no es pistacho ni almendro */
+function aclNoVar(r,a){var sp=aclSpOf(r), v=varReal(r); return sp&&v&&a&&a[sp]&&!aclMine(r,a[sp])?v:''}
 function aclOk(l){return (l||[]).filter(function(x){return x.c==='ok'}).length}
 /* título corto: la variedad del recinto o cuántas salen aptas */
 function aclShort(r,a){
   var sp=aclSpOf(r), l=sp?a[sp]:null, m=l?aclMine(r,l):null;
   if(m)return m.n+': '+ACL_LBL2[m.c];
-  var p='pistacho '+aclOk(a.p)+' de '+a.p.length+' aptas', q='almendro '+aclOk(a.a)+' de '+a.a.length;
-  return sp==='a'?'almendro '+aclOk(a.a)+' de '+a.a.length+' aptas':sp==='p'?p:p+' · '+q;
+  var p='pistacho '+aclOk(a.p)+' de '+a.p.length+' aptas', q='almendro '+aclOk(a.a)+' de '+a.a.length, nv=aclNoVar(r,a);
+  return (nv?'«'+nv+'» no está en el simulador · ':'')+(sp==='a'?'almendro '+aclOk(a.a)+' de '+a.a.length+' aptas':sp==='p'?p:p+' · '+q);
 }
 function aclFecha(t){var d=new Date(t);return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear()}
 function aclChip(c){return '<span class="aclc acl-'+c+'">'+ACL_LBL[c]+'</span>'}
@@ -5240,9 +5256,15 @@ function aclHTML(ref){
   if(a){
     var sp=aclSpOf(r), m=sp?aclMine(r,a[sp]):null;
     o+='<div class="aclres">'+(m?aclChip(m.c)+'<b>'+esc(m.n)+': '+ACL_LBL2[m.c]+'</b>':'<b>'+esc(aclShort(r,a))+'</b>')+'</div>';
-    o+='<p class="small" style="margin-top:6px">Calculado el '+aclFecha(a.f)+' · campañas '+esc(a.d[0])+'–'+esc(a.d[1])+' · '+aclRelTxt(a.rel)+'.'+(r?'':' No se guarda: el recinto no está en ninguna finca.')+'</p>';
-    if(aclViejo(a)&&!busy)o+='<div class="note">Hay datos nuevos del simulador.<div class="acts"><button class="btn sm primary" data-act="acl-calc" data-ref="'+esc(ref)+'">Recalcular</button></div></div>';
-  }else o+='<p class="small" style="margin-top:8px">Abre el simulador de aptitud climática con este recinto: veredicto de cada variedad de pistacho y de almendro, heladas, criterios, año a año y machos, con 31 campañas y el relieve de la parcela. El resultado se guarda en el recinto. Necesita conexión.</p>';
+    /* Entrega 145: el motivo y los años con los que sale el veredicto */
+    var u=a.u&&a.u.length===2?a.u:null, nv=aclNoVar(r,a);
+    if(m)o+='<p class="small" style="margin-top:6px"><b>'+(m.c==='ok'?'Sin limitaciones climáticas':'Motivo: '+esc(m.m||'—'))+'</b>'+(u?' · veredicto con los últimos 10 años ('+esc(u[0])+'–'+esc(u[1])+')':'')+(m.h&&m.h[3]?' · heladas graves en '+m.h[5]+' de '+m.h[3]+' años recientes':'')+'.</p>';
+    else if(nv)o+='<p class="small" style="margin-top:6px">La variedad «'+esc(nv)+'» no está en el simulador: se dice cuántas variedades salen aptas. Ábrelo para ver cada una.</p>';
+    else if(r&&!aclSpOf(r)&&r.cultivo)o+='<p class="small" style="margin-top:6px">El cultivo del recinto ('+esc(r.cultivo)+') no es pistacho ni almendro: se enseñan las dos especies.</p>';
+    o+='<p class="small" style="margin-top:6px">Calculado el '+aclFecha(a.f)+' · campañas '+esc(a.d[0])+'–'+esc(a.d[1])+' · '+aclRelTxt(a.rel)+((sp!=='a')?' · cosecha del pistacho para '+((a.rg||'r')==='s'?'secano':'regadío'):'')+(a.e?' · humedad, lluvia y viento de la estación SIAR de '+esc(a.e[0])+' ('+nf(a.e[1],0)+' km)':'')+'.'+(r?'':' No se guarda: el recinto no está en ninguna finca.')+'</p>';
+    if(aclSinRel(a)&&!busy)o+='<div class="note warn">Calculado <b>sin el relieve</b> porque el IGN no contestó: el veredicto puede cambiar. Se recalcula solo al abrir el simulador, o ahora:<div class="acts"><button class="btn sm primary" data-act="acl-calc" data-ref="'+esc(ref)+'">Recalcular</button></div></div>';
+    else if(aclViejo(a,r)&&!busy)o+='<div class="note">'+(r&&(a.rg||'r')!==aclRg(r)?'Ha cambiado el riego del recinto.':'Hay datos nuevos del simulador.')+'<div class="acts"><button class="btn sm primary" data-act="acl-calc" data-ref="'+esc(ref)+'">Recalcular</button></div></div>';
+  }else o+='<p class="small" style="margin-top:8px">Abre el simulador de aptitud climática con este recinto: veredicto de cada variedad de pistacho y de almendro, heladas, criterios, año a año y machos, con todas las campañas de datos y el relieve de la parcela. El resultado se guarda en el recinto; el informe PDF del simulador se hace en el momento y no se guarda. Necesita conexión.</p>';
   if(a&&secOpen.acl&&!busy)aclMira(ref);
   if(busy)o+='<p class="small" style="margin-top:6px" id="acl-st">'+esc(ACL.st[ref]||'Cargando el simulador…')+'</p>';
   if(err&&!busy)o+='<div class="note">'+esc(err)+'<div class="acts"><button class="btn sm" data-act="acl-calc" data-ref="'+esc(ref)+'">Reintentar</button></div></div>';
@@ -5267,9 +5289,9 @@ function aclCalc(ref,quiet){
   ACL.busy[ref]=true; delete ACL.err[ref]; ACL.st[ref]='Cargando el simulador…'; if(!quiet)aclRe(ref);
   var stF=function(t){ACL.st[ref]=t;var e=$('#acl-st');if(e&&sel&&sel.ref===ref)e.textContent=t};
   return aclReady().then(function(C){
-    return (C.ready?C.ready():Promise.resolve()).then(function(){return C.evaluar({type:'Feature',properties:{},geometry:g},{onStatus:stF,config:aclCfg()})});
+    return (C.ready?C.ready():Promise.resolve()).then(function(){return C.evaluar({type:'Feature',properties:{},geometry:g},{onStatus:stF,config:aclCfg(),secano:aclRg(r)==='s'})});
   }).then(function(R){
-    var a=aclSum(R), r2=S.recintos[ref];
+    var a=aclSum(R,aclRg(r)), r2=S.recintos[ref];
     if(r2){r2.apt=a;BKQ=Date.now()+1500;save()}else ACL.tmp[ref]=a; /* Entrega 137: no cuenta para el aviso de copia */
     delete ACL.busy[ref]; aclRe(ref); return a;
   },function(e){
@@ -5280,21 +5302,25 @@ function aclCalc(ref,quiet){
 function aclFHTML(id){
   var recs=fincaRecs(id).sort(function(a,b){return a.ref.localeCompare(b.ref,'es',{numeric:true})}); if(!recs.length)return '';
   var n=recs.filter(function(r){return r.apt}).length, run=ACL.run&&ACL.run.id===id?ACL.run:null, falta=recs.length-n;
+  /* Entrega 145: los que se calcularon con datos o parámetros anteriores, con otro riego o sin relieve */
+  var pend=recs.filter(function(r){return r.apt&&aclPend(r.apt,r)}).length; if(n&&secOpen.aclf&&!window.CONFIG)aclMiraF();
   var o='<details class="more" data-sec="aclf"'+(secOpen.aclf?' open':'')+'><summary>Aptitud climática'+(run?' · calculando '+Math.min(run.i+1,run.n)+' de '+run.n:n?' · '+n+' de '+recs.length+' calculados':'')+'</summary>';
   o+='<div class="aclfs">'+recs.map(function(r){
     var a=r.apt, t=a?aclShort(r,a):ACL.busy[r.ref]?'calculando…':ACL.err[r.ref]?'no se pudo calcular':'sin calcular';
-    var m=a?aclMine(r,a[aclSpOf(r)]||null):null;
-    return '<button class="rrow aclf" data-act="aclf-open" data-ref="'+esc(r.ref)+'"><span class="rr">'+esc(refLabel(r.ref))+(r.nombre?' · '+esc(r.nombre):'')+'</span><span class="rc">'+(m?aclChip(m.c):'')+esc(t)+'</span></button>';
+    var m=a?aclMine(r,a[aclSpOf(r)]||null):null, w=a?(aclSinRel(a)?'sin relieve, por recalcular':aclViejo(a,r)?'por recalcular':''):'';
+    return '<button class="rrow aclf" data-act="aclf-open" data-ref="'+esc(r.ref)+'"><span class="rr">'+esc(refLabel(r.ref))+(r.nombre?' · '+esc(r.nombre):'')+'</span><span class="rc">'+(m?aclChip(m.c):'')+esc(t)+(w?' <span class="aclw">· '+w+'</span>':'')+'</span></button>';
   }).join('')+'</div>';
   if(run)o+='<p class="small" style="margin-top:6px">Calculando '+Math.min(run.i+1,run.n)+' de '+run.n+'…</p>';
-  else if(falta)o+='<div class="acts"><button class="btn sm primary" data-act="aclf-calc" data-id="'+id+'">Calcular los que faltan ('+falta+')</button></div>';
-  else o+='<div class="acts"><button class="btn sm" data-act="aclf-calc" data-id="'+id+'" data-v="all">Recalcular todos</button></div>';
+  else o+='<div class="acts">'+(falta?'<button class="btn sm primary" data-act="aclf-calc" data-id="'+id+'">Calcular los que faltan ('+falta+')</button>':'')+(pend?'<button class="btn sm'+(falta?'':' primary')+'" data-act="aclf-calc" data-id="'+id+'" data-v="pend">Recalcular los que han cambiado ('+pend+')</button>':'')+(n?'<button class="btn sm" data-act="aclf-calc" data-id="'+id+'" data-v="all">Recalcular todos</button>':'')+'</div>';
+  if(!run&&pend)o+='<p class="small" style="margin-top:6px">'+pend+(pend===1?' recinto calculado':' recintos calculados')+' con datos anteriores del simulador, con otro riego o sin el relieve: conviene recalcularlos.</p>';
   o+='<p class="small" style="margin-top:6px">Toca un recinto para abrir el simulador con él.</p>';
   return o+'</details>';
 }
+/* Entrega 145: con la lista abierta, carga el núcleo (sin calcular) para saber qué resultados están viejos */
+function aclMiraF(){if(ACL.miraF||ACL.ld||navigator.onLine===false)return; ACL.miraF=1; aclReady().then(function(C){return C.ready?C.ready():null}).then(function(){if(typeof tab!=='undefined'&&tab==='fincas')renderFincas()},function(){})}
 function aclFCalc(id,all){
   if(ACL.run)return;
-  var l=fincaRecs(id).filter(function(r){return all||!r.apt}).sort(function(a,b){return a.ref.localeCompare(b.ref,'es',{numeric:true})}).map(function(r){return r.ref});
+  var l=fincaRecs(id).filter(function(r){return all==='pend'?r.apt&&aclPend(r.apt,r):all||!r.apt}).sort(function(a,b){return a.ref.localeCompare(b.ref,'es',{numeric:true})}).map(function(r){return r.ref});
   if(!l.length)return;
   ACL.run={id:id,i:0,n:l.length,ok:0}; renderFincas();
   var next=function(){
@@ -5310,9 +5336,9 @@ function aclSimOpen(ref){
   var r=S.recintos[ref], fi=r&&finca(r.fincaId), a=aclData(ref);
   ACL.sim={ref:ref,pk:aclPk()};
   el.className='aclsimw'; el.innerHTML='<div class="aclsim" role="dialog" aria-label="Simulador de aptitud climática"><div class="aclsimh"><div class="aclsimt"><b>Simulador de aptitud climática</b><span class="small">'+esc((fi?fi.nombre+' · ':'')+refLabel(ref))+'</span></div>'+
-    '<button class="btn sm" data-act="acl-sim-close">✕ Cerrar</button></div><div class="aclload" id="acl-load">Cargando el simulador… tarda unos segundos (calcula '+(aclSpOf(r)==='a'?'el almendro':'el pistacho')+' de este recinto).</div><iframe class="aclsimf" title="Simulador de aptitud climática" src="'+ACL_SIM+'?r='+encodeURIComponent(ref)+'"></iframe></div>';
+    '<button class="btn sm" data-act="acl-sim-close">✕ Cerrar</button></div><div class="aclload" id="acl-load">Cargando el simulador… tarda unos segundos (calcula '+(aclSpOf(r)==='a'?'el almendro':'el pistacho')+' de este recinto).</div><iframe class="aclsimf" title="Simulador de aptitud climática" src="'+ACL_SIM+'?r='+encodeURIComponent(ref)+(aclSpOf(r)==='a'?'&sp=a':'')+'&riego='+(aclRg(r)==='s'?'secano':'regadio')+(temaGet()!=='auto'?'&tema='+temaGet():'')+'"></iframe></div>';
   el.hidden=false; aclSimWatch(ref,el.querySelector('iframe'),aclSpOf(r));
-  if(!a||(ACL.sim.pk!==null&&(a.pk||'')!==ACL.sim.pk))aclCalc(ref,true);       // sin resultado guardado (o con otros parámetros): se guarda a la vez
+  if(!a||aclSinRel(a)||(r&&(a.rg||'r')!==aclRg(r))||(ACL.sim.pk!==null&&(a.pk||'')!==ACL.sim.pk))aclCalc(ref,true);       // sin resultado guardado (o sin relieve, con otro riego o con otros parámetros): se guarda a la vez
   else if(ACL.sim.pk===null)aclReady().then(function(C){return C.ready?C.ready():null}).then(function(){      // aún no se sabe: se mira al cargar
     var k=aclPk(), b=aclData(ref); if(ACL.sim&&ACL.sim.ref===ref)ACL.sim.pk=k;
     if(b&&k!==null&&(b.pk||'')!==k&&!ACL.busy[ref])aclCalc(ref,true);
@@ -13417,6 +13443,7 @@ function pvClose(){
 }
 var dlOut=null;
 function canShareFile(blob,name){try{return typeof File==='function'&&navigator.canShare&&navigator.canShare({files:[new File([blob],name,{type:blob.type||'application/octet-stream'})]})}catch(e){return false}}
+window.mfShowDl=function(){return showDl.apply(null,arguments)}; /* Entrega 145: la usa el informe PDF del simulador */
 function showDl(blob,name,title,extra){
   dlOut={blob:blob,name:name}; var el=$('#dlsheet'), sh=canShareFile(blob,name), phone=!isDesk()&&sh;
   var h='<div class="dlbox"><h2>'+esc(title||'Archivo listo')+'</h2><p class="small" style="margin:6px 0 0">'+esc(name)+' · '+Math.max(1,Math.round(blob.size/1024))+' KB</p>'+(extra?'<p class="small">'+extra+'</p>':'')+
@@ -16582,7 +16609,7 @@ document.addEventListener('click',function(ev){
     case 'acl-calc':aclCalc(b.dataset.ref);break;
     case 'acl-sim':aclSimOpen(b.dataset.ref);break;
     case 'acl-sim-close':aclSimClose();break;
-    case 'aclf-calc':aclFCalc(id,b.dataset.v==='all');break;
+    case 'aclf-calc':aclFCalc(id,b.dataset.v==='all'?true:b.dataset.v==='pend'?'pend':false);break;
     case 'finca-view':if(finca(id)&&isOc(finca(id))){openFinca(id);break}finOn();viewId=id;viewG=null;viewCrop=null;viewRG=null;detailId=null;toMap();syncFocus();setTimeout(function(){map.invalidateSize();fitFinca(id)},90);break;
     case 'move-open':fdOpen=!fdOpen;fdQ='';newFincaOpen=false;renderCard();break;
     case 'finca-back':colOpen=false;grpPick=false;bulkAll=false;viewId=null;viewG=null;viewCrop=null;viewRG=null;detailId=null;bulk=null;bulkR=null;bulkP=null;disarm();renderFincas();syncFocus();break;
@@ -18097,7 +18124,7 @@ document.addEventListener('click',function(ev){if(ev.target&&ev.target.id==='nt-
 document.addEventListener('keydown',function(ev){if(ev.target&&ev.target.id==='nt-x'&&ev.key==='Enter'&&!ev.shiftKey&&!ev.isComposing)ntEnter(ev,ev.target)});
 /* «☐ Casilla» y «✕» del buscador no le quitan el foco a lo que estás escribiendo (no se cierra el teclado) */
 ['mousedown','pointerdown'].forEach(function(e){document.addEventListener(e,function(ev){var b=ev.target&&ev.target.closest&&ev.target.closest('[data-act=nt-chk],#goclr');if(b&&document.activeElement&&(document.activeElement.id==='nt-x'||document.activeElement.id==='goinput'))ev.preventDefault()})});
-window.__mf={MP_FT:MP_FT,mpDose:mpDose,mpFtPicked:mpFtPicked,fbItems:fbItems,DOCs:function(){return DOC},mpFixNames:mpFixNames,renderAll:renderAll,mpAll:mpAll,mpInfo:mpInfo,mpWarnTxt:mpWarnTxt,MP:MP,trCardHTML0:trCardHTML0,aclState:function(){return ACL},aclCalc:aclCalc,aclSum:aclSum,aclShort:aclShort,aclMine:aclMine,aclSimOpen:aclSimOpen,aclSimClose:aclSimClose,aclPk:aclPk,loadPdfLib:loadPdfLib,pdfPiezas:pdfPiezas,pdfHay:pdfHay,pvState:function(){return PV},sigGroup:function(){return sigGroup},sigTiles:function(){return tiles},sigPaint:sigPaint,sigW:function(){return {ok:SWok,pend:Object.keys(SWel).length,carga:Object.keys(SWcb).length}},sigWOff:sigWOff,boxPad:boxPad,pdfFont:pdfFont,pdfFontC:pdfFontC,expMapHTML:expMapHTML,buildFichaPdf:buildFichaPdf,afCompute:afCompute,afCompare:afCompare,hatchOf:hatchOf,swBg:swBg,OV:OV,polyC:polyC,mmHTML:mmHTML,expClose:expClose,temaGet:temaGet,temaSet:temaSet,pvOpen:pvOpen,pvClose:pvClose,cvMatch:cvMatch,cvLabel:cvLabel,trVarList:trVarList,varReal:varReal,GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut||pdfLast},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
+window.__mf={MP_FT:MP_FT,mpDose:mpDose,mpFtPicked:mpFtPicked,fbItems:fbItems,DOCs:function(){return DOC},mpFixNames:mpFixNames,renderAll:renderAll,mpAll:mpAll,mpInfo:mpInfo,mpWarnTxt:mpWarnTxt,MP:MP,trCardHTML0:trCardHTML0,aclState:function(){return ACL},aclCalc:aclCalc,aclCfg:aclCfg,aclHTML:aclHTML,aclFHTML:aclFHTML,aclFCalc:aclFCalc,aclViejo:aclViejo,aclPend:aclPend,aclRg:aclRg,aclNoVar:aclNoVar,aclRelTxt:aclRelTxt,aclSum:aclSum,aclShort:aclShort,aclMine:aclMine,aclSimOpen:aclSimOpen,aclSimClose:aclSimClose,aclPk:aclPk,loadPdfLib:loadPdfLib,pdfPiezas:pdfPiezas,pdfHay:pdfHay,pvState:function(){return PV},sigGroup:function(){return sigGroup},sigTiles:function(){return tiles},sigPaint:sigPaint,sigW:function(){return {ok:SWok,pend:Object.keys(SWel).length,carga:Object.keys(SWcb).length}},sigWOff:sigWOff,boxPad:boxPad,pdfFont:pdfFont,pdfFontC:pdfFontC,expMapHTML:expMapHTML,buildFichaPdf:buildFichaPdf,afCompute:afCompute,afCompare:afCompare,hatchOf:hatchOf,swBg:swBg,OV:OV,polyC:polyC,mmHTML:mmHTML,expClose:expClose,temaGet:temaGet,temaSet:temaSet,pvOpen:pvOpen,pvClose:pvClose,cvMatch:cvMatch,cvLabel:cvLabel,trVarList:trVarList,varReal:varReal,GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut||pdfLast},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
 Object.assign(window.__mf,{IH:function(){return IH},IHL:IHL,ihSet:ihSet,ihStep:ihStep,ihList:ihList,ihCheck:ihCheck,ihItem:ihItem,ihBlank:ihBlank,setPHLAY:function(v){PHLAY=v},baseLayer:function(){return baseLayer}});
 Object.assign(window.__mf,{PSC:PSC,scData:scData,scBuild:scBuild,scApply:scApply,scHTML:scHTML,scResHTML:scResHTML,scCmpHTML:scCmpHTML,scMi:scMi,incTxt:incTxt,incCodes:incCodes,incListHTML:incListHTML,finMunis:finMunis,recMuni:recMuni,afRecs:afRecs,afCrops:afCrops,afNext:afNext,recMatch:recMatch,plQt:plQt,xsMark:xsMark,bkSmall:bkSmall,plNew:plNew,DOC_T:DOC_T,trpApply:trpApply,foldSave:foldSave,plFileBase:plFileBase,expGGet:expGGet,expGPick:expGPick,grbSplit:grbSplit,grStart:grStart,grSave:grSave,GRS:function(){return GRS},expHTML:expHTML,TRs:function(){return {tr:TR.cult,ab:AB.cult,fe:FE.cult,hi:HI.cult,inf:INF.cult,pl:PL.pid}},vfState:function(){return VFL},vfOn:vfOn,muniTxtSync:muniTxtSync,polyCount:function(){return polyC.size},ufbStart:ufbStart,ubkCheck:ubkCheck,ubkDue:ubkDue,bkOwn:bkOwn,fbBuild:fbBuild,UBK:UBK,getVersions:getVersions,prevGet:prevGet,spaceHTML:spaceHTML,snapVersion:snapVersion,datReady:function(){return DATP},datState:function(){return {ok:IDBOK,r:DATR,nv:VERS?VERS.length:-1,prev:!!PREV}},plPortrait:plPortrait,plCropTxt:plCropTxt,xlPlanBook:xlPlanBook,idbReset:function(w){idbP=null;if(w)IDB_WAIT=w},syncWait:function(w){SYNC_WAIT=w},syncBusy:function(){return syncing},uCvTxt:uCvTxt,feUcvForm:feUcvForm,feUnitConvert:feUnitConvert,rfEdit:rfEdit,rfSave:rfSave,infTotRows:infTotRows,abTotData:abTotData,cvLabel:cvLabel,feProds:feProds,pabShares:pabShares,pabHaR:pabHaR,pabSplits:pabSplits,pabSplitWarn:pabSplitWarn,pabXCands:pabXCands,pabAddX:pabAddX,pabMove:pabMove,buildPabPdf:buildPabPdf,buildPabXlsx:buildPabXlsx,pabBlocks:pabBlocks,pabCheck:pabCheck,pabReal:pabReal,pabCalc:pabCalc,pabAuto:pabAuto,pabHTML:pabHTML,pabCur:pabCur,pabTipo:pabTipo,pabLim:pabLim,PAB:PAB,haC:haC,haPair:haPair,plTrPlaces:plTrPlaces,daOpen:daOpen,daSave:daSave,PL:PL,plWeeks:plWeeks,plCalc:plCalc,plTrOrder:plTrOrder,plPending:plPending,plMarkGo:plMarkGo,buildTratPdf:buildTratPdf,xlPlanBook:xlPlanBook,xlBuild:xlBuild,plFromRecs:plFromRecs,plSecArgs:plSecArgs,plSecHTML:plSecHTML,plSecOut:plSecOut,plTrPRows:plTrPRows,buildPlanPdf:buildPlanPdf,buildPlanXlsx:buildPlanXlsx,planHTML:planHTML,plTrSources:plTrSources,fbBuild:fbBuild,fbRead:fbRead,fbItems:fbItems,fbRestoreFiles:fbRestoreFiles,idbPut:idbPut,idbGet:idbGet,idbKeys:idbKeys,applyImport:applyImport,pending:function(){return pendingImport},docPend:function(){return DOC.pend},phPend:function(){return PH.pend},phProcess:phProcess,phMax:function(n){PH_MAXB=n},trVarParts:trVarParts,numEs:numEs,nf:nf,trList:trList,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
