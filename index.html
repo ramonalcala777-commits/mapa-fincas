@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-JwHv3Qt2KO5Gorcq3QcKRJgGdIhxyCYQ3tXHdMxRUxg='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-9l8Gih7lv2+X21xttPTZf9ew3dLILFkjqhNR4vvj07U='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
@@ -1154,6 +1154,7 @@ button.cbtn.on{background:var(--accent-soft)}
 .steps{margin:8px 0 0;padding-left:20px}
 .steps li{margin:6px 0}
 .credits{margin-top:26px;font-size:12px;color:var(--ink2);line-height:1.5}
+.credits.legal{margin-top:10px}.credits.legal a{color:inherit}
 .fl{background:none;border:0}
 .flabel{display:inline-block;transform:translate(-50%,-50%);background:rgba(18,24,12,.82);color:#fff;border:2px solid var(--c);padding:3px 10px;border-radius:14px;font-weight:700;font-size:12px;line-height:1.2;text-align:center;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.4)}
 .flabel small{display:block;font-weight:700;font-size:11px;color:#ffd96a}
@@ -3181,7 +3182,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-13T05:57:08Z',n:'Entrega 145 · 13 nov · 06:57'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-13T09:58:39Z',n:'Entrega 146 · 13 nov · 10:58'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -5698,6 +5699,7 @@ function renderDatos(){
   T.apar+='<h3>Tenerla como icono</h3><p class="small" style="margin-top:0">En el menú del navegador elige «Añadir a pantalla de inicio». Ábrela siempre de la misma forma (desde el icono o desde el navegador), porque cada una guarda sus datos por separado.</p>';
   h+='<div class="datsel"><label class="lbl" for="dat-sel">Apartado</label>'+chSel('dat-tabs','t',DT,dt,'Apartado de Datos').replace('<select ','<select id="dat-sel" ')+'</div><div class="expnav chhide" role="tablist" id="dat-tabs">'+DT.map(function(x){return '<button type="button" role="tab" class="chip'+(dt===x[0]?' on':'')+'" aria-selected="'+(dt===x[0])+'" data-act="dat-tab" data-t="'+x[0]+'">'+x[1]+'</button>'}).join('')+'</div><div class="dtab">'+(dt==='all'?DATT_K.map(function(k){return T[k]}).join(''):T[dt])+'</div>';
   h+='<div class="credits">Recintos y usos: SIGPAC, FEGA / Ministerio de Agricultura, Pesca y Alimentación. Foto aérea: PNOA, © Instituto Geográfico Nacional. Satélite alternativo: Esri. Mapa: Leaflet. La superficie SIGPAC es la del FEGA; los totales usan la superficie cultivada que indiques en cada recinto (si no la indicas, la del SIGPAC).</div>';
+  h+='<div class="credits legal"><a href="privacidad-fincas.html" target="_blank" rel="noopener" data-legal="priv">Privacidad</a> · <a href="condiciones-fincas.html" target="_blank" rel="noopener" data-legal="cond">Condiciones</a> · © 2026 Ramón Alcalá</div>';
   el.innerHTML=h; renderSync(true);
 }
 
