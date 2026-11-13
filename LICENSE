@@ -1,0 +1,23 @@
+MAPA DE FINCAS
+Copyright © 2026 Ramón Alcalá. Todos los derechos reservados.
+
+Esta aplicación es propiedad de Ramón Alcalá. Incluye el código, el diseño, los textos, los catálogos de productos, la documentación, las pruebas y los vídeos.
+
+Que el código se pueda ver en GitHub no da permiso para usarlo. Sin permiso previo y por escrito del titular, queda prohibido copiar, modificar, distribuir, publicar, sublicenciar, vender o aprovechar la aplicación, entera o en parte, y también hacer obras derivadas de ella.
+
+Las personas a las que el titular da un usuario pueden usar la aplicación publicada solo para aquello a lo que se les ha dado acceso, y según las condiciones de uso (condiciones-fincas.html).
+
+Para pedir permiso o una licencia, hay que dirigirse al titular.
+
+
+COMPONENTES DE TERCEROS
+Van dentro de la aplicación y conservan su propia licencia, que permite usarlos así:
+- Leaflet 1.9.4 (mapa): licencia BSD de 2 cláusulas. © 2010-2023 Vladimir Agafonkin, © 2010-2011 CloudMade.
+- jsPDF 2.5.2 (PDF): licencia MIT. © 2010-2021 James Hall, yWorks GmbH y colaboradores.
+- PDF.js (visor de PDF): licencia Apache 2.0. © 2023 Mozilla Foundation.
+- geotiff.js 2.1.3 (relieve): licencia MIT. © 2015 EOX IT Services GmbH.
+- Letras Barlow y Barlow Semi Condensed: SIL Open Font License 1.1. © The Barlow Project Authors.
+- Letras DejaVu Sans Condensed: licencia libre de Bitstream Vera y DejaVu. © Bitstream, Inc. y autores de DejaVu.
+
+DATOS Y MAPAS
+Los datos y mapas que la aplicación consulta (SIGPAC y FEGA del Ministerio de Agricultura, PNOA del Instituto Geográfico Nacional, Catastro, CartoCiudad, Esri, OpenStreetMap, Open-Meteo, MET Norway, RainViewer, AEMET y SIAR) son de sus dueños y se usan con sus propias condiciones. La aplicación los cita donde se muestran.
