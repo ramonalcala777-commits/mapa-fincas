@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-VMFGbtwdF0PR87TXLZcsBtqkv613Y/DM8DTfgMr/vLA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-I7nyV++28SGY8L3V9UOgHSRVgg3DbsQyIHFG7LHVPRM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
@@ -1488,9 +1488,10 @@ details.more summary{text-decoration:underline;text-underline-offset:4px;text-de
 .in,.loginf input,.gform select{border-radius:8px;border:1.5px solid var(--line2);background:var(--surface)}
 .in:focus,.loginf input:focus,.trsel:focus{border-color:var(--ink);outline:none}
 /* Entrega 151: lista de sugerencias propia */
-.sgbox{position:fixed;z-index:2600;background:var(--surface);color:var(--ink);border:1px solid var(--line2);border-radius:12px;box-shadow:var(--shadow);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:4px;font-family:var(--sans)}
+/* Entrega 152: dentro de la página, debajo de la casilla (no flotando) */
+.sgbox{position:relative;display:block;margin:6px 0 2px;max-height:264px;background:var(--surface);color:var(--ink);border:1px solid var(--line2);border-radius:12px;box-shadow:var(--shadow);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:4px;font-family:var(--sans);text-align:left;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
 .sgbox[hidden]{display:none}
-.sgo{display:flex;flex-direction:column;justify-content:center;min-height:44px;padding:7px 12px;border-radius:9px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.sgo{display:flex;flex-direction:column;justify-content:center;min-height:44px;padding:7px 12px;border-radius:9px;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .sgo+.sgo{margin-top:1px}
 .sgo b{font-weight:600;font-size:15px;line-height:1.25;color:var(--ink)}
 .sgo small{display:block;font-size:12.5px;line-height:1.3;color:var(--ink2);margin-top:1px}
@@ -3229,7 +3230,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-17T10:37:21Z',n:'Entrega 151 · 17 nov · 11:37'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-17T14:02:56Z',n:'Entrega 152 · 17 nov · 15:02'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -4072,7 +4073,7 @@ function renderCard(){
     h+='<div class="lbl">Riego</div><div class="chips">'+riegoChips(r.riego,'riego')+'</div>';
     h+='<div class="lbl">Producción</div><div class="chips">'+prodChips(r.prod,'prod')+'</div>';
     var open=moreOpen||r.variedad||r.notas||r.anio||r.marco||r.patron||r.arb||r.hc;
-    h+='<details class="more" id="more"'+(open?' open':'')+'><summary>Plantación y notas</summary><input id="rv" class="in" data-dl="rv-dl" aria-autocomplete="list" placeholder="Variedad (opcional)" value="'+esc(r.variedad)+'" autocomplete="off">'+varDL(r)+''+
+    h+='<details class="more" id="more"'+(open?' open':'')+'><summary>Plantación y notas</summary><input id="rv" class="in" data-dl="rv-dl" aria-autocomplete="list" autocorrect="off" spellcheck="false" placeholder="Variedad (opcional)" value="'+esc(r.variedad)+'" autocomplete="off">'+varDL(r)+''+
       '<div class="gform" style="margin-top:8px"><input id="ra" class="in" inputmode="numeric" placeholder="Año de plantación" value="'+esc(r.anio||'')+'" autocomplete="off"><input id="rm" class="in" placeholder="Marco (ej. 6x5)" value="'+esc(r.marco||'')+'" autocomplete="off"><input id="rp" class="in" placeholder="Patrón (ej. UCB-1)" value="'+esc(r.patron||'')+'" autocomplete="off"><input id="rt" class="in" inputmode="numeric" placeholder="Nº de árboles" value="'+esc(numEs(r.arb)>0?nf(Math.round(numEs(r.arb)),0):(r.arb||''))+'" autocomplete="off"></div>'+
       '<div class="small" id="arbest" style="margin-top:6px">'+arbTxt(r)+'</div>'+
       '<div class="lbl" style="margin-top:10px">Hectáreas cultivadas <span class="small">(SIGPAC '+ha4(r.ha)+' ha · en blanco si coinciden)</span></div><input id="rhc" class="in" inputmode="decimal" placeholder="Ej. '+nf(r.ha*0.9,2)+'" value="'+esc(+r.hc>0?String(r.hc).replace('.',','):'')+'" autocomplete="off">'+
@@ -4096,7 +4097,7 @@ function recFichaHTML(r,fi,pt,uso){
   if(pfOthers(fi).length)h+='<div class="pfnote">Finca compartida con: '+esc(pfOthersTxt(fi))+'. Cambiar el recinto de finca vale para todas.</div>';
   h+='<div class="recdat">';
   h+=lb('Nombre del recinto')+'<input id="rnm" class="in" placeholder="Nombre (opcional), ej. El Pozo" value="'+esc(r.nombre||'')+'" autocomplete="off" aria-label="Nombre del recinto">';
-  h+=lb('Variedad')+'<input id="rv" class="in" data-dl="rv-dl" aria-autocomplete="list" placeholder="Variedad (opcional)" value="'+esc(r.variedad)+'" autocomplete="off" aria-label="Variedad">'+varDL(r)+'';
+  h+=lb('Variedad')+'<input id="rv" class="in" data-dl="rv-dl" aria-autocomplete="list" autocorrect="off" spellcheck="false" placeholder="Variedad (opcional)" value="'+esc(r.variedad)+'" autocomplete="off" aria-label="Variedad">'+varDL(r)+'';
   h+='<div class="gform rdg"><div>'+lb('Año de plantación')+'<input id="ra" class="in" inputmode="numeric" placeholder="Ej. 2018" value="'+esc(r.anio||'')+'" autocomplete="off" aria-label="Año de plantación"></div>'+
      '<div>'+lb('Marco')+'<input id="rm" class="in" placeholder="Ej. 6x5" value="'+esc(r.marco||'')+'" autocomplete="off" aria-label="Marco"></div>'+
      '<div>'+lb('Patrón')+'<input id="rp" class="in" placeholder="Ej. UCB-1" value="'+esc(r.patron||'')+'" autocomplete="off" aria-label="Patrón"></div>'+
@@ -7737,7 +7738,7 @@ function liveCalc(){
 }
 function trPForm(q,i,n){
   var h='<div class="trp"><div class="diah"><b>Producto '+(i+1)+'</b>'+(n>1?'<button type="button" class="btn sm" data-act="tr-pdel" data-i="'+i+'">Quitar</button>':'')+'</div>';
-  h+='<input id="trp-'+i+'-n" class="in" data-dl="tr-dl" aria-autocomplete="list" value="'+esc(q.n)+'" placeholder="Producto (nombre comercial)" autocomplete="off" aria-label="Producto '+(i+1)+'">';
+  h+='<input id="trp-'+i+'-n" class="in" data-dl="tr-dl" aria-autocomplete="list" autocorrect="off" spellcheck="false" value="'+esc(q.n)+'" placeholder="Producto (nombre comercial)" autocomplete="off" aria-label="Producto '+(i+1)+'">';
   h+='<input id="trp-'+i+'-a" class="in" style="margin-top:8px" value="'+esc(q.a)+'" placeholder="Materia activa (opcional)" autocomplete="off" aria-label="Materia activa">';
   h+='<div class="lbl" style="margin-top:12px">Dosis por 1.000 L de caldo (o un rango, ej. 3-3,3)</div><input id="trp-'+i+'-d" class="in" inputmode="decimal" value="'+esc(q.d)+'" placeholder="Ej. 2,5" autocomplete="off">';
   h+='<div class="chips" id="trp-'+i+'-u" style="margin-top:8px"><button type="button" class="chip'+(q.u==='L'?' on':'')+'" data-act="tr-unit" data-i="'+i+'" data-u="L">L</button><button type="button" class="chip'+(q.u==='kg'?' on':'')+'" data-act="tr-unit" data-i="'+i+'" data-u="kg">kg</button></div><div class="calc" id="trp-'+i+'-calc" aria-live="polite">'+esc(trCalcLine(i))+'</div>';
@@ -8631,7 +8632,7 @@ function abRegUpdate(ps,ctx){
 function abBlankP(){return {n:'',d:'',u:'kg',qn:'',qp:'',qk:'',de:'',pr:''}}
 function abPForm(q,i,n){
   var h='<div class="trp"><div class="diah"><b>Abono '+(i+1)+'</b>'+(n>1?'<button type="button" class="btn sm" data-act="ab-pdel" data-i="'+i+'">Quitar</button>':'')+'</div>';
-  h+='<input id="abp-'+i+'-n" class="in" data-dl="ab-dl" aria-autocomplete="list" value="'+esc(q.n)+'" placeholder="Abono (nombre comercial)" autocomplete="off" aria-label="Abono '+(i+1)+'">';
+  h+='<input id="abp-'+i+'-n" class="in" data-dl="ab-dl" aria-autocomplete="list" autocorrect="off" spellcheck="false" value="'+esc(q.n)+'" placeholder="Abono (nombre comercial)" autocomplete="off" aria-label="Abono '+(i+1)+'">';
   h+='<div class="lbl" style="margin-top:12px">Riqueza (% de cada nutriente)</div><div class="abrich"><label>N<input id="abp-'+i+'-qn" class="in" inputmode="decimal" value="'+esc(q.qn)+'" autocomplete="off"></label><label>P₂O₅<input id="abp-'+i+'-qp" class="in" inputmode="decimal" value="'+esc(q.qp)+'" autocomplete="off"></label><label>K₂O<input id="abp-'+i+'-qk" class="in" inputmode="decimal" value="'+esc(q.qk)+'" autocomplete="off"></label></div>';
   h+='<div class="lbl" style="margin-top:12px">Dosis (kg por hectárea, o un rango, ej. 20-25)</div><input id="abp-'+i+'-d" class="in" inputmode="decimal" value="'+esc(q.d)+'" placeholder="Ej. 20" autocomplete="off">';
   if(q.u==='L')h+='<div class="small" style="margin-top:6px">Este abono se guardó en litros por hectárea. Los abonos líquidos irán en Fertirrigación.</div><div class="lbl" style="margin-top:8px">Densidad (kg por litro)</div><input id="abp-'+i+'-de" class="in" inputmode="decimal" value="'+esc(q.de)+'" autocomplete="off">';
@@ -8910,7 +8911,7 @@ function feDCalcLine(ed,i){
 }
 function feDForm(q,i,n){
   var h='<div class="trp"><div class="diah"><b>Producto '+(i+1)+'</b>'+(n>1?'<button type="button" class="btn sm" data-act="fe-ddel" data-i="'+i+'">Quitar</button>':'')+'</div>';
-  h+='<input id="fed-'+i+'-n" class="in" data-dl="fe-dl2" aria-autocomplete="list" value="'+esc(q.n)+'" placeholder="Producto (nombre comercial)" autocomplete="off" aria-label="Producto '+(i+1)+'">';
+  h+='<input id="fed-'+i+'-n" class="in" data-dl="fe-dl2" aria-autocomplete="list" autocorrect="off" spellcheck="false" value="'+esc(q.n)+'" placeholder="Producto (nombre comercial)" autocomplete="off" aria-label="Producto '+(i+1)+'">';
   h+='<div class="lbl" style="margin-top:12px">Dosis por hectárea (o un rango, ej. 2-3)</div><input id="fed-'+i+'-d" class="in" inputmode="decimal" value="'+esc(q.d)+'" placeholder="Ej. 3" autocomplete="off">';
   h+='<div class="chips" id="fed-'+i+'-u" style="margin-top:8px"><button type="button" class="chip'+(q.u!=='kg'?' on':'')+'" data-act="fe-dunit" data-i="'+i+'" data-u="L">L/ha</button><button type="button" class="chip'+(q.u==='kg'?' on':'')+'" data-act="fe-dunit" data-i="'+i+'" data-u="kg">kg/ha</button></div>';
   h+='<div class="calc" id="fed-'+i+'-calc" aria-live="polite">'+esc(feDCalcLine(FE.ed,i))+'</div>';
@@ -8919,7 +8920,7 @@ function feDForm(q,i,n){
 }
 function fePForm(q,i,n){
   var h='<div class="trp"><div class="diah"><b>Abono '+(i+1)+'</b>'+(n>1?'<button type="button" class="btn sm" data-act="fe-pdel" data-i="'+i+'">Quitar</button>':'')+'</div>';
-  h+='<input id="fep-'+i+'-n" class="in" data-dl="fe-dl" aria-autocomplete="list" value="'+esc(q.n)+'" placeholder="Abono (nombre comercial)" autocomplete="off" aria-label="Abono '+(i+1)+'">';
+  h+='<input id="fep-'+i+'-n" class="in" data-dl="fe-dl" aria-autocomplete="list" autocorrect="off" spellcheck="false" value="'+esc(q.n)+'" placeholder="Abono (nombre comercial)" autocomplete="off" aria-label="Abono '+(i+1)+'">';
   h+='<div class="lbl" style="margin-top:12px">Riqueza (% de cada nutriente)</div><div class="abrich"><label>N<input id="fep-'+i+'-qn" class="in" inputmode="decimal" value="'+esc(q.qn)+'" autocomplete="off"></label><label>P₂O₅<input id="fep-'+i+'-qp" class="in" inputmode="decimal" value="'+esc(q.qp)+'" autocomplete="off"></label><label>K₂O<input id="fep-'+i+'-qk" class="in" inputmode="decimal" value="'+esc(q.qk)+'" autocomplete="off"></label></div>';
   h+='<div class="lbl" style="margin-top:12px">Dosis por hectárea (o un rango, ej. 20-25)</div><input id="fep-'+i+'-d" class="in" inputmode="decimal" value="'+esc(q.d)+'" placeholder="Ej. 20" autocomplete="off">';
   h+='<div class="chips" id="fep-'+i+'-u" style="margin-top:8px"><button type="button" class="chip'+(q.u!=='L'?' on':'')+'" data-act="fe-unit" data-i="'+i+'" data-u="kg">kg/ha</button><button type="button" class="chip'+(q.u==='L'?' on':'')+'" data-act="fe-unit" data-i="'+i+'" data-u="L">L/ha</button></div>';
@@ -9563,7 +9564,7 @@ function plTcellEdHTML(f,p,C0){
 function plRowEdHTML(){
   var e=PL.row, isA=e.k==='a', dl=feProds().filter(function(x){return isA?x.k!=='p':x.k==='p'});
   var h='<div class="note diaf"><b>'+(e.id?'Editar ':'Añadir ')+(isA?'abono':'producto')+'</b><datalist id="pl-rdl">'+dl.map(function(x){return sgOpt(x.n,sgAbS(x))}).join('')+'</datalist>';
-  h+='<input id="pl-rn" class="in" style="margin-top:8px" data-dl="pl-rdl" aria-autocomplete="list" value="'+esc(e.n)+'" placeholder="'+(isA?'Abono (nombre comercial)':'Producto, ej. Sulfacid')+'" autocomplete="off">';
+  h+='<input id="pl-rn" class="in" style="margin-top:8px" data-dl="pl-rdl" aria-autocomplete="list" autocorrect="off" spellcheck="false" value="'+esc(e.n)+'" placeholder="'+(isA?'Abono (nombre comercial)':'Producto, ej. Sulfacid')+'" autocomplete="off">';
   if(isA)h+='<div class="lbl" style="margin-top:12px">Riqueza (% de cada nutriente)</div><div class="abrich"><label>N<input id="pl-rqn" class="in" inputmode="decimal" value="'+esc(e.qn)+'" autocomplete="off"></label><label>P₂O₅<input id="pl-rqp" class="in" inputmode="decimal" value="'+esc(e.qp)+'" autocomplete="off"></label><label>K₂O<input id="pl-rqk" class="in" inputmode="decimal" value="'+esc(e.qk)+'" autocomplete="off"></label></div>';
   h+='<div class="chips" id="pl-ru" style="margin-top:10px"><button type="button" class="chip'+(e.u!=='L'?' on':'')+'" data-act="pl-ru" data-u="kg">kg/ha</button><button type="button" class="chip'+(e.u==='L'?' on':'')+'" data-act="pl-ru" data-u="L">L/ha</button></div>';
   if(isA)h+='<div id="pl-rdew"'+(e.u==='L'?'':' hidden')+'><div class="lbl" style="margin-top:12px">Densidad (kg por litro)</div><input id="pl-rde" class="in" inputmode="decimal" value="'+esc(e.de)+'" placeholder="Ej. 1,3" autocomplete="off"></div>';
@@ -9573,7 +9574,7 @@ function plRowEdHTML(){
 }
 function plFoEdHTML(){
   var e=PL.fo, h='<div class="note diaf"><b>'+(e.id?'Editar abonado de fondo':'Abonado de fondo')+'</b><datalist id="pl-fdl">'+abProds().map(function(x){return sgOpt(x.n,sgAbS(x))}).join('')+'</datalist>';
-  h+='<input id="pl-fn" class="in" style="margin-top:8px" data-dl="pl-fdl" aria-autocomplete="list" value="'+esc(e.n)+'" placeholder="Abono, ej. Ecofem" autocomplete="off">';
+  h+='<input id="pl-fn" class="in" style="margin-top:8px" data-dl="pl-fdl" aria-autocomplete="list" autocorrect="off" spellcheck="false" value="'+esc(e.n)+'" placeholder="Abono, ej. Ecofem" autocomplete="off">';
   h+='<div class="lbl" style="margin-top:12px">Riqueza (% de cada nutriente)</div><div class="abrich"><label>N<input id="pl-fqn" class="in" inputmode="decimal" value="'+esc(e.qn)+'" autocomplete="off"></label><label>P₂O₅<input id="pl-fqp" class="in" inputmode="decimal" value="'+esc(e.qp)+'" autocomplete="off"></label><label>K₂O<input id="pl-fqk" class="in" inputmode="decimal" value="'+esc(e.qk)+'" autocomplete="off"></label></div>';
   h+='<div class="lbl" style="margin-top:12px">Dosis (kg por hectárea)</div><input id="pl-fd" class="in" inputmode="decimal" value="'+esc(e.d)+'" placeholder="Ej. 1.000" autocomplete="off">';
   h+='<div class="lbl" style="margin-top:12px">Precio (€ por kg, opcional)</div><input id="pl-fpr" class="in" inputmode="decimal" value="'+esc(e.pr)+'" autocomplete="off">';
@@ -9599,7 +9600,7 @@ function plTrEdHTML(f,p){
   h+='<div class="small" id="pl-tclx" style="margin-top:4px">'+plClTxt(f,p)+'</div>';
   e.ps.forEach(function(q,i){
     h+='<div class="trp"><div class="diah"><b>Producto '+(i+1)+'</b>'+(e.ps.length>1?'<button type="button" class="btn sm" data-act="pl-tpdel" data-i="'+i+'">Quitar</button>':'')+'</div>';
-    h+='<input id="pl-tp-'+i+'-n" class="in" data-dl="pl-tdl" aria-autocomplete="list" value="'+esc(q.n)+'" placeholder="Producto (nombre comercial)" autocomplete="off">';
+    h+='<input id="pl-tp-'+i+'-n" class="in" data-dl="pl-tdl" aria-autocomplete="list" autocorrect="off" spellcheck="false" value="'+esc(q.n)+'" placeholder="Producto (nombre comercial)" autocomplete="off">';
     h+='<input id="pl-tp-'+i+'-a" class="in" style="margin-top:8px" value="'+esc(q.a)+'" placeholder="Materia activa (opcional)" autocomplete="off">';
     h+='<div class="lbl" style="margin-top:10px">Dosis por 1.000 L de caldo</div><input id="pl-tp-'+i+'-d" class="in" inputmode="decimal" value="'+esc(q.d)+'" placeholder="Ej. 2,5" autocomplete="off">';
     h+='<div class="chips" id="pl-tp-'+i+'-u" style="margin-top:8px"><button type="button" class="chip'+(q.u!=='kg'?' on':'')+'" data-act="pl-tunit" data-i="'+i+'" data-u="L">L</button><button type="button" class="chip'+(q.u==='kg'?' on':'')+'" data-act="pl-tunit" data-i="'+i+'" data-u="kg">kg</button></div>';
@@ -12627,65 +12628,90 @@ document.addEventListener('input',function(ev){if(ev.target&&ev.target.id==='lk-
 document.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='IMG'&&t.closest&&t.closest('.mmap'))t.remove()},true);
 document.addEventListener('focusin',function(e){var t=e.target;if(t&&t.classList&&t.classList.contains('lkurl')){try{t.select()}catch(x){}}});
 /* ───────── Entrega 151: lista de sugerencias propia (en lugar de la del navegador) ─────────
+   Entrega 152: la lista va DENTRO de la página, justo debajo de la casilla (no flotando encima): en el iPhone y el iPad
+   el teclado y el desplazamiento movían la lista flotante y la tapaban. Mover el dedo para desplazar ya no la cierra.
    Las casillas llevan data-dl="id del datalist" (no list=): el datalist sigue en la página solo como fuente de opciones.
    Cada <option> puede llevar data-s con un dato gris (riqueza y unidad, materia activa). */
-var SG={el:null,inp:null,L:[],i:-1,t:0};
+var SG={el:null,inp:null,L:[],i:-1,t:0,r:0,pad:null,busy:0,down:0};
 function sgOpt(n,s){return '<option value="'+esc(n)+'"'+(s?' data-s="'+esc(s)+'"':'')+'>'}
 function sgAbS(p){if(!p)return '';var r=p.k==='p'?'producto':(abRich(p)||'sin riqueza');return r+' · '+(p.u==='L'?'L':'kg')+'/ha'}
 function sgTrS(p){return p&&p.a?String(p.a):''}
 function sgNorm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
 function sgOpts(inp){var d=document.getElementById(inp.getAttribute('data-dl')||'');if(!d)return [];var seen={},o=[];[].forEach.call(d.querySelectorAll('option'),function(x){var v=x.value,k=sgNorm(v).trim();if(!k||seen[k])return;seen[k]=1;o.push({v:v,k:k,s:x.getAttribute('data-s')||''})});return o}
-function sgList(inp){var q=sgNorm(inp.value).trim(),a=[],b=[];sgOpts(inp).forEach(function(o){if(!q){a.push(o);return}var p=o.k.indexOf(q);if(p===0)a.push(o);else if(p>0)b.push(o)});var L=a.concat(b);if(L.length===1&&L[0].k===q)return [];return L}
+/* Entrega 152: al tocar una casilla que ya tiene un valor de la lista, sale la lista entera para poder cambiarlo */
+function sgList(inp,all){var q=sgNorm(inp.value).trim(),a=[],b=[],O=sgOpts(inp);if(all&&q&&O.some(function(o){return o.k===q}))return O;O.forEach(function(o){if(!q){a.push(o);return}var p=o.k.indexOf(q);if(p===0)a.push(o);else if(p>0)b.push(o)});var L=a.concat(b);if(L.length===1&&L[0].k===q)return [];return L}
 function sgHi(v,q){if(!q)return esc(v);var k=[].map.call(v,function(c){return sgNorm(c)||c}).join(''),p=k.indexOf(q);if(p<0||k.length!==v.length)return esc(v);return esc(v.slice(0,p))+'<mark>'+esc(v.slice(p,p+q.length))+'</mark>'+esc(v.slice(p+q.length))}
 function sgBox(){
-  if(SG.el)return SG.el; var e=document.createElement('div'); e.className='sgbox'; e.id='sgbox'; e.setAttribute('role','listbox'); e.hidden=true; document.body.appendChild(e);
-  /* que tocar la lista no quite el foco a la casilla */
+  if(SG.el)return SG.el; var e=document.createElement('div'); e.className='sgbox'; e.id='sgbox'; e.setAttribute('role','listbox'); e.hidden=true;
+  /* que tocar la lista no quite el foco a la casilla (ni cierre el teclado del iPhone) */
   e.addEventListener('mousedown',function(ev){ev.preventDefault()});
   e.addEventListener('click',function(ev){var o=ev.target.closest&&ev.target.closest('[data-sgi]');if(o)sgPick(+o.getAttribute('data-sgi'))});
   SG.el=e; return e;
 }
-function sgHide(){if(SG.el){SG.el.hidden=true;SG.el.innerHTML=''}if(SG.inp)SG.inp.setAttribute('aria-expanded','false');SG.i=-1;SG.L=[]}
-function sgShow(inp){
-  var e=sgBox(); SG.inp=inp; SG.L=sgList(inp); SG.i=-1;
+/* el hueco que se añade abajo para subir la lista solo se quita cuando la casilla ya no tiene el foco (si no, en el iPhone la casilla caería detrás del teclado) */
+function sgUnpad(){if(SG.pad){SG.pad.el.style.paddingBottom=SG.pad.v;SG.pad=null}}
+function sgHide(){clearTimeout(SG.r);if(!SG.inp||document.activeElement!==SG.inp||!SG.inp.isConnected)sgUnpad();if(SG.el){SG.el.hidden=true;SG.el.innerHTML='';if(SG.el.parentNode)SG.el.parentNode.removeChild(SG.el)}if(SG.inp)SG.inp.setAttribute('aria-expanded','false');SG.i=-1;SG.L=[]}
+function sgShow(inp,all){
+  var e=sgBox(), nw=SG.inp!==inp||e.hidden;
+  if(SG.inp&&SG.inp!==inp){sgUnpad();SG.inp.setAttribute('aria-expanded','false')}
+  SG.inp=inp; SG.L=sgList(inp,all); SG.i=-1;
   if(!SG.L.length||document.activeElement!==inp){sgHide();return}
-  var q=sgNorm(inp.value).trim(), M=80;
+  if(inp.nextElementSibling!==e)inp.insertAdjacentElement('afterend',e);
+  var q=sgNorm(inp.value).trim(), M=80; if(all&&SG.L.some(function(o){return o.k===q}))q='';
   e.innerHTML=SG.L.slice(0,M).map(function(o,i){return '<div class="sgo" role="option" data-sgi="'+i+'"><b>'+sgHi(o.v,q)+'</b>'+(o.s?'<small>'+esc(o.s)+'</small>':'')+'</div>'}).join('')+(SG.L.length>M?'<div class="sgn">Escribe para ver más ('+(SG.L.length-M)+')</div>':'');
-  e.hidden=false; e.scrollTop=0; inp.setAttribute('aria-expanded','true'); sgPos();
+  if(nw)e.style.maxHeight=''; e.hidden=false; e.scrollTop=0; inp.setAttribute('aria-expanded','true');
+  /* casilla ya rellena: se marca su valor en la lista */
+  var cur=sgNorm(inp.value).trim(), ci=-1; SG.L.slice(0,M).forEach(function(o,i){if(cur&&o.k===cur)ci=i});
+  if(ci>=0){var cx=e.children[ci];cx.classList.add('on');e.scrollTop=Math.max(0,cx.offsetTop-4)}
+  if(nw){sgReveal();clearTimeout(SG.r);SG.r=setTimeout(sgReveal,450)}
 }
-function sgPos(){
-  var e=SG.el, inp=SG.inp; if(!e||e.hidden||!inp)return;
-  if(!document.body.contains(inp)||document.activeElement!==inp){sgHide();return}
-  var r=inp.getBoundingClientRect(), vv=window.visualViewport, top0=vv?vv.offsetTop:0, H=vv?vv.height:window.innerHeight, W=document.documentElement.clientWidth;
-  var below=top0+H-r.bottom-10, above=r.top-top0-10, want=Math.min(300,e.scrollHeight+2), up=below<Math.min(want,160)&&above>below, mh=Math.max(96,Math.min(300,up?above:below));
-  var w=Math.min(r.width,W-16), l=Math.max(8,Math.min(r.left,W-8-w));
-  e.style.left=l+'px'; e.style.width=w+'px'; e.style.maxHeight=mh+'px';
-  var h=Math.min(want,mh); e.style.top=(up?r.top-4-h:r.bottom+4)+'px';
+/* que la lista se vea entera por encima del teclado: se sube la página lo justo, sin que la casilla se salga por arriba */
+function sgScroller(n){for(var p=n.parentElement;p&&p!==document.body&&p!==document.documentElement;p=p.parentElement){if(/(auto|scroll)/.test(getComputedStyle(p).overflowY))return p}return document.scrollingElement||document.documentElement}
+function sgReveal(){
+  var e=SG.el, inp=SG.inp; if(inp&&!inp.isConnected){sgHide();return}
+  if(!e||e.hidden||!inp||document.activeElement!==inp||!e.isConnected)return;
+  var vv=window.visualViewport, vt=vv?vv.offsetTop:0, vb=vt+(vv?vv.height:window.innerHeight);
+  var r=inp.getBoundingClientRect(), b=e.getBoundingClientRect(), need=b.bottom+8-vb, room=r.top-(vt+8);
+  var d=Math.min(need,room);
+  if(d>1){var sc=sgScroller(inp), left=sc.scrollHeight-sc.clientHeight-sc.scrollTop;
+    /* casilla al final de la página: se deja hueco abajo mientras la lista está abierta, para poder subirla encima del teclado */
+    if(d>left+1){if(!SG.pad)SG.pad={el:sc,v:sc.style.paddingBottom};sc.style.paddingBottom=(parseFloat(getComputedStyle(sc).paddingBottom)||0)+Math.ceil(d-left)+'px'}
+    sc.scrollTop+=d; b=e.getBoundingClientRect()}
+  /* si la página ya no sube más (casilla al final), la lista se acorta para caber encima del teclado */
+  var fit=Math.floor(vb-8-b.top); e.style.maxHeight=b.bottom>vb-8+1?Math.max(100,fit)+'px':'';
 }
 function sgPick(i){
   var o=SG.L[i], inp=SG.inp; if(!o||!inp)return;
   inp.value=o.v; sgHide();
-  inp.dispatchEvent(new Event('input',{bubbles:true})); inp.dispatchEvent(new Event('change',{bubbles:true}));
+  /* mientras se avisa del cambio, la lista no se vuelve a abrir (si no, salta la página un instante) */
+  SG.busy=1; try{inp.dispatchEvent(new Event('input',{bubbles:true})); inp.dispatchEvent(new Event('change',{bubbles:true}))}finally{SG.busy=0}
   sgHide();
 }
 function sgMove(d){
-  if(!SG.el||SG.el.hidden||!SG.L.length)return false; var n=Math.min(SG.L.length,80);
+  if(!SG.el||SG.el.hidden||!SG.L.length)return false; var n=Math.min(SG.L.length,80), e=SG.el;
   SG.i=SG.i<0?(d>0?0:n-1):(SG.i+d+n)%n;
-  [].forEach.call(SG.el.querySelectorAll('.sgo'),function(x,k){x.classList.toggle('on',k===SG.i);if(k===SG.i){try{x.scrollIntoView({block:'nearest'})}catch(z){}}});
+  [].forEach.call(e.querySelectorAll('.sgo'),function(x,k){x.classList.toggle('on',k===SG.i);
+    /* solo se desplaza la lista, nunca la página */
+    if(k===SG.i){if(x.offsetTop<e.scrollTop)e.scrollTop=x.offsetTop-4;else if(x.offsetTop+x.offsetHeight>e.scrollTop+e.clientHeight)e.scrollTop=x.offsetTop+x.offsetHeight-e.clientHeight+4}});
   return true;
 }
-document.addEventListener('focusin',function(e){var t=e.target;if(t&&t.getAttribute&&t.getAttribute('data-dl')){clearTimeout(SG.t);sgShow(t)}else if(SG.el&&!SG.el.hidden)sgHide()});
-document.addEventListener('input',function(e){var t=e.target;if(t&&t.getAttribute&&t.getAttribute('data-dl')&&document.activeElement===t)sgShow(t)});
-document.addEventListener('focusout',function(e){if(e.target===SG.inp){clearTimeout(SG.t);SG.t=setTimeout(function(){if(document.activeElement!==SG.inp)sgHide()},220)}});
+/* al pasar a otra cosa (un botón de debajo, por ejemplo) la lista no se quita en el mismo instante: así el botón no se mueve antes de soltar el dedo o el ratón */
+document.addEventListener('focusin',function(e){var t=e.target;if(t&&t.getAttribute&&t.getAttribute('data-dl')){clearTimeout(SG.t);sgShow(t,1)}else if(SG.inp&&!SG.inp.isConnected)sgHide()});
+document.addEventListener('input',function(e){var t=e.target;if(SG.busy)return;if(t&&t.getAttribute&&t.getAttribute('data-dl')&&document.activeElement===t)sgShow(t)});
+function sgLater(){clearTimeout(SG.t);SG.t=setTimeout(function(){if(document.activeElement===SG.inp&&SG.inp.isConnected)return;if(SG.down){sgLater();return}sgHide()},220)}
+document.addEventListener('focusout',function(e){if(e.target===SG.inp)sgLater()});
+document.addEventListener('pointerdown',function(){SG.down=1},true);
+['pointerup','pointercancel'].forEach(function(n){document.addEventListener(n,function(){SG.down=0},true)});
 document.addEventListener('keydown',function(e){
   if(!SG.inp||e.target!==SG.inp||!SG.el||SG.el.hidden)return;
   if(e.key==='ArrowDown'||e.key==='ArrowUp'){if(sgMove(e.key==='ArrowDown'?1:-1)){e.preventDefault();e.stopPropagation()}}
-  else if(e.key==='Enter'&&SG.i>=0){e.preventDefault();e.stopPropagation();sgPick(SG.i)}
+  else if(e.key==='Enter'&&SG.i>=0&&!e.isComposing){e.preventDefault();e.stopPropagation();sgPick(SG.i)}
   else if(e.key==='Escape'){e.preventDefault();e.stopPropagation();sgHide()}
 },true);
-document.addEventListener('pointerdown',function(e){if(SG.el&&!SG.el.hidden&&e.target!==SG.inp&&!SG.el.contains(e.target))sgHide()},true);
-window.addEventListener('scroll',function(e){if(SG.el&&!SG.el.hidden&&e.target!==SG.el&&!(SG.el.contains&&e.target&&e.target.nodeType===1&&SG.el.contains(e.target)))sgPos()},true);
-window.addEventListener('resize',sgPos);
-if(window.visualViewport){window.visualViewport.addEventListener('resize',sgPos);window.visualViewport.addEventListener('scroll',sgPos)}
+/* tocar fuera la cierra; arrastrar el dedo para desplazar la página no (en el móvil eso no da «click») */
+document.addEventListener('click',function(e){if(SG.inp&&!SG.inp.isConnected){sgHide();return}if(SG.el&&!SG.el.hidden&&e.target!==SG.inp&&!SG.el.contains(e.target))sgHide()},true);
+/* el teclado aparece o cambia de alto: se vuelve a colocar (no al ampliar con dos dedos) */
+if(window.visualViewport)window.visualViewport.addEventListener('resize',function(){if(window.visualViewport.scale>1.01)return;clearTimeout(SG.r);SG.r=setTimeout(sgReveal,80)});
 /* Entrega 143: solo en casillas de número (teclado numérico); no en textos como el nº de albarán o el estado fenológico */
 document.addEventListener('change',function(ev){var t=ev.target; if(!t||t.tagName!=='INPUT'||t.type==='date'||t.type==='file'||t.type==='password'||!t.closest||!t.closest('#p-fincas,#p-datos')||!(t.type==='number'||/^(decimal|numeric)$/.test(t.getAttribute('inputmode')||'')))return; var v=String(t.value||'').trim(); if(!/^[\d.,\s]+$/.test(v)||v.indexOf('.')<0)return; NUMDOT=0; var r=numEs(v); if(r!==r&&NUMDOT){NUMDOT=0;t.classList.add('bad');toast('«'+v+'» no vale: los decimales van con coma, por ejemplo 0,375. El punto solo separa miles (2.500).')}else t.classList.remove('bad')});
 document.addEventListener('change',function(ev){if(ev.target&&ev.target.id==='lk-cad'&&LKF)LKF.cad=ev.target.value});
@@ -18192,7 +18218,7 @@ function coFormHTML(f,ed){
   if(gv.length>1||(gv.length===1&&cvGroups(f,ed.cu).length>1))h+=lb('Variedad')+'<select id="co-v" class="in" aria-label="Variedad"><option value="">Todas las variedades</option>'+cvGroups(f,ed.cu).map(function(x){var k=x.key||'-';return '<option value="'+esc(k)+'"'+(ed.v===k?' selected':'')+'>'+esc(x.name)+' · '+ha2(x.ha)+' ha</option>'}).join('')+'</select>';
   h+='<details class="more" style="margin-top:8px"'+(ed.ropen?' open':'')+' id="co-rd"><summary>Recintos · '+sel.length+' de '+cand.length+' ('+ha2(coHa(sel))+' ha)</summary><div class="corecs">'+cand.map(function(r){return '<label><input type="checkbox" data-co-r="'+esc(r.ref)+'"'+(sel.indexOf(r.ref)>=0?' checked':'')+'> <span>'+esc(refShort(r.ref)+(r.nombre?' · '+r.nombre:''))+' · '+ha2(haC(r))+' ha</span></label>'}).join('')+'</div></details>';
   h+='<div class="gform"><div>'+lb('Kilos')+'<input id="co-kg" class="in" inputmode="decimal" placeholder="Ej. 12.500" value="'+esc(ed.kg)+'" autocomplete="off"></div><div>'+lb('Humedad (%)')+'<input id="co-hum" class="in" inputmode="decimal" placeholder="Opcional" value="'+esc(ed.hum)+'" autocomplete="off"></div></div>';
-  h+='<div class="gform"><div>'+lb('Comprador')+'<input id="co-comp" class="in" data-dl="co-bl" aria-autocomplete="list" placeholder="Opcional" value="'+esc(ed.comp)+'" autocomplete="off"><datalist id="co-bl">'+bl.map(function(b){return '<option value="'+esc(b)+'">'}).join('')+'</datalist></div><div>'+lb('Nº de albarán')+'<input id="co-alb" class="in" placeholder="Opcional" value="'+esc(ed.alb)+'" autocomplete="off"></div></div>';
+  h+='<div class="gform"><div>'+lb('Comprador')+'<input id="co-comp" class="in" data-dl="co-bl" aria-autocomplete="list" autocorrect="off" spellcheck="false" placeholder="Opcional" value="'+esc(ed.comp)+'" autocomplete="off"><datalist id="co-bl">'+bl.map(function(b){return '<option value="'+esc(b)+'">'}).join('')+'</datalist></div><div>'+lb('Nº de albarán')+'<input id="co-alb" class="in" placeholder="Opcional" value="'+esc(ed.alb)+'" autocomplete="off"></div></div>';
   var dd=ed.doc&&docItem(f.id,ed.doc);
   h+=lb('Albarán (PDF o foto, opcional)')+'<div class="acts" style="margin:0">'+(ed.file?'<span class="small">'+esc(ed.file.name)+' · '+docSize(ed.file.size)+'</span><button type="button" class="btn sm" data-act="co-nofile">Quitar</button>':'<button type="button" class="btn sm" data-act="co-pick">'+(dd?'Cambiar el albarán':'Añadir albarán')+'</button>'+(dd?'<span class="small">Guardado en Documentos: '+esc(dd.n)+'</span>':''))+'</div>';
   h+=lb('Notas')+'<textarea id="co-nt" class="in" rows="2" placeholder="Opcional">'+esc(ed.nt)+'</textarea>';
