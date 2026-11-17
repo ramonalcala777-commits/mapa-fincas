@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-I7nyV++28SGY8L3V9UOgHSRVgg3DbsQyIHFG7LHVPRM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-hJ1PZbPbpygyo/iNO7m7xlzZa0sXIhe+9GfnEaIxtB4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
@@ -778,7 +778,7 @@ body.guest.vc .pft i{display:inline}
 .gdhead .chips{flex-wrap:wrap;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
 .gdhead .chips .chip{flex:none;white-space:nowrap}
 .gdhead h2{font-size:22px;margin:0;flex:1}
-.gdtop{display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:4;background:var(--surface);padding:12px 0 8px}
+.gdtop{display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:4;background:var(--surface);padding:calc(12px + env(safe-area-inset-top,0px)) 0 8px}
 .gdrow{display:flex;gap:10px;padding:10px 4px;border-bottom:1px solid var(--line);align-items:flex-start}
 .gdrow.on{background:var(--accent-soft)}
 .gdck{flex:none;width:30px;height:30px;display:grid;place-items:center}
@@ -1278,7 +1278,7 @@ button.cbtn.on{background:var(--accent-soft)}
 
 .lopt span{display:block}
 .lopt small{display:block;color:var(--ink2);font-weight:400;font-size:12px;line-height:1.25}
-.modal{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;background:rgba(10,14,6,.6);padding:16px}
+.modal{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;background:rgba(10,14,6,.6);padding:16px;padding-top:max(16px,env(safe-area-inset-top,0px));padding-bottom:max(16px,env(safe-area-inset-bottom,0px))}
 .pview{position:fixed;inset:0;z-index:2500;display:flex;flex-direction:column;background:#1b1b1b;color:#eee;overscroll-behavior:contain}
 .pvbar{order:0;display:flex;align-items:center;gap:6px;padding:8px max(10px,env(safe-area-inset-right)) 8px max(10px,env(safe-area-inset-left));padding-top:max(8px,env(safe-area-inset-top));background:var(--surface);color:var(--ink);border-bottom:1px solid var(--line)}
 .pvbar .pvt{flex:1 1 auto;min-width:0;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1714,7 +1714,8 @@ h3{color:var(--ink);font-size:16.5px;font-weight:700;line-height:1.25;padding-le
   .tc-w .mmap{display:none}
   .expmap{display:block;position:relative;margin:0 -16px -14px;height:170px}
   .expmap .mmap{border-radius:0;height:170px!important}
-  #p-fincas.expmode .exphead{border-radius:14px 14px 0 0;padding-top:12px;z-index:6}
+  /* Entrega 153: la cabecera deja el hueco de la hora y la batería (antes «✕ Cerrar» quedaba debajo y no se podía tocar) */
+  #p-fincas.expmode .exphead{border-radius:0;padding-top:calc(12px + env(safe-area-inset-top,0px));z-index:6}
   .expmap .mback{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));left:12px;z-index:2;width:44px;height:44px;border-radius:8px;border:0;background:var(--surface);color:var(--ink);display:grid;place-items:center;box-shadow:0 2px 8px rgba(23,33,38,.25)}
 }
 .diaf>.acts:last-child{position:sticky;bottom:-32px;z-index:4;margin:12px -13px -11px;padding:10px 13px;background:var(--surface2);border-top:1px solid var(--line);border-radius:0 0 10px 10px}
@@ -3230,7 +3231,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-17T14:02:56Z',n:'Entrega 152 · 17 nov · 15:02'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-17T16:01:11Z',n:'Entrega 153 · 17 nov · 17:01'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
