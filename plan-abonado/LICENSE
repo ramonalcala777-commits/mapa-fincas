@@ -1,0 +1,16 @@
+PLAN DE ABONADO
+Copyright © 2026 Ramón Alcalá. Todos los derechos reservados.
+
+Esta herramienta (código, diseño, textos y documentación) es propiedad de Ramón Alcalá.
+Que el código se pueda ver no da permiso para usarlo. Sin permiso previo y por escrito del titular, queda prohibido copiar, modificar, distribuir, publicar, sublicenciar, vender o aprovechar la herramienta, entera o en parte, y hacer obras derivadas de ella.
+Cualquier persona puede usar la herramienta publicada para hacer los planes de abonado de sus fincas, según las condiciones de uso (condiciones.html).
+
+COMPONENTES DE TERCEROS (conservan su propia licencia)
+- jsPDF 2.5.2: licencia MIT. © 2010-2021 James Hall, yWorks GmbH y colaboradores.
+- PDF.js: licencia Apache 2.0. © Mozilla Foundation.
+- Letras Barlow: SIL Open Font License 1.1. © The Barlow Project Authors.
+
+FUENTES DE DATOS
+- Valores climatológicos normales: © AEMET.
+- Recintos: SIGPAC, Ministerio de Agricultura, Pesca y Alimentación.
+- Extracciones de cultivos: Guía práctica de la fertilización racional de los cultivos en España (MAPA, 2010).
