@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-M1YX+TP4Yg9ExNqFR4Oscq42UEdcDE8Qecw2iynSkfM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-W8i1nqy7gt/aOfyxABiFabg+aOPXqFCBB7KAQAe8meE='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
@@ -3218,7 +3218,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-13T20:06:13Z',n:'Entrega 149 · 13 nov · 21:06'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-17T09:52:03Z',n:'Entrega 150 · 17 nov · 10:52'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -3743,16 +3743,37 @@ function flabelOcc(){
 }
 /* busca el texto y tamaño mayores que caben dentro del recinto y sin pisar nada ya colocado */
 function labelFit(r,tiers,occ){
-  var p=rpt(r), bb=geomBounds(r.geom), sw=map.latLngToContainerPoint(bb.getSouthWest()), ne=map.latLngToContainerPoint(bb.getNorthEast()), bw=Math.abs(ne.x-sw.x), bh=Math.abs(sw.y-ne.y), c=map.latLngToContainerPoint([p[1],p[0]]), pick=null;
+  var p=rpt(r), bb=geomBounds(r.geom), sw=map.latLngToContainerPoint(bb.getSouthWest()), ne=map.latLngToContainerPoint(bb.getNorthEast()), bw=Math.abs(ne.x-sw.x), bh=Math.abs(sw.y-ne.y), c=map.latLngToContainerPoint([p[1],p[0]]), pick=null, tapado=false;
   var hit=function(x0,y0,x1,y1){for(var i=0;i<occ.length;i++){var o=occ[i];if(x0<o[2]&&x1>o[0]&&y0<o[3]&&y1>o[1])return true}return false};
   [12,11,10,9].some(function(fs){
     return tiers.some(function(t){
       var w=txtW(t.map(function(a){return a[0]}).join(' · '),fs)+24, h=fs*1.25+6;
       if(w>bw*.95||h>bh*.9)return false;
-      if(hit(c.x-w/2,c.y-h/2,c.x+w/2,c.y+h/2))return false;
+      if(hit(c.x-w/2,c.y-h/2,c.x+w/2,c.y+h/2)){tapado=true;return false}
       pick={t:t,fs:fs}; occ.push([c.x-w/2-2,c.y-h/2-2,c.x+w/2+2,c.y+h/2+2]); return true;
     });
   });
+  /* Entrega 150: si el centro lo tapa una medición u otra etiqueta, se busca otro sitio libre dentro del recinto (el más cercano al centro) */
+  if(!pick&&tapado){
+    var P=polys(r.geom).map(function(pp){return pp.map(function(rg){return rg.map(function(q){var s=map.latLngToContainerPoint([q[1],q[0]]);return [s.x,s.y]})})});
+    var dentro=function(x,y){return P.some(function(pp){return inPoly([x,y],pp)})};
+    var x0=Math.min(sw.x,ne.x), y0=Math.min(sw.y,ne.y), N=12, cs=[];
+    for(var i=0;i<N;i++)for(var j=0;j<N;j++){var x=x0+(i+.5)/N*bw, y=y0+(j+.5)/N*bh; if(dentro(x,y))cs.push([x,y,Math.hypot(x-c.x,y-c.y)])}
+    cs.sort(function(a,b){return a[2]-b[2]});
+    [12,11,10,9].some(function(fs){
+      return tiers.some(function(t){
+        var w=txtW(t.map(function(a){return a[0]}).join(' · '),fs)+24, h=fs*1.25+6;
+        if(w>bw*.95||h>bh*.9)return false;
+        return cs.some(function(q){
+          var a0=q[0]-w/2, b0=q[1]-h/2, a1=q[0]+w/2, b1=q[1]+h/2;
+          if(!(dentro(a0,b0)&&dentro(a1,b0)&&dentro(a0,b1)&&dentro(a1,b1)))return false;
+          if(hit(a0,b0,a1,b1))return false;
+          var ll=map.containerPointToLatLng([q[0],q[1]]);
+          pick={t:t,fs:fs,ll:[ll.lat,ll.lng]}; occ.push([a0-2,b0-2,a1+2,b1+2]); return true;
+        });
+      });
+    });
+  }
   return pick;
 }
 function labelHTML(pick,col){
@@ -3778,7 +3799,7 @@ function cLabelsRedraw(){
     var T=function(a){return a.filter(Boolean)};
     var tiers=[T([nm,[cn+(vr?' · '+varReal(r):'')],hs]),T([nm,[cn],hs]),T([nm,[cn]]),T([[cn]])];
     var pick=labelFit(r,tiers,occ); if(!pick)return;
-    cLabels.addLayer(L.marker([p[1],p[0]],{icon:L.divIcon({className:'cl',html:labelHTML(pick,cropColor(r.cultivo||NOCROP)),iconSize:[0,0]}),interactive:false,keyboard:false}));
+    cLabels.addLayer(L.marker(pick.ll||[p[1],p[0]],{icon:L.divIcon({className:'cl',html:labelHTML(pick,cropColor(r.cultivo||NOCROP)),iconSize:[0,0]}),interactive:false,keyboard:false}));
   });
 }
 /* etiquetas durante un aforo: lo mismo que en el mapa + el dato aforado */
@@ -3796,7 +3817,7 @@ function afLabelsRedraw(){
       pick=labelFit(r,tiers,occ);
     }else if(nm||st)pick={fs:11,t:T([nm,st])};
     if(!pick)return;
-    afLbl.addLayer(L.marker([p[1],p[0]],{icon:L.divIcon({className:'cl',html:labelHTML(pick,cc),iconSize:[0,0]}),interactive:false,keyboard:false}));
+    afLbl.addLayer(L.marker(pick.ll||[p[1],p[0]],{icon:L.divIcon({className:'cl',html:labelHTML(pick,cc),iconSize:[0,0]}),interactive:false,keyboard:false}));
   });
 }
 function syncLabels(){var on=map.getZoom()<=16;if(on&&!map.hasLayer(labels))map.addLayer(labels);if(!on&&map.hasLayer(labels))map.removeLayer(labels)}
@@ -15990,7 +16011,9 @@ function medCands(m,area){
   MCAND[key]=out; return out;
 }
 function drawMedAll(){
-  medAll.clearLayers(); if(!OV.med)return;
+  medAll.clearLayers(); flDeclutter(); if(!OV.med)return;
+  /* Entrega 150: antes de medir los huecos, los nombres de las fincas vuelven a su sitio (sin las mediciones, que se acaban de quitar):
+     así un nombre que antes tapaba una medición vuelve a contar y la medición ya no se queda encima para siempre */
   var z=map.getZoom(), boxes=[], drawing=med.on&&!med.view, mains=[], sides=[], obs=medObst();
   var hit=function(L0,b,g){for(var i=0;i<L0.length;i++){var o=L0[i];if(b.x0<o.x1+g&&b.x1+g>o.x0&&b.y0<o.y1+g&&b.y1+g>o.y0)return true}return false};
   MEDS().slice().sort(function(a,b){return (b.t||0)-(a.t||0)}).forEach(function(m){
@@ -16013,6 +16036,19 @@ function drawMedAll(){
       if(hit(obs,b,3))continue;
       pick=c;pb=b;break;
     }
+    /* Entrega 150: si dentro no queda hueco, la etiqueta se pone pegada por fuera de la medición (al lado) antes que tapar el nombre de una finca */
+    if(!pick){
+      var sx0=Infinity,sy0=Infinity,sx1=-Infinity,sy1=-Infinity;
+      o.m.pts.forEach(function(c){var s=map.latLngToContainerPoint([c[1],c[0]]);sx0=Math.min(sx0,s.x);sy0=Math.min(sy0,s.y);sx1=Math.max(sx1,s.x);sy1=Math.max(sy1,s.y)});
+      var mx=(sx0+sx1)/2, my=(sy0+sy1)/2, gx=w/2+6, gy=h/2+6;
+      var qs=[]; [0,14,28,48,72,104,140].forEach(function(d){[[0,-1],[0,1],[1,0],[-1,0],[1,-1],[-1,-1],[1,1],[-1,1]].forEach(function(v){
+        qs.push([v[0]?(v[0]>0?sx1+gx+d:sx0-gx-d):mx, v[1]?(v[1]>0?sy1+gy+d:sy0-gy-d):my])})});
+      qs.some(function(q){
+        var b={x0:q[0]-w/2,y0:q[1]-h/2,x1:q[0]+w/2,y1:q[1]+h/2};
+        if(hit(boxes,b,3)||hit(obs,b,3))return false;
+        var ll=map.containerPointToLatLng([q[0],q[1]]); pick=[ll.lng,ll.lat]; pb=b; return true;
+      });
+    }
     if(!pick){pick=alt;pb=ab}
     if(!pick)return;
     boxes.push(pb);
@@ -16034,6 +16070,7 @@ function drawMedAll(){
     var d=.002, A2=[s.A[0]+(s.B[0]-s.A[0])*(fp-d),s.A[1]+(s.B[1]-s.A[1])*(fp-d)], B2=[s.A[0]+(s.B[0]-s.A[0])*(fp+d),s.A[1]+(s.B[1]-s.A[1])*(fp+d)];
     var mk=medSideLbl(A2,B2,s.txt,s.col,0); if(mk)medAll.addLayer(mk);
   });
+  flDeclutter();
 }
 function finOn(){if(OV.fin)return;OV.fin=true;lsSet(KEYO,JSON.stringify(OV));redrawTiles();drawSaved()}
 
