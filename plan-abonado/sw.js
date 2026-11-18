@@ -1,5 +1,5 @@
 /* Funciona sin cobertura: guarda la herramienta en el aparato. Los datos del usuario no pasan por aquí. */
-var V='202611181505', C='plan-abonado-'+V;
+var V='202611181649', C='plan-abonado-3.1-'+V;
 var F=['./','index.html','app.js?v='+V,'style.css?v='+V,'manifest.webmanifest','iconos/favicon.png','iconos/apple-touch-icon.png','iconos/icono-192.png','iconos/icono-512.png',
   'fonts/barlow-latin-400-normal.woff2','fonts/barlow-latin-500-normal.woff2','fonts/barlow-latin-600-normal.woff2','fonts/barlow-latin-700-normal.woff2','fonts/barlow-condensed-latin-500-normal.woff2','fonts/barlow-condensed-latin-600-normal.woff2','fonts/barlow-condensed-latin-700-normal.woff2','fonts/barlow-semi-condensed-latin-500-normal.woff2','fonts/barlow-semi-condensed-latin-600-normal.woff2',
   'lib/pdf.js','lib/pdfjs.js','lib/pdfjs-worker.js','lib/leaflet.js','lib/leaflet.css','privacidad.html','condiciones.html'];
