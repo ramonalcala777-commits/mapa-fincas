@@ -570,3 +570,28 @@ body.mapon{overflow:hidden}
   .srch .in{width:100%}
 }
 @media print{.side,.desk{display:none}.app{display:block}}
+/* v3.1: hoja de la PAC, titular leído y recintos con dos cultivos */
+.pactit{margin:10px 0 4px;padding:8px 12px;border-left:3px solid var(--brand);background:var(--tint);border-radius:6px;font-size:13.5px;line-height:1.5}
+.pacdos{align-items:flex-start;font-size:13.5px}
+.pacdos .pmx{margin-top:4px}
+/* v3.1 punto 7: «Aplicar a» en medidas y restricciones */
+.apl{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;margin-bottom:6px}
+.apl .fld{min-width:240px;max-width:340px}
+.dsu{color:var(--warn);display:inline-flex;gap:6px;align-items:center}
+.ckrow .dsu{display:block;margin:2px 0 0 26px}
+/* v3.1 punto 8: interruptor «Nombres» del mapa */
+.mnom{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--on-side);cursor:pointer;white-space:nowrap;padding:0 4px;user-select:none}
+.mnom input{width:16px;height:16px;accent-color:var(--mark);margin:0}
+.pacdos{flex-wrap:nowrap}
+.pacdos>svg,.pacdos>.ic{flex:none;margin-top:2px}
+.pacplan{margin-top:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pacplan select{width:auto;flex:0 0 auto}
+.pacdos{margin-bottom:10px}
+.pacrow small{display:block;margin-top:1px}
+/* v3.1: resumen de la hoja de la PAC, cada dato en su casilla y cada unidad en su línea */
+.und{display:flex;flex-wrap:wrap;gap:8px 28px;margin:6px 0 10px}
+.und>div{display:flex;flex-direction:column;gap:2px}
+.und .k{font:600 11px/1.2 var(--semi);letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.und b{font-size:15px}
+.ugl>div{display:flex;gap:10px;align-items:baseline;padding:2px 0}
+.ugl b{min-width:170px}
