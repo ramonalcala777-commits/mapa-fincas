@@ -595,3 +595,16 @@ body.mapon{overflow:hidden}
 .und b{font-size:15px}
 .ugl>div{display:flex;gap:10px;align-items:baseline;padding:2px 0}
 .ugl b{min-width:170px}
+/* v3.2: zona vulnerable según el SIGPAC (nota bajo el desplegable y aviso de unidad con recintos dentro y fuera) */
+table.q small.zvn{display:block;font:500 11.5px/1.25 var(--sans);color:var(--ink3);margin-top:-2px;max-width:220px;text-transform:none;letter-spacing:0}
+table.q small.zvn.w{color:var(--warn)}
+.zvw{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:9px 12px;border-radius:8px;background:var(--warn-bg);color:var(--warn);font-size:13.5px}
+.zvw svg{width:16px;height:16px;flex:none}.zvw b{font-weight:600}.zvw span{flex:1;min-width:200px}
+.zvw .btn{color:var(--ink);background:var(--bg)}
+/* v3.2: «No tengo análisis de suelo» */
+.sul2{display:flex;flex-direction:column;gap:6px;align-items:stretch}.sul2 .sulk{width:100%}.sul2 label.ckr{align-self:flex-start}
+label.ckr.suck{font-size:13.5px;color:var(--ink2);white-space:nowrap;margin:0}
+.suno{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px}.suno b{font-weight:600;color:var(--ink2)}
+table.q .suno select.in{width:100%;flex:none;min-width:0;height:34px;font-size:13.5px;padding:0 28px 0 10px;text-overflow:ellipsis}
+.suno{flex-direction:column;align-items:stretch;gap:5px}.suno b{white-space:nowrap;font-size:13.5px}
+.edg .fld.abm{width:240px}.edg .fld.abm .hlp{margin-left:4px}
