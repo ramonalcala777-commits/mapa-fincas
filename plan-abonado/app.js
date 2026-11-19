@@ -788,7 +788,7 @@ function pabOut(f,p,kind){
 /* Plan de abonado — herramienta independiente (versión 3: tres pasos, Finca · Datos · Plan y PDF).
    Todo se guarda en este aparato (localStorage) y, si se quiere, en un archivo de copia. No hay servidor ni cuentas.
    El cálculo, el PDF y el Excel del plan vienen de base.js (RD 1051/2022 y Decreto 80/2025 de Castilla-La Mancha). */
-var VERSION="3.1 · 18 nov 2026";
+var VERSION="3.2 · 19 nov 2026";
 var KEY='plan-abonado:datos', KEYUI='plan-abonado:vista', KEYGEO='plan-abonado:contornos';
 var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
 
@@ -826,7 +826,7 @@ ha4=function(n){return nf(n,2)};
 /* deshacer */
 var UNDO=[];
 function undoPush(){try{var t=JSON.stringify({fincas:S.fincas,recintos:S.recintos,x:S.x});if(UNDO[UNDO.length-1]===t)return;UNDO.push(t);if(UNDO.length>40)UNDO.shift()}catch(e){}}
-function undoDo(){var t=UNDO.pop();if(!t){toast('No hay nada que deshacer');return}var o=JSON.parse(t);S.fincas=o.fincas;S.recintos=o.recintos;S.x=o.x;save();var mo=!$('#mapa').hidden;if(UI.fid&&!finca(UI.fid)){UI.v='inicio';UI.fid=null;if(mo){mapaCerrar();mo=false}}render();if(mo){mRestyle();mSide()}toast('Deshecho')}
+function undoDo(){var t=UNDO.pop();if(!t){toast('No hay nada que deshacer');return}var o=JSON.parse(t);S.fincas=o.fincas;S.recintos=o.recintos;S.x=o.x;save();if(typeof RMODE==='object')RMODE={};var mo=!$('#mapa').hidden;if(UI.fid&&!finca(UI.fid)){UI.v='inicio';UI.fid=null;if(mo){mapaCerrar();mo=false}}render();if(mo){mRestyle();mSide()}toast('Deshecho')}
 function undoToast(msg){toast(msg,'Deshacer',undoDo)}
 
 /* avisos: cortos, arriba a la derecha (punto 36); no tapan casillas */
@@ -901,8 +901,12 @@ function catMios(){var gen={},o=[],seen={};catGen().forEach(function(x){gen[noAc
   S.fincas.forEach(function(f){(f.pab||[]).forEach(function(p){(p.ud||[]).forEach(function(u){((u.pg||{}).rows||[]).forEach(function(q){var k=noAcc(q.n||'').toLowerCase().trim();if(!k||gen[k]||seen[k])return;if(!(+q.rn||+q.rp||+q.rk))return;seen[k]=1;o.push({n:q.n,rn:+q.rn||0,rp:+q.rp||0,rk:+q.rk||0,org:q.org===1?1:0,g:'Usados antes'})})})})});
   return o.sort(function(a,b){return (b.mio||0)-(a.mio||0)||a.n.localeCompare(b.n,'es')})}
 function catTodo(){return catMios().concat(catGen())}
-function catBusca(q){var t=noAcc(q||'').toLowerCase().trim(), L=catTodo();if(!t)return L;var ws=t.split(/\s+/);
-  return L.filter(function(x){var n=noAcc(x.n).toLowerCase()+' '+[x.rn,x.rp,x.rk].join('-')+' '+noAcc(x.g).toLowerCase();return ws.every(function(w){return n.indexOf(w)>=0})})}
+/* v3.2: «Abono tipo» (el listado de arriba, con su riqueza típica) o «Mi abono» (nombre comercial: «Mis abonos» y «Usados antes») */
+function abKey(n){return noAcc(String(n||'')).toLowerCase().trim()}
+function catEsTipo(n){var k=abKey(n);return !!k&&catGen().some(function(x){return abKey(x.n)===k})}
+function catGrupo(x){return x.g==='Mis abonos'||x.g==='Usados antes'?x.g:'Abonos tipo: '+x.g}
+function catBusca(q,de){var t=noAcc(q||'').toLowerCase().trim(), L=de==='tipo'?catGen():de==='mio'?catMios():catTodo();if(!t)return L;var ws=t.split(/\s+/);
+  return L.filter(function(x){var n=noAcc(x.n).toLowerCase()+' '+[x.rn,x.rp,x.rk].join('-')+' '+noAcc(catGrupo(x)).toLowerCase();return ws.every(function(w){return n.indexOf(w)>=0})})}
 function catDe(n){var k=noAcc(n||'').toLowerCase().trim();return catTodo().filter(function(x){return noAcc(x.n).toLowerCase()===k})[0]||null}
 
 /* ───── cultivos ───── */
@@ -942,9 +946,48 @@ function sigLeer(f,refs,cb){
   if(navigator.onLine===false){toast('Sin internet no puedo leer el SIGPAC. Prueba luego.');if(cb)cb(0,refs.length);return}
   var idx=0,ok=0,ko=0; refs.forEach(function(x){SIGB[x]=1});
   var one=function(){if(idx>=refs.length)return Promise.resolve();var x=refs[idx++];
-    return sigInfo(x).then(function(o){var r=S.recintos[x];if(!r)return;sigAplica(r,o);ok++}).catch(function(){ko++}).then(function(){delete SIGB[x];return one()})};
+    /* v3.2: la zona vulnerable solo se pregunta si el SIGPAC ha dado los datos del recinto (un recinto que no existe también sale «fuera») */
+    return sigInfo(x).then(function(o){var r=S.recintos[x];if(!r)return;sigAplica(r,o);ok++;return zvLee(x)}).catch(function(){ko++}).then(function(){delete SIGB[x];return one()})};
   Promise.all([one(),one(),one(),one()]).then(function(){pendAPlanes(f);climaAuto(f);save();if(cb)cb(ok,ko);render()});
 }
+/* ───── v3.2: zona vulnerable a nitratos según el SIGPAC (FEGA) ─────
+   Consulta «Intersección de recinto con nitratos»: % del recinto dentro de la capa de nitratos, o [] si no toca.
+   Se guarda en el recinto r.zvn={p:%,m2,f:fecha}. Si falla, no se guarda nada (nunca «No» por un fallo). */
+var ZVQ={}, ZVKO={};
+function sigNitr(ref){return fetch('https://sigpac-hubcloud.es/servicioconsultassigpac/intersection/nitratos/'+ref.split(':').join('/')+'.json').then(function(r){if(!r.ok)throw 1;return r.json()}).then(function(j){if(!Array.isArray(j))throw 1;var p=0,m2=0;j.forEach(function(o){p+=+o.surface_tpc||0;m2+=+o.surface_intersection||0});return {p:Math.min(100,Math.round(p*1000)/1000),m2:Math.round(m2),f:hoyIso()}})}
+function zvLee(ref){ZVQ[ref]=1;return sigNitr(ref).then(function(o){var r=S.recintos[ref];if(r)r.zvn=o;delete ZVKO[ref];return o}).catch(function(){ZVKO[ref]=1;return null}).then(function(o){delete ZVQ[ref];return o})}
+/* al abrir una finca: se pregunta lo que falte, sin avisos. Solo los recintos que el SIGPAC ya ha confirmado (tienen sus datos);
+   los demás, si el SIGPAC los encuentra ahora. No cambia nada más del recinto. */
+/* la finca de ejemplo tiene códigos inventados (municipio 900): no se pregunta al SIGPAC */
+function fEj(f){return !!(f&&(f.ej===1||(f.datos&&f.datos.tit&&f.datos.tit.nif==='00000000T'&&f.nombre==='Finca de ejemplo')))}
+function zvComprobar(f){if(!f||fEj(f)||navigator.onLine===false)return;var rs=fincaRecs(f.id).filter(function(r){return !r.zvn&&!ZVQ[r.ref]});if(!rs.length)return;
+  var L=rs.slice(),n=0,one=function(){var r=L.shift();if(!r)return Promise.resolve();var go=r.hs!=null?zvLee(r.ref):sigInfo(r.ref).then(function(){return zvLee(r.ref)},function(){ZVKO[r.ref]=1;return null});
+    return go.then(function(o){if(o)n++;return one()})};
+  rs.forEach(function(r){ZVQ[r.ref]=1});
+  Promise.all([one(),one(),one(),one()]).then(function(){if(n){saveRaw();if(UI.v==='finca'&&UI.fid===f.id)render()}else if(UI.v==='finca'&&UI.fid===f.id)renderLuego()})}
+/* «Sí, 100 %», «Sí, 2 % (borde)», «No» */
+function zvPct(p){return p>=99.5?'100 %':(p<0.1?'menos de 0,1 %':(p<10?trTxt(p,1).replace(/,0$/,''):trTxt(p,0))+' %')}
+function zvTxt(o){if(!o)return '';return o.p>0?'Sí, '+zvPct(o.p)+(o.p<99.5?(o.p<10?' (borde)':' (en parte)'):''):'No'}
+/* la unidad: lo que dice el SIGPAC de sus recintos */
+function zvMan(u){return u.zvMan===1||(u.zv===1&&u.zvA!==1)}
+function zvSig(f,u){var R=(u.refs||[]).map(function(x){return S.recintos[x]}).filter(function(r){return r&&r.fincaId===f.id}),con=R.filter(function(r){return r.zvn}),den=con.filter(function(r){return r.zvn.p>0}),fe='';
+  con.forEach(function(r){if(r.zvn.f>fe)fe=r.zvn.f});
+  return {R:R,con:con,den:den,fue:con.filter(function(r){return !(r.zvn.p>0)}),sin:R.filter(function(r){return !r.zvn}),pend:R.some(function(r){return ZVQ[r.ref]}),v:den.length?1:(R.length&&con.length===R.length?0:null),f:fe}}
+/* pone la unidad en «Sí» si algún recinto cae dentro y en «No» si ninguno cae y se han podido mirar todos; lo puesto a mano no se toca.
+   Las unidades de antes de la 3.2 marcadas en «Sí» cuentan como puestas a mano (no se bajan a «No» solas). Solo escribe si cambia algo. */
+function zvAplicar(f){var ch=0;(f.pab||[]).forEach(function(p){(p.ud||[]).forEach(function(u){if(zvMan(u))return;var z=zvSig(f,u);if(z.v===null)return;
+  if(u.zv!==z.v||u.zvA!==1||u.zvF!==z.f){u.zv=z.v;u.zvA=1;u.zvF=z.f;ch=1}})});return ch}
+/* «Separar en dos unidades»: los recintos que caen en zona vulnerable (aunque sea por el borde) y los que no */
+function zvSeparar(f,p,i){var u=p.ud[i];if(!u)return;var z=zvSig(f,u);if(!z.den.length||!z.fue.length)return;undoPush();
+  var fuera=z.fue.map(function(r){return r.ref}),base=String(u.n||'').replace(/ \((fuera de )?zona vulnerable\)$/,'');
+  var nu=JSON.parse(JSON.stringify(u));nu.id=uid();nu.refs=fuera;nu.n=base+' (fuera de zona vulnerable)';nu.zv=0;nu.zvA=1;nu.zvF=z.f;delete nu.zvMan;delete nu.suDe;
+  if(nu.rc)Object.keys(nu.rc).forEach(function(x){if(fuera.indexOf(x)<0)delete nu.rc[x]});
+  ((nu.pg||{}).rows||[]).forEach(function(q){q.id=uid()});
+  u.refs=(u.refs||[]).filter(function(x){return fuera.indexOf(x)<0});u.n=base+' (zona vulnerable)';u.zv=1;u.zvA=1;u.zvF=z.f;delete u.zvMan;
+  if(u.rc)fuera.forEach(function(x){delete u.rc[x]});
+  var big=function(L){return L.map(function(x){return S.recintos[x]}).filter(Boolean).sort(function(a,b){return haC(b)-haC(a)})[0]};
+  if(u.refs.indexOf(u.rp)<0){var b1=big(u.refs);u.rp=b1?b1.ref:''}if(nu.refs.indexOf(nu.rp)<0){var b2=big(nu.refs);nu.rp=b2?b2.ref:''}
+  p.ud.splice(i+1,0,nu);p.udMan=1;p.m=Date.now();save();render();undoToast('«'+base+'» separada en dos unidades: dentro y fuera de zona vulnerable')}
 /* la pendiente del SIGPAC pasa a la tabla de recintos de cada unidad si allí está vacía */
 function pendAPlanes(f){(f.pab||[]).forEach(function(p){(p.ud||[]).forEach(function(u){(u.refs||[]).forEach(function(x){var r=S.recintos[x];if(!r||r.pend==null)return;u.rc=u.rc||{};var c=u.rc[x]=u.rc[x]||{};if(!abHas(c.pe))c.pe=r.pend})})})}
 /* si la lluvia del plan es la puesta sola y ahora se sabe la estación más cercana, se cambia */
@@ -1085,7 +1128,7 @@ function planNuevo(f,y,prev){
   prev=prev||pabList(f)[0];
   if(prev){n.cl=Object.assign({},prev.cl||PAB_CL);delete n.clAuto;if(prev.clAuto)n.clAuto=1;
     n.ud.forEach(function(u){var o=(prev.ud||[]).filter(function(x){return x.n===u.n||(x.ck===u.ck&&x.rg===u.rg)})[0];if(!o)return;
-      ['zv','tp','inh','rp','loc','leg','bobs'].forEach(function(k){if(o[k]!==undefined)u[k]=o[k]});
+      ['zv','zvMan','zvA','zvF','suNo','tp','inh','rp','loc','leg','bobs'].forEach(function(k){if(o[k]!==undefined)u[k]=o[k]});
       ['su','rc','ag','ne','ap','mo','mit','res'].forEach(function(k){if(o[k]!==undefined)u[k]=JSON.parse(JSON.stringify(o[k]))});
       u.pg={src:'own',rows:((o.pg||{}).rows||[]).map(function(q){var c=JSON.parse(JSON.stringify(q));c.id=uid();return c})};
       if(o.d0===1)u.d0=1; if(LEN.test(u.ck))u.prec=pabCkName(u.ck); u.n=o.n||u.n})}
@@ -1162,7 +1205,7 @@ function udTrasCambio(f,p,man){if(!p)return;if(man){UDAV[p.id]=1;return}udRehace
 
 /* ───── ejemplo inventado (para probar) ───── */
 function ejemplo(){
-  undoPush(); var f=fincaNueva('Finca de ejemplo'); f.datos.tit={n:'Titular de ejemplo',nif:'00000000T',mun:'Municipio',prov:'Albacete'};
+  undoPush(); var f=fincaNueva('Finca de ejemplo'); f.ej=1; f.datos.tit={n:'Titular de ejemplo',nif:'00000000T',mun:'Municipio',prov:'Albacete'};
   addRecs(f,[{ref:'2:900:0:0:1:1:1',ha:5.2,cultivo:'Pistacho',riego:'regadio',variedad:'Kerman',nombre:'La Hoya',pend:2.1},{ref:'2:900:0:0:1:2:1',ha:3.1,cultivo:'Pistacho',riego:'regadio',variedad:'Kerman',pend:1.4},{ref:'2:900:0:0:3:7:2',ha:6.4,cultivo:'Almendro',riego:'secano',variedad:'Guara',pend:4.8}]);
   var p=planNuevo(f,pabY0());
   /* punto 37: el programa del pistacho de regadío sale cuadrado (49,2 / 45,8 / 105,0 frente a 48,7 / 45 / 105); el almendro de secano (6,40 ha) está exento y se deja vacío */
@@ -1227,16 +1270,13 @@ function arreglo(f,u,C,k){var b=C.B[k], rg=u.rg==='regadio', nm={n:rg?'Nitrato a
   if(best<0)return null; var q=rows[best], nx=(+q.d||0)-b.dv/((+q[R]||0)/100), nd=Math.max(0,Math.round(nx/5)*5);if(Math.abs(nd-nx)*(+q[R]||0)/100>0.9)nd=Math.max(0,Math.round(nx));if(nd===(+q.d||0))return null;
   return {t:'set',j:best,d:nd,txt:'baja «'+(q.n||'aporte '+(best+1))+'» de '+nf(+q.d||0,0)+' a '+nf(nd,0)+' kg/ha'}}
 
-/* ───── semáforo del suelo (niveles orientativos, criterio técnico) ───── */
-var SUELO=[
-  ['mo','Materia orgánica','%',[0.8,1.5,2.5,3.5],2],
-  ['p','Fósforo (Olsen)','mg/kg',[7,12,20,35],0],
-  ['k','Potasio','mg/kg',[100,175,300,450],0],
-  ['ph','pH','',[5.5,6.5,7.5,8.5],1]];
-var NIV=['Muy bajo','Bajo','Medio','Alto','Muy alto'], NIVPH=['Muy ácido','Ácido','Neutro','Básico','Muy básico'];
-function nivel(v,cut){for(var i=0;i<cut.length;i++)if(v<cut[i])return i;return 4}
-/* crédito del suelo propuesto: alto = 25 % de la necesidad; muy alto = 50 % (P₂O₅ y K₂O) */
-function creditoSuelo(u,C){var su=u.su||{},o={};[['p','p'],['k','k']].forEach(function(x){var v=su[x[0]];if(!abHas(v))return;var l=nivel(+v,SUELO.filter(function(s){return s[0]===x[0]})[0][3]);if(l>=3)o[x[1]]=Math.round(C.nb[x[1]]*(l===4?0.5:0.25))});return o}
+/* ───── v3.2 (propuesta 2.4): el semáforo del suelo (bajo, medio, alto…) y el «crédito del suelo» se han quitado: sus cortes no
+   tenían fuente y no he encontrado una publicación oficial que los dé (ver INFORME.md). Lo que aporta el suelo se sigue pudiendo
+   escribir a mano en «Aportes»; los planes guardados con un aporte del suelo puesto con el botón lo conservan tal cual. ───── */
+/* «No tengo análisis de suelo» (u.suNo, opcional): 'nd' no dispongo; 'no20' no obligatorio (unidad de 20 ha o menos sin hoja de 5 ha).
+   Solo vale si la unidad no tiene análisis; 'no20' solo si la unidad tiene 20 ha o menos (si crece, pasa a «No dispongo»). */
+var SUNO_TXT={nd:'Sin análisis de suelo',no20:'Sin análisis de suelo: no obligatorio (RD 1311/2012, anexo III, parte I, A.3, datos generales, letra d)'};
+function suNoMot(u,C){if(!u||!u.suNo||suTiene(u.su))return '';return u.suNo==='no20'&&C&&C.ha<=20+1e-9?'no20':'nd'}
 
 /* ───── ayudas (?) con el artículo de la norma ───── */
 /* cultivos para los que la guía del MAPA no da extracciones por tonelada (viña, triticale, otros frutales…): aviso en ámbar */
@@ -1244,16 +1284,17 @@ var SIN_EX_TXT='La guía del MAPA no da extracciones por tonelada para este cult
 var GLOS={
   ud:['Unidad de producción','Conjunto de recintos con el mismo cultivo y el mismo régimen (secano o regadío) que se abonan igual. El plan se hace por unidad.','RD 1051/2022, art. 3 v) y art. 6'],
   ex:['Unidad exenta','Las unidades de secano de 10 ha o menos no necesitan plan de abonado. Se pueden rellenar igualmente.','RD 1051/2022, art. 4.2 b)'],
-  zv:['Zona vulnerable a nitratos','Zonas que declara la comunidad autónoma por el riesgo de contaminación por nitratos. En ellas hay un límite de N por cultivo y más restricciones. Para saber si tus recintos están dentro, mira el visor de zonas vulnerables de la Junta de Comunidades de Castilla-La Mancha o pregunta en tu oficina comarcal agraria con el código SIGPAC del recinto. La herramienta no lo sabe sola.','Decreto 80/2025 de Castilla-La Mancha, anejo III'],
+  zv:['Zona vulnerable a nitratos','Zonas que designa la comunidad autónoma por el riesgo de contaminación por nitratos. En ellas hay un límite de N por cultivo y más restricciones. La herramienta lo mira sola en el SIGPAC del FEGA (consulta «Intersección de recinto con nitratos»), que da qué parte de cada recinto cae en la capa de zonas vulnerables. Es una ayuda: la referencia legal es la designación de la Junta de Comunidades de Castilla-La Mancha. Si un recinto toca solo por el borde, se enseña su porcentaje para que lo mires. Puedes cambiarlo a mano y se queda como lo pongas.','Decreto 80/2025 de Castilla-La Mancha, anejo III · SIGPAC (FEGA), consulta de nitratos'],
   cos:['Cosecha esperada','Lo que esperas recoger este año, en kg por ha. Con las extracciones por tonelada da lo que necesita el cultivo.','RD 1051/2022, art. 5.1 a)'],
   ag:['Agua de riego','Lo que piensas regar en la campaña, en m³ por ha. Si pones en el detalle los nitratos del agua, se descuenta el N que trae.','RD 1051/2022, art. 6.3'],
-  su:['Análisis de suelo','El del recinto representativo de la unidad: materia orgánica, pH, fósforo (Olsen) y potasio. Si otra unidad tiene el mismo suelo, puedes usar su análisis.','RD 1051/2022, art. 6.2'],
+  su:['Análisis de suelo','El plan lleva datos del suelo de los recintos o, al menos, de un recinto representativo por cada hoja de cultivo: materia orgánica, pH, fósforo y potasio asimilables (los primeros 30 cm). Según la norma salen de mapas o registros provinciales y, si no los hay, de análisis cada 5 años como mínimo en regadío y cada 10 en secano. No hace falta el análisis si los recintos no pueden agruparse en una hoja de cultivo de al menos 5 ha y la unidad tiene 20 ha o menos. No hay mapa de suelos oficial de Castilla-La Mancha que la herramienta pueda consultar. Si no tienes análisis, marca «No tengo análisis de suelo». Si otra unidad tiene el mismo suelo, puedes usar su análisis.','RD 1051/2022, art. 6.2; RD 1311/2012, anexo III, parte I, A.3 (redacción del RD 92/2024)'],
   sinex:['Extracciones de referencia',SIN_EX_TXT+'. Escribe las tuyas: los kilos de N, P₂O₅ y K₂O que se lleva cada tonelada de cosecha (pídeselas a tu técnico si no las sabes).',''],
   tp:['Tipo de parcela','Tipo 1: suelo ligero (arenoso, franco-arenoso o franco) o precedente leguminosa. Tipo 2: el resto, y también si se fertirriga. Cambia el límite de N.','Decreto 80/2025 de Castilla-La Mancha, anejo III'],
   rp:['Recinto representativo','El recinto cuyo análisis de suelo vale para toda la unidad.','RD 1051/2022, art. 6.2'],
+  abt:['Abono tipo o mi abono','«Abono tipo»: uno del listado, con la riqueza típica de ese tipo de abono; si tu etiqueta dice otra, cámbiala. «Mi abono»: el nombre comercial y la riqueza de la etiqueta; al pulsar «Hecho» se guarda en «Mis abonos» y sale el primero la próxima vez. En el PDF y en el Excel sale el nombre que pongas con su riqueza.',''],
   uf:['U.F. (unidades fertilizantes)','Kilos de nutriente puro por hectárea: dosis (kg/ha) × riqueza (%) ÷ 100. Por ejemplo, 100 kg/ha de un 15-15-15 son 15 U.F. de N, de P₂O₅ y de K₂O.',''],
   net:['Necesidad neta','Lo que necesita el cultivo (necesidad bruta) menos lo que ya aportan el suelo, el agua de riego, el estiércol y otros. Es lo que tiene que cubrir el programa.','RD 1051/2022, art. 5'],
-  suelo:['Aporte del suelo','Lo que el suelo puede dar según el análisis. Si no se pone, cuenta 0 y no se descuenta nada (es lo prudente). Con niveles altos de P o K se puede descontar una parte: es criterio técnico.','RD 1051/2022, art. 5.1'],
+  suelo:['Aporte del suelo','Lo que el suelo puede dar. Si no se pone, cuenta 0 y no se descuenta nada (es lo prudente). Si tu técnico calcula lo que aporta el suelo, escríbelo aquí.','RD 1051/2022, art. 5.1'],
   prec:['Cultivo precedente','El cultivo de la campaña anterior en esos recintos. En leñosos es el mismo cultivo.','RD 1051/2022, art. 5.1 a)'],
   mo:['Materia orgánica','El plan debe buscar mantener o aumentar la materia orgánica del suelo.','RD 1051/2022, art. 4.3'],
   pg:['Programa previsto','Abonos que se piensan aplicar: momento, producto, dosis, forma de aplicación y maquinaria.','RD 1051/2022, art. 6.4'],
@@ -1297,7 +1338,7 @@ function faltas(f,p,Cs){var L=[],seen={},add=function(s,t,sel,u,det){if(seen[t])
       if((ne.mo||'cos')==='cos'&&!abHas(ne.pr))add('dat','la cosecha esperada de '+q,'[data-p="'+P+'ne.pr"]',i);
       if(noExtr(u))add('dat','las extracciones de '+q,'[data-p="'+P+'ne.ex.n"]',i);
       if(u.rg==='regadio'&&!abHas((u.ag||{}).m3)&&!abHas((u.ag||{}).max))add('dat','el agua de riego de '+q,'[data-p="'+P+'ag.m3"]',i);
-      if(!suTiene(u.su))add('dat','el análisis de suelo de '+q,'[data-p="'+P+'su.mo"]',i);
+      if(!suTiene(u.su)&&!suNoMot(u,C))add('dat','el análisis de suelo de '+q,'[data-p="'+P+'su.mo"]',i);
       if(!u.rp&&C.rs.length)add('det','el recinto representativo de '+q,'',i,'su')}
     if(!u.prec)add('det','el cultivo precedente de '+q,'[data-p="'+P+'prec"]',i,'ne');
     if(!(u.mo&&u.mo.obj))add('det','el objetivo de materia orgánica','',i,'mo');
@@ -1427,7 +1468,9 @@ function udCult(f,u){var r=(u.refs||[]).map(function(x){return S.recintos[x]}).f
 
 /* ───── pasos ───── */
 var STEPS=[['fin','Finca'],['dat','Datos'],['plan','Plan y PDF']];
-var CTX=null, SEL={}, RM={}, RMR={}, HL=[];
+var CTX=null, SEL={}, RM={}, RMR={}, RMODE={}, HL=[];
+/* modo de la fila que se edita: lo elegido en el desplegable o, si no, «tipo» si el nombre es del listado (o no hay nombre) */
+function abModo(q){return RMODE[q.id]||(!q.n||catEsTipo(q.n)?'tipo':'mio')}
 function isWide(){return window.matchMedia&&window.matchMedia('(min-width:1200px)').matches}
 function stepIdx(){for(var i=0;i<STEPS.length;i++)if(STEPS[i][0]===UI.step)return i;return 0}
 function ctxOf(f){var p=pabCur(f),Cs=p?(p.ud||[]).map(function(u){return pabCalc(f,u,p)}):[],F=faltas(f,p,Cs),E=Cs.map(function(C,i){return udEst(f,p,p.ud[i],C)});return {p:p,Cs:Cs,F:F,E:E,G:estGlobal(f,p,Cs,F,E)}}
@@ -1462,7 +1505,7 @@ function render(){
   var fo=focoGuarda(), sy=window.scrollY, ss=$('#side')?$('#side').scrollTop:0;
   var f=UI.v==='finca'?finca(UI.fid):null; if(!f){UI.v='inicio';UI.fid=null}
   EXP.fid=UI.fid; var B=document.body; B.classList.toggle('vf',!!f); B.classList.toggle('vi',!f);
-  if(f){UI.step=stepOf(UI.step);pabSync(f);planAuto(f);CTX=ctxOf(f);B.dataset.step=UI.step;
+  if(f){UI.step=stepOf(UI.step);pabSync(f);planAuto(f);if(zvAplicar(f))saveRaw();CTX=ctxOf(f);B.dataset.step=UI.step;
     $('#side').innerHTML=sideHTML(f,CTX); $('#app').innerHTML=fixHTML(pasoHTML(f,CTX)); $('#desk').innerHTML=deskHTML(f,CTX)}
   else{CTX=null;delete B.dataset.step;$('#side').innerHTML='';$('#desk').innerHTML='';$('#app').innerHTML=inicioHTML()}
   document.title=f?f.nombre+' · Plan de abonado':'Plan de abonado';
@@ -1533,7 +1576,7 @@ function empiezaRec(){return '<div class="opts">'+
   '<button class="opt" data-act="ap-addrec">'+ic('plus')+'<b>A mano</b><span>Con el código SIGPAC de cada recinto.</span></button></div>'}
 function addRecHoja(){var f=finca(UI.fid);
   sheet('<h2>Añadir recintos</h2>'+(f?'<div class="opts two"><button class="opt" data-act="ap-mapa">'+ic('map')+'<b>En el mapa SIGPAC</b><span>Toca y añade.</span></button><button class="opt" data-act="ap-pdf-pick">'+ic('pdf')+'<b>Del PDF de la PAC</b><span>Todos de una vez.</span></button><button class="opt" data-act="ap-csv-pick">'+ic('grid')+'<b>De una tabla (CSV)</b><span>Polígono, parcela…</span></button></div><h3>A mano</h3>':'<p class="small">Escribe el código SIGPAC de cada recinto. La finca se crea al añadir el primero.</p>'+fld('Nombre de la finca','<input id="ap-fn" class="in" value="Mi finca" autocomplete="off">'))+
-    fld('Código SIGPAC','<input id="ap-ref" class="in" inputmode="numeric" placeholder="02:012:0:0:1:16:5" autocomplete="off"'+(f?' autofocus':'')+'>')+'<div class="small">Provincia, municipio, agregado, zona, polígono, parcela y recinto (o solo provincia, municipio, polígono, parcela y recinto).</div>'+
+    fld('Código SIGPAC','<input id="ap-ref" class="in" inputmode="numeric" placeholder="02:081:0:0:1:1:1" autocomplete="off"'+(f?' autofocus':'')+'>')+'<div class="small">Provincia, municipio, agregado, zona, polígono, parcela y recinto (o solo provincia, municipio, polígono, parcela y recinto).</div>'+
     '<div class="g3">'+fld('Cultivo','<select id="ap-rc" class="in">'+cultOpts(UI.mLast?UI.mLast.c:'')+'</select>')+fld('Riego','<select id="ap-rr" class="in"><option value="secano">Secano</option><option value="regadio"'+(UI.mLast&&UI.mLast.r==='regadio'?' selected':'')+'>Regadío</option></select>')+fld('ha (vacío: las del SIGPAC)','<input id="ap-rh" class="in" inputmode="decimal" autocomplete="off">')+'</div>'+
     '<div class="acts"><button class="btn p" data-act="ap-ref-add">'+ic('plus')+'Añadir este recinto</button><button class="btn" data-act="ap-close">'+(f?'Hecho':'Cancelar')+'</button></div>','wide');
   if(!f)setTimeout(function(){var r=$('#ap-ref');if(r)r.focus()},40)}
@@ -1553,6 +1596,15 @@ function refAdd(){var f=finca(UI.fid), ref=refParse(($('#ap-ref')||{}).value);if
 
 /* ───── paso 2: Datos (una fila por unidad, solo lo imprescindible) ───── */
 function nin(path,val,cls,ph,lbl){return '<input class="in pa-in'+(cls?' '+cls:'')+'" data-p="'+esc(path)+'" inputmode="decimal" value="'+esc(val===undefined||val===null?'':(typeof val==='number'?abEd(val):val))+'"'+(ph?' placeholder="'+esc(ph)+'"':'')+' autocomplete="off"'+(lbl?' aria-label="'+esc(lbl)+'"':'')+'>'}
+/* v3.2: nota de la zona vulnerable bajo el desplegable y aviso de unidad con recintos dentro y fuera */
+function zvNota(f,u){var z=zvSig(f,u),o={};if(fEj(f)&&!zvMan(u))return o;
+  if(zvMan(u))o.t='Cambiado a mano'+(z.v!==null&&z.v!==(u.zv?1:0)?' (el SIGPAC dice «'+(z.v?'Sí':'No')+'»)':'');
+  else if(z.pend&&z.v===null)o.t='Comprobando en el SIGPAC…';
+  else if(u.zvA===1&&z.v!==null)o.t='Según el SIGPAC (FEGA), consultado el '+isoEs(z.f||u.zvF);
+  else if(z.R.length){o.t='No he podido comprobarlo en el SIGPAC';o.w=1}
+  if(z.den.length&&z.fue.length){o.mix=z.den.length+' de '+z.R.length+' recintos están en zona vulnerable.';
+    var bo=z.den.filter(function(r){return r.zvn.p<99.5});if(bo.length)o.bor=bo.map(function(r){return refLabel(r.ref)+': '+zvPct(r.zvn.p)+' dentro'}).join(' · ')+'.'}
+  return o}
 function suFuente(p,u){return u.suDe?(p.ud||[]).filter(function(x){return x.id===u.suDe&&x!==u})[0]||null:null}
 function datHTML(f,ctx){var p=ctx.p,Cs=ctx.Cs;
   var h=cabeza(2,'Lo que hace falta para el plan','Solo esto. Lo demás ya está puesto con lo habitual y lo puedes revisar después.');
@@ -1567,13 +1619,22 @@ function datHTML(f,ctx){var p=ctx.p,Cs=ctx.Cs;
     var agua=u.rg==='regadio'?nin(P+'ag.m3',ag.m3,'w7'+(abHas(ag.m3)||abHas(ag.max)?'':' e'),'Falta','Agua de riego de '+u.n):'<span class="na">Secano</span>';
     var src=suFuente(p,u), suc;
     if(src){var s2=src.su||{};suc='<td class="sepc" colspan="5"><div class="lnkd">'+ic('copy')+'<span>El mismo análisis que «'+esc(src.n)+'»: '+esc([abHas(s2.mo)?trTxt(+s2.mo,2)+' % MO':'',abHas(s2.ph)?'pH '+trTxt(+s2.ph,1):'',abHas(s2.p)?'P '+trTxt(+s2.p,0):'',abHas(s2.k)?'K '+trTxt(+s2.k,0):'',pabIso(s2.f)?isoEs(pabIso(s2.f)):''].filter(Boolean).join(' · '))+'</span></div></td>'}
+    else if(suNoMot(u,C)){var mot=suNoMot(u,C);suc='<td class="sepc" colspan="5"><div class="suno"><b>Sin análisis de suelo</b><select class="in ap-sunomot" data-u="'+i+'" aria-label="Motivo" title="'+esc(mot==='no20'?'No obligatorio: unidad de 20 ha o menos sin hoja de cultivo de 5 ha':'No dispongo de análisis')+'">'+
+        '<option value="nd">No dispongo de análisis</option>'+(C.ha<=20+1e-9?'<option value="no20"'+(mot==='no20'?' selected':'')+'>No obligatorio: unidad de 20 ha o menos sin hoja de cultivo de 5 ha</option>':'')+'</select></div></td>'}
     else{var any=suTiene(su), ee=function(v){return any||abHas(v)?'':' e'};
       suc='<td class="sepc">'+nin(P+'su.mo',su.mo,'w5'+ee(su.mo),any?'':'Falta','Materia orgánica')+'</td><td>'+nin(P+'su.ph',su.ph,'w4'+ee(su.ph),'','pH')+'</td><td>'+nin(P+'su.p',su.p,'w4'+ee(su.p),'','Fósforo Olsen')+'</td><td>'+nin(P+'su.k',su.k,'w5'+ee(su.k),'','Potasio')+'</td>'+
         '<td><input class="in pa-in w8'+(pabIso(su.f)?'':' soft')+'" data-p="'+P+'su.f" data-date="1" value="'+esc(pabIso(su.f)?isoEs(pabIso(su.f)):'')+'" placeholder="dd/mm/aaaa" inputmode="numeric" autocomplete="off" aria-label="Fecha del análisis"></td>'}
+    var zv=zvNota(f,u);
     h+='<tr data-u="'+i+'"><td>'+uc+'</td><td><select class="in pa-in sel" data-p="'+P+'zv" aria-label="Zona vulnerable"><option value="0">No</option><option value="1"'+(u.zv?' selected':'')+'>Sí</option></select></td><td>'+cos+'</td><td>'+agua+'</td>'+suc+'</tr>';
     if(noExtr(u)||(!PAB_EX[u.ck]&&mo==='cos')){var ex=ne.ex||{};h+='<tr class="sub ex2" data-u="'+i+'"><td></td><td colspan="8"><div class="exw'+(noExtr(u)?' on':'')+'">'+ic('alert')+'<span><b>No tengo extracciones de referencia para este cultivo: escribe las tuyas.</b> '+esc(SIN_EX_TXT)+'.'+hlp('sinex')+'</span><span class="exi">'+['n','p','k'].map(function(k){return '<label>'+{n:'N',p:'P₂O₅',k:'K₂O'}[k]+' '+nin(P+'ne.ex.'+k,ex[k],'w4'+(noExtr(u)?' e':''),'','Extracción '+k)+'</label>'}).join('')+'<small>kg por t de cosecha</small></span></div></td></tr>'}
     var otras=conSu.filter(function(j){return j!==i});
-    if(src||(otras.length&&!suTiene(su)))h+='<tr class="sub sul" data-u="'+i+'"><td></td><td colspan="3"></td><td class="sepc" colspan="5"><select class="in sulk ap-sulink'+(src?' on':'')+'" data-u="'+i+'" aria-label="¿Mismo análisis de suelo que otra unidad?"><option value="">'+(src?'Escribir su propio análisis':'Mismo suelo que otra unidad…')+'</option>'+otras.concat(src?[p.ud.indexOf(src)]:[]).filter(function(v,ix,a){return a.indexOf(v)===ix}).map(function(j){return '<option value="'+esc(p.ud[j].id)+'"'+(src&&src.id===p.ud[j].id?' selected':'')+'>El mismo análisis que «'+esc(p.ud[j].n)+'»</option>'}).join('')+'</select></td></tr>'});
+    /* v3.2: «No tengo análisis de suelo», a la vista en la fila del análisis */
+    var sno=!src&&!suTiene(su)?'<label class="ckr suck"><input type="checkbox" class="ap-suno" data-u="'+i+'"'+(u.suNo?' checked':'')+'> No tengo análisis de suelo</label>':'';
+    var slk=src||otras.length?'<select class="in sulk ap-sulink'+(src?' on':'')+'" data-u="'+i+'" aria-label="¿Mismo análisis de suelo que otra unidad?"><option value="">'+(src?'Escribir su propio análisis':'Mismo suelo que otra unidad…')+'</option>'+otras.concat(src?[p.ud.indexOf(src)]:[]).filter(function(v,ix,a){return a.indexOf(v)===ix}).map(function(j){return '<option value="'+esc(p.ud[j].id)+'"'+(src&&src.id===p.ud[j].id?' selected':'')+'>El mismo análisis que «'+esc(p.ud[j].n)+'»</option>'}).join('')+'</select>':'';
+    /* la nota de la zona vulnerable va debajo de su desplegable, en la fila de abajo (no ensancha la tabla) */
+    var zvt=zv.t?'<small class="zvn'+(zv.w?' w':'')+'">'+esc(zv.t)+'</small>':'';
+    if(sno||slk||zvt)h+='<tr class="sub sul" data-u="'+i+'"><td></td><td colspan="3">'+zvt+'</td><td class="sepc" colspan="5">'+(sno||slk?'<div class="sul2">'+sno+slk+'</div>':'')+'</td></tr>';
+    if(zv.mix)h+='<tr class="sub zvm" data-u="'+i+'"><td></td><td colspan="8"><div class="zvw">'+ic('alert')+'<span><b>'+esc(zv.mix)+'</b>'+(zv.bor?' '+esc(zv.bor):'')+'</span><button class="btn q" data-act="ap-zvsep" data-u="'+i+'">Separar en dos unidades</button></div></td></tr>';});
   h+='</tbody></table>';
   /* revisión: «Hacer el plan» solo se bloquea por lo que falta en esta tabla; lo que falta de Finca se dice al lado y lleva allí */
   var Fd=ctx.F.filter(function(x){return x.s==='dat'}), Ff=ctx.F.filter(function(x){return x.s==='fin'}), bloq=Fd.length>0;
@@ -1620,10 +1681,11 @@ function progTabla(f,p,u,C,i){var P='ud.'+i+'.',rows=(u.pg||{}).rows||[],pm=perM
     if(op){var cin=function(k,v,ph,cls,lbl){return '<input class="in pa-in'+(cls?' '+cls:'')+'" data-p="'+esc(R+k)+'"'+(/\bn\b/.test(cls||'')?' inputmode="decimal"':'')+' value="'+esc(v===undefined||v===null?'':(typeof v==='number'?abEd(v):v))+'"'+(ph?' placeholder="'+esc(ph)+'"':'')+' autocomplete="off" aria-label="'+esc(lbl)+'">'};
       var sg=function(k,v,kind,ph,lbl){return '<div class="sgw">'+cin(k,v,ph,'sgi',lbl).replace('class="in pa-in sgi"','class="in pa-in sgi" data-sg="'+kind+'"')+'</div>'};
       var L=FO.slice();if(q.fo&&L.indexOf(q.fo)<0)L.unshift(q.fo);
-      h+='<tr class="sub ed"><td colspan="7"><div class="edg">'+fld('Abono',sg('n',q.n,'ab','Buscar abono…','Abono'),'w2')+fld('Mes o meses',sg('mo',q.mo,'mes','Marzo-abril','Mes'))+fld('N %',cin('rn',q.rn,'0','n','N %'),'nn')+fld('P₂O₅ %',cin('rp',q.rp,'0','n','P₂O₅ %'),'nn')+fld('K₂O %',cin('rk',q.rk,'0','n','K₂O %'),'nn')+
+      var tipo=abModo(q)==='tipo',msel='<select class="in ap-abmodo" data-id="'+esc(q.id)+'" aria-label="Abono tipo o mi abono"><option value="tipo"'+(tipo?' selected':'')+'>Abono tipo (del listado)</option><option value="mio"'+(tipo?'':' selected')+'>Mi abono (nombre comercial)</option></select>';
+      h+='<tr class="sub ed"><td colspan="7"><div class="edg">'+fld('Abono'+hlp('abt'),msel,'abm')+fld(tipo?'Abono tipo':'Nombre comercial',sg('n',q.n,tipo?'abt':'abm',tipo?'Buscar en los abonos tipo…':'Nombre de la etiqueta',tipo?'Abono tipo':'Nombre comercial'),'w2')+fld('Mes o meses',sg('mo',q.mo,'mes','Marzo-abril','Mes'))+fld('N %',cin('rn',q.rn,'0','n','N %'),'nn')+fld('P₂O₅ %',cin('rp',q.rp,'0','n','P₂O₅ %'),'nn')+fld('K₂O %',cin('rk',q.rk,'0','n','K₂O %'),'nn')+
         fld('Forma','<select class="in pa-in" data-p="'+esc(R+'fo')+'" aria-label="Forma de aplicación">'+L.map(function(x){return '<option'+(x===(q.fo||'')?' selected':'')+'>'+esc(x)+'</option>'}).join('')+'</select>','fo')+fld('Equipo',cin('eq',q.eq,'Abonadora','','Equipo'),'eq')+fld('Medida de mitigación',cin('mi',q.mi,'Opcional','','Medida de mitigación'),'w2')+
         (co?fld('Precio €/kg',cin('pz',q.pz,'0,00','n','Precio €/kg')):'')+'<label class="ckr"><input type="checkbox" class="pa-chk" data-p="'+esc(R+'org')+'"'+(q.org===1?' checked':'')+'> Abono orgánico</label></div>'+
-        '<div class="acts"><button type="button" class="btn q danger" data-act="pa-row-del" data-u="'+i+'" data-j="'+j+'">'+ic('trash')+'Quitar este abono</button><span class="sp"></span><span class="small">La riqueza es la típica de ese abono: pon la de la etiqueta si es otra.</span><button type="button" class="btn" data-act="ap-rowed" data-id="'+esc(q.id)+'">Hecho</button></div></td></tr>'}});
+        '<div class="acts"><button type="button" class="btn q danger" data-act="pa-row-del" data-u="'+i+'" data-j="'+j+'">'+ic('trash')+'Quitar este abono</button><span class="sp"></span><span class="small">'+(tipo?'La riqueza es la típica de ese tipo de abono: pon la de tu etiqueta si es otra.':'Pon la riqueza de la etiqueta. Al pulsar «Hecho» queda en «Mis abonos».')+'</span><button type="button" class="btn" data-act="ap-rowed" data-id="'+esc(q.id)+'">Hecho</button></div></td></tr>'}});
   if(!rows.length)h+='<tr><td colspan="7" class="empty">Aún no hay abonos. Pulsa «Proponer programa» o «Añadir abono».</td></tr>';
   var B=C.B;
   h+='<tr class="tot" id="u'+i+'-tot"><td colspan="3">Total del plan <span class="z">U.F./ha</span></td><td class="r">'+nf(B.n.pl,0)+'</td><td class="r">'+nf(B.p.pl,0)+'</td><td class="r">'+nf(B.k.pl,0)+'</td><td></td></tr>';
@@ -1750,15 +1812,8 @@ function detEd(f,ctx,k){var p=ctx.p,Cs=ctx.Cs,U=udsNoEx(p,Cs),ud=p.ud||[],h='';
     h+='<div class="acts"><button class="btn" data-act="pa-mod-add">'+ic('plus')+'Añadir un cambio</button></div>'}
   return h}
 
-/* semáforo del suelo (niveles orientativos, criterio técnico) y descuento propuesto */
-function sueloHTML(u,C,i){var su=u.su||{}, any=SUELO.some(function(s){return abHas(su[s[0]])});
-  if(!any)return '';
-  var h='<div class="sem">'+SUELO.map(function(s){var v=su[s[0]];if(!abHas(v))return '<div class="sm0"><span>'+s[1]+'</span><b>—</b></div>';var l=nivel(+v,s[3]),ph=s[0]==='ph';
-    return '<div class="lv'+(ph?(l===2?' l2':l===0||l===4?' l4':' l3'):' l'+l)+'"><span>'+s[1]+'</span><b>'+trTxt(+v,s[4])+(s[2]?' '+s[2]:'')+'</b><i>'+(ph?NIVPH:NIV)[l]+'</i></div>'}).join('')+'</div><div class="small">Niveles orientativos (criterio técnico).</div>';
-  var cr=creditoSuelo(u,C), ap=(u.ap||{}).s||{};
-  if(cr.p||cr.k)h+='<div class="note">Con fósforo o potasio altos se puede descontar parte de lo que necesita (criterio técnico: nivel alto, el 25 %; muy alto, el 50 %). Propuesta: '+[cr.p?'<b>'+cr.p+' U.F. de P₂O₅</b>':'',cr.k?'<b>'+cr.k+' U.F. de K₂O</b>':''].filter(Boolean).join(' y ')+' por ha.'+
-    '<div class="acts"><button class="btn" data-act="ap-cred" data-u="'+i+'">Ponerlo como aporte del suelo</button>'+(abHas(ap.p)||abHas(ap.k)?'<span class="small">Ahora: P₂O₅ '+trTxt(+ap.p||0,0)+' · K₂O '+trTxt(+ap.k||0,0)+'</span>':'')+'</div></div>';
-  return h}
+/* v3.2 (propuesta 2.4): sin semáforo ni crédito del suelo (cortes sin fuente). Queda la función para no cambiar quien la llama. */
+function sueloHTML(u,C,i){return ''}
 
 function compraHTML(f,p,Cs){var L=compra(f,p,Cs);if(!L.length)return '';var co=!!UI.cost, tot=L.reduce(function(a,x){return a+x.eur},0);
   return '<table class="mini shop"><thead><tr><th>Abono</th><th class="r">Total</th><th class="r">Equivale a</th>'+(co?'<th class="r">Coste</th>':'')+'<th>Unidades</th></tr></thead><tbody>'+
@@ -1828,7 +1883,7 @@ function fixHTML(h){
 
 /* ───── visor SIGPAC para añadir recintos: foto aérea PNOA de máxima actualidad, recintos y datos de cada recinto ───── */
 var IGNW='https://www.ign.es/wmts/', MZ=15, MNZ=Math.pow(2,MZ), RT=6378137;
-var MAP={m:null,lay:null,tiles:{},sel:null,info:{},busy:0,fail:0,places:null};
+var MAP={m:null,lay:null,grid:null,tiles:new Map(),feat:{},top:{},sel:null,info:{},zvn:{},busy:0,fail:0,places:null};
 var refKey=function(p){return [p.provincia,p.municipio,p.agregado||0,p.zona||0,p.poligono,p.parcela,p.recinto].join(':')};
 function m2ll(p){return [p[0]/RT*180/Math.PI,(2*Math.atan(Math.exp(p[1]/RT))-Math.PI/2)*180/Math.PI]}
 function projG(g){var cv=function(r){return r.map(m2ll)};if(!g)return null;if(g.type==='Polygon')return {type:'Polygon',coordinates:g.coordinates.map(cv)};if(g.type==='MultiPolygon')return {type:'MultiPolygon',coordinates:g.coordinates.map(function(p){return p.map(cv)})};return null}
@@ -1845,7 +1900,7 @@ function mapaAbrir(){var f=UI.v==='finca'?finca(UI.fid):null;MAP.nueva=!f;sheetC
 var PNG0='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVR4nGNgAAIAAAUAAXpeqz8AAAAASUVORK5CYII=';
 function mNombres(on){UI.mNom=on?1:0;saveUI();var m=MAP.m;if(!m||!MAP.nom)return;if(on&&!m.hasLayer(MAP.nom))MAP.nom.addTo(m);if(!on&&m.hasLayer(MAP.nom))m.removeLayer(MAP.nom)}
 document.addEventListener('change',function(ev){var t=ev.target;if(t&&t.id==='m-nom')mNombres(t.checked)});
-function mapaCerrar(){var el=$('#mapa');if(MAP.m){try{MAP.m.remove()}catch(e){}}MAP.m=null;MAP.lay=null;MAP.nom=null;MAP.tiles={};MAP.sel=null;MAP.fail=0;MAP.gen=(MAP.gen||0)+1;el.hidden=true;el.innerHTML='';document.body.classList.remove('mapon');render()}
+function mapaCerrar(){var el=$('#mapa');if(MAP.m){try{MAP.m.remove()}catch(e){}}MAP.m=null;MAP.lay=null;MAP.grid=null;MAP.nom=null;MAP.sel=null;MAP.fail=0;sigReset();el.hidden=true;el.innerHTML='';document.body.classList.remove('mapon');render()}
 function mFin(){return MAP.nueva&&!UI.fid?null:finca(UI.fid)}
 function mInit(){var f=mFin();if(!$('#mmap'))return;
   var m=MAP.m=L.map('mmap',{minZoom:6,maxZoom:20,zoomControl:true,attributionControl:true,preferCanvas:true});m.attributionControl.setPrefix(false);
@@ -1853,7 +1908,11 @@ function mInit(){var f=mFin();if(!$('#mmap'))return;
   /* v3.1 punto 8: los nombres (capa transparente del IGN) encima de la foto y debajo de los recintos; si falta una tesela, sale vacía y no rota */
   MAP.nom=L.tileLayer(IGNW+'ign-base?service=WMTS&request=GetTile&version=1.0.0&format=image/png&layer=IGNBaseOrto&style=default&tilematrixset=GoogleMapsCompatible&TileMatrix={z}&TileRow={y}&TileCol={x}',{maxNativeZoom:19,maxZoom:20,zIndex:2,errorTileUrl:PNG0,className:'mnomt',attribution:'Nombres: © IGN'});
   if(UI.mNom!==0)MAP.nom.addTo(m);
-  MAP.lay=L.geoJSON(null,{renderer:L.canvas({padding:0.4,tolerance:3}),style:mEstilo,onEachFeature:function(ft,l){l.on('click',function(ev){L.DomEvent.stop(ev);mSel(ft.properties,ev.latlng,ft.geometry)})}}).addTo(m);
+  /* v3.2: los recintos «libres» van por cuadros pintados en un hilo aparte (SigGrid); encima, solo los de las fincas y el seleccionado */
+  m.createPane('sigp');m.getPane('sigp').style.zIndex=390;m.getPane('sigp').style.pointerEvents='none';
+  MAP.grid=SigGrid().on('tileunload',function(e){var el=e.tile;if(el&&el._id){delete SWel[el._id];if(SW)SW.postMessage({t:'x',id:el._id});el._id=0;el._done=null}});
+  MAP.lay=L.geoJSON(null,{renderer:L.canvas({padding:0.4,tolerance:3}),style:mEstilo,interactive:false}).addTo(m);
+  m.on('click',function(ev){var h=hitAt(ev.latlng);if(h)mSel(h.p,ev.latlng,h.g)});
   m.on('moveend',mTiles);
   var pts=(f?fincaRecs(f.id):[]).filter(function(r){return r.ll}).map(function(r){return r.ll});
   if(pts.length){if(pts.length===1)m.setView(pts[0],17);else m.fitBounds(L.latLngBounds(pts).pad(0.25),{maxZoom:17})}
@@ -1862,29 +1921,215 @@ function mInit(){var f=mFin();if(!$('#mmap'))return;
 function mHint(t){var e=$('#mhint');if(!e)return;e.hidden=!t;e.textContent=t||''}
 function mEstilo(ft){var p=ft.properties||{},k=refKey(p),r=S.recintos[k],mine=r&&!!UI.fid&&r.fincaId===UI.fid,oth=r&&!mine&&finca(r.fincaId),sel=MAP.sel&&MAP.sel.ref===k;
   return {color:sel?'#ffd400':(mine?'#7cff9a':'#ffffff'),weight:sel?3.2:(mine?2.2:1.2),opacity:sel?1:0.9,fill:true,fillColor:mine?'#2fbf5a':(oth?'#8fa3ff':'#ffffff'),fillOpacity:mine?0.35:(oth?0.25:(sel?0.12:0.02))}}
-function mTiles(){var m=MAP.m;if(!m)return;var z=m.getZoom();
-  if(z<14){if(m.hasLayer(MAP.lay))m.removeLayer(MAP.lay);mHint('Acércate un poco más para ver los recintos.');return}
-  if(!m.hasLayer(MAP.lay))MAP.lay.addTo(m);
-  var b=m.getBounds(),tx=function(lon){return Math.floor((lon+180)/360*MNZ)},ty=function(lat){var r=lat*Math.PI/180;return Math.floor((1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*MNZ)};
-  var x0=tx(b.getWest()),x1=tx(b.getEast()),y0=ty(b.getNorth()),y1=ty(b.getSouth()),n=0,todo=[];
-  for(var x=x0;x<=x1;x++)for(var y=y0;y<=y1;y++){var k=x+'.'+y;if(!MAP.tiles[k])todo.push([x,y,k])}
-  if(todo.length>80){mHint('Acércate un poco más para ver los recintos.');return}
+/* ───── v3.2: recintos SIGPAC por cuadros, como en la app de fincas (SigGrid, SIGW, sigReq, sigWMsg, sigRepaint, sigSkipSync,
+   refreshSigpac, hitAt) ─────
+   - SIGCORE guarda cada recinto UNA vez (con cuántos trozos lo traen) y pinta un cuadro de 256 px buscando en los trozos de
+     alrededor; sirve igual dentro del Worker (OffscreenCanvas, lienzo 2D con willReadFrequently: lo pinta el procesador) que en
+     el hilo del mapa si el navegador no tiene OffscreenCanvas.
+   - En el hilo del mapa: MAP.tiles (trozo 'x,y' → {t, refs}) y MAP.feat (recinto → {p, g, bb, n}) para tocar (hitAt) y para
+     dibujar encima los de las fincas y el seleccionado. Los trozos lejanos se sueltan con el tope de tres pantallas. */
+function SIGCORE(){
+  var R=6378137, TZ=15, SC=256*Math.pow(2,TZ), W=2*Math.PI*R, G={}, T={}, SK={}, ST={w:1.2,c:'#ffffff',o:0.9,fc:'#ffffff',fo:0.02};
+  function add(k,j){
+    if(T[k])return {refs:T[k],nu:[],c:new Float64Array(0)};
+    var refs=[], nu=[], cs=[], seen={};
+    (j&&j.features||[]).forEach(function(f){
+      var g=f&&f.geometry, p=f&&f.properties||{}; if(!g||(g.type!=='Polygon'&&g.type!=='MultiPolygon'))return;
+      var ref=[p.provincia,p.municipio,p.agregado||0,p.zona||0,p.poligono,p.parcela,p.recinto].join(':');
+      if(seen[ref])return; seen[ref]=1; refs.push(ref);
+      if(G[ref]){G[ref].n++;return}
+      var P=g.type==='Polygon'?[g.coordinates]:g.coordinates, r=[], st=[], b=[Infinity,Infinity,-Infinity,-Infinity];
+      P.forEach(function(pl){var rl=[];pl.forEach(function(ring){
+        var a=new Float64Array(ring.length*2);
+        for(var n=0;n<ring.length;n++){var X=ring[n][0], Y=ring[n][1], x=SC*(X/W+0.5), y=SC*(0.5-Y/W);
+          a[2*n]=x; a[2*n+1]=y; if(x<b[0])b[0]=x; if(y<b[1])b[1]=y; if(x>b[2])b[2]=x; if(y>b[3])b[3]=y;
+          cs.push(X/R*180/Math.PI,(2*Math.atan(Math.exp(Y/R))-Math.PI/2)*180/Math.PI)}
+        rl.push(ring.length); r.push(a)}); st.push(rl)});
+      G[ref]={b:b,r:r,n:1};
+      nu.push({ref:ref,m:g.type==='MultiPolygon'?1:0,s:st,p:{provincia:p.provincia,municipio:p.municipio,agregado:p.agregado||0,zona:p.zona||0,poligono:p.poligono,parcela:p.parcela,recinto:p.recinto,dn_surface:p.dn_surface,uso_sigpac:p.uso_sigpac}});
+    });
+    T[k]=refs; return {refs:refs,nu:nu,c:new Float64Array(cs)};
+  }
+  function drop(ks){ks.forEach(function(k){var L=T[k];if(!L)return;delete T[k];L.forEach(function(ref){var o=G[ref];if(o&&--o.n<=0)delete G[ref]})})}
+  function ring(ctx,a,ox,oy,k){var n=a.length, lx=0, ly=0;
+    for(var q=0;q<n;q+=2){var X=(a[q]-ox)*k, Y=(a[q+1]-oy)*k;
+      if(!q){ctx.moveTo(X,Y);lx=X;ly=Y}else if(q>=n-2||Math.abs(X-lx)+Math.abs(Y-ly)>=0.7){ctx.lineTo(X,Y);lx=X;ly=Y}}
+    ctx.closePath()}
+  /* m = {z,x,y,d}; ctx: lienzo de 256·d px */
+  function paint(ctx,m){
+    var d=m.d||1, w=Math.round(256*d), k=Math.pow(2,m.z-TZ), ox=m.x*256/k, oy=m.y*256/k, ex=ox+256/k, ey=oy+256/k, mg=4/k, px=Math.floor(m.x/k), py=Math.floor(m.y/k), n=0, seen={};
+    ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,w,w); ctx.setTransform(d,0,0,d,0,0);
+    ctx.lineWidth=ST.w; ctx.strokeStyle=ST.c; ctx.fillStyle=ST.fc; ctx.lineCap='round'; ctx.lineJoin='round';
+    var nx=Math.max(1,Math.ceil(1/k));
+    for(var i=-1;i<=nx;i++)for(var j=-1;j<=nx;j++){
+      var L=T[(px+i)+','+(py+j)]; if(!L)continue;
+      for(var e=0;e<L.length;e++){var ref=L[e], f=G[ref]; if(!f||SK[ref]||seen[ref])continue; var b=f.b;
+        if(b[2]<ox-mg||b[0]>ex+mg||b[3]<oy-mg||b[1]>ey+mg)continue;
+        seen[ref]=1; ctx.beginPath(); for(var h=0;h<f.r.length;h++)ring(ctx,f.r[h],ox,oy,k);
+        ctx.globalAlpha=ST.fo; ctx.fill('evenodd'); ctx.globalAlpha=ST.o; ctx.stroke(); n++}}
+    ctx.globalAlpha=1; return n}
+  function stats(){var g=0,t=0,s=0,k;for(k in G)g++;for(k in T){t++;s+=T[k].length}return {g:g,t:t,s:s}}
+  return {add:add,drop:drop,paint:paint,stats:stats,skip:function(o){SK=o||{}},style:function(o){if(o)ST=o},reset:function(){G={};T={}}};
+}
+/* el hilo aparte: lee cada trozo (JSON de hasta 1 MB), guarda y pinta; al mapa solo le llega la imagen hecha */
+function SIGW(CORE){
+  var C=CORE(), Q=[], CV=null, CX=null, busy=0, gen=0, mc=new MessageChannel();
+  function run(){busy=0;var t0=Date.now();
+    while(Q.length&&Date.now()-t0<12){var m=Q.shift();
+      try{var d=m.d||1, w=Math.round(256*d); if(!CV||CV.width!==w){CV=new OffscreenCanvas(w,w);CX=CV.getContext('2d',{willReadFrequently:true})}
+        var n=C.paint(CX,m); if(n){var bm=CV.transferToImageBitmap();postMessage({t:'p',id:m.id,n:n,bmp:bm},[bm])}else postMessage({t:'p',id:m.id,n:0,bmp:null})}catch(e){postMessage({t:'p',id:m.id,err:1})}}
+    if(Q.length)kick()}
+  function kick(){if(!busy){busy=1;mc.port2.postMessage(0)}}
+  mc.port1.onmessage=run;
+  onmessage=function(e){var m=e.data;
+    if(m.t==='a'){if(m.g!==gen){postMessage({t:'f',q:m.q,err:1});return}
+      try{var r=C.add(m.k,JSON.parse(new TextDecoder().decode(m.b)));postMessage({t:'f',q:m.q,refs:r.refs,nu:r.nu,c:r.c},[r.c.buffer])}catch(err){postMessage({t:'f',q:m.q,err:1})}}
+    else if(m.t==='p'){Q.push(m);kick()}
+    else if(m.t==='x'){for(var i=0;i<Q.length;i++)if(Q[i].id===m.id){Q.splice(i,1);break}}
+    else if(m.t==='d')C.drop(m.ks);
+    else if(m.t==='s')C.skip(m.s);
+    else if(m.t==='st')C.style(m.st);
+    else if(m.t==='r'){gen=m.g;C.reset();Q.length=0}
+    else if(m.t==='n')postMessage({t:'n',st:C.stats()});
+  };
+  var ok=false;try{var oc=new OffscreenCanvas(4,4),x=oc.getContext('2d',{willReadFrequently:true});x.fillRect(0,0,1,1);ok=!!(x&&oc.transferToImageBitmap())}catch(e){}
+  postMessage({t:'ok',ok:ok});
+}
+var SIG_ST={w:1.2,c:'#ffffff',o:0.9,fc:'#ffffff',fo:0.02};
+var SW=null, SWok=false, SWn=0, SWq=0, SWel={}, SWcb={}, SWsk=null, SWp=null, SCORE=null;
+function sigArranca(){if(SWp)return SWp;
+  SWp=new Promise(function(res){
+    var fin=function(ok){if(!ok&&SW){try{SW.terminate()}catch(e){}SW=null}SWok=!!ok;if(!SWok&&!SCORE){SCORE=SIGCORE();SCORE.style(SIG_ST)}res()};
+    try{
+      if(window.__sinHilo||typeof Worker==='undefined'||typeof OffscreenCanvas==='undefined'||!window.URL||!URL.createObjectURL){fin(false);return}
+      SW=new Worker(URL.createObjectURL(new Blob(['('+SIGW.toString()+')('+SIGCORE.toString()+')'],{type:'text/javascript'})));
+      var to=setTimeout(function(){fin(false)},3000);
+      SW.onmessage=function(e){var m=e.data;if(m.t==='ok'){clearTimeout(to);if(m.ok){SW.postMessage({t:'st',st:SIG_ST});SW.postMessage({t:'r',g:MAP.gen||0})}fin(m.ok);if(SW)SW.onmessage=sigWMsg}};
+      SW.onerror=function(){clearTimeout(to);sigWOff();fin(false)};
+    }catch(e){fin(false)}});
+  return SWp}
+/* si el hilo aparte falla: se sigue en el hilo del mapa y se vuelve a pedir lo que había */
+function sigWOff(){if(!SWok)return;SWok=false;try{SW.terminate()}catch(e){}SW=null;
+  Object.keys(SWcb).forEach(function(q){var f=SWcb[q];delete SWcb[q];f({err:1})});
+  Object.keys(SWel).forEach(function(id){var el=SWel[id];delete SWel[id];el._id=0;var d=el._done;el._done=null;sigQueue(el,el._co,d)});
+  if(!SCORE){SCORE=SIGCORE();SCORE.style(SIG_ST)}MAP.tiles.clear();MAP.feat={};SWsk=null;setTimeout(function(){if(MAP.grid&&MAP.grid._map)MAP.grid.redraw();mTiles()},0)}
+function sigReset(){MAP.gen=(MAP.gen||0)+1;MAP.busy=0;MAP.tiles=new Map();MAP.feat={};MAP.top={};SWsk=null;SWel={};SQ.length=0;
+  if(SW&&SWok)SW.postMessage({t:'r',g:MAP.gen});if(SCORE)SCORE.reset()}
+/* respaldo sin OffscreenCanvas: los cuadros se pintan aquí por turnos (como mucho 10 ms seguidos por fotograma) */
+var SQ=[], SQt=0;
+function sigQueue(el,co,done){SQ.push([el,co,done]);if(!SQt)SQt=(window.requestAnimationFrame||setTimeout)(sigRun)}
+function sigRun(){SQt=0;var t0=Date.now();
+  while(SQ.length&&Date.now()-t0<10){var q=SQ.shift();try{sigPaint(q[0],q[1])}catch(e){}if(q[2])q[2](null,q[0])}
+  if(SQ.length)SQt=(window.requestAnimationFrame||setTimeout)(sigRun)}
+function sigPaint(el,co){var d=Math.min(2,window.devicePixelRatio||1),w=Math.round(256*d);if(el.width!==w){el.width=w;el.height=w}
+  var ctx=el._c2||(el._c2=el.getContext('2d',{willReadFrequently:true}));if(!ctx||!SCORE)return 0;el._n=SCORE.paint(ctx,{z:co.z,x:co.x,y:co.y,d:d});return el._n}
+function sigWMsg(e){var m=e.data;
+  if(m.t==='f'){var f=SWcb[m.q];delete SWcb[m.q];if(f)f(m);return}
+  if(m.t==='n'){var g=SWcb.n;delete SWcb.n;if(g)g(m.st);return}
+  if(m.t!=='p')return;
+  var el=SWel[m.id];delete SWel[m.id];
+  if(!el||el._id!==m.id){if(m.bmp&&m.bmp.close)m.bmp.close();return}
+  el._id=0;var done=el._done;el._done=null;
+  if(m.err){if(!SCORE){SCORE=SIGCORE();SCORE.style(SIG_ST)}if(done)done(null,el);return}
+  var d=Math.min(2,window.devicePixelRatio||1),w=Math.round(256*d);
+  try{if(el.width!==w){el.width=w;el.height=w}
+    var ctx=el._ctx||(el._ctx=el.getContext('bitmaprenderer')||el.getContext('2d'));
+    if(ctx.transferFromImageBitmap)ctx.transferFromImageBitmap(m.bmp||null);
+    else{ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,w,w);if(m.bmp){ctx.drawImage(m.bmp,0,0);m.bmp.close()}}}catch(er){if(m.bmp&&m.bmp.close)m.bmp.close()}
+  el._n=m.n;if(done)done(null,el)}
+/* los que se dibujan encima (fincas y seleccionado) no se pintan en los cuadros; al hilo solo se manda cuando cambia */
+function sigSkipSync(o){var s=Object.keys(o).sort().join('|');if(s===SWsk)return false;SWsk=s;if(SWok&&SW)SW.postMessage({t:'s',s:o});else if(SCORE)SCORE.skip(o);return true}
+function sigReq(el,co,done){
+  if(!SWok){sigQueue(el,co,done);return}
+  if(el._id){delete SWel[el._id];SW.postMessage({t:'x',id:el._id})}
+  var id=++SWn;el._id=id;el._co=co;if(done)el._done=done;SWel[id]=el;
+  SW.postMessage({t:'p',id:id,z:co.z,x:co.x,y:co.y,d:Math.min(2,window.devicePixelRatio||1)})}
+/* vuelve a pintar los cuadros que tocan los trozos de keys ({'x,y':1}); sin keys, todos */
+function sigRepaint(keys){var g=MAP.grid;if(!g||!g._map||!g._tiles)return;
+  Object.keys(g._tiles).forEach(function(id){var t=g._tiles[id],co=t.coords;
+    if(keys){var k=Math.pow(2,co.z-MZ),px=Math.floor(co.x/k),py=Math.floor(co.y/k),nx=Math.max(1,Math.ceil(1/k)),hit=false;
+      for(var i=-1;i<=nx&&!hit;i++)for(var j=-1;j<=nx&&!hit;j++)if(keys[(px+i)+','+(py+j)])hit=true;
+      if(!hit)return}
+    sigReq(t.el,co,null)})}
+/* Leaflet se carga al abrir el mapa: la clase se hace entonces */
+var SigGridC=null;function SigGrid(){if(!SigGridC)SigGridC=L.GridLayer.extend({options:{pane:'sigp',minZoom:14,maxZoom:20,className:'sigcuad',updateWhenZooming:false},
+  createTile:function(co,done){var el=document.createElement('canvas');el.width=el.height=Math.round(256*Math.min(2,window.devicePixelRatio||1));sigReq(el,co,done);return el}});return new SigGridC()}
+/* geometrías: lo que llega del hilo (o del respaldo) se guarda una vez por recinto en MAP.feat */
+function sigFeats(k,m){var c=m.c,o=0,nu=0;
+  m.nu.forEach(function(f){var P=f.s.map(function(pl){return pl.map(function(n){var ring=new Array(n);for(var i=0;i<n;i++,o+=2)ring[i]=[c[o],c[o+1]];return ring})});
+    var g=f.m?{type:'MultiPolygon',coordinates:P}:{type:'Polygon',coordinates:P[0]},bb=[Infinity,Infinity,-Infinity,-Infinity];
+    P.forEach(function(pl){pl[0].forEach(function(q){if(q[0]<bb[0])bb[0]=q[0];if(q[1]<bb[1])bb[1]=q[1];if(q[0]>bb[2])bb[2]=q[0];if(q[1]>bb[3])bb[3]=q[1]})});
+    if(!MAP.feat[f.ref]){MAP.feat[f.ref]={p:f.p,g:g,bb:bb,n:0};nu++}
+    if(S.recintos[f.ref]&&!GEO[f.ref])geoPonG(f.ref,g)});
+  m.refs.forEach(function(r){var x=MAP.feat[r];if(x)x.n++});
+  return nu}
+function sigSuelta(ks){var fu={};ks.forEach(function(k){var rec=MAP.tiles.get(k);if(!rec)return;MAP.tiles.delete(k);fu[k]=1;
+    (rec.refs||[]).forEach(function(r){var x=MAP.feat[r];if(x&&--x.n<=0)delete MAP.feat[r]})});
+  if(SWok&&SW)SW.postMessage({t:'d',ks:ks});else if(SCORE)SCORE.drop(ks);
+  return fu}
+var tX=function(lon){return Math.floor((lon+180)/360*MNZ)}, tY=function(lat){var r=lat*Math.PI/180;return Math.floor((1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*MNZ)};
+function sigCarga(x,y){var k=x+','+y;if(MAP.tiles.has(k)){MAP.tiles.get(k).t=Date.now();return}
+  var rec={t:Date.now(),refs:null},gen=MAP.gen||0,hilo=false;MAP.tiles.set(k,rec);MAP.busy++;
+  sigArranca().then(function(){return fetch('https://sigpac.mapa.gob.es/vectorsdg/vector/recinto@3857/'+MZ+'.'+x+'.'+(MNZ-1-y)+'.geojson')})
+    .then(function(r){if(!r.ok)throw new Error(r.status);hilo=SWok;return hilo?r.arrayBuffer():r.json()})
+    .then(function(j){if((MAP.gen||0)!==gen)return null;
+      if(hilo)return new Promise(function(res,rej){var q=++SWq;SWcb[q]=function(m){if(m.err)rej(new Error('hilo'));else res(m)};SW.postMessage({t:'a',q:q,k:k,b:j,g:gen},[j])});
+      return SCORE.add(k,j)})
+    .then(function(m){if(!m||(MAP.gen||0)!==gen||MAP.tiles.get(k)!==rec)return;
+      rec.refs=m.refs;sigFeats(k,m);MAP.fail=0;var o={};o[k]=1;mTopSync(true);sigRepaint(o)})
+    .catch(function(e){if((MAP.gen||0)!==gen)return;if(MAP.tiles.get(k)===rec)MAP.tiles.delete(k);if(!(e&&e.message==='hilo')){MAP.fail=1;mHint('El SIGPAC no responde ahora: prueba en un rato.')}})
+    .then(function(){if((MAP.gen||0)===gen)MAP.busy--})}
+function refreshSigpac(){var m=MAP.m;if(!m||!MAP.grid)return;var z=m.getZoom();
+  if(z<14){if(m.hasLayer(MAP.grid))m.removeLayer(MAP.grid);if(m.hasLayer(MAP.lay))m.removeLayer(MAP.lay);mHint('Acércate un poco más para ver los recintos.');return}
+  var b=m.getBounds(),x0=tX(b.getWest()),x1=tX(b.getEast()),y0=tY(b.getNorth()),y1=tY(b.getSouth()),want=[];
+  for(var x=x0;x<=x1;x++)for(var y=y0;y<=y1;y++)want.push([x,y]);
+  if(want.length>80){mHint('Acércate un poco más para ver los recintos.');return}
+  if(!m.hasLayer(MAP.grid))MAP.grid.addTo(m);if(!m.hasLayer(MAP.lay))MAP.lay.addTo(m);
   mHint(MAP.fail?'El SIGPAC no responde ahora: prueba en un rato.':'');
-  var gen=MAP.gen||0;todo.forEach(function(t){MAP.tiles[t[2]]=1;MAP.busy++;n++;
-    fetch('https://sigpac.mapa.gob.es/vectorsdg/vector/recinto@3857/'+MZ+'.'+t[0]+'.'+(MNZ-1-t[1])+'.geojson').then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})
-      .then(function(j){if(!MAP.lay||(MAP.gen||0)!==gen)return;(j.features||[]).forEach(function(ft){var g=projG(ft.geometry);if(g){var rk=refKey(ft.properties||{});if(S.recintos[rk]&&!GEO[rk])geoPonG(rk,g)}if(g)MAP.lay.addData({type:'Feature',properties:ft.properties||{},geometry:g})});MAP.fail=0})
-      .catch(function(){delete MAP.tiles[t[2]];MAP.fail=1;mHint('El SIGPAC no responde ahora: prueba en un rato.')})
-      .then(function(){MAP.busy--})})}
-function mRestyle(){if(MAP.lay)MAP.lay.setStyle(mEstilo)}
+  want.forEach(function(w){sigCarga(w[0],w[1])});
+  /* tope: los trozos de unas tres pantallas; se sueltan los más viejos que no se ven (solo los ya leídos) */
+  var sz=m.getSize(),tmax=Math.max(40,3*(Math.ceil(sz.x/256)+1)*(Math.ceil(sz.y/256)+1));MAP.tmax=tmax;
+  if(MAP.tiles.size>tmax){var keep={},olds=[],ks=[];want.forEach(function(w){keep[w[0]+','+w[1]]=1});
+    MAP.tiles.forEach(function(rec,k){if(!keep[k]&&rec.refs)olds.push([k,rec.t])});olds.sort(function(p,q){return p[1]-q[1]});
+    while(MAP.tiles.size-ks.length>tmax&&olds.length)ks.push(olds.shift()[0]);
+    if(ks.length){var fu=sigSuelta(ks);mTopSync(true);sigRepaint(fu)}}}
+function mTiles(){refreshSigpac()}
+/* tocar: cuenta propia sobre las geometrías guardadas; primero los de encima */
+function inRing(pt,r){var x=pt[0],y=pt[1],ins=false;for(var i=0,j=r.length-1;i<r.length;j=i++){var xi=r[i][0],yi=r[i][1],xj=r[j][0],yj=r[j][1];if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))ins=!ins}return ins}
+function inGeo(pt,g){var P=g.type==='Polygon'?[g.coordinates]:g.type==='MultiPolygon'?g.coordinates:[];return P.some(function(pl){var n=0;pl.forEach(function(r){if(inRing(pt,r))n++});return n%2===1})}
+function hitAt(ll){var pt=[ll.lng,ll.lat],c=function(ref){var x=MAP.feat[ref];return x&&pt[0]>=x.bb[0]&&pt[0]<=x.bb[2]&&pt[1]>=x.bb[1]&&pt[1]<=x.bb[3]&&inGeo(pt,x.g)?{ref:ref,p:x.p,g:x.g}:null},h=null;
+  Object.keys(MAP.top).some(function(r){return (h=c(r))});if(h)return h;
+  for(var r in MAP.feat){if((h=c(r)))return h}return null}
+/* encima, con sus colores de ahora: los recintos de esta finca, los de otras fincas y el seleccionado */
+function mTopGeo(ref){var x=MAP.feat[ref];if(x)return x.g;var s=MAP.sel;if(s&&s.ref===ref){if(s.g)return s.g;if(s.wkt){var g=wktGeo(s.wkt);if(g)return g}}return null}
+function mTopSync(noRepaint){if(!MAP.lay)return;var want={},ch={},r;
+  for(r in S.recintos){var x=S.recintos[r];if(x&&finca(x.fincaId)&&MAP.feat[r])want[r]=1}
+  if(MAP.sel&&mTopGeo(MAP.sel.ref))want[MAP.sel.ref]=1;
+  for(r in MAP.top)if(!want[r]){MAP.lay.removeLayer(MAP.top[r]);delete MAP.top[r];ch[r]=1}
+  for(r in want)if(!MAP.top[r]){var g=mTopGeo(r);var p=(MAP.feat[r]||{}).p||refProps(r);var l=L.geoJSON({type:'Feature',properties:p,geometry:g},{style:mEstilo,interactive:false,renderer:MAP.lay.options.renderer});
+    l.eachLayer(function(y){MAP.lay.addLayer(y);MAP.top[r]=y});ch[r]=1}
+  MAP.lay.setStyle(mEstilo);if(MAP.sel&&MAP.top[MAP.sel.ref]&&MAP.top[MAP.sel.ref].bringToFront)MAP.top[MAP.sel.ref].bringToFront();
+  var cam=sigSkipSync(want);
+  if(cam&&!noRepaint){var keys={};Object.keys(ch).forEach(function(r){var x=MAP.feat[r];if(!x)return;for(var tx=tX(x.bb[0]);tx<=tX(x.bb[2]);tx++)for(var ty=tY(x.bb[3]);ty<=tY(x.bb[1]);ty++)keys[tx+','+ty]=1});sigRepaint(keys)}}
+function refProps(ref){var a=String(ref).split(':').map(Number);return {provincia:a[0],municipio:a[1],agregado:a[2],zona:a[3],poligono:a[4],parcela:a[5],recinto:a[6]}}
+function mRestyle(){mTopSync()}
+/* para las pruebas: lo que hay guardado (aquí y en el hilo) */
+function sigStats(){var o={tiles:MAP.tiles.size,feat:Object.keys(MAP.feat).length,top:Object.keys(MAP.top).length,hilo:SWok,tmax:MAP.tmax||0,cuadros:MAP.grid&&MAP.grid._tiles?Object.keys(MAP.grid._tiles).length:0};
+  if(SWok&&SW)return new Promise(function(res){SWcb.n=function(st){o.w=st;res(o)};SW.postMessage({t:'n'})});o.w=SCORE?SCORE.stats():null;return Promise.resolve(o)}
 function mSel(p,ll,g){var k=refKey(p);MAP.sel={ref:k,g:g||null,ha:(+p.dn_surface||0)/10000,uso:p.uso_sigpac||'',ll:ll?[Math.round(ll.lat*1e5)/1e5,Math.round(ll.lng*1e5)/1e5]:null};mRestyle();mSide();
-  if(!MAP.info[k])sigInfo(k).then(function(o){MAP.info[k]=o;if(MAP.sel&&MAP.sel.ref===k)mSide()}).catch(function(){MAP.info[k]={err:1};if(MAP.sel&&MAP.sel.ref===k)mSide()})}
+  if(!MAP.info[k])sigInfo(k).then(function(o){MAP.info[k]=o;mZv(k);if(MAP.sel&&MAP.sel.ref===k)mSide()}).catch(function(){MAP.info[k]={err:1};if(MAP.sel&&MAP.sel.ref===k)mSide()});
+  else if(!MAP.info[k].err)mZv(k)}
+/* v3.2: zona vulnerable del recinto tocado (solo si el SIGPAC ha dado sus datos). 0 = preguntando */
+function mZv(k){if(MAP.zvn[k]!==undefined&&!(MAP.zvn[k]&&MAP.zvn[k].err))return;var r=S.recintos[k];if(r&&r.zvn){MAP.zvn[k]=r.zvn;return}MAP.zvn[k]=0;
+  sigNitr(k).then(function(o){MAP.zvn[k]=o;var r2=S.recintos[k];if(r2&&!r2.zvn){r2.zvn=o;saveRaw()}},function(){MAP.zvn[k]={err:1}}).then(function(){if(MAP.sel&&MAP.sel.ref===k)mSide()})}
+function mZvTxt(k){var r=S.recintos[k],z=r&&r.zvn?r.zvn:MAP.zvn[k];if(z===0)return 'Consultando…';if(!z)return '';if(z.err)return 'No he podido comprobarlo';return zvTxt(z)}
 function mSide(){var el=$('#mside');if(!el)return;var st0=MAP.sel?MAP.sel.ref:'';if(el.dataset.ref!==st0){el.dataset.ref=st0;setTimeout(function(){el.scrollTop=0},0)}var f=mFin(),rs=f?fincaRecs(f.id):[],s=MAP.sel,h='';
   if(!s){h='<div class="k">Recintos</div><p class="small">Toca un recinto en el mapa para ver sus datos y añadirlo'+(f?' a la finca. Los de esta finca se ven en verde.':'. La finca se crea al añadir el primero.')+'</p>'}
   else{var o=MAP.info[s.ref]||{}, r=S.recintos[s.ref], mine=f&&r&&r.fincaId===f.id, oth=r&&!mine?finca(r.fincaId):null, uso=o.uso_sigpac||s.uso, ha=o.superficie!=null?+o.superficie:s.ha;
     var dl=function(k,v){return v===''||v==null?'':'<div><dt>'+k+'</dt><dd>'+v+'</dd></div>'};
     h='<div class="k">Recinto SIGPAC</div><h3>'+esc(refLabel(s.ref))+'</h3><dl class="mdl">'+dl('Uso',esc(usoTxt(uso)))+dl('Superficie',ha2(ha)+' ha')+
       (o.err?'<div class="small">No he podido leer el resto de datos del SIGPAC.</div>':!o.provincia?'<div class="small">Leyendo los datos del SIGPAC…</div>':
-        dl('Pendiente media',o.pendiente_media!=null?trTxt(+o.pendiente_media,1)+' %':'')+dl('Coef. de regadío',o.coef_regadio!=null?trTxt(+o.coef_regadio,0)+' %':'')+dl('Admisibilidad',o.admisibilidad!=null?trTxt(+o.admisibilidad,0)+' %':'')+dl('Altitud',+o.altitud?nf(+o.altitud,0)+' m':'')+dl('Incidencias',o.incidencias?esc(o.incidencias):''))+'</dl>';
+        dl('Pendiente media',o.pendiente_media!=null?trTxt(+o.pendiente_media,1)+' %':'')+dl('Coef. de regadío',o.coef_regadio!=null?trTxt(+o.coef_regadio,0)+' %':'')+dl('Admisibilidad',o.admisibilidad!=null?trTxt(+o.admisibilidad,0)+' %':'')+dl('Altitud',+o.altitud?nf(+o.altitud,0)+' m':'')+dl('Incidencias',o.incidencias?esc(o.incidencias):'')+dl('Zona vulnerable (SIGPAC)',esc(mZvTxt(s.ref))))+'</dl>';
     if(mine)h+='<div class="okst">'+ic('check')+'Ya está en esta finca</div><div class="acts"><button class="btn sm danger lk" data-act="ap-m-del">Quitarlo de la finca</button></div>';
     else if(oth)h+='<div class="note">Está en la finca «'+esc(oth.nombre)+'».</div>';
     else{/* punto 32: el cultivo y el riego del último recinto añadido */
@@ -1900,11 +2145,13 @@ function mAdd(){var f=mFin(),s=MAP.sel;if(!s)return;var o=MAP.info[s.ref]||{};
   var x={ref:s.ref,ha:o.superficie!=null?+o.superficie:s.ha,cultivo:($('#m-cult')||{}).value||'',riego:($('#m-rg')||{}).value||'secano',uso:s.uso,ll:s.ll};
   var R=addRecs(f,[x]);if(!R.added){toast('Ese recinto ya está en otra finca.');return}
   UI.mLast={c:x.cultivo,r:x.riego};saveUI();if(s.g&&!GEO[s.ref])geoPonG(s.ref,s.g);
-  var r=S.recintos[s.ref];if(o.provincia)sigAplica(r,o);if(!r.ll&&s.ll)r.ll=s.ll;pendAPlanes(f);climaAuto(f);save();mRestyle();mSide();toast('Recinto '+refLabel(s.ref)+' añadido','Deshacer',function(){undoDo();mRestyle();mSide()});
+  var r=S.recintos[s.ref];if(o.provincia)sigAplica(r,o);
+  /* v3.2: la zona vulnerable ya leída al tocarlo; si no, se pregunta ahora */
+  var zk=MAP.zvn[s.ref];if(zk&&zk.p!=null)r.zvn=zk;else if(o.provincia)zvLee(s.ref).then(function(z){if(z){saveRaw();if(!$('#mapa').hidden)mSide();else render()}});if(!r.ll&&s.ll)r.ll=s.ll;pendAPlanes(f);climaAuto(f);save();mRestyle();mSide();toast('Recinto '+refLabel(s.ref)+' añadido','Deshacer',function(){undoDo();mRestyle();mSide()});
   if(!o.provincia)sigLeer(f,[s.ref])}
 function mDel(){var f=mFin(),s=MAP.sel;if(!f||!s)return;recQuitar(f,[s.ref]);mRestyle();mSide();toast('Recinto quitado','Deshacer',function(){undoDo();mRestyle();mSide()})}
 function mGo(t){t=String(t||'').trim();if(!t)return;var ref=refParse(t),res=$('#m-res');
-  if(ref){toast('Buscando el recinto…');sigInfo(ref).then(function(o){var g=wktGeo(o.wkt);if(!g||!MAP.m)throw 1;toastOff();var lay=L.geoJSON(g);MAP.m.fitBounds(lay.getBounds().pad(0.6),{maxZoom:18});MAP.info[ref]=o;mSel({provincia:o.provincia,municipio:o.municipio,agregado:o.agregado,zona:o.zona,poligono:o.poligono,parcela:o.parcela,recinto:o.recinto,dn_surface:(+o.superficie||0)*10000,uso_sigpac:o.uso_sigpac},null);MAP.sel.wkt=o.wkt;var ll=wktLL(o.wkt);if(ll)MAP.sel.ll=ll})
+  if(ref){toast('Buscando el recinto…');sigInfo(ref).then(function(o){var g=wktGeo(o.wkt);if(!g||!MAP.m)throw 1;toastOff();var lay=L.geoJSON(g);MAP.m.fitBounds(lay.getBounds().pad(0.6),{maxZoom:18});MAP.info[ref]=o;mSel({provincia:o.provincia,municipio:o.municipio,agregado:o.agregado,zona:o.zona,poligono:o.poligono,parcela:o.parcela,recinto:o.recinto,dn_surface:(+o.superficie||0)*10000,uso_sigpac:o.uso_sigpac},null);MAP.sel.wkt=o.wkt;var ll=wktLL(o.wkt);if(ll)MAP.sel.ll=ll;mRestyle()})
     .catch(function(){toast('No encuentro ese recinto en el SIGPAC. Revisa los números.')});return}
   res.hidden=false;res.innerHTML='<div class="small">Buscando «'+esc(t)+'»…</div>';
   fetch('https://www.cartociudad.es/geocoder/api/geocoder/candidates?limit=8&q='+encodeURIComponent(t)).then(function(r){return r.json()}).then(function(a){
@@ -1989,13 +2236,22 @@ function flash(el){el.classList.remove('flash');void el.offsetWidth;el.classList
 function outGo(f,p,kind){var go=function(){try{var b=kind==='pdf'?buildPabPdf(f,p):buildPabXlsx(f,p);dlDirecto(b,'plan-de-abonado-'+safeName(f.nombre)+'-'+campFile(+p.y+1)+'.'+(kind==='pdf'?'pdf':'xlsx'),kind==='pdf'?'PDF':'Excel',kind==='pdf')}catch(e){toast('No he podido crear el plan de abonado.')}};
   if(kind==='pdf'){toast('Preparando el PDF…');ensurePdf().then(function(){toastOff();go()},function(){pdfNoListo()})}else go()}
 function pdfGo(f,p){outGo(f,p,'pdf')}
-function abrirFinca(id){var f=finca(id);if(!f)return;UI=Object.assign(UI,{v:'finca',fid:id,det:null});SEL={};RM={};RMR={};planAuto(f);var c=ctxOf(f),hasPg=c.p&&(c.p.ud||[]).some(function(u){return ((u.pg||{}).rows||[]).length});
-  var x=c.F.filter(function(y){return y.s==='fin'||y.s==='dat'})[0];UI.step=!fincaRecs(f.id).length?'fin':(x?x.s:(hasPg?'plan':'dat'));saveUI();window.__scrollTop=true;render()}
+function abrirFinca(id){var f=finca(id);if(!f)return;UI=Object.assign(UI,{v:'finca',fid:id,det:null});SEL={};RM={};RMR={};RMODE={};planAuto(f);var c=ctxOf(f),hasPg=c.p&&(c.p.ud||[]).some(function(u){return ((u.pg||{}).rows||[]).length});
+  var x=c.F.filter(function(y){return y.s==='fin'||y.s==='dat'})[0];UI.step=!fincaRecs(f.id).length?'fin':(x?x.s:(hasPg?'plan':'dat'));saveUI();window.__scrollTop=true;render();zvComprobar(f)}
 function copiasHoja(){var h='<h2>Copias</h2><p class="small">Lo que metes se guarda en este navegador. Una copia en archivo te protege si se borran los datos del navegador o cambias de ordenador.</p><div class="opts two">';
   if(fsCan())h+=FS.h?'<button class="opt" data-act="ap-fs-stop">'+ic('close')+'<b>Dejar de guardar en «'+esc(FS.name)+'»</b><span>Se sigue guardando en el navegador.</span></button>':'<button class="opt" data-act="ap-fs-pick">'+ic('save')+'<b>Guardar solo en un archivo</b><span>Eliges el archivo una vez y cada cambio se guarda ahí (recomendado).</span></button>';
   h+='<button class="opt" data-act="ap-copia">'+ic('download')+'<b>Descargar una copia ahora</b><span>Un archivo con todas tus fincas.</span></button><button class="opt" data-act="ap-abrir">'+ic('folder')+'<b>Abrir una copia</b><span>Recuperar fincas de un archivo.</span></button></div><div class="acts"><button class="btn" data-act="ap-close">Cerrar</button></div>';sheet(h,'wide')}
+/* v3.2: al terminar una fila con un abono que no es del listado, se guarda en «Mis abonos» (sin duplicar; si cambia la riqueza, se actualiza y se avisa) */
+function filaPorId(p,id){var o=null;((p&&p.ud)||[]).forEach(function(u,i){((u.pg||{}).rows||[]).forEach(function(q,j){if(q.id===id)o={u:u,q:q,i:i,j:j}})});return o}
+function abRq(a){return trTxt(+a.rn||0,1,1)+'-'+trTxt(+a.rp||0,1,1)+'-'+trTxt(+a.rk||0,1,1)+(a.org?' orgánico':'')}
+function abGuardaMio(q){var n=String(q.n||'').trim(),k=abKey(n);if(!k||catEsTipo(n)||!(+q.rn||+q.rp||+q.rk||q.org===1))return;
+  var L=S.x.abonos=S.x.abonos||[],a=L.filter(function(x){return abKey(x.n)===k})[0],nu={rn:+q.rn||0,rp:+q.rp||0,rk:+q.rk||0,org:q.org===1?1:0};
+  if(!a){a={n:n,rn:nu.rn,rp:nu.rp,rk:nu.rk};if(nu.org)a.org=1;if(abHas(q.pz))a.pz=+q.pz;L.push(a);save();toast('«'+n+'» guardado en «Mis abonos»');return}
+  var ch=false;if(abHas(q.pz)&&+a.pz!==+q.pz){a.pz=+q.pz;ch=true}
+  if(['rn','rp','rk'].some(function(x){return Math.abs((+a[x]||0)-nu[x])>1e-9})||(a.org?1:0)!==nu.org){var antes=abRq(a);a.rn=nu.rn;a.rp=nu.rp;a.rk=nu.rk;if(nu.org)a.org=1;else delete a.org;save();toast('Actualizada la riqueza de «'+a.n+'» en «Mis abonos»: antes '+antes+', ahora '+abRq(a));return}
+  if(ch)save()}
 function misHoja(){var L=S.x.abonos||[];
-  var h='<h2>Mis abonos</h2><p class="small">Los abonos que usas, con la riqueza de su etiqueta y, si quieres, el precio. Salen los primeros al buscar en el programa. El precio solo se ve en pantalla.</p><div class="xs"><table class="mini ma"><thead><tr><th>Nombre</th><th class="r">N %</th><th class="r">P₂O₅ %</th><th class="r">K₂O %</th><th class="c">Org.</th><th class="r">€/kg</th><th class="r">Densidad (kg/L)</th><th></th></tr></thead><tbody>'+
+  var h='<h2>Mis abonos</h2><p class="small">Tus abonos con nombre comercial y la riqueza de su etiqueta (y, si quieres, el precio). Se guardan solos al poner «Mi abono» en el programa; aquí puedes corregirlos o añadir más. El precio solo se ve en pantalla.</p><div class="xs"><table class="mini ma"><thead><tr><th>Nombre</th><th class="r">N %</th><th class="r">P₂O₅ %</th><th class="r">K₂O %</th><th class="c">Org.</th><th class="r">€/kg</th><th class="r">Densidad (kg/L)</th><th></th></tr></thead><tbody>'+
     L.map(function(a,i){var c=function(k,ph,n){return '<td><input class="in ma-in'+(n?' n':'')+'" data-i="'+i+'" data-k="'+k+'" value="'+esc(a[k]==null?'':(typeof a[k]==='number'?abEd(a[k]):a[k]))+'" placeholder="'+(ph||'')+'"'+(n?' inputmode="decimal"':'')+' autocomplete="off"></td>'};
       return '<tr>'+c('n','Nombre del abono')+c('rn','0',1)+c('rp','0',1)+c('rk','0',1)+'<td class="c"><input type="checkbox" class="ma-in" data-i="'+i+'" data-k="org"'+(a.org?' checked':'')+'></td>'+c('pz','0,00',1)+c('dens','',1)+'<td><button class="btn q ib danger" data-act="ap-ma-del" data-i="'+i+'" aria-label="Quitar">'+ic('close')+'</button></td></tr>'}).join('')+
     (L.length?'':'<tr><td colspan="8" class="small empty">Aún no hay abonos tuyos.</td></tr>')+'</tbody></table></div><div class="acts"><button class="btn" data-act="ap-ma-add">'+ic('plus')+'Añadir abono</button><button class="btn p" data-act="ap-ma-ok">Hecho</button></div>';
@@ -2106,22 +2362,22 @@ document.addEventListener('click',function(ev){
   if(a==='ap-hacer-ok'){if(p)hacerPlan(f,p,b.dataset.m==='todas');return}
   if(!p)return;
   var ui=+b.dataset.u, u=p.ud[ui], C=u&&pabCalc(f,u,p);
-  if(a==='ap-rowed'){var id=b.dataset.id;RM[id]=!RM[id];render();if(RM[id]){var jj=-1;p.ud.forEach(function(x,i2){((x.pg||{}).rows||[]).forEach(function(q,j){if(q.id===id){jj=[i2,j]}})});if(jj!==-1)focoEn('[data-p="ud.'+jj[0]+'.pg.rows.'+jj[1]+'.n"]')}else focoEn('button[data-act="ap-rowed"][data-id="'+id+'"]');return}
+  if(a==='ap-rowed'){var id=b.dataset.id;if(RM[id]){var fq=filaPorId(p,id);if(fq)abGuardaMio(fq.q)}RM[id]=!RM[id];render();if(RM[id]){var jj=-1;p.ud.forEach(function(x,i2){((x.pg||{}).rows||[]).forEach(function(q,j){if(q.id===id){jj=[i2,j]}})});if(jj!==-1)focoEn('[data-p="ud.'+jj[0]+'.pg.rows.'+jj[1]+'.n"]')}else focoEn('button[data-act="ap-rowed"][data-id="'+id+'"]');return}
   if(a==='ap-mitprop'){undoPush();var nm=0;udsAplica(f,p,function(x){nm+=mitPropuesta(x,true)||0});save();render();toast(nm?'Marcadas las medidas que encajan con el programa':'Ya estaban marcadas las que encajan');return}
   if(!u)return;
+  if(a==='ap-zvsep'){zvSeparar(f,p,ui);return}
   if(a==='ap-exopen'){UI['exo'+u.id]=1;saveUI();render();return}
   if(a==='ap-prop'){if(sinCosecha(f,p,u,ui))return;var rows=propuesta(f,u,C);if(!rows.length){toast('Con lo que ya aporta, «'+u.n+'» no necesita abono (necesidad neta 0).');return}
     var had=((u.pg||{}).rows||[]).length;undoPush();u.pg={src:'own',rows:rows};delete u.d0;mitPropuesta(u,true);p.m=Date.now();save();render();undoToast('Programa propuesto con '+rows.length+(rows.length===1?' abono':' abonos')+(had?' (cambia el que había)':'')+'. Revísalo y cambia lo que quieras');return}
   if(a==='ap-ajustar'){if(sinCosecha(f,p,u,ui))return;var R=ajustar(f,p,u);undoPush();u.pg=u.pg||{src:'own'};u.pg.rows=R.rows;delete u.d0;p.m=Date.now();save();render();
     var C2=pabCalc(f,u,p),ok=['n','p','k'].every(function(k){return C2.B[k].st==='Ajustado'});
     undoToast((ok?'Ajustado: los tres nutrientes cuadran':'Ajustado lo que se puede'+(R.off.length?' (no cuadra '+R.off.map(function(k){return {n:'el N',p:'el P₂O₅',k:'el K₂O'}[k]}).join(' ni ')+')':''))+(R.added.length?'. Añadido: '+R.added.join(', '):'')+(R.quit.length?'. Quitado: '+R.quit.join(', '):'')+(R.limN?'. El N se queda en el límite de zona vulnerable':''));return}
-  if(a==='ap-cred'){var cr=creditoSuelo(u,C);undoPush();u.ap=u.ap||{};u.ap.s=u.ap.s||{};if(cr.p)u.ap.s.p=cr.p;if(cr.k)u.ap.s.k=cr.k;p.m=Date.now();save();render();toast('Puesto como aporte del suelo (criterio técnico)');return}
 });
 document.addEventListener('submit',function(ev){var fm=ev.target;if(fm&&fm.dataset&&fm.dataset.f==='m-go'){ev.preventDefault();mGo(($('#m-q')||{}).value)}});
 function pick(accept,fn){var i=document.createElement('input');i.type='file';i.accept=accept;i.style.display='none';document.body.appendChild(i);i.onchange=function(){var fl=i.files&&i.files[0];i.parentNode.removeChild(i);if(fl)fn(fl)};i.click()}
 
 /* deshacer también lo escrito en las casillas: se guarda el estado justo antes de cada cambio */
-document.addEventListener('change',function(ev){var t=ev.target;if(!t||!t.closest||!t.closest('#app,#sheet,#side,#desk'))return;if(t.id==='ap-q'||(t.classList&&/\b(rsel|rsel-all|ap-camp|ap-cost|ap-bulk|ap-clprov|ap-aplu)\b/.test(t.className)))return;if(t.dataset.p||t.dataset.e||t.dataset.r||t.dataset.m||t.classList.contains('ap-in')||t.classList.contains('ma-in')||t.classList.contains('ap-sulink')||t.classList.contains('ap-moall'))undoPush()},true);
+document.addEventListener('change',function(ev){var t=ev.target;if(!t||!t.closest||!t.closest('#app,#sheet,#side,#desk'))return;if(t.id==='ap-q'||(t.classList&&/\b(rsel|rsel-all|ap-camp|ap-cost|ap-bulk|ap-clprov|ap-aplu)\b/.test(t.className)))return;if(t.dataset.p||t.dataset.e||t.dataset.r||t.dataset.m||t.classList.contains('ap-in')||t.classList.contains('ma-in')||t.classList.contains('ap-sulink')||t.classList.contains('ap-suno')||t.classList.contains('ap-sunomot')||t.classList.contains('ap-moall'))undoPush()},true);
 document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('[data-act^="pa-"]');if(b&&b.dataset.act!=='pa-del')undoPush()},true);
 /* fechas: lo escrito como dd/mm/aaaa se guarda como fecha */
 document.addEventListener('change',function(ev){var t=ev.target;if(!t||!t.dataset||!t.dataset.date)return;var v=String(t.value||'').trim();if(!v)return;
@@ -2158,10 +2414,17 @@ document.addEventListener('change',function(ev){
   if(t.classList.contains('ap-resd')){var rk2=t.dataset.m,tx2=t.value.trim();udsAplica(f,p,function(u){var o=(u.res||{})[rk2];if(o&&o.a!==undefined){if(tx2)o.d=tx2;else delete o.d}});save();renderLuego();return}
   if(t.classList.contains('ap-aplu')){UI.aplU=t.value||null;saveUI();render();return}
   if(t.classList.contains('ap-moall')){var ob=t.value;todasUd(f,p,function(u){u.mo=u.mo||{};if(ob)u.mo.obj=ob;else delete u.mo.obj});save();renderLuego();return}
+  if(t.classList.contains('ap-abmodo')){var fr=filaPorId(p,t.dataset.id);if(!fr)return;var md=t.value==='mio'?'mio':'tipo',qq=fr.q,esT=catEsTipo(qq.n);RMODE[qq.id]=md;
+    if(qq.n&&(md==='mio'?esT:!esT)){undoPush();qq.n='';p.m=Date.now();save()}render();focoEn('[data-p="ud.'+fr.i+'.pg.rows.'+fr.j+'.n"]');return}
+  if(t.classList.contains('sgi')&&t.dataset.sg==='abm'){var qm=filaDe(t.dataset.p||'');if(qm&&!(+qm.rn||+qm.rp||+qm.rk)){var km=abKey(qm.n),cm=catMios().filter(function(x){return abKey(x.n)===km})[0];if(cm){qm.rn=cm.rn;qm.rp=cm.rp;qm.rk=cm.rk;if(cm.org)qm.org=1;if(abHas(cm.pz)&&!abHas(qm.pz))qm.pz=cm.pz;p.m=Date.now();save();renderLuego()}}return}
+  if(t.classList.contains('ap-suno')){var su0=p.ud[+t.dataset.u];if(!su0)return;if(t.checked)su0.suNo='nd';else delete su0.suNo;p.m=Date.now();save();renderLuego();return}
+  if(t.classList.contains('ap-sunomot')){var su1=p.ud[+t.dataset.u];if(!su1)return;su1.suNo=t.value==='no20'?'no20':'nd';p.m=Date.now();save();renderLuego();return}
   if(t.classList.contains('ap-sulink')){var du=p.ud[+t.dataset.u];if(!du)return;var src=(p.ud||[]).filter(function(x){return x.id===t.value})[0];
-    if(src&&src!==du){du.suDe=src.id;du.su=JSON.parse(JSON.stringify(src.su||{}));if(src.rp&&!du.rp)du.rp=du.refs[0]||''}else{delete du.suDe;du.su={}}p.m=Date.now();save();renderLuego();return}
+    if(src&&src!==du){delete du.suNo;du.suDe=src.id;du.su=JSON.parse(JSON.stringify(src.su||{}));if(src.rp&&!du.rp)du.rp=du.refs[0]||''}else{delete du.suDe;du.su={}}p.m=Date.now();save();renderLuego();return}
   if(t.classList.contains('pa-in')&&t.dataset.p){var pa=t.dataset.p,m1=/^ud\.(\d+)\.(n|ck|rg)$/.exec(pa);if(m1){p.udMan=1;saveRaw()}
-    var m2=/^ud\.(\d+)\.su\./.exec(pa);if(m2&&p.ud[+m2[1]]){suCopia(p,p.ud[+m2[1]]);saveRaw()}
+    /* v3.2: la zona vulnerable cambiada a mano se respeta siempre */
+    var mz=/^ud\.(\d+)\.zv$/.exec(pa);if(mz&&p.ud[+mz[1]]){var uz=p.ud[+mz[1]];uz.zvMan=1;delete uz.zvA;delete uz.zvF;saveRaw()}
+    var m2=/^ud\.(\d+)\.su\./.exec(pa);if(m2&&p.ud[+m2[1]]){if(suTiene(p.ud[+m2[1]].su))delete p.ud[+m2[1]].suNo;suCopia(p,p.ud[+m2[1]]);saveRaw()}
     if(/^cl\./.test(pa)&&p.clAuto){delete p.clAuto;saveRaw()}}
 });
 document.addEventListener('input',function(ev){var t=ev.target;if(!t)return;
@@ -2181,18 +2444,18 @@ function sgPos(){if(!SG.box||!SG.inp)return;var r=SG.inp.getBoundingClientRect()
   SG.box.style.width=w+'px';SG.box.style.left=Math.max(8,x)+'px';var mh=Math.min(320,Math.max(160,below>220?below-16:r.top-16));SG.box.style.maxHeight=mh+'px';
   if(below>220||below>r.top)SG.box.style.top=(r.bottom+window.scrollY+4)+'px';else SG.box.style.top=(r.top+window.scrollY-Math.min(mh,SG.box.scrollHeight)-4)+'px'}
 function sgOpen(inp){var kind=inp.dataset.sg,q=noAcc(inp.value||'').toLowerCase().trim(),L;
-  if(kind==='ab')L=catBusca(inp.value).slice(0,60);else L=MES_SG.filter(function(m){return !q||noAcc(m).toLowerCase().indexOf(q)===0}).map(function(m){return {n:m}});
+  if(/^ab/.test(kind))L=catBusca(inp.value,kind==='abt'?'tipo':kind==='abm'?'mio':'').slice(0,60);else L=MES_SG.filter(function(m){return !q||noAcc(m).toLowerCase().indexOf(q)===0}).map(function(m){return {n:m}});
   if(SG.inp!==inp)sgClose();SG.inp=inp;SG.L=L;SG.hi=-1;
   if(!L.length){if(SG.box){SG.box.parentNode.removeChild(SG.box);SG.box=null}return}
   if(!SG.box){SG.box=document.createElement('div');SG.box.className='sgl';SG.box.setAttribute('role','listbox');document.body.appendChild(SG.box)}
-  var g0='';SG.box.innerHTML=L.map(function(x,i){var gh='';if(kind==='ab'&&x.g!==g0){g0=x.g;gh='<div class="sgg">'+esc(x.g)+'</div>'}
-    return gh+'<div class="sgo" role="option" data-i="'+i+'"><span>'+esc(x.n)+'</span>'+(kind==='ab'?'<em>'+trTxt(x.rn,1)+'-'+trTxt(x.rp,1)+'-'+trTxt(x.rk,1)+(x.org?' · orgánico':'')+'</em>':'')+'</div>'}).join('');sgPos()}
+  var g0='';SG.box.innerHTML=L.map(function(x,i){var gh='';if(/^ab/.test(kind)&&catGrupo(x)!==g0){g0=catGrupo(x);gh='<div class="sgg">'+esc(g0)+'</div>'}
+    return gh+'<div class="sgo" role="option" data-i="'+i+'"><span>'+esc(x.n)+'</span>'+(/^ab/.test(kind)?'<em>'+trTxt(x.rn,1)+'-'+trTxt(x.rp,1)+'-'+trTxt(x.rk,1)+(x.org?' · orgánico':'')+'</em>':'')+'</div>'}).join('');sgPos()}
 function sgClose(){if(SG.box&&SG.box.parentNode)SG.box.parentNode.removeChild(SG.box);SG.box=null;SG.inp=null;SG.L=[];SG.hi=-1}
 window.addEventListener('resize',sgPos);window.addEventListener('scroll',function(){if(SG.box)sgPos()},true);
 function sgHi(d){if(!SG.box)return;var n=SG.L.length;SG.hi=SG.hi<0?(d>0?0:n-1):(SG.hi+d+n)%n;$$('.sgo',SG.box).forEach(function(o){o.classList.toggle('on',+o.dataset.i===SG.hi)});var on=$('.sgo.on',SG.box);if(on)on.scrollIntoView({block:'nearest'})}
 function sgPick(i){var inp=SG.inp,x=SG.L[i];if(!inp||!x)return;var kind=inp.dataset.sg,path=inp.dataset.p;sgClose();inp.value=x.n;inp.defaultValue=x.n;
   var nxt=null;
-  if(kind==='ab'){var q=filaDe(path),f=finca(UI.fid),p=f&&pabCur(f);if(q&&p){q.n=x.n;q.rn=x.rn;q.rp=x.rp;q.rk=x.rk;if(x.org)q.org=1;else delete q.org;if(abHas(x.pz))q.pz=x.pz;
+  if(/^ab/.test(kind)){var q=filaDe(path),f=finca(UI.fid),p=f&&pabCur(f);if(q&&p){q.n=x.n;q.rn=x.rn;q.rp=x.rp;q.rk=x.rk;if(x.org)q.org=1;else delete q.org;if(abHas(x.pz))q.pz=x.pz;
       var mu=/^ud\.(\d+)\./.exec(path),u=mu&&p.ud[+mu[1]];if(!q.fo)q.fo=u&&u.rg==='regadio'?'Fertirrigación':'Suelo';if(!q.eq)q.eq=u&&u.rg==='regadio'?'Cabezal de riego':'Abonadora';p.m=Date.now();save()}
     nxt=$('[data-p="'+path.replace(/\.n$/,'.mo')+'"]')}
   else{var q2=filaDe(path),f2=finca(UI.fid),p2=f2&&pabCur(f2);if(q2&&p2){q2.mo=x.n;p2.m=Date.now();save()}nxt=$('[data-p="'+path.replace(/\.mo$/,'.d')+'"]')}
@@ -2247,7 +2510,7 @@ function soltar(fl){var nm=String(fl.name||'').toLowerCase(),ty=fl.type||'';
 cargar();
 var MQ=[window.matchMedia('(min-width:1200px)')];
 MQ.forEach(function(q){var fn=function(){if($('#app'))render()};if(q.addEventListener)q.addEventListener('change',fn);else if(q.addListener)q.addListener(fn)});
-document.addEventListener('DOMContentLoaded',function(){render();fsInit()});
+document.addEventListener('DOMContentLoaded',function(){render();fsInit();if(UI.v==='finca')zvComprobar(finca(UI.fid))});
 (function(){var tm=null;try{new MutationObserver(function(){if(tm)return;tm=setTimeout(function(){tm=null;stkLab();inThou()},0)}).observe(document.documentElement,{childList:true,subtree:true})}catch(e){}})();
 if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
 window.__pa={S:function(){return S},UI:function(){return UI},render:render,ejemplo:ejemplo,pabCalc:pabCalc,pabBlocks:pabBlocks,buildPabXlsx:buildPabXlsx,ensurePdf:ensurePdf,buildPabPdf:buildPabPdf,climaDe:climaDe,climaKey:climaKey,refParse:refParse,catGen:catGen,mesesDe:mesesDe,propuesta:propuesta,faltas:faltas,ctxOf:ctxOf,mapaAbrir:mapaAbrir,MAP:function(){return MAP},
@@ -2287,6 +2550,15 @@ pabBlocks=function(f,p){
       if(b.t!=='tb')return;var c=b.cols,L=c.length-1;if(c[L].h!=='Estado')return;
       if(c[0].h==='Unidad'&&b.rows.length===uds.length)b.rows.forEach(function(r,i){if(sd[i])r[L]=SIN_DATOS});
       else if(c[0].h==='Nutriente'&&uj>=0&&sd[uj])b.rows.forEach(function(r){r[L]=SIN_DATOS})})}
+  /* v3.2: unidad sin análisis de suelo («No tengo análisis»): donde iba el análisis y en la comprobación 6.2 dice «Sin análisis de suelo» */
+  var sn=uds.map(function(u,i){return suNoMot(u,Cs[i])});
+  if(sn.some(Boolean)){var us=-1;D.B.forEach(function(b){if(b.t==='h1'&&/^Unidad de producción: /.test(b.x)){us++;return}var m=us>=0&&sn[us];if(!m)return;
+    if(b.t==='kv'&&b.k==='Resultados')b.v=SUNO_TXT[m];
+    if(b.t==='tb'&&b.cols[0].h==='Apartado')b.rows.forEach(function(r){if(/^6\.2 /.test(r[0])){r[1]='Sin análisis de suelo';r[2]=m==='no20'?'no obligatorio (RD 1311/2012, anexo III, parte I, A.3, datos generales, letra d)':'no se dispone de análisis de suelo'}})})}
+  /* v3.2: de dónde sale la zona vulnerable de cada unidad (lo que no se sabe de dónde sale, como antes) */
+  var uz=-1;D.B.forEach(function(b){if(b.t==='h1'&&/^Unidad de producción: /.test(b.x)){uz++;b.zvU=uz;return}
+    if(b.t==='p'&&uz>=0&&!b.zvHecho&&/ · (fuera de )?zona vulnerable$/.test(b.x)){var u=uds[uz];b.zvHecho=1;if(!u)return;
+      if(u.zvMan===1)b.x+=' (indicado a mano)';else if(u.zvA===1&&!zvMan(u)&&u.zvF)b.x+=' (según el SIGPAC del FEGA, consultado el '+isoEs(u.zvF)+')'}});
   if(!vac.some(Boolean))return D;
   /* v3.1 punto 6: de la unidad exenta vacía se quedan su título, su línea de superficie, la frase de exenta y la tabla de sus recintos
      (igual que en las demás unidades); lo que se quita es lo vacío: datos de inicio, suelo, balance, programa, medidas y comprobación. */
