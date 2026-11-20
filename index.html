@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-hJ1PZbPbpygyo/iNO7m7xlzZa0sXIhe+9GfnEaIxtB4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-ndFJ+P7eg6fv9QGsyfQYZkF6E61p7SwNguU+2T4/POg=' 'sha256-UD4CfXsR4R5Gc6d4vw9XF3lwIX6Ksrg5zSw5xrR+UVs=' 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' 'sha256-h+GBEaqBdA8bNKHYyOafB5DIkO+eK2GjZ9aoqt3W7no='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; font-src 'self' data:; connect-src 'self' blob: data: https://rbrvokfrbvcsqmskshul.supabase.co https://nominatim.openstreetmap.org https://api.rainviewer.com https://s3-us-west-2.amazonaws.com https://archive-api.open-meteo.com https://api.open-meteo.com https://api.met.no https://servicios.idee.es https://server.arcgisonline.com https://services.arcgisonline.com https://*.arcgis.com https://www.ign.es https://www.cartociudad.es https://sigpac.mapa.gob.es https://sigpac-hubcloud.es https://ovc.catastro.meh.es https://www1.sedecatastro.gob.es https://tile.openstreetmap.org https://tilecache.rainviewer.com https://rbrvokfrbvcsqmskshul.supabase.co; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; media-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
@@ -3231,7 +3231,7 @@ function ndviStep(older){
   var j=i+(older?1:-1); if(i<0||j<0||j>=l.length)return;
   NDV.sel=l[j].d; if(ndviLayer)ndviLayer.redraw(); ndviPill(); if(!$('#layers').hidden)renderLayers();
 }
-var APPV={v:'2026-11-17T16:01:11Z',n:'Entrega 153 · 17 nov · 17:01'}, verNew=null, verAt=0;
+var APPV={v:'2026-11-20T09:13:54Z',n:'Entrega 154 · 20 nov · 10:13'}, verNew=null, verAt=0;
 function verRender(){var b=$('#verbtn');if(!b)return;b.className=verNew?'new':'';b.textContent=verNew?'Hay una versión nueva · toca para actualizar':APPV.n}
 function verCheck(manual){
   verAt=Date.now();
@@ -16179,14 +16179,14 @@ function finOn(){if(OV.fin)return;OV.fin=true;lsSet(KEYO,JSON.stringify(OV));red
 
 /* ---- importar una PAC desde su PDF ---- */
 var pac=null;
-function pacCrop(prod){
+function pacCrop0(prod){
   var p=noAcc(String(prod||'')).toUpperCase().replace(/^(FS|FY|FL|FC|CI)\s+/,'').trim();
   if(/^ALMENDR/.test(p))return 'Almendro'; if(/^PISTACH/.test(p))return 'Pistacho'; if(/^OLIV/.test(p))return 'Olivo';
   if(/^(VINED|VID|VINA|UVA|VINEDO)/.test(p))return 'Viña'; if(/^(CEBADA|TRIGO|AVENA|CENTENO|TRITICALE|CEREAL)/.test(p))return 'Cereal'; if(/^BARBECHO/.test(p))return 'Barbecho';
   return '';
 }
 var titleCase2=function(s){return String(s||'').toLowerCase().replace(/(^|\s)(\S)/g,function(m,a,b){return a+b.toUpperCase()})};
-function pacParseRow(txt){
+function pacParseRow0(txt){
   var t=String(txt).trim().split(/\s+/);
   if(t.length<14||!/^\d+$/.test(t[0])||!/^\d{2}$/.test(t[1])||!/^\d{1,3}$/.test(t[2]))return null;
   var i=3, name=[]; while(i<t.length&&!/^\d+$/.test(t[i])){name.push(t[i]);i++}
@@ -16201,21 +16201,142 @@ function pacParseRow(txt){
   var f=function(s){return parseFloat(String(s).replace(',','.'))};
   return {prov:+t[1],muni:+t[2],mname:name.join(' '),agr:+a[0],zona:+a[1],pol:+a[2],par:+a[3],rec:+a[4],sigHa:f(a[5]),decHa:f(a[6]),prod:prod,vari:vari,riego:riego};
 }
+/* ───── Entrega 154: lectura de la PAC (el mismo arreglo que la herramienta del plan de abonado, versión 3.1) ─────
+   En la PAC de Castilla-La Mancha:
+   1. el producto va detrás del uso SIGPAC («TA TRIGO BLANDO», «FS PISTACHO», o solo «TA» con el producto en otro renglón): el uso ya no se toma como cultivo;
+   2. el producto a veces ocupa dos renglones dentro de la misma fila («BARBECHO» arriba y «TRADICIONAL» abajo; el uso «O»/«V» igual);
+   3. un recinto puede ir declarado en varias líneas (trigo + trigo + barbecho): se suman y, si hay dos cultivos, se avisa;
+   4. el titular, su NIF, el domicilio y el representante se leen del bloque del solicitante.
+   Si la maqueta es otra, se lee como antes (renglón a renglón). */
+var PAC_USO=(function(){var o={};'TA TH PS PR PA OV VI FS FY FL FV FF OF OC CF CS CV CI IV IM ZU ZV ZC CA ED AG FO EP MT OP VO VF'.split(' ').concat(Object.keys(USOS)).forEach(function(k){o[k]=1});return o})();
+/* palabras que van pegadas al producto, no a la variedad */
+var PAC_QUAL=/^(BLANDO|DURO|TRADICIONAL|MEDIOAMBIENTAL|SEMILLADO|VERDE|GRANO|FORRAJERO|FORRAJERA|DE)$/;
+/* quita los códigos de uso SIGPAC del principio: «TA TRIGO BLANDO» → uso TA, producto «TRIGO BLANDO» */
+function pacSinUso(tk){var uso='';tk=tk.slice();while(tk.length&&PAC_USO[noAcc(tk[0]).toUpperCase()]){if(!uso)uso=noAcc(tk[0]).toUpperCase();tk.shift()}return {uso:uso,tk:tk}}
+/* area: opcional, {cells:[{x,s}], vx}: las casillas de producto y variedad de la fila (con los trozos de los renglones de arriba y abajo) y la x donde empieza la variedad */
+function pacParseRow(txt,area){
+  var r=pacParseRow0(txt); if(!r)return null;
+  var prod=[],vari=[],u0='';
+  if(area&&area.cells&&area.cells.length){area.cells.forEach(function(c){(c.x>=area.vx-3?vari:prod).push.apply(c.x>=area.vx-3?vari:prod,c.s.split(/\s+/).filter(Boolean))})}
+  else{var t=String(txt).trim().split(/\s+/),i=3;while(i<t.length&&!/^\d+$/.test(t[i]))i++;var rest=t.slice(i+9),k=-1;for(var j=0;j<rest.length;j++){if(/^[SR]$/i.test(rest[j])){k=j;break}}
+    var pv=k>=0?rest.slice(0,k):rest.slice(0,4),su=pacSinUso(pv);pv=su.tk;u0=su.uso;
+    if(pv.length>=2&&/^SIN$/i.test(pv[pv.length-2])&&/^VARIEDAD$/i.test(pv[pv.length-1]))pv=pv.slice(0,-2);
+    if(pv.length){prod=[pv[0]];var q=1;while(q<pv.length&&PAC_QUAL.test(noAcc(pv[q]).toUpperCase())&&!(q+1<pv.length&&/^VARIEDAD$/i.test(pv[q+1])))prod.push(pv[q++]);vari=pv.slice(q)}}
+  var s=pacSinUso(prod);prod=s.tk;
+  var pj=prod.join(' ').trim(), vj=vari.join(' ').trim();
+  /* «SIN VARIEDAD», aunque venga partido entre el producto y la variedad */
+  if(/^VARIEDAD$/i.test(vj)&&/(^|\s)SIN$/i.test(pj)){pj=pj.replace(/\s*\bSIN$/i,'').trim();vj=''}
+  pj=pj.replace(/\s*\bSIN\s+VARIEDAD\b\s*$/i,'').trim();
+  if(/^SIN\s+VARIEDAD$/i.test(vj))vj='';
+  r.prod=pj; r.vari=vj; r.uso=u0||s.uso||(area&&area.uso)||''; return r;
+}
+/* cultivo de la app a partir del producto de la PAC (sin el uso SIGPAC delante: «TA» solo no es un cultivo) */
+function pacCrop(prod){var tk=noAcc(String(prod||'')).toUpperCase().trim().split(/\s+/).filter(Boolean);return pacCrop0(pacSinUso(tk).tk.join(' '))}
+/* «TRIGO BLANDO» → «Trigo blando» */
+function pacEtq(s){s=String(s||'').trim().toLowerCase();return s?s.charAt(0).toUpperCase()+s.slice(1):''}
+/* nombre de lo declarado en una línea: el cultivo de la app; los cereales y lo que la app no conoce, con el nombre de la PAC («Trigo blando»). Vacío si no hay producto */
+function pacCultivo(r){var c=pacCrop(r.prod)||pacCropVar(r.vari),p=String(r.prod||'').trim();
+  if(c&&!(c==='Cereal'&&p))return c;if(!p||/^[A-Za-z]{1,2}$/.test(p))return c||'';return pacEtq(p)}
+/* lo que se enseña de una fila: «Cereal · Trigo blando», «Almendro», «Girasol» */
+function pacCultTxt(r){var c=pacCrop(r.prod)||pacCropVar(r.vari),p=pacSinUso(String(r.prod||'').split(/\s+/).filter(Boolean)).tk.join(' ');if(c==='Cereal'&&p)return 'Cereal · '+pacEtq(p);return c||(p?titleCase2(p):'Sin cultivo')}
 function pacXY(vt,m){return [vt[0]*m[4]+vt[2]*m[5]+vt[4],vt[1]*m[4]+vt[3]*m[5]+vt[5]]}
+/* renglones de una hoja: [{y, w:[{x,s}]}] ordenados de arriba abajo y de izquierda a derecha (±2,5 de y) */
+function pacLineas(pg){var vt=pg.vt||[1,0,0,-1,0,0],ys=[];
+  pg.items.forEach(function(it){var s=it.str;if(!s||!s.trim())return;var xy=pacXY(vt,it.transform),y=xy[1],g=null;for(var i=0;i<ys.length;i++){if(Math.abs(ys[i].y-y)<=2.5){g=ys[i];break}}if(!g){g={y:y,w:[]};ys.push(g)}g.w.push({x:xy[0],s:s.trim()})});
+  ys.sort(function(a,b){return a.y-b.y});ys.forEach(function(g){g.w.sort(function(a,b){return a.x-b.x})});return ys}
+/* casillas de producto y variedad de una fila de recinto: entre la del CSP (la última cifra) y la de «S»/«R» */
+function pacArea(g,r,txt){var t=String(txt).trim().split(/\s+/),i=3;while(i<t.length&&!/^\d+$/.test(t[i]))i++;var tCsp=i+8,acc=0,iC=-1,iR=-1;
+  for(var j=0;j<g.w.length;j++){var n=g.w[j].s.split(/\s+/).length;if(iC<0&&acc+n>tCsp){iC=j}else if(iC>=0&&/^[SR]$/i.test(g.w[j].s)){iR=j;break}acc+=n}
+  if(iC<0||iR<0)return null;var own=g.w.slice(iC+1,iR);return {x0:g.w[iC].x+1,x1:g.w[iR].x-1,own:own,y:g.y}}
 function pacRowsFromItems(pages){
-  var rows=[], seen={}, year='';
+  var year='',byKey=Object.create(null),order=[],todas=[],esUso=function(t){return !!PAC_USO[noAcc(String(t)).toUpperCase()]};
+  /* x de la columna de la variedad: la que más se repite entre las casillas de variedad de las filas («SIN VARIEDAD», «GUARA»…) */
+  var moda=function(xs){var c={},b=null;xs.forEach(function(x){var k=Math.round(x);c[k]=(c[k]||0)+1;if(b===null||c[k]>c[b])b=k});return b===null?null:{x:b,n:c[b]}};
+  var candX=function(g){if(!g.A)return [];var nu=g.A.own.filter(function(w){return !esUso(w.s)}),o=[];
+    g.A.own.forEach(function(w){if(/^SIN\s+VARIEDAD$/i.test(w.s))o.push(w.x)});if(!o.length&&nu.length>=2)o.push(nu[nu.length-1].x);return o};
   pages.forEach(function(pg){
-    var items=pg.items, vt=pg.vt||[1,0,0,-1,0,0];
-    var ys=[]; items.forEach(function(it){var s=it.str; if(!s||!s.trim())return; var xy=pacXY(vt,it.transform), y=xy[1], g=null; for(var i=0;i<ys.length;i++){if(Math.abs(ys[i].y-y)<=2.5){g=ys[i];break}} if(!g){g={y:y,w:[]};ys.push(g)} g.w.push({x:xy[0],s:s.trim()})});
-    ys.sort(function(a,b){return a.y-b.y}).forEach(function(g){
-      var txt=g.w.sort(function(a,b){return a.x-b.x}).map(function(w){return w.s}).join(' ');
-      if(!year){var m=txt.match(/Campa[ñn]a\s*(\d{4})/);if(m)year=m[1]}
-      var r=pacParseRow(txt); if(!r)return;
-      var key=[r.prov,r.muni,r.agr,r.zona,r.pol,r.par,r.rec].join(':'); if(seen[key])return; seen[key]=1; r.key=key; rows.push(r);
-    });
-  });
+    var L=pacLineas(pg),main=[];
+    L.forEach(function(g){var txt=g.w.map(function(w){return w.s}).join(' ');if(!year){var m=txt.match(/Campa[ñn]a\s*(\d{4})/);if(m)year=m[1]}
+      var r=pacParseRow0(txt);if(r){g.r=r;g.txt=txt;g.A=pacArea(g,r,txt);main.push(g)}});
+    /* punto 2: los trozos de los renglones de arriba y abajo que caen en la columna del producto de una fila (a menos de 6,5 de su y) */
+    L.forEach(function(g){if(g.r)return;g.w.forEach(function(w){var best=null,bd=6.5;main.forEach(function(m){if(!m.A)return;var d=Math.abs(m.y-g.y);if(d<bd&&w.x>m.A.x0&&w.x<m.A.x1){bd=d;best=m}});if(best)(best.frag=best.frag||[]).push({x:w.x,y:g.y,s:w.s})})});
+    var cx=[];main.forEach(function(g){cx=cx.concat(candX(g))});
+    todas.push({main:main,vx:moda(cx)})});
+  todas.forEach(function(T){
+    T.main.forEach(function(g){var area=null;
+      if(g.A){var P=g.A.own.map(function(w){return {x:w.x,y:g.y,s:w.s}}).concat(g.frag||[]),cl=[];
+        P.sort(function(a,b){return a.x-b.x||a.y-b.y}).forEach(function(p){var c=cl.filter(function(c){return Math.abs(c.x-p.x)<=3})[0];if(!c){c={x:p.x,p:[]};cl.push(c)}c.p.push(p)});
+        var cells=cl.map(function(c){c.p.sort(function(a,b){return a.y-b.y});var one=c.p.every(function(p){return /^[A-Za-zÑñ]$/.test(p.s)});return {x:c.x,y:c.p[0].y,s:c.p.map(function(p){return p.s}).join(one?'':' ')}});
+        /* el uso SIGPAC en su propia casilla («TA», o «O»/«V» en dos renglones) se aparta: no es producto ni variedad */
+        var uso='';cells=cells.filter(function(c){if(esUso(c.s)){if(!uso)uso=noAcc(c.s).toUpperCase();return false}return true});
+        /* de arriba abajo y, en el mismo renglón, de izquierda a derecha: «BARBECHO» / «TRADICIONAL» aunque vayan centrados */
+        cells.sort(function(a,b){return Math.abs(a.y-b.y)>2.5?a.y-b.y:a.x-b.x});
+        /* la columna que se repite en la hoja; si no se repite, la de la propia fila; si la fila no la tiene, la de otra fila de la hoja */
+        var cf=candX(g),vx=T.vx&&T.vx.n>=2?T.vx.x:(cf.length?cf[0]:(T.vx?T.vx.x:Infinity));area={cells:cells,vx:vx,uso:uso}}
+      var r=pacParseRow(g.txt,area);if(!r)return;r.key=[r.prov,r.muni,r.agr,r.zona,r.pol,r.par,r.rec].join(':');r.cultivo=pacCultivo(r);
+      if(!byKey[r.key]){byKey[r.key]=[];order.push(r.key)}byKey[r.key].push(r)})});
+  /* punto 3: un recinto en varias líneas. Las del mismo cultivo de la app se suman (trigo y cebada son «Cereal»); con dos cultivos se queda el de más hectáreas y se avisa */
+  var rows=order.map(function(k){var L=byKey[k],G=Object.create(null),go=[];
+    /* si lo declarado pasa claramente de la superficie SIGPAC del recinto y las líneas son la misma tanda repetida (otra tabla), cuenta una vez */
+    var tot=L.reduce(function(a,r){return a+(r.decHa||0)},0);
+    if(L.length>1&&L[0].sigHa>0&&tot>L[0].sigHa*1.02+0.01){var cn=Object.create(null),ks=[];L.forEach(function(r){var q=(r.cultivo||'')+'|'+(r.decHa||0);if(!cn[q]){cn[q]=0;ks.push(q)}cn[q]++});
+      var gcd=function(a,b){return b?gcd(b,a%b):a},d=ks.reduce(function(a,q){return gcd(a,cn[q])},0);
+      if(d>1){var vis=Object.create(null);L=L.filter(function(r){var q=(r.cultivo||'')+'|'+(r.decHa||0);vis[q]=(vis[q]||0)+1;return vis[q]<=cn[q]/d})}}
+    L.forEach(function(r){var c=pacCrop(r.prod)||pacCropVar(r.vari)||r.cultivo||'';if(!G[c]){G[c]={c:c,ha:0,r:r,lb:[]};go.push(G[c])}var g=G[c];g.ha+=r.decHa||0;
+      if((r.decHa||0)>(g.r.decHa||0))g.r=r;var lb=r.cultivo||'';if(lb&&g.lb.indexOf(lb)<0)g.lb.push(lb)});
+    /* se queda el cultivo de más hectáreas; una línea sin cultivo solo gana si no hay otra */
+    var top=go.slice().sort(function(a,b){return (a.c?0:1)-(b.c?0:1)||b.ha-a.ha})[0],o=Object.assign({},top.r);
+    o.decHa=Math.round(top.ha*10000)/10000;o.lineas=L.length;if(top.lb.length>1)o.etqs=top.lb.slice();
+    if(go.length>1)o.mix=go.map(function(g){return {c:g.lb.join(' y ')||g.c||'Sin cultivo',ha:Math.round(g.ha*10000)/10000}}).sort(function(a,b){return b.ha-a.ha});
+    return o});
   return {rows:rows,year:year};
 }
+/* «Declarado con dos cultivos: Trigo blando 12,50 ha y Barbecho 3,50 ha. Pongo Cereal · Trigo blando con 12,50 ha.» */
+function pacMixTxt(r){var M=r.mix||[],nn=['','un','dos','tres','cuatro','cinco'][M.length]||String(M.length),li=M.map(function(m){return m.c+' '+ha2(m.ha)+' ha'});
+  return 'Declarado con '+nn+' cultivos: '+(li.length>1?li.slice(0,-1).join(', ')+' y '+li[li.length-1]:li[0])+'. Pongo '+pacCultTxt(r)+' con '+ha2(r.decHa)+' ha.'}
+/* punto 4: titular, NIF, domicilio y representante desde el bloque del solicitante de la PAC.
+   Se lee por posición: una fila de rótulos («CIF/NIF», «Nombre / Razón Social»…) y debajo sus valores, dentro del apartado
+   («DATOS PERSONALES DEL SOLICITANTE», «DIRECCIÓN RESIDENCIA», «REPRESENTANTE»). Lo que no se encuentre así se deja vacío:
+   mejor vacío que con el NIF del cónyuge, del gerente o de un socio. Si la PAC tiene otra maqueta, no se lee nada y no falla. */
+var PAC_LBL=/^(cif\/nif|nif\/cif|nif|cif|dni\/nif|nombre( \/ razon social| o razon social)?|razon social|apellidos|primer apellido|segundo apellido|f\. nacimiento|fecha de nacimiento|genero|sexo|estado civil|telefono|movil|e-?mail|correo electronico|tipo (de )?via|nombre (de la )?via|domicilio|numero|n\.?º|bloque|portal|escalera|planta|puerta|piso|km|provincia|municipio|localidad|codigo postal|c\.? ?p\.?|apartado de correos|oficina de correos)$/;
+function pacNorm(s){return noAcc(s).toLowerCase().replace(/\s+/g,' ').trim()}
+/* '' si el NIF, NIE o CIF es correcto; si no, por qué no */
+function nifMal(v){v=String(v||'').toUpperCase().replace(/[\s.\-]/g,'');if(!v)return '';var L='TRWAGMYFPDXBNJZSQVHLCKE',m;
+  if((m=/^(\d{8})([A-Z])$/.exec(v)))return L[+m[1]%23]===m[2]?'':'La letra del NIF no cuadra con los números.';
+  if((m=/^([KLM])(\d{7})([A-Z])$/.exec(v)))return L[+m[2]%23]===m[3]?'':'La letra del NIF no cuadra con los números.';
+  if((m=/^([XYZ])(\d{7})([A-Z])$/.exec(v)))return L[+('XYZ'.indexOf(m[1])+m[2])%23]===m[3]?'':'La letra del NIE no cuadra con los números.';
+  if((m=/^([ABCDEFGHJNPQRSUVW])(\d{7})([0-9A-J])$/.exec(v))){var s=0;for(var i=0;i<7;i++){var x=+m[2][i];if(i%2===0){x*=2;s+=Math.floor(x/10)+x%10}else s+=x}var c=(10-s%10)%10,ch='JABCDEFGHI'[c];
+    var ok=/[NPQRSW]/.test(m[1])?m[3]===ch:(/[ABEH]/.test(m[1])?m[3]===String(c):(m[3]===String(c)||m[3]===ch));return ok?'':'El dígito de control del CIF no cuadra.'}
+  return 'No parece un NIF, NIE ni CIF.'}
+function pacTitular(pages){
+  var L=[];pages.slice(0,4).forEach(function(pg,pi){pacLineas(pg).forEach(function(g){g.pg=pi;L.push(g)})});
+  var lbl=function(w){return PAC_LBL.test(pacNorm(w.s))}, hdr=function(g){return g.w.length&&g.w.every(lbl)},
+    sec=function(g){return g.w.length===1&&!lbl(g.w[0])&&/^[A-ZÁÉÍÓÚÑÜ][A-ZÁÉÍÓÚÑÜ .\/,()-]{4,}$/.test(g.w[0].s)};
+  var find=function(re){for(var i=0;i<L.length;i++)if(sec(L[i])&&re.test(pacNorm(L[i].w[0].s)))return i;return -1};
+  /* rótulo → valor, en las filas del apartado que empieza en la línea i */
+  var vals=function(i,desde){var V={};if(i<0)return V;var j0=desde?i:i+1;for(var j=j0;j<L.length&&j<j0+24&&!sec(L[j])&&L[j].pg===L[i].pg;j++){var h=L[j],d=L[j+1];if(!hdr(h)||!d||d.pg!==h.pg||hdr(d)||sec(d)||d.y-h.y>16)continue;
+      d.w.forEach(function(w){var c=null;h.w.forEach(function(x){if(x.x<=w.x+6)c=x});if(!c)return;var k=pacNorm(c.s);V[k]=V[k]?V[k]+' '+w.s:w.s});j++}return V};
+  var nifOk=function(v){v=String(v||'').toUpperCase().replace(/[\s.\-]/g,'');return /^(\d{8}[A-Z]|[XYZ]\d{7}[A-Z]|[A-HJNP-SUVW]\d{7}[0-9A-J])$/.test(v)&&!nifMal(v)?v:''};
+  var nifDe=function(V){return nifOk(V['cif/nif']||V['nif/cif']||V['nif']||V['cif']||V['dni/nif'])};
+  var nomDe=function(V){var n=V['nombre / razon social']||V['nombre o razon social']||V['razon social']||V['nombre']||'';var ap=V['apellidos']||[V['primer apellido'],V['segundo apellido']].filter(Boolean).join(' ');return [n,ap].filter(Boolean).join(' ').replace(/\s+/g,' ').trim()};
+  var T={}, V=vals(find(/^(datos (personales )?(del|de la) (persona )?(solicitante|titular|beneficiari[oa])|solicitante|titular|beneficiari[oa])$/));
+  if(!nifDe(V)&&!nomDe(V)){/* sin el apartado: la fila «CIF/NIF · Nombre / Razón Social» de la cabecera de las hojas */
+    for(var i=0;i<L.length-1;i++){var h=L[i];if(!hdr(h))continue;var ks=h.w.map(function(w){return pacNorm(w.s)});if(ks.indexOf('cif/nif')<0||ks.indexOf('nombre / razon social')<0)continue;
+      var W=vals(i,1);if(nifDe(W)){V=W;break}}}
+  T.nif=nifDe(V);T.n=T.nif?nomDe(V):'';if(!T.n)delete T.n;if(!T.nif)delete T.nif;
+  if(T.nif){
+    var iD=find(/^(direccion|domicilio)( de)? (residencia|fiscal|social)$/);if(iD<0)iD=find(/^(direccion|domicilio)( de)? notificacion$/);if(iD<0)iD=find(/^(direccion|domicilio)$/);
+    var D=vals(iD),via=D['nombre via']||D['nombre de la via']||D['domicilio']||'';
+    if(via){var tv=D['tipo via']||D['tipo de via']||'',nu=D['numero']||D['n.º']||D['nº']||'';T.dir=[titleCase2(tv),titleVia(via)].filter(Boolean).join(' ')+(nu?', '+nu:'')}
+    var cp=String(D['codigo postal']||D['c.p.']||D['cp']||'').trim();if(/^\d{5}$/.test(cp))T.cp=cp;
+    if(D['municipio']||D['localidad'])T.mun=D['municipio']||D['localidad'];if(D['provincia'])T.prov=D['provincia'];
+    var R=vals(find(/^(datos del )?representante( legal)?$/)),rnif=nifDe(R),rn=nomDe(R);
+    if(rnif&&rn&&rnif!==T.nif){T.rn=rn;T.rnif=rnif}}
+  return T}
+function titleVia(s){return titleCase2(s).replace(/ (De|Del|La|Las|Los|El|Y|En)(?= )/g,function(m){return m.toLowerCase()})}
+/* lo leído del titular, en líneas para la ventana de la PAC */
+function pacTitTxt(t){t=t||{};var L=[];if(t.n||t.nif)L.push('Titular: '+(t.n||'sin nombre')+(t.nif?' · NIF '+t.nif:''));
+  var d=[t.dir,[t.cp,t.mun].filter(Boolean).join(' '),t.prov].filter(Boolean).join(', ');if(d)L.push('Domicilio: '+d);if(t.rn)L.push('Representante: '+t.rn+(t.rnif?' · NIF '+t.rnif:''));return L}
 /* ---- importar nombres (y ecológico) desde un Excel ---- */
 var xi=null;
 function xu16(b,o){return b[o]|b[o+1]<<8}
@@ -16714,7 +16835,8 @@ function pacRead(file){
       return Promise.all(ps);
     }).then(function(pages){
       var o=pacRowsFromItems(pages); if(!o.rows.length)throw new Error('vacio');
-      pac={rows:o.rows,year:o.year,name:'PAC '+(o.year||''),busy:false,done:0,fail:[],skip:[]}; renderPac(); $('#toast').innerHTML='';
+      var tit={}; try{tit=pacTitular(pages)}catch(e){tit={}}
+      pac={rows:o.rows,year:o.year,name:'PAC '+(o.year||''),tit:tit,busy:false,done:0,fail:[],skip:[]}; renderPac(); $('#toast').innerHTML='';
     }).catch(function(e){pac=null;toast(e&&e.message==='net'?'Para leer el PDF hace falta internet (se descarga el lector una sola vez).':'No he encontrado la tabla de recintos en ese PDF.')});
   };
   rd.readAsArrayBuffer(file);
@@ -16725,10 +16847,17 @@ function renderPac(){
   var rows=pac.rows, munis={}, tot=0; rows.forEach(function(r){munis[r.mname]=1;tot+=r.sigHa});
   var nsel=rows.filter(function(r){return !r.off}).length;
   var h='<div class="dlbox"><h2>Importar PAC</h2><p class="small" style="margin:6px 0 0">He encontrado <b>'+rows.length+'</b> recintos en '+Object.keys(munis).length+(Object.keys(munis).length===1?' municipio':' municipios')+' · '+ha2(tot)+' ha (superficie SIGPAC)</p>';
+  /* Entrega 154: lo leído del titular y los recintos declarados con más de un cultivo, antes de crear la finca */
+  if(!pac.result&&!pac.busy){
+    var TL=pacTitTxt(pac.tit);
+    if(TL.length)h+='<div class="note pactit">'+TL.map(function(t){return '<div>'+esc(t)+'</div>'}).join('')+'<div class="small">Se guarda en «Titular y contacto» de la finca.</div></div>';
+    var MX=rows.filter(function(r){return r.mix&&!r.off});
+    if(MX.length)h+='<div class="note warn pacdos"><b>⚠ '+(MX.length===1?'1 recinto declarado':MX.length+' recintos declarados')+' con más de un cultivo.</b> Cada recinto lleva un cultivo: pongo el de más hectáreas y lo apunto en sus notas.'+MX.map(function(r){return '<div class="small" style="margin-top:4px"><b>'+esc(refLabel(r.key))+'</b>: '+esc(pacMixTxt(r))+'</div>'}).join('')+'</div>';
+  }
   if(!pac.result&&!pac.busy)h+=impSelBar();
   h+='<div class="paclist">'+rows.map(function(r,i){
     var part=Math.abs(r.sigHa-r.decHa)>0.005;
-    return '<div class="pacrow'+(r.off?' off':'')+'" role="checkbox" aria-checked="'+(!r.off)+'" tabindex="0" data-act="imp-tog" data-i="'+i+'">'+impBox(r,i)+'<b>'+esc(titleCase2(r.mname))+' · '+r.pol+'-'+r.par+'-'+r.rec+'</b><span>'+nf(r.sigHa,2)+' ha</span><small>'+esc((pacCrop(r.prod)||titleCase2(r.prod)||'Sin cultivo')+(r.vari?' · '+titleCase2(r.vari):'')+(r.riego?' · '+riegoName(r.riego):''))+(part?' · declarada solo '+nf(r.decHa,2)+' ha':'')+'</small></div>';
+    return '<div class="pacrow'+(r.off?' off':'')+'" role="checkbox" aria-checked="'+(!r.off)+'" tabindex="0" data-act="imp-tog" data-i="'+i+'">'+impBox(r,i)+'<b>'+esc(titleCase2(r.mname))+' · '+r.pol+'-'+r.par+'-'+r.rec+'</b><span>'+nf(r.sigHa,2)+' ha</span><small>'+esc(pacCultTxt(r)+(r.vari?' · '+titleCase2(r.vari):'')+(r.riego?' · '+riegoName(r.riego):''))+(part?' · declarada solo '+nf(r.decHa,2)+' ha':'')+(r.mix?' · <b>'+(r.mix.length===2?'dos':r.mix.length)+' cultivos</b>':'')+'</small></div>';
   }).join('')+'</div>';
   if(pac.busy)h+='<p class="small">Buscando recintos en el SIGPAC… '+pac.done+' de '+rows.length+'</p>';
   else if(pac.result)h+='<div class="note">'+pac.result+'</div>';
@@ -16754,22 +16883,29 @@ function pacGo(){
     var groups=[];
     if(pac.split){var gm={};found.forEach(function(o){(gm[o.row.mname]||(gm[o.row.mname]=[])).push(o)});Object.keys(gm).forEach(function(k){groups.push({nm:nm+' · '+titleCase2(k),items:gm[k]})})}
     else groups.push({nm:nm,items:found});
-    var skipped=0, made=[], addedT=0, haT=0, lastF=null;
+    var skipped=0, made=[], addedT=0, haT=0, lastF=null, nMix=0, TP=pac.tit||{}, conTit=false;
     for(var gi=0;gi<groups.length;gi++){
       var f=createFinca(groups[gi].nm); if(!f){pac.busy=false;renderPac();return}
       var added=0;
       groups[gi].items.forEach(function(o){
         var g=o.geo, ex=S.recintos[g.ref]; if(ex){skipped++;return}
-        var cult=pacCrop(o.row.prod)||pacCropVar(o.row.vari), prod=titleCase2(o.row.prod);
-        var nts=[cult?'':(prod?'PAC: '+prod:''),o.row.nota||''].filter(Boolean).join(' · ');
-        S.recintos[g.ref]={ref:g.ref,ha:g.ha,uso:g.uso,geom:g.geom,pt:pointInside(g.geom),fincaId:f.id,cultivo:cult,riego:o.row.riego||'',variedad:titleCase2(o.row.vari),notas:nts,sig:sigCache[g.ref]||undefined};
+        var cult=pacCrop(o.row.prod)||pacCropVar(o.row.vari), prod=titleCase2(pacSinUso(String(o.row.prod||'').split(/\s+/).filter(Boolean)).tk.join(' '));
+        /* Entrega 154: los cereales apuntan el producto de la PAC («Trigo blando») y los recintos con dos cultivos, lo declarado */
+        var esPac=pac.kind!=='tabla', nts=[o.row.mix?'PAC: '+pacMixTxt(o.row):(esPac&&cult==='Cereal'&&o.row.prod?'PAC: '+(o.row.etqs&&o.row.etqs.length>1?o.row.etqs.join(' y '):pacEtq(o.row.prod)):(cult?'':(prod?'PAC: '+prod:''))),o.row.nota||''].filter(Boolean).join(' · ');
+        if(o.row.mix)nMix++;
+        /* si la PAC declara menos que la superficie SIGPAC del recinto (y también menos que la del SIGPAC de hoy), lo declarado es la superficie cultivada */
+        var hc=(pac.kind!=='tabla'&&o.row.decHa>0&&o.row.sigHa-o.row.decHa>0.005&&g.ha-o.row.decHa>0.005)?o.row.decHa:undefined;
+        S.recintos[g.ref]={ref:g.ref,ha:g.ha,hc:hc,uso:g.uso,geom:g.geom,pt:pointInside(g.geom),fincaId:f.id,cultivo:cult,riego:o.row.riego||'',variedad:titleCase2(o.row.vari),notas:nts,sig:sigCache[g.ref]||undefined};
+        if(hc===undefined)delete S.recintos[g.ref].hc;
         added++;
       });
-      if(added){var cs={};fincaRecs(f.id).forEach(function(r){if(r.cultivo)cs[r.cultivo]=(cs[r.cultivo]||0)+r.ha});var best=Object.keys(cs).sort(function(a,b){return cs[b]-cs[a]})[0];if(best)S.lastCrop[f.id]=best; made.push(groups[gi].nm); addedT+=added; haT+=fincaHa(f.id); lastF=f}
+      if(added){var cs={};fincaRecs(f.id).forEach(function(r){if(r.cultivo)cs[r.cultivo]=(cs[r.cultivo]||0)+r.ha});var best=Object.keys(cs).sort(function(a,b){return cs[b]-cs[a]})[0];if(best)S.lastCrop[f.id]=best; made.push(groups[gi].nm); addedT+=added; haT+=fincaHa(f.id); lastF=f;
+        /* Entrega 154: los datos del titular leídos de la PAC van a «Titular y contacto» de la finca nueva */
+        if(pac.kind!=='tabla'&&(TP.nif||TP.n)){f.datos=f.datos||{};var T0=f.datos.tit=f.datos.tit||{};['n','nif','dir','cp','mun','prov','rn','rnif'].forEach(function(k){if(TP[k]&&!T0[k])T0[k]=TP[k]});conTit=true}}
       else S.fincas=S.fincas.filter(function(x){return x.id!==f.id});
     }
     save(); pac.busy=false;
-    pac.result='<b>'+(made.length?(made.length===1?'Finca «'+esc(made[0])+'» creada':made.length+' fincas creadas: '+made.map(function(m){return '«'+esc(m)+'»'}).join(', ')):'No se ha creado ninguna finca')+'</b><br>'+addedT+' recintos añadidos · '+ha2(haT)+' ha'+(skipped?'<br>'+skipped+' ya estaban en otra finca y no se han tocado.':'')+(fail.length?'<br><b>'+fail.length+' no se han podido buscar</b> en el SIGPAC: '+fail.map(function(r){return r.pol+'-'+r.par+'-'+r.rec+' ('+esc(titleCase2(r.mname))+')'}).join(', ')+'.':'');
+    pac.result='<b>'+(made.length?(made.length===1?'Finca «'+esc(made[0])+'» creada':made.length+' fincas creadas: '+made.map(function(m){return '«'+esc(m)+'»'}).join(', ')):'No se ha creado ninguna finca')+'</b><br>'+addedT+' recintos añadidos · '+ha2(haT)+' ha'+(conTit?'<br>Titular: '+esc(TP.n||'')+(TP.nif?' (NIF '+esc(TP.nif)+')':'')+', guardado en «Titular y contacto».':'')+(nMix?'<br>'+(nMix===1?'1 recinto declarado':nMix+' recintos declarados')+' con más de un cultivo: va con el de más hectáreas y lo declarado, en sus notas.':'')+(skipped?'<br>'+skipped+' ya estaban en otra finca y no se han tocado.':'')+(fail.length?'<br><b>'+fail.length+' no se han podido buscar</b> en el SIGPAC: '+fail.map(function(r){return r.pol+'-'+r.par+'-'+r.rec+' ('+esc(titleCase2(r.mname))+')'}).join(', ')+'.':'');
     renderPac(); afterDataChange(false); if(lastF){activeFinca=null;detailId=null;viewId=null;setTimeout(function(){if(tab==='mapa'||isDesk()){map.invalidateSize();fitFinca(lastF.id)}},120)}
   });
 }
@@ -18773,7 +18909,7 @@ document.addEventListener('keydown',function(ev){if(ev.target&&ev.target.id==='n
 window.__mf={MP_FT:MP_FT,mpDose:mpDose,mpFtPicked:mpFtPicked,fbItems:fbItems,DOCs:function(){return DOC},mpFixNames:mpFixNames,renderAll:renderAll,mpAll:mpAll,mpInfo:mpInfo,mpWarnTxt:mpWarnTxt,MP:MP,trCardHTML0:trCardHTML0,aclState:function(){return ACL},aclCalc:aclCalc,aclCfg:aclCfg,aclHTML:aclHTML,aclFHTML:aclFHTML,aclFCalc:aclFCalc,aclViejo:aclViejo,aclPend:aclPend,aclRg:aclRg,aclNoVar:aclNoVar,aclRelTxt:aclRelTxt,aclSum:aclSum,aclShort:aclShort,aclMine:aclMine,aclSimOpen:aclSimOpen,aclSimClose:aclSimClose,aclPk:aclPk,loadPdfLib:loadPdfLib,pdfPiezas:pdfPiezas,pdfHay:pdfHay,pvState:function(){return PV},sigGroup:function(){return sigGroup},sigTiles:function(){return tiles},sigPaint:sigPaint,sigW:function(){return {ok:SWok,pend:Object.keys(SWel).length,carga:Object.keys(SWcb).length}},sigWOff:sigWOff,boxPad:boxPad,pdfFont:pdfFont,pdfFontC:pdfFontC,expMapHTML:expMapHTML,buildFichaPdf:buildFichaPdf,afCompute:afCompute,afCompare:afCompare,hatchOf:hatchOf,swBg:swBg,OV:OV,polyC:polyC,mmHTML:mmHTML,expClose:expClose,temaGet:temaGet,temaSet:temaSet,pvOpen:pvOpen,pvClose:pvClose,cvMatch:cvMatch,cvLabel:cvLabel,trVarList:trVarList,varReal:varReal,GD:GD,gdOpen:gdOpen,gdRender:gdRender,gdDupPairs:gdDupPairs,gdOrphans:gdOrphans,GP:GP,guPoll:guPoll,GUs:function(){return GU},lkLoad:lkLoad,lkPublishAll:lkPublishAll,lkTick:lkTick,LKs:function(){return LK},buildVista:buildVista,guApply:guApply,lkSet:function(a,c){LK=a;GC=c||[]},lkDefaults:lkDefaults,pfDelete:pfDelete,isOc:isOc,setOc:setOc,recIn:recIn,newTag:newTag,PFc:function(){return PF},VF:VF,TAGS:TAGS,pfList:pfList,pfSwitch:pfSwitch,idxRule:idxRule,IDX:IDX,cardState:function(){return cardFull},selG:selGroup,dimG:dimGroup,favG:favGroup,tagG:tagGroup,medMarks:medMarks,medLines:medLines,medState:function(){return med},openTag:openTag,drawMarks:drawMarks,ndviStep:ndviStep,tileXY:tileXY,parseWKT:parseWKT,parseGo:parseGo,pointInside:pointInside,projGeom:projGeom,refKey:refKey,refLabel:refLabel,stats:stats,state:function(){return S},pick:pick,map:map,tiles:tiles,select:select,setTab:setTab,goTo:goTo,inPoly:inPoly,polys:polys,buildBackup:buildBackup,readImport:readImport,applyImport:applyImport,syncNow:syncNow,login:login,saved:savedGroup,labels:labels,focusId:focusId,goFinca:goFinca,renderCard:renderCard,sigCache:sigCache,SY:function(){return SY},fincaPoint:fincaPoint,createFinca:createFinca,addTo:addTo,NDV:NDV,ndviLoad:ndviLoad,vincenty:vincenty,areaEllip:areaEllip,med:med,pdf:function(){return pdfOut||pdfLast},OV:OV,setOv:setOv,catCache:catCache,showCat:showCat,goRC:goRC,flt:function(){return flt},renderFincas:renderFincas,fincasListHTML:fincasListHTML,getRecents:getRecents,placeGo:placeGo,searchPlace:searchPlace};
 Object.assign(window.__mf,{loadPdfLib:loadPdfLib,BASES:BASES,ndvChart:ndvChart,NDC:NDC,ndcSvg:ndcSvg,ndvChartClose:ndvChartClose,LS:LS,lsApply:lsApply,abc:abc,renderDw:renderDw,dlS:function(){return dl},afS:function(){return af},afStartHTML:afStartHTML,xiCmpHTML:xiCmpHTML,popLight:popLight,tpHTML:tpHTML,dwZones:dwZones});
 Object.assign(window.__mf,{IH:function(){return IH},IHL:IHL,ihSet:ihSet,ihStep:ihStep,ihList:ihList,ihCheck:ihCheck,ihItem:ihItem,ihBlank:ihBlank,setPHLAY:function(v){PHLAY=v},baseLayer:function(){return baseLayer}});
-Object.assign(window.__mf,{PSC:PSC,scData:scData,scBuild:scBuild,scApply:scApply,scHTML:scHTML,scResHTML:scResHTML,scCmpHTML:scCmpHTML,scMi:scMi,incTxt:incTxt,incCodes:incCodes,incListHTML:incListHTML,finMunis:finMunis,recMuni:recMuni,afRecs:afRecs,afCrops:afCrops,afNext:afNext,recMatch:recMatch,plQt:plQt,xsMark:xsMark,bkSmall:bkSmall,plNew:plNew,DOC_T:DOC_T,trpApply:trpApply,foldSave:foldSave,plFileBase:plFileBase,expGGet:expGGet,expGPick:expGPick,grbSplit:grbSplit,grStart:grStart,grSave:grSave,GRS:function(){return GRS},expHTML:expHTML,TRs:function(){return {tr:TR.cult,ab:AB.cult,fe:FE.cult,hi:HI.cult,inf:INF.cult,pl:PL.pid}},vfState:function(){return VFL},vfOn:vfOn,muniTxtSync:muniTxtSync,polyCount:function(){return polyC.size},ufbStart:ufbStart,ubkCheck:ubkCheck,ubkDue:ubkDue,bkOwn:bkOwn,fbBuild:fbBuild,UBK:UBK,getVersions:getVersions,prevGet:prevGet,spaceHTML:spaceHTML,snapVersion:snapVersion,datReady:function(){return DATP},datState:function(){return {ok:IDBOK,r:DATR,nv:VERS?VERS.length:-1,prev:!!PREV}},plPortrait:plPortrait,plCropTxt:plCropTxt,xlPlanBook:xlPlanBook,idbReset:function(w){idbP=null;if(w)IDB_WAIT=w},syncWait:function(w){SYNC_WAIT=w},syncBusy:function(){return syncing},uCvTxt:uCvTxt,feUcvForm:feUcvForm,feUnitConvert:feUnitConvert,rfEdit:rfEdit,rfSave:rfSave,infTotRows:infTotRows,abTotData:abTotData,cvLabel:cvLabel,feProds:feProds,pabShares:pabShares,pabHaR:pabHaR,pabSplits:pabSplits,pabSplitWarn:pabSplitWarn,pabXCands:pabXCands,pabAddX:pabAddX,pabMove:pabMove,buildPabPdf:buildPabPdf,buildPabXlsx:buildPabXlsx,pabBlocks:pabBlocks,pabCheck:pabCheck,pabReal:pabReal,pabCalc:pabCalc,pabAuto:pabAuto,pabHTML:pabHTML,pabCur:pabCur,pabTipo:pabTipo,pabLim:pabLim,PAB:PAB,haC:haC,haPair:haPair,plTrPlaces:plTrPlaces,daOpen:daOpen,daSave:daSave,PL:PL,plWeeks:plWeeks,plCalc:plCalc,plTrOrder:plTrOrder,plPending:plPending,plMarkGo:plMarkGo,buildTratPdf:buildTratPdf,xlPlanBook:xlPlanBook,xlBuild:xlBuild,plFromRecs:plFromRecs,plSecArgs:plSecArgs,plSecHTML:plSecHTML,plSecOut:plSecOut,plTrPRows:plTrPRows,buildPlanPdf:buildPlanPdf,buildPlanXlsx:buildPlanXlsx,planHTML:planHTML,plTrSources:plTrSources,fbBuild:fbBuild,fbRead:fbRead,fbItems:fbItems,fbRestoreFiles:fbRestoreFiles,idbPut:idbPut,idbGet:idbGet,idbKeys:idbKeys,applyImport:applyImport,pending:function(){return pendingImport},docPend:function(){return DOC.pend},phPend:function(){return PH.pend},phProcess:phProcess,phMax:function(n){PH_MAXB=n},trVarParts:trVarParts,numEs:numEs,nf:nf,trList:trList,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,medCalc:medCalc,snapInfo:snapInfo,medStripPts:medStripPts,medCuts:medCuts,medCrosses:medCrosses,medAngles:medAngles,medSides:medSides,medSimp:medSimp,medGo:medGo,medMids:medMids,medGuide:medGuide,medKml:medKml,medPole:medPole,mXY:mXY,mLL:mLL,medStatsOf:medStatsOf,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
+Object.assign(window.__mf,{PSC:PSC,scData:scData,scBuild:scBuild,scApply:scApply,scHTML:scHTML,scResHTML:scResHTML,scCmpHTML:scCmpHTML,scMi:scMi,incTxt:incTxt,incCodes:incCodes,incListHTML:incListHTML,finMunis:finMunis,recMuni:recMuni,afRecs:afRecs,afCrops:afCrops,afNext:afNext,recMatch:recMatch,plQt:plQt,xsMark:xsMark,bkSmall:bkSmall,plNew:plNew,DOC_T:DOC_T,trpApply:trpApply,foldSave:foldSave,plFileBase:plFileBase,expGGet:expGGet,expGPick:expGPick,grbSplit:grbSplit,grStart:grStart,grSave:grSave,GRS:function(){return GRS},expHTML:expHTML,TRs:function(){return {tr:TR.cult,ab:AB.cult,fe:FE.cult,hi:HI.cult,inf:INF.cult,pl:PL.pid}},vfState:function(){return VFL},vfOn:vfOn,muniTxtSync:muniTxtSync,polyCount:function(){return polyC.size},ufbStart:ufbStart,ubkCheck:ubkCheck,ubkDue:ubkDue,bkOwn:bkOwn,fbBuild:fbBuild,UBK:UBK,getVersions:getVersions,prevGet:prevGet,spaceHTML:spaceHTML,snapVersion:snapVersion,datReady:function(){return DATP},datState:function(){return {ok:IDBOK,r:DATR,nv:VERS?VERS.length:-1,prev:!!PREV}},plPortrait:plPortrait,plCropTxt:plCropTxt,xlPlanBook:xlPlanBook,idbReset:function(w){idbP=null;if(w)IDB_WAIT=w},syncWait:function(w){SYNC_WAIT=w},syncBusy:function(){return syncing},uCvTxt:uCvTxt,feUcvForm:feUcvForm,feUnitConvert:feUnitConvert,rfEdit:rfEdit,rfSave:rfSave,infTotRows:infTotRows,abTotData:abTotData,cvLabel:cvLabel,feProds:feProds,pabShares:pabShares,pabHaR:pabHaR,pabSplits:pabSplits,pabSplitWarn:pabSplitWarn,pabXCands:pabXCands,pabAddX:pabAddX,pabMove:pabMove,buildPabPdf:buildPabPdf,buildPabXlsx:buildPabXlsx,pabBlocks:pabBlocks,pabCheck:pabCheck,pabReal:pabReal,pabCalc:pabCalc,pabAuto:pabAuto,pabHTML:pabHTML,pabCur:pabCur,pabTipo:pabTipo,pabLim:pabLim,PAB:PAB,haC:haC,haPair:haPair,plTrPlaces:plTrPlaces,daOpen:daOpen,daSave:daSave,PL:PL,plWeeks:plWeeks,plCalc:plCalc,plTrOrder:plTrOrder,plPending:plPending,plMarkGo:plMarkGo,buildTratPdf:buildTratPdf,xlPlanBook:xlPlanBook,xlBuild:xlBuild,plFromRecs:plFromRecs,plSecArgs:plSecArgs,plSecHTML:plSecHTML,plSecOut:plSecOut,plTrPRows:plTrPRows,buildPlanPdf:buildPlanPdf,buildPlanXlsx:buildPlanXlsx,planHTML:planHTML,plTrSources:plTrSources,fbBuild:fbBuild,fbRead:fbRead,fbItems:fbItems,fbRestoreFiles:fbRestoreFiles,idbPut:idbPut,idbGet:idbGet,idbKeys:idbKeys,applyImport:applyImport,pending:function(){return pendingImport},docPend:function(){return DOC.pend},phPend:function(){return PH.pend},phProcess:phProcess,phMax:function(n){PH_MAXB=n},trVarParts:trVarParts,numEs:numEs,nf:nf,trList:trList,PALS:PALS,palVars:palVars,palCR:palCR,palCSS:palCSS,palSet:palSet,palApply:palApply,palHTML:palHTML,grList:grList,grRecs:grRecs,grOf:grOf,grTxt:grTxt,expOpen:expOpen,setDetail:function(id){detailId=id},getRG:function(){return viewRG},drawCtx:drawCtx,recOn:recOn,syncFocus:syncFocus,renderChip:renderChip,trRecChips:trRecChips,abRecChips:abRecChips,feRecChips:feRecChips,cvMatch:cvMatch,cvCropSel:cvCropSel,infVT:infVT,GRS:GRS,trVarTxt:trVarTxt,trvStart:trvStart,trvBack:trvBack,trmS:function(){return trm},trpParse:trpParse,trpLines:trpLines,docAdd:docAdd,finca:finca,infVar:infVar,hiRecs:hiRecs,hiRefs:hiRefs,pdfFont:pdfFont,trCultList:trCultList,HI:HI,INF:INF,hiEvents:hiEvents,hiCamp:hiCamp,infData:infData,buildInfPdf:buildInfPdf,buildInfXlsx:buildInfXlsx,abTotData:abTotData,EXP_S:EXP_S,FE:FE,DA:DA,abTotLine:abTotLine,AB:AB,abCalc:abCalc,abResumen:abResumen,TR:TR,trm:trm,trCalc:trCalc,buildTratPdf:buildTratPdf,trSafe:trSafe,EXP:EXP,expOpen:expOpen,expHTML:expHTML,DOC:DOC,docNew:docNew,docPicked:docPicked,docSave:docSave,docFlush:docFlush,docOpen:docOpen,docDel:docDel,DOC_SQL:DOC_SQL,DIA:DIA,diaNew:diaNew,diaEdit:diaEdit,diaSave:diaSave,diaDel:diaDel,diaCancel:diaCancel,diaHTML:diaHTML,PHs:PH,phFlush:phFlush,idbKeys:idbKeys,srGuard:srGuard,photoSrc:photoSrc,setPHESRI:function(v){PHESRI=v},planEsri:planEsri,whyErr:whyErr,fetchJsonS:fetchJsonS,ignReset:function(){IGNDOWN=false},WB:WBK,wbParse:wbParse,wbSet:wbSet,wbLoad:wbLoad,wbItem:wbItem,wbGrid:wbGrid,wbWarp:wbWarp,wbPlan:wbPlan,wbImage:wbImage,wbMerc:wbMerc,planFoto:planFoto,setPHREL:function(v){PHREL=v},planLegendBlocks:planLegendBlocks,esdParse:esdParse,dlOutGet:function(){return dlOut},dxfRec:dxfRec,recS:function(){return rec},toUTMx:toUTM,recPlanGeom:recPlanGeom,planFix:planFix,planAlphas:planAlphas,sitBox:sitBox,planBlockRect:planBlockRect,bk:function(){return {bkup:BKUP,e:BKS.e,ok:BKS.ok}},bkFire:function(ev){baseLayer.fire(ev)},bkTile:function(ok){BKS[ok?'ok':'e']++},bkLayer:function(){return baseLayer},setBase:setBase,loadPdfJs:loadPdfJs,lkExpired:lkExpired,lkCad:lkCad,usAct:usAct,usState:function(){return US},lkSet:function(a){LK=a},lkSave:lkSave,lkRender:function(){return typeof pfModalRender==='function'?(pfX={mode:'share'},pfModalRender(),$('#pfmodal').innerHTML):''},lkForm:function(f){LKF=f},lkSaveBody:function(){return LKF},dwGeneral:dwGeneral,dwNums:dwNums,dwZones:dwZones,dwLimits:dwLimits,xlsxRead:xlsxRead,xParse:xParse,xMatch:xMatch,xiBuild:xiBuild,xiRender:xiRender,xiApply:xiApply,xiStats:xiStats,xiState:function(){return xi},xParcelas:xParcelas,afLbl:afLbl,sigAllRows:sigAllRows,sigTileList:sigTileList,afManOpen:afManOpen,afmDel:afmDel,afAllData:afAllData,afGrp:afGrp,afOff:afOff,af:af,afOpen:afOpen,afStartMap:afStartMap,afClick:afClick,afSave:afSave,afSet:afSet,afVal:afVal,afProg:afProg,afCompute:afCompute,afCompare:afCompare,afXlsx:afXlsx,afPdf:afPdf,afGenerate:afGenerate,xlsxBuild:xlsxBuild,renderAf:renderAf,afRepHTML:afRepHTML,afStartHTML:afStartHTML,wmsParts:wmsParts,wmsImage:wmsImage,planPx:planPx,renderLayers:renderLayers,layOpen:layOpen,varOpen:varOpen,impRender:impRender,tagCardHTML:tagCardHTML,parseGo:parseGo,olcDecode:olcDecode,fromUTM:fromUTM,planoBuild:planoBuild,planTones:planTones,varGroups:varGroups,planVarLayout:planVarLayout,recPlanGeom:recPlanGeom,recState:function(){return rec},applyRemote:applyRemote,markExported:markExported,bkAdopt:bkAdopt,SYo:function(){return SY},tabRows:tabRows,tabLinesFromItems:tabLinesFromItems,tabLinesFromText:tabLinesFromText,tabStart:tabStart,tabResolve:tabResolve,tabProvCode:tabProvCode,muniKey:muniKey,pacCropVar:pacCropVar,pacSearch:pacSearch,pac:function(){return pac},muniCache:muniCache,renderSel:renderSel,renderRec:renderRec,recRowsInBox:recRowsInBox,dl:dl,dwOpen:dwOpen,renderDw:renderDw,dwGo:dwGo,dwUnits:dwUnits,dwPlan:dwPlan,dwRows:dwRows,dwFincasSel:dwFincasSel,fichaBlob:fichaBlob,tpStart:tpStart,tpState:function(){return tp},tpMove:tpMove,ggOf:ggOf,ggGet:ggGet,itemShown:itemShown,gAssign:gAssign,hideFincas:hideFincas,hiddenFincas:hiddenFincas,allRecsAll:allRecsAll,filterUI:filterUI,flt:flt,renderChip:renderChip,fincaDetailHTML:fincaDetailHTML,undoPush:undoPush,undoDo:undoDo,undoToast:undoToast,drawCtx:drawCtx,ownerColor:ownerColor,goGrupo:goGrupo,polyC:polyC,cLabels:cLabels,cLabelsRedraw:cLabelsRedraw,cultLine:cultLine,vc:function(){return viewCrop},setVC:function(v){viewCrop=v;renderAll()},vg:function(){return viewG},newGrupo:newGrupo,fitCrop:fitCrop,visT:function(){return visT},refreshSigpac:refreshSigpac,dataStr:dataStr,cropNames:cropNames,cropColor:cropColor,cropOp:cropOp,fillOp:fillOp,canonCrop:canonCrop,grupo:grupo,grupoFincas:grupoFincas,csSet:csSet,reportPdf:reportPdf,sigShow:sigShow,toUTM:toUTM,zipBytes:zipBytes,crc32:crc32,shpBuild:shpBuild,shpFiles:shpFiles,kmlBuild:kmlBuild,csvBuild:csvBuild,dxfBuild:dxfBuild,expList:expList,expRow:expRow,msel:msel,selItems:selItems,rec:rec,recBox:recBox,recPlanGeom:recPlanGeom,photoFiles:photoFiles,planoBuild:planoBuild,clipRing:clipRing,BK:BK,backupDue:backupDue,bkShow:bkShow,pacParseRow:pacParseRow,pacRowsFromItems:pacRowsFromItems,pacCrop:pacCrop,pacTitular:pacTitular,pacMixTxt:pacMixTxt,pacCultivo:pacCultivo,pacCultTxt:pacCultTxt,nifMal:nifMal,pac:function(){return pac},pacSet:function(v){pac=v;renderPac()},drawMedAll:drawMedAll,medAll:medAll,medCalc:medCalc,snapInfo:snapInfo,medStripPts:medStripPts,medCuts:medCuts,medCrosses:medCrosses,medAngles:medAngles,medSides:medSides,medSimp:medSimp,medGo:medGo,medMids:medMids,medGuide:medGuide,medKml:medKml,medPole:medPole,mXY:mXY,mLL:mLL,medStatsOf:medStatsOf,showDl:showDl,dlOut:function(){return dlOut},fixRing:fixRing,reportPdf:reportPdf,doExp:doExp});
 Object.assign(window.__mf,{NT:NT,ntNew:ntNew,ntOpen:ntOpen,ntBack:ntBack,ntLeave:ntLeave,ntInput:ntInput,ntTap:ntTap,ntBox:ntBox,ntEnter:ntEnter,ntDel:ntDel,ntList:ntList,ntTitle:ntTitle,ntChk:ntChk,ntGroup:ntGroup,renderNotas:renderNotas,CO:CO,coNew:coNew,coEdit:coEdit,coSave:coSave,coDel:coDel,coSum:coSum,coHTML:coHTML,coRead:coRead,coPicked:coPicked,coLbl:coLbl,rhEvents:rhEvents,rhHTML:rhHTML,recFichaHTML:recFichaHTML});
 Object.assign(window.__mf,{llHTML:llHTML,llLoad:llLoad,llGet:llGet,llSum:llSum,llArr:llArr,llN:llN,LLU:function(){return LLU},LLSEL:LLSEL,pvHTML:pvHTML,pvLoad:pvLoad,pvGet:pvGet,pvParse:pvParse,pvDias:pvDias,PVU:function(){return PVU}});
 Object.assign(window.__mf,{offMigra:offMigra,OFFMG:function(){return OFFMG},offTCount:offTCount,offTGet:offTGet,arqList:arqList,arqHTML:arqHTML,offKeys:offKeys,offState:offState,offDownload:offDownload,offRemove:offRemove,offPend:offPend,offSet:offSet,offAskCheck:offAskCheck,offUrl:offUrl,offTotal:offTotal,offLoad:offLoad,offDiff:offDiff,offMark:offMark,offSig:offSig,OFFM:function(){return OFFM},OFF:function(){return OFF},offBusy:function(){return !!OFFD},save:function(){save()},renderDatos:renderDatos,offAskShown:function(){return OFFASK}});
